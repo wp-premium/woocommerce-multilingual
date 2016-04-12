@@ -1,0 +1,14 @@
+.options-permalink-php .translation_controls{
+    margin-top:4px;
+    width:25em;
+    text-align:right;
+}
+.translation_controls .select2-container{
+    margin-top:-18px;
+    text-align:left;
+    max-width: 50%;
+}
+
+.options-permalink-php .select2-container .select2-choice .select2-arrow b:after{
+    display: none;
+}
