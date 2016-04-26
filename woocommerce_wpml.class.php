@@ -60,7 +60,7 @@ class woocommerce_wpml {
         $this->xdomain_data      = new xDomain_Data;
         $this->languages_upgrader = new WCML_Languages_Upgrader;
 
-        $this->url_translation   = new WCML_Url_Translation;
+        $this->url_translation   = new WCML_Url_Translation( $this, $sitepress );
 
 
 
@@ -177,7 +177,22 @@ class woocommerce_wpml {
     }
 
     function load_locale(){
-        load_plugin_textdomain('woocommerce-multilingual', false, WCML_LOCALE_PATH);
+        return load_plugin_textdomain('woocommerce-multilingual', false, WCML_PLUGIN_FOLDER.'/locale' );
+    }
+
+    public function switch_locale( $lang_code = false ){
+        global $l10n, $sitepress;
+        static $original_l10n;
+        if (!empty($lang_code)) {
+            $original_l10n = isset($l10n['woocommerce-multilingual']) ? $l10n['woocommerce-multilingual'] : null;
+            if ($original_l10n !== null) {
+                unset($l10n['woocommerce-multilingual']);
+            }
+            return load_textdomain('woocommerce-multilingual',
+                WCML_LOCALE_PATH . '/woocommerce-multilingual-' . $sitepress->get_locale($lang_code) . '.mo');
+        } else { // switch back
+            $l10n['woocommerce-multilingual'] = $original_l10n;
+        }
     }
 
     function install(){
@@ -214,6 +229,7 @@ class woocommerce_wpml {
             self::set_up_capabilities();
 
             $this->set_language_information();
+            $this->check_product_type_terms();
 
             $this->settings['set_up'] = 1;
             $this->update_settings();
@@ -265,8 +281,8 @@ class woocommerce_wpml {
         foreach($products as $product){
             $exist = $sitepress->get_language_for_element($product->ID,'post_product');
             if(!$exist){
-            $sitepress->set_element_language_details($product->ID, 'post_product',false,$def_lang);
-        }
+                $sitepress->set_element_language_details($product->ID, 'post_product',false,$def_lang);
+            }
         }
 
         //set language info for taxonomies
@@ -274,24 +290,84 @@ class woocommerce_wpml {
         foreach($terms as $term){
             $exist = $sitepress->get_language_for_element($term->term_taxonomy_id, 'tax_product_cat');
             if(!$exist){
-            $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_cat',false,$def_lang);
-        }
+                $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_cat',false,$def_lang);
+            }
         }
         $terms = $wpdb->get_results("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy WHERE taxonomy = 'product_tag'");
         foreach($terms as $term){
             $exist = $sitepress->get_language_for_element($term->term_taxonomy_id, 'tax_product_tag');
             if(!$exist){
-            $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_tag',false,$def_lang);
-        }
+                $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_tag',false,$def_lang);
+            }
         }
 
         $terms = $wpdb->get_results("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy WHERE taxonomy = 'product_shipping_class'");
         foreach($terms as $term){
             $exist = $sitepress->get_language_for_element($term->term_taxonomy_id, 'tax_product_shipping_class');
             if(!$exist){
-            $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_shipping_class',false,$def_lang);
+                $sitepress->set_element_language_details($term->term_taxonomy_id, 'tax_product_shipping_class',false,$def_lang);
+            }
         }
     }
+
+    //handle situation when product_type terms translated before activating WCML
+    function check_product_type_terms(){
+        global $wpdb;
+        //check if terms were translated
+        $translations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations WHERE element_type = 'tax_product_type'" );
+
+        if( $translations ){
+            foreach( $translations as $translation ){
+                if( !is_null( $translation->source_language_code ) ){
+                    //check relationships
+                    $term_relationships = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $translation->element_id  ) );
+                    if( $term_relationships ){
+                        $orig_term = $wpdb->get_var( $wpdb->prepare( "SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type = 'tax_product_type' AND trid = %d AND source_language_code IS NULL", $translation->trid ) );
+                        if( $orig_term ){
+                            foreach( $term_relationships as $term_relationship ){
+                                $wpdb->update(
+                                    $wpdb->term_relationships,
+                                    array(
+                                        'term_taxonomy_id' => $orig_term
+                                    ),
+                                    array(
+                                        'object_id' => $term_relationship->object_id,
+                                        'term_taxonomy_id' => $translation->element_id
+                                    )
+                                );
+                            }
+                        }
+                    }
+
+                    $term_id = $wpdb->get_var( $wpdb->prepare( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id = %d", $translation->element_id  ) );
+
+                    if( $term_id ){
+                        $wpdb->delete(
+                            $wpdb->terms,
+                            array(
+                                'term_id' => $term_id
+                            )
+                        );
+
+                        $wpdb->delete(
+                            $wpdb->term_taxonomy,
+                            array(
+                                'term_taxonomy_id' => $translation->element_id
+                            )
+                        );
+                    }
+                }
+            }
+
+            foreach( $translations as $translation ){
+                $wpdb->delete(
+                    $wpdb->prefix . 'icl_translations',
+                    array(
+                        'translation_id' => $translation->translation_id
+                    )
+                );
+            }
+        }
     }
 
     function menu(){
