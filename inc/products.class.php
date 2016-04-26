@@ -75,7 +75,7 @@ class WCML_Products{
         add_action( 'woocommerce_email', array( $this, 'woocommerce_email_refresh_text_domain' ) );
         add_action( 'wp_ajax_woocommerce_update_shipping_method', array( $this, 'wcml_refresh_text_domain' ), 9 );
         add_action( 'wp_ajax_nopriv_woocommerce_update_shipping_method', array( $this, 'wcml_refresh_text_domain' ), 9 );
-        add_filter( 'wpml_link_to_translation', array( $this, '_filter_link_to_translation' ), 100, 2 );
+        add_filter( 'wpml_link_to_translation', array( $this, '_filter_link_to_translation' ), 100, 3 );
 
         add_filter( 'woocommerce_upsell_crosssell_search_products', array( $this, 'filter_woocommerce_upsell_crosssell_posts_by_language' ) );
 
@@ -1309,7 +1309,7 @@ class WCML_Products{
     }
 
 
-    function _filter_link_to_translation( $link, $post_id ){
+    function _filter_link_to_translation( $link, $post_id, $lang ){
         global $woocommerce_wpml;
 
         if( $woocommerce_wpml->settings[ 'trnsl_interface' ] &&
@@ -1321,9 +1321,13 @@ class WCML_Products{
 
             if( empty( $post_id ) && isset( $_GET['post'] ) ){
                 $post_id = $_GET['post'];
+                $is_original_post = $this->is_original_product( $post_id );
+            }else{
+                $post_language = wpml_get_language_information($post_id);
+                $is_original_post = $post_language['language_code'] == $lang;
             }
 
-            if( isset( $_GET[ 'post' ] ) || !$this->is_original_product( $post_id ) ){
+            if( isset( $_GET[ 'post' ] ) || !$is_original_post ){
                 $link = admin_url( 'admin.php?page=wpml-wcml&tab=products&prid='.$post_id );
             }
 
@@ -2857,7 +2861,7 @@ class WCML_Products{
         $all_products_taxonomies = get_taxonomies( array( 'object_type' => array( 'product' ) ), 'objects' );
 
         foreach($all_products_taxonomies as $tax_key => $tax) {
-            if($tax_key == 'product_type' ) continue;
+            if( substr( $tax_key, 0 , 3 ) != 'pa_' || !in_array( $tax_key, array( 'product_cat', 'product_tag', 'product_shipping_class' ) ) ) continue;
 
             $found = false;
 
@@ -2981,7 +2985,14 @@ class WCML_Products{
 
                         $new_id_obj = get_post( $new_id );
                         $new_slug = wp_unique_post_slug( sanitize_title( $new_id_obj->post_title ), $new_id, $post_to_duplicate->post_status, $post_to_duplicate->post_type, $new_id_obj->post_parent );
-                        $wpdb->update( $wpdb->posts, array( 'post_name' => $new_slug, 'post_status' => $post_to_duplicate->post_status ), array( 'ID' => $new_id ) );
+                        $wpdb->update(
+                            $wpdb->posts,
+                            array(
+                                'post_name' => $new_slug,
+                                'post_status' => 'draft'
+                            ),
+                            array( 'ID' => $new_id )
+                        );
 
                         do_action( 'wcml_after_duplicate_product' , $new_id, $post_to_duplicate );
 

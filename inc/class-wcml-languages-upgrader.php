@@ -26,7 +26,7 @@ class WCML_Languages_Upgrader{
 
         $locale = $sitepress->get_locale( $lang_code );
 
-        if( $locale != 'en_US' && $this->has_available_update( $locale ) ){
+        if( $locale != 'en_US' && $this->has_available_update( $locale, $wc_version ) ){
 
             $wc_version = $wc_version ? $wc_version : WC_VERSION;
 
@@ -199,13 +199,14 @@ class WCML_Languages_Upgrader{
      *
      * @return bool
      */
-    function has_available_update( $locale ) {
+    function has_available_update( $locale, $wc_version = false ) {
+        $wc_version = $wc_version ? $wc_version : WC_VERSION;
         $version = get_option( 'woocommerce_language_pack_version_'.$locale, array( '0', $locale ) );
 
         $notices = maybe_unserialize( get_option( 'wcml_translations_upgrade_notice' ) );
 
-        if ( 'en_US' !== $locale && ( ! is_array( $version ) || version_compare( $version[0], WC_VERSION, '<' ) || $version[1] !== $locale ) ) {
-            if ( $this->check_if_language_pack_exists( $locale ) ){
+        if ( 'en_US' !== $locale && ( ! is_array( $version ) || version_compare( $version[0], $wc_version, '<' ) || $version[1] !== $locale ) ) {
+            if ( $this->check_if_language_pack_exists( $locale, $wc_version ) ){
 
                 if( !$notices || !in_array( $locale, $notices )){
                     $notices[] = $locale;
@@ -217,7 +218,7 @@ class WCML_Languages_Upgrader{
                 return true;
             } else {
                 // Updated the woocommerce_language_pack_version to avoid searching translations for this release again
-                update_option( 'woocommerce_language_pack_version_'.$locale, array( WC_VERSION, $locale ) );
+                update_option( 'woocommerce_language_pack_version_'.$locale, array( $wc_version, $locale ) );
             }
         }
 
@@ -230,9 +231,9 @@ class WCML_Languages_Upgrader{
      *
      * @return bool
      */
-    function check_if_language_pack_exists( $locale ) {
+    function check_if_language_pack_exists( $locale, $wc_version ) {
 
-        $response = wp_safe_remote_get( $this->get_language_pack_uri( $locale ), array( 'timeout' => 60 ) );
+        $response = wp_safe_remote_get( $this->get_language_pack_uri( $locale, $wc_version ), array( 'timeout' => 60 ) );
 
         if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 && $response['body'] != '404 File not found' ) {
             return true;
