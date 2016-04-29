@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.0
-Tested up to: 4.5
-Stable tag: 3.7.12
+Tested up to: 4.5.1
+Stable tag: 3.7.13
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -77,6 +77,14 @@ In order for the checkout and store pages to appear translated, you need to crea
 3. Multiple currencies
 
 == Changelog ==
+
+= 3.7.13 =
+* Bug fix: When adding a global attribute inline while creating a product in a secondary language, the term was created in the wrong language
+* Fixed a compatibility issues with WooCommerce Tab Manager: fatal error when trying to translate a product
+* Fixed another compatibility issues with WooCommerce Tab Manager: when a product had only a global tab, the translated tab didn't show up on the translated product
+* Improvements for how the gateways strings are registered for translation
+* Updated logic for registering and translating Shipping zones and methods according to changes in WooCommerce 2.6
+
 
 = 3.7.12 =
 * Fixed a bug that made the shop pages return 404 errors on WordPress 4.5

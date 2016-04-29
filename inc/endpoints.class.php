@@ -38,13 +38,20 @@ class WCML_Endpoints{
                 'order-received'     => $this->get_endpoint_translation( 'order-received', $wc_vars['order-received'] ),
 
                 // My account actions
-                'view-order'         => $this->get_endpoint_translation( 'view-order', $wc_vars['view-order'] ),
-                'edit-account'       => $this->get_endpoint_translation( 'edit-account', $wc_vars['edit-account'] ),
-                'edit-address'       => $this->get_endpoint_translation( 'edit-address', $wc_vars['edit-address'] ),
-                'lost-password'      => $this->get_endpoint_translation( 'lost-password', $wc_vars['lost-password'] ),
-                'customer-logout'    => $this->get_endpoint_translation( 'customer-logout', $wc_vars['customer-logout'] ),
-                'add-payment-method' => $this->get_endpoint_translation( 'add-payment-method', $wc_vars['add-payment-method'] ),
+                'view-order'                 => $this->get_endpoint_translation( 'view-order', $wc_vars['view-order'] ),
+                'edit-account'               => $this->get_endpoint_translation( 'edit-account', $wc_vars['edit-account'] ),
+                'edit-address'               => $this->get_endpoint_translation( 'edit-address', $wc_vars['edit-address'] ),
+                'lost-password'              => $this->get_endpoint_translation( 'lost-password', $wc_vars['lost-password'] ),
+                'customer-logout'            => $this->get_endpoint_translation( 'customer-logout', $wc_vars['customer-logout'] ),
+                'add-payment-method'         => $this->get_endpoint_translation( 'add-payment-method', $wc_vars['add-payment-method'] ),
             );
+
+            if( isset( $wc_vars['orders'] ) ) $query_vars[ 'orders' ] = $this->get_endpoint_translation( 'orders', $wc_vars['orders'] );
+            if( isset( $wc_vars['downloads'] ) ) $query_vars[ 'downloads' ] = $this->get_endpoint_translation( 'downloads', $wc_vars['downloads'] );
+            if( isset( $wc_vars['payment-methods'] ) ) $query_vars[ 'payment-methods' ] = $this->get_endpoint_translation( 'payment-methods', $wc_vars['payment-methods'] );
+            if( isset( $wc_vars['delete-payment-method'] ) ) $query_vars[ 'delete-payment-method' ] = $this->get_endpoint_translation( 'delete-payment-method', $wc_vars['delete-payment-method'] );
+            if( isset( $wc_vars['set-default-payment-method'] ) ) $query_vars[ 'set-default-payment-method' ] = $this->get_endpoint_translation( 'set-default-payment-method', $wc_vars['set-default-payment-method'] );
+
             $query_vars = array_merge( $wc_vars , $query_vars );
             WC()->query->query_vars = $query_vars;
 
