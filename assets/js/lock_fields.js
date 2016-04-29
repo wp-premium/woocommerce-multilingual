@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
     var i;
-    var ids = ['_virtual','_downloadable','product-type','_backorders','_manage_stock','_stock','_sold_individually','comment_status','_tax_status','_tax_class','parent_id','crosssell_ids','upsell_ids'];
+    var ids = ['_virtual','_downloadable','product-type','_backorders','_manage_stock','_stock','_stock_status','_sold_individually','comment_status','_tax_status','_tax_class','parent_id','crosssell_ids','upsell_ids'];
 
     $('.wcml_prod_hidden_notice').prependTo('#woocommerce-product-data');
 

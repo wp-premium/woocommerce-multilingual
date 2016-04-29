@@ -13,48 +13,64 @@ class WCML_WC_Strings{
         add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
         add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
         add_action( 'registered_taxonomy', array ( $this, 'translate_attributes_label_in_wp_taxonomies' ), 100, 3 );
-        add_filter( 'woocommerce_payment_gateways', array( $this, 'payment_gateways_filters' ), 100 );
-        add_filter( 'woocommerce_shipping_methods', array( $this, 'shipping_methods_filters' ), 100 );
+        $this->payment_gateways_filters();
+        $this->shipping_methods_filters();
 
+        add_action('wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'save_shipping_zone_method_from_ajax'), 9);
     }
 
-    function payment_gateways_filters( $payment_gateways ){
+    function payment_gateways_filters( ){
+
+        $payment_gateways = WC()->payment_gateways()->payment_gateways;
 
         foreach ( $payment_gateways as $gateway ) {
-
-            if( is_string( $gateway ) ){
-                $gateway_id = strtolower( str_replace( 'WC_Gateway_', '', $gateway ) ) ;
-            }elseif( isset( $gateway->id ) ){
+            if( isset( $gateway->id ) ){
                 $gateway_id = $gateway->id;
             }else{
                 continue;
             }
-
-
             add_filter( 'woocommerce_settings_api_sanitized_fields_'.$gateway_id, array( $this, 'register_gateway_strings' ) );
             add_filter( 'option_woocommerce_'.$gateway_id.'_settings', array( $this, 'translate_gateway_strings' ), 9, 2 );
         }
-
-        return $payment_gateways;
     }
 
-    function shipping_methods_filters( $shipping_methods ){
+    function shipping_methods_filters( ){
+
+        $shipping_methods = WC()->shipping->get_shipping_methods();
 
         foreach ( $shipping_methods as $shipping_method ) {
-
-            if( is_string( $shipping_method ) ){
-                $shipping_method_id = strtolower( str_replace( 'WC_Shipping_', '', $shipping_method ) );
-            }elseif( isset( $shipping_method->id ) ){
+            if( isset( $shipping_method->id ) ){
                 $shipping_method_id = $shipping_method->id;
             }else{
                 continue;
             }
 
-            add_filter( 'woocommerce_settings_api_sanitized_fields_'.$shipping_method_id, array( $this, 'register_shipping_strings' ) );
+            if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '2.6', '<' ) ) ){
+                add_filter( 'woocommerce_settings_api_sanitized_fields_'.$shipping_method_id, array( $this, 'register_shipping_strings' ) );
+            }else{
+                add_filter( 'woocommerce_shipping_' . $shipping_method_id . '_instance_settings_values', array( $this, 'register_zone_shipping_strings' ),9,2 );
+            }
+
             add_filter( 'option_woocommerce_'.$shipping_method_id.'_settings', array( $this, 'translate_shipping_strings' ), 9, 2 );
         }
+    }
 
-        return $shipping_methods;
+    function save_shipping_zone_method_from_ajax(){
+        foreach( $_POST['data'] as $key => $value ){
+            if( strstr( $key, '_title' ) ){
+                $shipping_id = str_replace( 'woocommerce_', '', $key );
+                $shipping_id = str_replace( '_title', '', $shipping_id );
+                $this->register_shipping_title( $shipping_id.$_POST['instance_id'], $value );
+                break;
+            }
+        }
+    }
+
+    function register_zone_shipping_strings( $instance_settings, $object ){
+        if( !empty( $instance_settings['title'] ) ){
+            $this->register_shipping_title( $object->id.$object->instance_id, $instance_settings['title'] );
+        }
+        return $instance_settings;
     }
 
     function pre_init(){
@@ -294,10 +310,14 @@ class WCML_WC_Strings{
         }
 
         if( isset( $shipping_method_id ) ){
-            do_action( 'wpml_register_single_string', 'woocommerce', $shipping_method_id .'_shipping_method_title', $fields['title'] );
+            $this->register_shipping_title( $shipping_method_id, $fields['title'] );
         }
 
         return $fields;
+    }
+
+    function register_shipping_title( $shipping_method_id, $title ){
+        do_action( 'wpml_register_single_string', 'woocommerce', $shipping_method_id .'_shipping_method_title', $title );
     }
 
     function translate_shipping_strings( $value, $option = false ){
@@ -433,39 +453,9 @@ class WCML_WC_Strings{
 
     function show_custom_url_base_translation_links(){
         global $woocommerce_wpml,$sitepress;
-
-        ?>
-        <script>
-            var inputs = ['woocommerce_product_category_slug', 'woocommerce_product_tag_slug', 'woocommerce_product_attribute_slug', 'product_permalink_structure'];
-
-            for(i in inputs){
-                var input = jQuery('input[name="' + inputs[i] + '"]');
-                if(input.length){
-
-                    if(inputs[i] == 'product_permalink_structure' && jQuery('input[name="product_permalink"]:checked').val() == '' ){
-                        input = jQuery('input[name="product_permalink"]:checked').closest('.form-table').find('code').eq(0);
-                    }
-
-                    input.parent().append('<div class="translation_controls"></div>');
-
-                    if(inputs[i] == 'woocommerce_product_attribute_slug' && input.val() == '' ){
-
-                        input.parent().find('.translation_controls').append('&nbsp;');
-
-                    }else{
-                        input.parent().find('.translation_controls').append('<a href="<?php
-                            echo admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context='. urlencode($woocommerce_wpml->url_translation->url_strings_context()) )
-                             ?>"><?php _e('translations', 'woocommerce-multilingual') ?></a>');
-                    }
-
-                }
-            }
-        </script>
-        <?php
+        $permalink_options = get_option( 'woocommerce_permalinks' );
 
         $lang_selector = new WPML_Simple_Language_Selector( $sitepress );
-
-        $permalink_options = get_option( 'woocommerce_permalinks' );
 
         $bases = array( 'tag_base' => 'product_tag', 'category_base' => 'product_cat', 'attribute_base' => 'attribute', 'product_base' => 'product' );
 
@@ -486,7 +476,11 @@ class WCML_WC_Strings{
                     break;
                 case 'product':
                     $input_name = 'product_permalink_structure';
-                    $value = !empty( $permalink_options['product_base'] ) ? trim( $permalink_options['product_base'], '/' ) : $woocommerce_wpml->url_translation->default_product_base;
+                    if( empty( $permalink_options['product_base'] ) ){
+                        $value = _x( 'product', 'default-slug', 'woocommerce' );
+	  	            }else{
+                        $value = trim( $permalink_options['product_base'], '/' );
+                    }
                     break;
             }
 
@@ -500,6 +494,26 @@ class WCML_WC_Strings{
 
             <script>
                 var input = jQuery('input[name="<?php echo $input_name ?>"]');
+
+                if(input.length){
+
+                    if( '<?php echo $input_name ?>' == 'product_permalink_structure' && jQuery('input[name="product_permalink"]:checked').val() == '' ){
+                        input = jQuery('input[name="product_permalink"]:checked').closest('.form-table').find('code').eq(0);
+                    }
+
+                    input.parent().append('<div class="translation_controls"></div>');
+
+                    if( '<?php echo $input_name ?>' == 'woocommerce_product_attribute_slug' && input.val() == '' ){
+
+                        input.parent().find('.translation_controls').append('&nbsp;');
+
+                    }else{
+                        input.parent().find('.translation_controls').append('<a href="<?php
+                            echo admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context='. urlencode($woocommerce_wpml->url_translation->url_strings_context() ).'&search='.$value.'&em=1' )
+                             ?>"><?php _e('translations', 'woocommerce-multilingual') ?></a>');
+                    }
+
+                }
 
                 if( '<?php echo $input_name ?>' == 'product_permalink_structure' && jQuery('input[name="product_permalink"]:checked').val() == '' ){
 

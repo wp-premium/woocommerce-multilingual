@@ -17,7 +17,7 @@ class WCML_Compatibility {
         //hardcoded list of extensions and check which ones the user has and then include the corresponding file from the ‘compatibility’ folder
 
         //WooCommerce Tab Manager plugin
-        if(class_exists('WC_Tab_Manager')){
+        if( class_exists('WC_Tab_Manager') ){
             $this->tab_manager = new WCML_Tab_Manager();
         }
 

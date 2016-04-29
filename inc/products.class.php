@@ -95,8 +95,6 @@ class WCML_Products{
         //add sitepress filters
         add_filter( 'wpml_save_post_trid_value', array( $this, 'wpml_save_post_trid_value' ), 10, 3 );
         add_filter( 'wpml_save_post_lang', array( $this, 'wpml_save_post_lang_value' ), 10 );
-        //add filter when add term on product page
-        add_filter( 'wpml_create_term_lang', array( $this, 'product_page_add_language_info_to_term' ) );
 
         //quick & bulk edit
         add_action( 'woocommerce_product_quick_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
@@ -903,7 +901,7 @@ class WCML_Products{
                         update_post_meta($trnsl_product_id,$key,$meta_value);
                     }
                 }else{
-                    if( in_array( $key ,array( '_file_paths', '_downloadable_files' )) || ( isset($settings['translation-management']['custom_fields_translation'][$key]) && $settings['translation-management']['custom_fields_translation'][$key] == 1 ) ){
+                    if( ( $woocommerce_wpml->settings['file_path_sync']  && in_array( $key ,array( '_file_paths', '_downloadable_files' ) ) ) || ( isset($settings['translation-management']['custom_fields_translation'][$key]) && $settings['translation-management']['custom_fields_translation'][$key] == 1 ) ){
                         $meta_value = apply_filters('wcml_meta_value_before_add',$meta_value,$key);
                         update_post_meta($trnsl_product_id, $key, $meta_value);
                     }
@@ -1321,11 +1319,9 @@ class WCML_Products{
 
             if( empty( $post_id ) && isset( $_GET['post'] ) ){
                 $post_id = $_GET['post'];
-                $is_original_post = $this->is_original_product( $post_id );
-            }else{
-                $post_language = wpml_get_language_information($post_id);
-                $is_original_post = $post_language['language_code'] == $lang;
             }
+
+            $is_original_post = $this->is_original_product( $post_id );
 
             if( isset( $_GET[ 'post' ] ) || !$is_original_post ){
                 $link = admin_url( 'admin.php?page=wpml-wcml&tab=products&prid='.$post_id );
@@ -2456,15 +2452,6 @@ class WCML_Products{
         }
     }
 
-    function product_page_add_language_info_to_term($lang){
-        if(isset($_POST['action']) && $_POST['action'] == 'woocommerce_add_new_attribute'){
-            global $sitepress;
-            $lang = $sitepress->get_default_language();
-        }
-        return $lang;
-
-    }
-
     function sync_product_gallery_duplicate_attachment($att_id, $dup_att_id){
 
         $product_id = wp_get_post_parent_id($att_id);
@@ -2736,27 +2723,32 @@ class WCML_Products{
     }
 
     function get_cart_attribute_translation( $attr_key, $attribute, $variation_id, $current_language, $product_id, $tr_product_id ){
-        global $woocommerce;
 
-        //delete 'attribute_' at the beginning
-        $taxonomy = substr( $attr_key, 10, strlen( $attr_key ) - 1 );
+        $attr_translation = $attribute;
 
-        if( taxonomy_exists( $taxonomy ) ){
+        if( !empty( $attribute ) ){
+            //delete 'attribute_' at the beginning
+            $taxonomy = substr( $attr_key, 10, strlen( $attr_key ) - 1 );
 
-            $term_id = $this->wcml_get_term_id_by_slug( $taxonomy, $attribute );
-            $trnsl_term_id = apply_filters( 'translate_object_id',$term_id,$taxonomy,true,$current_language);
-            $term = $this->wcml_get_term_by_id( $trnsl_term_id, $taxonomy );
-            return $term->slug;
-        }else{
+            if( taxonomy_exists( $taxonomy ) ){
 
-            $trnsl_attr = get_post_meta( $variation_id, $attr_key, true );
-
-            if( $trnsl_attr ){
-                return $trnsl_attr;
+                $term_id = $this->wcml_get_term_id_by_slug( $taxonomy, $attribute );
+                $trnsl_term_id = apply_filters( 'translate_object_id',$term_id,$taxonomy,true,$current_language);
+                $term = $this->wcml_get_term_by_id( $trnsl_term_id, $taxonomy );
+                $attr_translation = $term->slug;
             }else{
-                return $this->get_custom_attr_translation( $product_id, $tr_product_id, $taxonomy, $attribute );
+
+                $trnsl_attr = get_post_meta( $variation_id, $attr_key, true );
+
+                if( $trnsl_attr ){
+                    $attr_translation = $trnsl_attr;
+                }else{
+                    $attr_translation = $this->get_custom_attr_translation( $product_id, $tr_product_id, $taxonomy, $attribute );
+                }
             }
         }
+
+        return $attr_translation;
     }
 
     //get cart_item_data from existing cart array ( from session )
