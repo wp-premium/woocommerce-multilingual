@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.0
 Tested up to: 4.5.1
-Stable tag: 3.7.13
+Stable tag: 3.7.14
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -77,6 +77,9 @@ In order for the checkout and store pages to appear translated, you need to crea
 3. Multiple currencies
 
 == Changelog ==
+
+= 3.7.14 =
+* Fixed a problem introduced in the previous version: Mollie payment methods not working when using the 'Mollie Payments for WooCommerce' plugin
 
 = 3.7.13 =
 * Bug fix: When adding a global attribute inline while creating a product in a secondary language, the term was created in the wrong language
