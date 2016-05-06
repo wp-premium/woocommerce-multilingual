@@ -13,8 +13,6 @@ class WCML_WC_Strings{
         add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
         add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
         add_action( 'registered_taxonomy', array ( $this, 'translate_attributes_label_in_wp_taxonomies' ), 100, 3 );
-        $this->payment_gateways_filters();
-        $this->shipping_methods_filters();
 
         add_action('wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'save_shipping_zone_method_from_ajax'), 9);
     }
@@ -83,6 +81,9 @@ class WCML_WC_Strings{
     
     function init(){
         global $pagenow, $sitepress;
+
+        $this->payment_gateways_filters();
+        $this->shipping_methods_filters();
 
         $this->current_language = $sitepress->get_current_language();
         if( $this->current_language == 'all' ){
