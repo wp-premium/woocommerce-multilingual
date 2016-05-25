@@ -1977,20 +1977,22 @@ class WCML_Products{
         global $sitepress;
         $settings = $sitepress->get_settings();
 
-        foreach(get_post_custom_keys($product_id) as $meta_key){
-            if(isset($settings['translation-management']['custom_fields_translation'][$meta_key]) && $settings['translation-management']['custom_fields_translation'][$meta_key] == 2){
-                if($this->check_custom_field_is_single_value($product_id,$meta_key)){
-                    if(in_array($meta_key,$this->not_display_fields_for_variables_product)){
-                        continue;
-                    }
-                }else{
-                    $exception = apply_filters('wcml_product_content_exception',true,$product_id,$meta_key);
-                    if($exception){
-                        continue;
-                    }
+        $post_custom_keys = $this->wcml_get_translatable_product_custom_fields( $product_id );
+
+        foreach($post_custom_keys as $meta_key){
+
+            if($this->check_custom_field_is_single_value($product_id,$meta_key)){
+                if(in_array($meta_key,$this->not_display_fields_for_variables_product)){
+                    continue;
                 }
-                $contents[] = $meta_key;
+            }else{
+                $exception = apply_filters('wcml_product_content_exception',true,$product_id,$meta_key);
+                if($exception){
+                    continue;
+                }
             }
+            $contents[] = $meta_key;
+
         }
 
         return apply_filters('wcml_product_content_fields', $contents, $product_id );
@@ -2017,18 +2019,7 @@ class WCML_Products{
         global $sitepress,$wpseo_metabox;
         $settings = $sitepress->get_settings();
 
-
-        $all_post_custom_keys = get_post_custom_keys($product_id) ;
-
-        // filter out not translatable custom fields
-        $post_custom_keys = array();
-        foreach( $all_post_custom_keys as $meta_key ){
-            if(isset($settings['translation-management']['custom_fields_translation'][$meta_key]) && $settings['translation-management']['custom_fields_translation'][$meta_key] == 2){
-                $post_custom_keys[] = $meta_key;
-            }
-        }
-
-        $post_custom_keys = apply_filters ( 'wcml_translatable_custom_fields',  $post_custom_keys );
+        $post_custom_keys = $this->wcml_get_translatable_product_custom_fields( $product_id );
 
         foreach( $post_custom_keys as $meta_key ){
 
@@ -2065,6 +2056,21 @@ class WCML_Products{
         }
 
         return apply_filters('wcml_product_content_fields_label', $contents, $product_id);
+    }
+
+
+    function wcml_get_translatable_product_custom_fields( $product_id ){
+        $all_post_custom_keys = get_post_custom_keys($product_id) ;
+
+        // filter out not translatable custom fields
+        $post_custom_keys = array();
+        foreach( $all_post_custom_keys as $meta_key ){
+            if(isset($settings['translation-management']['custom_fields_translation'][$meta_key]) && $settings['translation-management']['custom_fields_translation'][$meta_key] == 2){
+                $post_custom_keys[] = $meta_key;
+            }
+        }
+
+        return apply_filters ( 'wcml_translatable_custom_fields',  $post_custom_keys );
     }
 
     function check_custom_field_is_single_value($product_id,$meta_key){
