@@ -1974,9 +1974,6 @@ class WCML_Products{
             $contents[] = 'variations';
         }
 
-        global $sitepress;
-        $settings = $sitepress->get_settings();
-
         $post_custom_keys = $this->wcml_get_translatable_product_custom_fields( $product_id );
 
         foreach($post_custom_keys as $meta_key){
@@ -2060,6 +2057,9 @@ class WCML_Products{
 
 
     function wcml_get_translatable_product_custom_fields( $product_id ){
+        global $sitepress;
+        $settings = $sitepress->get_settings();
+
         $all_post_custom_keys = get_post_custom_keys($product_id) ;
 
         // filter out not translatable custom fields

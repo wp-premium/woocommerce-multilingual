@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.0
 Tested up to: 4.5.2
-Stable tag: 3.7.15
+Stable tag: 3.7.16
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -77,6 +77,13 @@ In order for the checkout and store pages to appear translated, you need to crea
 3. Multiple currencies
 
 == Changelog ==
+
+= 3.7.16 =
+* Compatibility with WooCommerce 2.6 (woocommerce_term_meta tables removed)
+* Fixed a compatibility issue with WooCommerce Table Rate Shipping (shipping class not showing on secondary language)
+* Bug fix: Translated shipping classes were sometimes not displayed for secondary languages
+* Bug fix: WooCommerce Booking & Appointments causes Fatal Error when Translation Management
+* Bug fix: Yoast custom fields were not shown in the translation editor
 
 = 3.7.15 =
 * Fixed a problem with BACS payment gateway strings not being translated in order confirmation page
