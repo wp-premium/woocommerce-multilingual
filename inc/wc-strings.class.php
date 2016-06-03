@@ -9,6 +9,7 @@ class WCML_WC_Strings{
     function __construct(){
 
         add_action( 'init', array( $this, 'init' ) );
+        add_action( 'init', array( $this, 'payment_gateways_filters' ), 11 );
         add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
         add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
         add_action( 'registered_taxonomy', array ( $this, 'translate_attributes_label_in_wp_taxonomies' ), 100, 3 );
@@ -23,7 +24,6 @@ class WCML_WC_Strings{
         if( !WPML_SUPPORT_STRINGS_IN_DIFF_LANG ){
             add_filter('gettext_with_context', array($this, 'translate_default_slug'), 2, 4);
         }
-        $this->payment_gateways_filters();
         $this->shipping_methods_filters();
 
         $this->current_language = $sitepress->get_current_language();

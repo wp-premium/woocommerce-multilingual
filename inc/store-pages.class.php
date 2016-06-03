@@ -29,11 +29,6 @@ class WCML_Store_Pages{
             $this->create_missing_store_pages();
         }
         
-        // table rate shipping support        
-        if(defined('TABLE_RATE_SHIPPING_VERSION')){
-            add_filter('woocommerce_table_rate_query_rates_args', array($this, 'default_shipping_class_id'));
-        }
-        
         $this->front_page_id = get_option('page_on_front');
         $this->shop_page_id =  wc_get_page_id('shop');
         $this->shop_page = get_post( $this->shop_page_id );
@@ -149,22 +144,6 @@ class WCML_Store_Pages{
         }
 
         return apply_filters( 'translate_object_id',$id, 'page', true);
-    }
-    
-    function default_shipping_class_id($args){
-        global $sitepress, $woocommerce_wpml;
-        if($sitepress->get_current_language() != $sitepress->get_default_language() && !empty($args['shipping_class_id'])){
-            
-            $args['shipping_class_id'] = apply_filters( 'translate_object_id',$args['shipping_class_id'], 'product_shipping_class', false, $sitepress->get_default_language());
-            
-            if($woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT){
-            // use unfiltred cart price to compare against limits of different shipping methods
-            $args['price'] = $woocommerce_wpml->multi_currency->unconvert_price_amount($args['price']); 
-            }
-            
-        }
-        
-        return $args;
     }
     
     /**
