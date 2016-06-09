@@ -4,7 +4,6 @@ class WCML_Mix_and_Match_Products{
 
     function __construct(){
         add_action( 'updated_post_meta', array( $this, 'sync_mnm_data'), 10, 4 );
-	add_filter('woocommerce_product_object', array($this, 'woocommerce_product_object'), 10, 1 );
     }
 
     function sync_mnm_data( $meta_id, $post_id, $meta_key, $meta_value  ){
@@ -64,15 +63,5 @@ class WCML_Mix_and_Match_Products{
 
     }
 
-    function woocommerce_product_object ($the_product) {
-	
-	$translated_product_id = apply_filters('wpml_object_id', $the_product->ID, 'product', True);
-	
-	if ($translated_product_id != $the_product->ID) {
-	    $the_product = wc_get_product($translated_product_id);
-	}
-	
-	return $the_product;
-    }
 
 }

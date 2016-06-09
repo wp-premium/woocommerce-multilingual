@@ -5,13 +5,13 @@ class WCML_Table_Rate_Shipping{
     function __construct(){
 
         add_action('init', array($this, 'init'),9);
+
+        add_filter('woocommerce_table_rate_query_rates_args', array($this, 'default_shipping_class_id'));
+        add_filter('get_the_terms',array( $this, 'shipping_class_id_in_default_language'), 10, 3 );
     }
 
     public function init(){
         global $pagenow;
-
-        add_filter('woocommerce_table_rate_query_rates_args', array($this, 'default_shipping_class_id'));
-        add_filter('get_the_terms',array( $this, 'shipping_class_id_in_default_language'), 10, 3 );
 
         //register shipping label
         if($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page']=='shipping_zones' && isset( $_POST['shipping_label'] ) && isset( $_POST['woocommerce_table_rate_title'] )){
@@ -32,7 +32,7 @@ class WCML_Table_Rate_Shipping{
 
             if($woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT){
                 // use unfiltred cart price to compare against limits of different shipping methods
-                $args['price'] = $woocommerce_wpml->multi_currency->unconvert_price_amount($args['price']);
+                $args['price'] = $woocommerce_wpml->multi_currency->prices->unconvert_price_amount($args['price']);
             }
 
         }
@@ -61,6 +61,5 @@ class WCML_Table_Rate_Shipping{
         return $terms;
 
     }
-
 
 }

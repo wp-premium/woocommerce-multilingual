@@ -4,104 +4,86 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nProject-Id-Version:WPML_EXPORT\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: \nLanguage:en\nMIME-Version: 1.0\n"
 
-msgid "Collapse"
-msgstr "折りたたむ"
+msgid "Introduction"
+msgstr "はじめに"
 
-msgid "Expand"
-msgstr "拡大する"
+msgid "Store Pages"
+msgstr "ストアページ"
 
-msgid "Please set bundles for product"
-msgstr "製品用のバンドルを設定してください"
+msgid "Global Attributes"
+msgstr "グローバル属性"
 
-msgid "Please save translation before translate bundles texts"
-msgstr "バンドルテキストを翻訳する前に翻訳を保存してください"
+msgid "Multiple Currencies"
+msgstr "複数通貨"
 
-msgid "Title"
-msgstr "タイトル"
+msgid "Translation Interface"
+msgstr "翻訳インターフェース"
 
-msgid "Description"
-msgstr "内容"
+msgid "Ready!"
+msgstr "用意！"
 
-msgid "Enter translation"
-msgstr "翻訳を入力"
+msgid "Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products."
+msgstr ""
 
-msgid "%s translation"
-msgstr "%s 翻訳"
+msgid "Action failed. Please refresh the page and retry."
+msgstr "操作に失敗しました。ページを更新し、再試行してください。"
 
-msgid "Show content"
-msgstr "コンテンツを表示"
+msgid "Cheatin&#8217; huh?"
+msgstr "ズルしてます&#8217; ね?"
 
-msgid "Edit translation"
-msgstr "翻訳を編集"
+msgid "Run the Setup Wizard"
+msgstr "セットアップウィザード実行"
 
-msgid "Original content:"
-msgstr "元のコンテンツ"
+msgid "Skip Setup"
+msgstr "設定をスキップ"
 
-msgid "Close"
-msgstr "クローズする"
+msgid "WooCommerce Multilingual &rsaquo; Setup Wizard"
+msgstr "WooCommerce Multilingual &rsaquo; セットアップウィザード"
 
-msgid "Cancel"
-msgstr "キャンセル"
+msgid "WooCommerce Multilingual"
+msgstr "WooCommerce Multilingual"
 
-msgid "Ok"
-msgstr "OK"
+msgid "How to translate products"
+msgstr "製品の翻訳方法"
 
-msgid "One-off cost for the booking as a whole."
-msgstr "１度のお支払いだけで全てご予約。"
+msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
+msgstr "製品翻訳にはクイック編集が無効です。製品の翻訳の編集には %sを使用することをお薦めします。 %s"
 
-msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
-msgstr "これは1ブロック予約当たりのコストです。他のコスト（リソースと人件費など）はこれに加算されます。"
+msgid "WooCommerce Multilingual products editor"
+msgstr "WooCommerce Multilingual 製品エディター"
 
-msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
-msgstr "フロントエンドでユーザーにコストが表示されます。後の計算のために空白にしておいてください。予約に様々なコストがある場合、\"from:\"という語が前に置かれます。"
+msgid "Edit this product translation"
+msgstr "この製品翻訳を編集する"
 
-msgid "Calculate costs in other currencies automatically"
-msgstr "コストが他の通貨で自動的に計算されます"
+msgid "How to translate attributes"
+msgstr "属性の翻訳方法"
 
-msgid "Set costs in other currencies manually"
-msgstr "手動で他の通貨のコストを設定する"
+msgid "How to translate product categories"
+msgstr "製品カテゴリーの翻訳方法"
 
-msgid "Invalid nonce"
-msgstr "無効なnonce"
+msgid "The recommended way to translate WooCommerce products is using the\n                             %sWooCommerce Multilingual products translation%s page.\n                             Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
+msgstr ""
 
-msgid "Resources"
-msgstr "リソース"
+msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
+msgstr "カスタム属性を編集するには、 <a href=\"%s\">カスタム製品翻訳エディター</a>を使用する必要があります。"
 
-msgid "Person types"
-msgstr "個人タイプ"
+msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgstr "通常のカテゴリーベースと同じ値を使用しています。これにより競合が起こり、URLが適切に作動しなくなります。"
 
-msgid "Resources label"
-msgstr "リソースラベル"
+msgid "translations"
+msgstr "翻訳"
 
-msgid "Booking currency"
-msgstr "予約通貨"
-
-msgid "Translation of"
-msgstr "次の翻訳"
-
-msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "追加オプションのストリングを翻訳するには、%s を保存し、<b><a href=\"%s\">ストリング翻訳インターフェース</a></b>に移動します"
-
-msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "アドオンストリングを翻訳するには、アドオンを保存してから<b><a href=\"%s\">ストリング翻訳インターフェース</a></b>へ移動します"
-
-msgid "Product Bundles"
-msgstr "製品バンドル"
-
-msgid "Please update original product"
-msgstr "原文をアップデートしてください"
-
-msgid "Currency switcher"
-msgstr "通貨スイッチャー"
-
-msgid "Configure options"
-msgstr "オプション設定"
-
-msgid "Currencies order updated"
-msgstr "通貨の順番が更新されました"
+msgid "product"
+msgstr "製品"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior %s."
 msgstr "WooCommerce Multilingual が有効になっていますが、使用できません。%sより以前の<a href=\"%s\">WPML</a>バージョンと互換性がありません。"
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">Woocommerce</a> versions prior %s."
+msgstr "WooCommerce Multilingual が有効ですが、適切に動作しません。これは<a href=\"%s\">Woocommerce</a>%s以前のバージョンに対応しません。"
+
+msgid "You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href=\"%s\">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML."
+msgstr "WooCommerce Multilingual %sをご使用中です。このバージョンは設定画面に重要なUI再設計を含み、 <a href=\"%s\">WPML %s</a> 以降を必要とします。フロントエンドではすべてが有効ですが、WooCommerce Multilingualのオプションを設定するには、WPMLをアップグレードする必要があります。"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML Translation Management</a> versions prior %s."
 msgstr "WooCommerce Multilingual が有効になっていますが、使用できません。 %sより以前の<a href=\"%s\">WPML 翻訳管理</a>バージョンと互換性がありません。"
@@ -142,47 +124,53 @@ msgstr "wpml-config.xml ファイルのカスタムタイプ%s 設定は変更�
 msgid "Custom taxonomy %s configuration from wpml-config.xml file was altered!"
 msgstr "wpml-config.xml ファイルのカスタムタクゾノミー%s 設定は変更されました！"
 
-msgid "Select the currency you want to set the options for:"
-msgstr "オプションを設定したい通貨を選択してください："
+msgid "Upgrade WPML"
+msgstr "WPMLをアップグレードする"
 
-msgid "All the products will be removed from the current order in order to change the currency"
-msgstr "通貨を変更するには、現在の注文から全ての製品を取り除いてください"
+msgid "Invalid language parameter: %s"
+msgstr "無効な言語パラメーター: %s"
 
-msgid "Show all currencies"
-msgstr "全ての通貨を表示する"
+msgid "Source product id not found: %s"
+msgstr "ソース製品IDが見つかりません: %s"
 
-msgid "Currency - no orders found"
-msgstr "通貨 - 順番がありません"
+msgid "Product Base"
+msgstr "製品ベース"
 
-msgid "Order currency:"
-msgstr "通貨を順番に並べる:"
+msgid "Product Tag Base"
+msgstr "製品タグベース"
 
-msgid "All the products will be removed from the current order in order to change the language"
-msgstr "言語を変更するために、現在の順番からすべての製品が取り除かれます"
+msgid "Product Category Base"
+msgstr "製品カテゴリーベース"
 
-msgid "Order language:"
-msgstr "注文言語："
+msgid "Product Attribute Base"
+msgstr "製品属性ベース"
 
-msgid "Title missing"
-msgstr "題名なし"
+msgid "Endpoint: %s"
+msgstr "終点: %s"
+
+msgid "product-category"
+msgstr "製品-カテゴリー"
+
+msgid "product-tag"
+msgstr "製品-タグ"
 
 msgid "Original language"
 msgstr "原語"
 
-msgid "Not translated"
-msgstr "翻訳されていません"
+msgid "Take this and edit"
+msgstr "引き受けて編集する"
 
-msgid "Not translated - needs update"
-msgstr "翻訳なし－更新が必要です"
+msgid "Add translation"
+msgstr "翻訳を追加する"
 
-msgid "In progress"
-msgstr "進行中"
+msgid "Update translation"
+msgstr "翻訳をアップデート"
 
-msgid "Complete"
-msgstr "完了"
+msgid "Finish translating"
+msgstr "翻訳を終了する"
 
-msgid "The recommended way to translate WooCommerce products is using the <b><a href=\"%s\">WooCommerce Multilingual products translation</a></b> page. Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
-msgstr "WooCommerce 製品を翻訳するには、 <b><a href=\"%s\">WooCommerce Multilingual 製品翻訳</a></b> ページを使用することをお薦めします。このページはWooCommerce Multilingual製品翻訳テーブルにない要素を翻訳する時だけこのページをご使用ください。"
+msgid "Edit translation"
+msgstr "翻訳を編集"
 
 msgid "Edit this item inline"
 msgstr "このアイテムインラインを編集する"
@@ -190,23 +178,47 @@ msgstr "このアイテムインラインを編集する"
 msgid "Quick Edit"
 msgstr "クイック編集"
 
-msgid "Content / Description"
-msgstr ""
+msgid "Translation in progress"
+msgstr "翻訳進行中"
 
-msgid "Excerpt"
-msgstr "抜粋"
+msgid "Invalid nonce"
+msgstr "無効なnonce"
 
-msgid "Images"
-msgstr "画像"
+msgid "Currency - no orders found"
+msgstr "通貨 - 順番がありません"
 
-msgid "Variations"
-msgstr "バリエーション"
+msgid "Currencies order updated"
+msgstr "通貨の順番が更新されました"
 
-msgid "Any %s"
-msgstr "任意の%s"
+msgid "Currency switcher"
+msgstr "通貨スイッチャー"
 
-msgid "Please translate all attributes"
-msgstr "すべての属性を翻訳してください"
+msgid "Configure options"
+msgstr "オプション設定"
+
+msgid "Settings saved!"
+msgstr "設定が保存されました！"
+
+msgid "Add new currency"
+msgstr "新しい通貨を追加する"
+
+msgid "Update currency"
+msgstr "通貨を更新する"
+
+msgid "Update settings for %s"
+msgstr "%sの設定を更新する"
+
+msgid "The default currency was changed. In order to show accurate prices in all currencies, you need to update the exchange rates under the %sMulti-currency%s configuration."
+msgstr "デフォルト通貨が変更されました。全ての通貨に正確な価格を表示するには、%sMulti-currency%s 設定で為替レートを更新する必要があります。"
+
+msgid "All the products will be removed from the current order in order to change the currency"
+msgstr "通貨を変更するには、現在の注文から全ての製品を取り除いてください"
+
+msgid "Show all currencies"
+msgstr "全ての通貨を表示する"
+
+msgid "Order currency:"
+msgstr "通貨を順番に並べる:"
 
 msgid "Cart"
 msgstr "カート"
@@ -241,20 +253,65 @@ msgstr "注文を閲覧"
 msgid "Shop"
 msgstr "ショップ"
 
+msgid "All the products will be removed from the current order in order to change the language"
+msgstr "言語を変更するために、現在の順番からすべての製品が取り除かれます"
+
+msgid "Order language:"
+msgstr "注文言語："
+
+msgid "Choose a file"
+msgstr "ファイルを選択"
+
+msgid "At least one of these fields is required: title, content or excerpt"
+msgstr "少なくとも3フィールドのうちの1つが必要です：タイトル、コンテンツまたは抜粋"
+
+msgid "This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation."
+msgstr "あなたは現在この翻訳ジョブに指名されていません。他のトランスレーターが引き受け、翻訳を続けることができます。"
+
+msgid "This field is locked for editing because WPML will copy its value from the original language."
+msgstr "このファイルはWPMLが言語から値をコピーするため、編集不可です。"
+
+msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
+msgstr "これは%sの翻訳です。フィールドの幾つかは編集不可能です。製品の翻訳には%s を使用することをお薦めします。"
+
+msgid "WooCommerce Multilingual products translator"
+msgstr "WooCommerce Multilingual 製品トランスレーター"
+
+msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
+msgstr "以前のWooCommerce Multilingual が更新されたようです。翻訳されたバリエーションと画像を自動的に作成しますか？"
+
+msgid "Yes, go to the troubleshooting page"
+msgstr "はい、トラブルシューティングページへ移動します"
+
+msgid "No - dismiss"
+msgstr "いいえ- 無視します"
+
+msgid "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?"
+msgstr "%sWooCommerce Multilingual%sのインストールに成功しました。クイック概略を表示しますか？"
+
+msgid "Learn how to turn your e-commerce site multilingual"
+msgstr "Eコマースサイトを多言語にする方法を学ぶ"
+
+msgid "Dismiss"
+msgstr "無視する"
+
 msgid "To translate %s please use the %s translation%s page, inside the %sWooCommerce Multilingual admin%s."
 msgstr "%s を翻訳するには、%sWooCommerce Multilingual admin%s内の %s翻訳%s ページを使用してください。"
 
 msgid "%s do not require translation."
 msgstr "%s は翻訳を必要としません。"
 
-msgid "Change"
-msgstr "変更"
+msgid "Include to translation"
+msgstr "翻訳に含む"
 
-msgid "Some %s are missing translations (%d translations missing)."
-msgstr "幾つかの %s に翻訳がありません(%d 翻訳がありません)。"
+msgid "%d %s are missing translations."
+msgstr "%d %s は翻訳がありません。"
 
-msgid "Translate now"
-msgstr "今すぐ翻訳する"
+msgid "Translate %s"
+msgstr "%sを翻訳"
+
+msgid "Exclude from translation"
+msgstr "翻訳から除外する"
 
 msgid "All %s are translated."
 msgstr "すべての%s は翻訳されました。"
@@ -286,149 +343,188 @@ msgstr "%sが無事更新されました-全ての翻訳された %s用。"
 msgid "Synchronize attributes and update product variations"
 msgstr "属性を同期し、製品バリエーションを更新する"
 
-msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
-msgstr "以前のWooCommerce Multilingual が更新されたようです。翻訳されたバリエーションと画像を自動的に作成しますか？"
+msgid "Image"
+msgstr "画像"
 
-msgid "Yes, go to the troubleshooting page"
-msgstr "はい、トラブルシューティングページへ移動します"
+msgid "Product"
+msgstr "製品"
 
-msgid "No - dismiss"
-msgstr "いいえ- 無視します"
+msgid "Type"
+msgstr "タイプ"
 
-msgid "product-category"
-msgstr "製品-カテゴリー"
+msgid "Date"
+msgstr "日付"
 
-msgid "product-tag"
-msgstr "製品-タグ"
+msgid "Categories"
+msgstr "カテゴリー"
 
-msgid "Please enter this text in %s"
-msgstr "このテキストを%sで入力してください"
+msgid "No products found"
+msgstr "製品がありません"
 
-msgid "You have to enter this text in the strings language ( %s ) so you can translate it using the WPML String Translation."
-msgstr "WPML String Translationを利用して翻訳するには、ストリング言語 ( %s )でこのテキストを入力する必要があります。"
+msgid "Draft"
+msgstr "下書き"
 
-msgid "You need to enter attribute names in %s (even though your site's default language is %s). Then, translate it to %s and the rest of the site's languages using in the %sWooCommerce Multlingual admin%s."
-msgstr "%s語で属性名を入力してください（あなたのサイトのデフォルト言語が%s語の場合も）。その後、それを%s語に訳し、%sWooCommerce Multlingual admin%sを利用してサイトの残りの言語を訳してください。"
+msgid "Private"
+msgstr "プライベート"
 
-msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
-msgstr "カスタム属性を編集するには、 <a href=\"%s\">カスタム製品翻訳エディター</a>を使用する必要があります。"
-
-msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgid "Pending"
 msgstr ""
 
-msgid "translations"
-msgstr "翻訳"
+msgid "Scheduled"
+msgstr "スケジュール済み"
 
-msgid "WooCommerce Multilingual"
-msgstr "WooCommerce Multilingual"
+msgid "Parent product: %s"
+msgstr "親製品: %s"
 
-msgid "General settings"
-msgstr "一般設定"
+msgid "Edit this item"
+msgstr "このアイテムを編集する"
 
-msgid "Products"
-msgstr "製品"
+msgid "Edit"
+msgstr "編集"
+
+msgid "View \"%s\""
+msgstr "\"%s\"を表示する"
+
+msgid "View"
+msgstr "表示"
+
+msgid "Published"
+msgstr "公開済み"
+
+msgid "Last Modified"
+msgstr "最後の変更"
+
+msgid "All languages"
+msgstr "全言語"
+
+msgid "All categories"
+msgstr "全カテゴリー"
+
+msgid "All translation statuses"
+msgstr "全翻訳の状況"
+
+msgid "Not translated or needs updating"
+msgstr "翻訳されていません、または更新の必要がありません"
+
+msgid "Needs updating"
+msgstr "更新が必要"
+
+msgid "Translation complete"
+msgstr "翻訳完了"
+
+msgid "All statuses"
+msgstr "全てのステータス"
+
+msgid "Filter"
+msgstr "フィルター"
+
+msgid "Reset"
+msgstr "リセット"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "%d items"
+msgstr "%d 項目"
+
+msgid "Go to the first page"
+msgstr "最初のページに移動"
+
+msgid "Go to the previous page"
+msgstr "前のページに移動"
+
+msgid "Select Page"
+msgstr "ページ選択"
+
+msgid "Current page"
+msgstr "現在のページ"
+
+msgid "of"
+msgstr "の"
+
+msgid "Go to the next page"
+msgstr "次のページに移動"
+
+msgid "Go to the last page"
+msgstr "最後のページに移動"
+
+msgid "Translatable?"
+msgstr "翻訳可能?"
+
+msgid "Enable this if you want to translate attribute values with Woocommerce Multilingual"
+msgstr "Woocommerce Multilingualで属性値を翻訳するには、これを有効にしてください　"
+
+msgid "Existing translations and variations associated will be deleted."
+msgstr "既存の翻訳と関連バリエーションが削除されます。"
+
+msgid "Product Translation Interface"
+msgstr "製品翻訳インターフェース"
+
+msgid "The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions."
+msgstr "おすすめの方法はWPML翻訳エディターを使用することです。翻訳プロセスがとても簡単になり、さまざまなWooCommerce拡張機能に良好に統合します。"
+
+msgid "WPML Translation Editor"
+msgstr "WPML 翻訳エディター"
+
+msgid "Native WooCommerce product editing screen"
+msgstr "ネイティブ WooCommerce 製品編集画面"
+
+msgid "Products synchronization"
+msgstr "製品の同期"
+
+msgid "Configure specific product properties that should be synced to translations."
+msgstr "翻訳に同期される製品のプロパティを設定する"
+
+msgid "Sync publishing date for translated products."
+msgstr "翻訳された製品の公開日を同期する。"
+
+msgid "Sync products and product taxonomies order."
+msgstr "製品と製品タクゾノミー順を同期する。"
+
+msgid "Products Download Files"
+msgstr "製品ダウンロードファイル"
+
+msgid "If you are using downloadable products, you can choose to have their paths\n                                            synchronized, or seperate for each language."
+msgstr "ダウンロード可能な製品をご使用なら、これらのパスを\n同期する、または言語別に分離することを選択できます。"
+
+msgid "Use the same files for translations"
+msgstr "翻訳に同じファイルを使用する"
+
+msgid "Add separate download files for translations"
+msgstr "翻訳に別のダウンロードファイルを追加する"
+
+msgid "Save changes"
+msgstr "変更を保存する"
+
+msgid "Troubleshooting page"
+msgstr "トラブルシューティングページ"
+
+msgid "Update Translation"
+msgstr "翻訳をアップデートする"
+
+msgid "Hide This Message"
+msgstr "このメッセージを非表示にする"
+
+msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
+msgstr "<strong>WooCommerce 翻訳があります</strong> &#8211; <code>%s</code> 翻訳を<code>%s</code>バージョンにインストールするか、アップデートしてください。."
+
+msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
+msgstr "最近翻訳された属性に対し、翻訳された製品バリエーションを自動的に発生します。"
+
+msgid "Synchronize %s assignment in content"
+msgstr "コンテンツ内の %s 指定を同期"
+
+msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
+msgstr "このアクションはあなたのコンテンツの色々な言語に%sタクゾノミーを自動的に適用します。元コンテンツをスキャンし、同じタクゾノミーを翻訳コンテンツに適用します。"
 
 msgid "You have untranslated terms!"
 msgstr "未翻訳のタームがあります！"
 
-msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
-msgstr "WooCommerce Multilingual が有効ですが、作動しません。2.0.5版以前の <a href=\"%s\">WPML</a> と互換性がありません。"
+msgid "Select currency"
+msgstr "通貨を選択する"
 
-msgid "%s plugin is installed and active."
-msgstr "%s プラグインがインストール済みで有効です。"
-
-msgid "%s is set up."
-msgstr "%s が設定されました。"
-
-msgid "%s is not set up."
-msgstr "%s が設定されました。"
-
-msgid "%s plugin is either not installed or not active."
-msgstr "%s プラグインがインストールされていないか、操作できません。"
-
-msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
-msgstr "インストールされた%1$s バージョンは正しくありません。 %1$s %2$s 以降が必要です。"
-
-msgid "Required plugins"
-msgstr "必要なプラグイン"
-
-msgid "Plugins Status"
-msgstr "プラグイン状況"
-
-msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
-msgstr "WooCommerce Multilingual は幾つかのプラグインにより作動します。必要なプラグインがない場合、インストールし、認証する必要があります。"
-
-msgid "Update WPML"
-msgstr "WPMLを更新する"
-
-msgid "Get WPML"
-msgstr "WPMLを入手"
-
-msgid "Get WPML Media"
-msgstr "WPML メディアを入手"
-
-msgid "Get WPML Translation Management"
-msgstr "WPML 翻訳管理を入手"
-
-msgid "Get WPML String Translation"
-msgstr "WPML ストリング翻訳を入手"
-
-msgid "Download WooCommerce"
-msgstr "WooCommerceをダウンロード"
-
-msgid "Drop-down menu"
-msgstr "ドロップダウンメニュー"
-
-msgid "List of currencies"
-msgstr "通貨リスト"
-
-msgid "Show a currency selector on the product page template"
-msgstr "製品ページテンプレートで通貨セレクターを表示する"
-
-msgid "Currency switcher options"
-msgstr "通貨スイッチャーオプション"
-
-msgid "You can customize currency switcher on front-end"
-msgstr "フロントエンドで通貨スイッチャーをカスタマイズできます"
-
-msgid "Currency order"
-msgstr "通貨順"
-
-msgid "Drag the currencies to change their order"
-msgstr "順番を変更するには通貨をドラッグしてください"
-
-msgid "Currency switcher style"
-msgstr "通貨スイッチャースタイル"
-
-msgid "Vertical"
-msgstr "垂直"
-
-msgid "Horizontal"
-msgstr "水平"
-
-msgid "Visibility"
-msgstr "可視性"
-
-msgid "Available parameters"
-msgstr "利用可能なパラメーター"
-
-msgid "%name%, %symbol%, %code%"
-msgstr "%name%、 %symbol%、%code%"
-
-msgid "Template for currency switcher"
-msgstr "通貨スイッチャー用のテンプレート"
-
-msgid "Default: %name% (%symbol%) - %code%"
-msgstr "初期設定: %name% (%symbol%) - %code%"
-
-msgid "Currency switcher preview"
-msgstr "通貨スイッチャープレビュー"
-
-msgid "Save"
-msgstr "保存"
-
-msgid "Currency options for %s"
-msgstr "%sの通貨オプション"
+msgid "Exchange Rate"
+msgstr "為替率"
 
 msgid "Only numeric"
 msgstr "数値のみ"
@@ -436,23 +532,23 @@ msgstr "数値のみ"
 msgid "Set on %s"
 msgstr "%sに設定"
 
-msgid "Left (%s99.99)"
-msgstr "左 (%s99.99)"
-
-msgid "Right (99.99%s)"
-msgstr "右(99.99%s)"
-
-msgid "Left with space (%s 99.99)"
-msgstr "左と空白 (%s 99.99)"
-
-msgid "Right with space (99.99 %s)"
-msgstr "右と空白 (99.99 %s)"
-
-msgid "Exchange Rate"
-msgstr "為替率"
+msgid "Currency Preview"
+msgstr "通貨プレビュー"
 
 msgid "Currency Position"
 msgstr "通貨ポジション"
+
+msgid "Left"
+msgstr "左"
+
+msgid "Right"
+msgstr "右"
+
+msgid "Left with space"
+msgstr "余白付き左側"
+
+msgid "Right with space"
+msgstr "余白付き右側"
 
 msgid "Thousand Separator"
 msgstr "千区切り"
@@ -466,17 +562,17 @@ msgstr "少数桁"
 msgid "Rounding to the nearest integer"
 msgstr "一番近い整数に丸める"
 
-msgid "disabled"
-msgstr "無効"
+msgid "Disabled"
+msgstr "無効済み"
 
-msgid "up"
-msgstr "上げ"
+msgid "Up"
+msgstr "上"
 
-msgid "down"
-msgstr "下げ"
+msgid "Down"
+msgstr "下"
 
-msgid "nearest"
-msgstr "一番近い"
+msgid "Nearest"
+msgstr "最も近い"
 
 msgid "Increment for nearest integer"
 msgstr "一番近い整数に増加する"
@@ -484,8 +580,47 @@ msgstr "一番近い整数に増加する"
 msgid "Autosubtract amount"
 msgstr "自動減算額"
 
-msgid " (%s)"
-msgstr "(%s)"
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Products"
+msgstr "製品"
+
+msgid "Tags"
+msgstr "タグ"
+
+msgid "Attributes"
+msgstr "属性"
+
+msgid "Shipping Classes"
+msgstr "配送クラス"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Multi-currency"
+msgstr "複数通貨"
+
+msgid "Store URLs"
+msgstr "ストアURL"
+
+msgid "Status"
+msgstr "状況"
+
+msgid "Troubleshooting"
+msgstr "トラブルシューティング"
+
+msgid "Thank you for using %sWooCommerce Multilingual%s! You can express your love and\n                                    support by %s rating our plugin and saying that %sit works%s for you."
+msgstr "%sWooCommerce Multilingual%sをご利用いただき、ありがとうございます! 当社のプラグインに対して\n%s評価と%s順調に動作する%sというコメントでご支援いただければ幸いです。"
+
+msgid "Hide"
+msgstr "非表示"
+
+msgid "Loading ..."
+msgstr "読み込み中です..."
 
 msgid "Regular Price"
 msgstr "通常価格"
@@ -493,20 +628,17 @@ msgstr "通常価格"
 msgid "Sale Price"
 msgstr "セールス価格"
 
-msgid "Multi-currency is enabled but no secondary currencies have been set"
-msgstr "複数通貨が有効ですが、2次通貨が設定されていません"
+msgid "Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s."
+msgstr ""
 
 msgid "Calculate prices in other currencies automatically"
 msgstr "自動的に他の通貨で価格を計算します"
 
-msgid "Click to see the prices in the other currencies as they are currently shown onthe front end."
-msgstr "表示されている他の通貨で価格を計算するにはクリックしてください。"
+msgid "Click to see the prices in the other currencies as they are currently shown on the front end."
+msgstr "フロントエンドで表示されている他通貨での価格を見るにはクリックしてください。"
 
 msgid "Show"
 msgstr "表示"
-
-msgid "Hide"
-msgstr "非表示"
 
 msgid "Set prices in other currencies manually"
 msgstr "手動で他の通貨の価格を設定する"
@@ -529,8 +661,8 @@ msgstr "初期設定通貨と同じ"
 msgid "Set dates"
 msgstr "日付を設定"
 
-msgid "Please enter in a value less than the regular price"
-msgstr "通常価格以下の値を入力してください"
+msgid "Collapse"
+msgstr "折りたたむ"
 
 msgid "From&hellip;"
 msgstr "From&hellip;"
@@ -538,206 +670,185 @@ msgstr "From&hellip;"
 msgid "To&hellip;"
 msgstr "To&hellip;"
 
-msgid "Choose a file"
-msgstr "ファイルを選択"
+msgid "Please enter in a value less than the regular price"
+msgstr "通常価格以下の値を入力してください"
 
-msgid "Enter translation for name"
-msgstr "名前の翻訳を入力してください"
+msgid "Required plugins"
+msgstr "必要なプラグイン"
 
-msgid "Please set images for product"
-msgstr "製品用の画像を設定してください"
+msgid "Plugins Status"
+msgstr "プラグイン状況"
 
-msgid "Please save translation before translate images texts"
-msgstr "画像テキストを翻訳する前に翻訳を保存してください"
+msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
+msgstr "WooCommerce Multilingual は幾つかのプラグインにより作動します。必要なプラグインがない場合、インストールし、認証する必要があります。"
 
-msgid "Caption"
-msgstr "説明文"
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
+msgstr "WooCommerce Multilingual が有効ですが、作動しません。2.0.5版以前の <a href=\"%s\">WPML</a> と互換性がありません。"
 
-msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
-msgstr "<strong>WooCommerce 翻訳があります</strong> &#8211; <code>%s</code> 翻訳を<code>%s</code>バージョンにインストールするか、アップデートしてください。."
+msgid "Update WPML"
+msgstr "WPMLを更新する"
 
-msgid "Update Translation"
-msgstr "翻訳をアップデートする"
+msgid "Get WPML"
+msgstr "WPMLを入手"
 
-msgid "Hide This Message"
-msgstr "このメッセージを非表示にする"
+msgid "Get WPML Media"
+msgstr "WPML メディアを入手"
 
-msgid "This product is an exact duplicate of the %s product."
-msgstr "この製品は%s製品の複製です。"
+msgid "Get WPML Translation Management"
+msgstr "WPML 翻訳管理を入手"
 
-msgid "edit product"
-msgstr "製品を編集"
+msgid "Get WPML String Translation"
+msgstr "WPML ストリング翻訳を入手"
 
-msgid "Take this and edit"
-msgstr "引き受けて編集する"
+msgid "%s is installed and active."
+msgstr "%s がインストールされ、有効です。"
 
-msgid "Update"
-msgstr "アップデート"
+msgid "%s is set up."
+msgstr "%s が設定されました。"
 
-msgid "Language"
-msgstr "言語"
+msgid "%s is not set up."
+msgstr "%s が設定されました。"
 
-msgid "Edit independently."
-msgstr "個々に編集する。"
+msgid "%s is either not installed or not active."
+msgstr "%s がインストールされていないか有効ではありません。"
 
-msgid "Undo (keep this product as a duplicate)"
-msgstr "元に戻す (この製品を複製として残す)"
+msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
+msgstr "インストールされた%1$s バージョンは正しくありません。 %1$s %2$s 以降が必要です。"
 
-msgid "Translation in progress"
-msgstr "翻訳進行中"
+msgid "Download WooCommerce"
+msgstr "WooCommerceをダウンロード"
 
-msgid "Show slug"
-msgstr "スラグ表示"
+msgid "The WordPress Multilingual Plugin"
+msgstr "WordPress 多言語プラグイン"
 
-msgid "Edit slug"
-msgstr "スラグ編集"
+msgid "This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages."
+msgstr "このページを使用して異なるタイプのURLが作成されたWooCommerceの全てのストリングを翻訳できます。これらを翻訳することで、ページ言語にマッチするURLを完全にローカライズできます。"
 
-msgid "Please save translation before edit slug"
-msgstr "スラグ編集前に翻訳を保存してください"
+msgid "You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page."
+msgstr "デフォルト値は%sパーマリンク設定%s ページ上で入力／編集できます。またエンドポイントはWooCommerce %sアカウント設定%s ページ上で入力／編集できます。"
 
-msgid "Translation missing"
-msgstr "翻訳がありません"
+msgid "permalinks settings"
+msgstr "パーマリンク設定"
 
-msgid "Add Media"
-msgstr "メディアを追加"
+msgid "Account settings"
+msgstr "アカウント設定"
 
-msgid "Text"
-msgstr "テキスト"
+msgid "Slug type"
+msgstr "スラグタイプ"
 
-msgid "Visual"
-msgstr "ビジュアル"
+msgid "Original Slug"
+msgstr "オリジナルスラグ"
 
-msgid "name"
-msgstr "名前"
+msgid "Shop page"
+msgstr "ストアページ"
 
-msgid "values"
-msgstr "値"
+msgid "Product base"
+msgstr "製品ベース"
 
-msgid "Upload file"
-msgstr "ファイルをアップロードする"
+msgid "Product category base"
+msgstr "製品カテゴリーベース"
 
-msgid "Translate %s"
-msgstr "%sを翻訳"
+msgid "Product tag base"
+msgstr "製品タグベース"
 
-msgid "%d products"
-msgstr "%d 製品"
+msgid "Product attribute base"
+msgstr "製品属性ベース"
 
-msgid " | Parent product: %s"
-msgstr "| 親製品: %s"
+msgid "Original"
+msgstr "オリジナル"
 
-msgid "Show all products"
-msgstr "全ての製品を表示する"
+msgid "Translation to"
+msgstr "次言語への翻訳"
 
-msgid "WooCommerce Products"
-msgstr "WooCommerce 製品"
+msgid "Product Shop Base"
+msgstr "製品ストアベース"
 
-msgid "All languages"
-msgstr "全言語"
+msgid "Welcome to WooCommerce Multilingual!"
+msgstr "WooCommerce Multilingualにようこそ！"
 
-msgid "Any category"
-msgstr "任意のカテゴリー"
-
-msgid "All products"
-msgstr "全製品"
-
-msgid "Not translated or needs updating"
-msgstr "翻訳されていません、または更新の必要がありません"
-
-msgid "Needs updating"
-msgstr "更新が必要"
-
-msgid "Translation complete"
-msgstr "翻訳完了"
-
-msgid "All statuses"
-msgstr "全てのステータス"
-
-msgid "Search"
-msgstr "検索"
-
-msgid "Reset"
-msgstr "リセット"
-
-msgid "Go to the first page"
-msgstr "最初のページに移動"
-
-msgid "Go to the previous page"
-msgstr "前のページに移動"
-
-msgid "of"
-msgstr "の"
-
-msgid "Go to the next page"
-msgstr "次のページに移動"
-
-msgid "Go to the last page"
-msgstr "最後のページに移動"
-
-msgid "Type"
-msgstr "タイプ"
-
-msgid "Product"
-msgstr "製品"
-
-msgid "No products found"
-msgstr "製品がありません"
-
-msgid " (draft)"
-msgstr "(下書き)"
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sSlugs Translation%s to translate."
+msgid "Configure the multilingual support for your e-commerce site in just a couple of minutes."
 msgstr ""
 
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sString Translation%s to translate."
-msgstr "製品パーマリンクベースは%sに翻訳されていません。この翻訳された製品のurlsは使用できません。翻訳するには、 %sストリング翻訳%sに移動してください。"
+msgid "By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away."
+msgstr "製品はデフォルトにより製品カタログ、製品タグ、属性と同様に翻訳可能です。これらの翻訳を直ちに開始できます。"
 
-msgid "Please review the %sguide for running WooCommerce multilingual with default language other than English%s."
-msgstr "%s英語以外の初期設定言語でWooCommerce multilingualを実行するガイド%sをお読みください。"
+msgid "You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode."
+msgstr "どの属性を翻訳するか設定し、翻訳されたショップページをインストールし、複数通貨モードを有効にすることができます。"
 
-msgid "You should check WPML configuration files added by other plugins or manual settings on the %sMultilingual Content Setup%s section."
-msgstr "他のプラグインに追加されたWPML 設定ファイルまたは%s多言語コンテンツ設定%s セクションのマニュアル設定をお調べください。"
+msgid "Start"
+msgstr "スタート"
 
-msgid "Your store's base currency is %s (%s). To change it, go to the %s page."
-msgstr "保存された基本通貨は %s (%s)です。変更するには、 %s ページへ移動してください。"
+msgid "No, thanks. I'll do it later."
+msgstr "いいえ結構です。後にします。"
 
-msgid "Products using custom currency rates as they were migrated from the previous versions - option to support different prices per language"
-msgstr "以前のバージョンから移行された製品はカスタムの通貨レート－言語別に違う価格をサポートするオプションを使用します"
+msgid "Select translatable attributes"
+msgstr "翻訳可能な属性を選択してください"
 
-msgid "Are you sure?"
-msgstr "確かですか？"
+msgid "There are no attributes defined"
+msgstr "定義された属性がありません"
 
-msgid "Delete"
-msgstr "削除"
+msgid "Continue"
+msgstr "続ける"
 
-msgid "Configuration warnings"
-msgstr "設定警告"
+msgid "Later"
+msgstr "後で"
 
-msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
-msgstr "WooCommerce Multilingual の正常な作動を妨げる様々な設定問題のレポート"
+msgid "One or more WooCommerce pages have not been created"
+msgstr "1以上の WooCommerce ページが作成されていません"
 
-msgid "Attention required: probable problem with URLs in different languages"
-msgstr "注意: 異なる言語のURLの問題の可能性"
+msgid "Install missing WooCommerce pages and create translations."
+msgstr "紛失しているWooCommerce ページをインストールし、翻訳を作成。"
 
-msgid "Your site's default language is not English and the strings language is also not English. This may lead to problems with your site's URLs in different languages."
-msgstr "あなたのサイトの初期設定言語もストリング言語も英語ではありません。これにより、他の言語のURLに問題が発生するかもしれません。"
+msgid "Translate Store Pages"
+msgstr "ストアページを翻訳する"
 
-msgid "Change the strings language to English"
-msgstr "ストリング言語を英語に変更する"
+msgid "All store pages must be translated in the languages configured on the site."
+msgstr "全てのストアページをサイトの設定言語に翻訳する必要があります。"
 
-msgid "Re-scan strings"
-msgstr "ストリングを再スキャンする"
+msgid "Select the translation interface"
+msgstr "翻訳インターフェースを選択する"
 
-msgid "Your site's default language is not English. There are some settings that require careful attention."
-msgstr "サイトの初期設定言語は英語ではありません。注意が必要な設定が幾つかあります。"
+msgid "Enable multiple currencies"
+msgstr "複数通貨を有効にする"
 
-msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
-msgstr "WooCommerce Multilingual wpml-config.xml ファイルの設定が幾つか上書きされました。"
+msgid "This will allow you to set prices for products in different currencies. The prices can be determined based on a given exchange rate or set explicitly for specific products."
+msgstr "これにより通貨別に製品価格を設定することができます。価格は所定の為替率または特定の製品に基づいて決定します。"
+
+msgid "Enable the multi-currency mode"
+msgstr "複数通貨モードを有効にする"
+
+msgid "Further actions that are necessary for making your existing content multilingual, are listed below."
+msgstr "既存コンテンツを他言語にするために必要な操作は下記にリストされています。"
+
+msgid "Start translating products"
+msgstr "製品の翻訳を開始する"
+
+msgid "Add secondary currencies on the %smulti-currency configuration%s page"
+msgstr " %s複数通貨設定%s ページに第2通貨を追加する"
+
+msgid "Translate existing terms for these %sproduct attributes%s: %s"
+msgstr "これらの%s製品属性%sの既存条件を翻訳する: %s"
+
+msgid "Translate existing %sproduct categories%s"
+msgstr "既存の%s製品属性%sを翻訳する"
+
+msgid "Translate existing %sproduct tags%s"
+msgstr "既存の%s製品タグ%sを翻訳する"
+
+msgid "%sAdd missing translations%s for shipping classes"
+msgstr "出荷クラスに%s紛失している翻訳を追加する%s"
+
+msgid "Translate %sURL slugs%s to create multilingual store and product urls"
+msgstr "多言語ストアと製品urlsを作成するには%sURL スラグ%s を翻訳してください"
+
+msgid "Use custom settings for translations download files"
+msgstr ""
 
 msgid "WooCommerce Store Pages"
 msgstr "WooCommerce ストアページ"
 
-msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated in all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
-msgstr "多言語の電子商取引サイトを運用するには、WooCommerce ショップページを全てのサイト言語に翻訳する必要があります。全てのページをインストールした後、このメニューから翻訳を追加できます。"
+msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated to all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
+msgstr "多言語Eコマースサイトを運営するには、WooCommerceストアページを全てのサイト言語に翻訳する必要があります。全てのページをインストール後、このメニューから翻訳を追加することができます。"
 
 msgid "One or more WooCommerce pages have not been created."
 msgstr "1つかそれ以上のWooCommerce ページが作成されていません。"
@@ -745,137 +856,59 @@ msgstr "1つかそれ以上のWooCommerce ページが作成されていませ�
 msgid "Install WooCommerce Pages"
 msgstr "WooCommerce ページをインストール"
 
-msgid "WooCommerce store pages don't exist for this language:"
-msgstr "WooCommerceストアページはこの言語には存在しません："
+msgid "WooCommerce store pages do not exist for these languages:"
+msgstr "WooCommerce ストアページがこれらの言語に存在しません："
 
-msgid "WooCommerce store pages don't exist for these languages:"
-msgstr "これらの言語にWooCommerce ストアページがありません："
-
-msgid "Create missing translations."
-msgstr "欠如している翻訳を作成。"
+msgid "Create missing translations"
+msgstr "必要な翻訳を作成"
 
 msgid "These pages are currently being translated by translators via WPML: "
 msgstr "これらのページは現在WPMLを通して翻訳者によって翻訳されています:"
 
-msgid "Hide this message"
-msgstr "このメッセージを非表示にする"
-
-msgid "Show details about missing translations"
-msgstr "欠如している翻訳に関する詳細を表示"
-
 msgid "WooCommerce store pages are translated to all the site's languages."
 msgstr "WooCommerce ストアページはサイトの全言語用に翻訳されました。"
 
+msgid "Configuration warnings"
+msgstr "設定警告"
+
+msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
+msgstr "WooCommerce Multilingual の正常な作動を妨げる様々な設定問題のレポート"
+
+msgid "Your product permalink base is not translated to:"
+msgstr "製品パーマリンクベースが次の言語に翻訳されていません："
+
+msgid "Translate URLs"
+msgstr "URLを翻訳する"
+
+msgid "Your site's default language is not English and the strings language is also not English."
+msgstr "サイトのデフォルト言語は英語ではなく、ストリング言語も英語ではありません。"
+
+msgid "Running WooCommerce multilingual with default language other than English."
+msgstr "英語ではないデフォルト言語でWooCommerce multilingualを実行中。"
+
+msgid "This may cause problems with URLs in different languages."
+msgstr "これは他言語のURLに問題を起こすかもしれません。"
+
+msgid "Change default language"
+msgstr "初期設定の言語を変更する"
+
+msgid "Your site's default language is not English."
+msgstr "サイトのデフォルト言語は英語ではありません。"
+
+msgid "There are some settings that require careful attention."
+msgstr "幾つかの設定に注意が必要です。"
+
+msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgstr "WooCommerce Multilingual wpml-config.xml ファイルの設定が幾つか上書きされました。"
+
+msgid "You should check WPML configuration files added by other plugins or manual settings on the %s section."
+msgstr "他のプラグインまたは%sセクションのマニュアル設定により追加されたWPML設定ファイルをお調べください。"
+
+msgid "Multilingual Content Setup"
+msgstr "マルチ言語コンテンツ設定"
+
 msgid "Taxonomies missing translations"
 msgstr "タクゾノミーに翻訳がありません"
-
-msgid "Ignore"
-msgstr "無視"
-
-msgid "Right now, there are no taxonomy terms needing translation."
-msgstr "現在翻訳が必要なタクゾノミーのタームがありません"
-
-msgid "Product Translation Interface"
-msgstr "製品翻訳インターフェース"
-
-msgid "The recommended way to translate products is using the products translation table in the WooCommerce Multilingual admin. Choose to go to the native WooCommerce interface, if your products include custom sections that require direct access."
-msgstr "製品の翻訳はWooCommerce Multilingual adminの製品翻訳テーブルを使用することをおすすめします。あなたの製品が直接アクセスを必要とするカスタム部分を含む場合、WooCommerce インターフェースに移動を選択してください。"
-
-msgid "Choose what to do when clicking on the translation controls for products:"
-msgstr "製品の翻訳コントロールをクリックした時のアクションを選択します："
-
-msgid "Go to the product translation table in WooCommerce Multilingual"
-msgstr "WooCommerce Multilingualの製品翻訳テーブルに移動"
-
-msgid "Go to the native WooCommerce product editing screen"
-msgstr "WooCommerce 製品編集画面に移動"
-
-msgid "Products synchronization"
-msgstr "製品の同期"
-
-msgid "Configure specific product properties that should be synced to translations."
-msgstr "翻訳に同期される製品のプロパティを設定する"
-
-msgid "Sync publishing date for translated products."
-msgstr "翻訳された製品の公開日を同期する。"
-
-msgid "Sync products and product taxonomies order."
-msgstr "製品と製品タクゾノミー順を同期する。"
-
-msgid "File Paths Synchronization "
-msgstr "ファイルパス同期"
-
-msgid "If you are using downloadable products, you can choose to have their paths synchronized, or seperate for each language."
-msgstr "ダウンロード可能な製品を取り扱う場合、パスを同期するか、言語別に分けることができます。"
-
-msgid "Use the same file paths in all languages"
-msgstr "全言語に同じファイルパスを使用"
-
-msgid "Different file paths for each language"
-msgstr "各言語に別のファイルパスを使用"
-
-msgid "Manage Currencies"
-msgstr "通貨管理"
-
-msgid "This will let you enable the multi-currency mode where users can see prices according to their currency preference and configured exchange rate."
-msgstr "これにより、ユーザーが自分の通貨と為替レート設定により価格が表示される多通貨モードを有効にします。"
-
-msgid "No multi-currency."
-msgstr "複数通貨なし。"
-
-msgid "Multiple currencies, independent of languages."
-msgstr "言語と独立した複数通貨"
-
-msgid "Learn more"
-msgstr "さらに学ぶ"
-
-msgid "Currency"
-msgstr "通貨"
-
-msgid "default"
-msgstr "初期設定"
-
-msgid "Edit"
-msgstr "編集"
-
-msgid "Default currency"
-msgstr "初期設定通貨"
-
-msgid "Switch to this currency when switching language in the front-end"
-msgstr "表示言語に切り替える時、通貨も切り替える"
-
-msgid "OFF"
-msgstr "オフ"
-
-msgid "ON"
-msgstr "オン"
-
-msgid "Keep"
-msgstr "保存"
-
-msgid "Please fill field"
-msgstr "欄に入力してください"
-
-msgid "Add currency"
-msgstr "通貨を追加"
-
-msgid "n/a"
-msgstr "該当なし"
-
-msgid "Show only products with custom prices in secondary currencies"
-msgstr "第2通貨でカスタム価格を表示する製品だけ表示"
-
-msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
-msgstr "このオプションがオンの時、フロントエンドで第2通貨に切替えられ、表示通貨におけるカスタム価格を持つ製品だけが表示されます。為替レートに基づいて価格が決定される製品は表示されません。"
-
-msgid "Troubleshooting page"
-msgstr "トラブルシューティングページ"
-
-msgid "Run fix"
-msgstr "修正を実行"
-
-msgid "Dismiss"
-msgstr "無視する"
 
 msgid "To run a fully translated site, you should translate all taxonomy terms. Some store elements, such as variations, depend on taxonomy translation."
 msgstr "完全に翻訳されたサイトを運営するには、全てのタクゾノミーのタームを翻訳すべきです。バリエーションなど、特定のストア要素はタクゾノミー翻訳で翻訳されます。"
@@ -883,26 +916,20 @@ msgstr "完全に翻訳されたサイトを運営するには、全てのタク
 msgid "This taxonomy requires translation."
 msgstr "このタクゾノミーは翻訳を必要とします。"
 
+msgid "Include in translation"
+msgstr "翻訳に含む"
+
 msgid "This taxonomy does not require translation."
 msgstr "このタクゾノミーは翻訳を必要としません。"
 
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "このページから移動すると、変更が失われます。"
+msgid "Right now, there are no taxonomy terms needing translation."
+msgstr "現在翻訳が必要なタクゾノミーのタームがありません"
 
-msgid "At least one currency must be enabled for this language!"
-msgstr "この言語に少なくとも通貨を一つ有効にしてください！"
+msgid "There are no translatable product attributes defined"
+msgstr "翻訳できる製品属性定義がありません"
 
-msgid "Synchronize %s assignment in content"
-msgstr "コンテンツ内の %s 指定を同期"
-
-msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
-msgstr "このアクションはあなたのコンテンツの色々な言語に%sタクゾノミーを自動的に適用します。元コンテンツをスキャンし、同じタクゾノミーを翻訳コンテンツに適用します。"
-
-msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
-msgstr "最近翻訳された属性に対し、翻訳された製品バリエーションを自動的に発生します。"
-
-msgid "Troubleshooting"
-msgstr "トラブルシューティング"
+msgid "Select the attribute to translate: "
+msgstr "翻訳する属性を選択してください："
 
 msgid "Please make a backup of your database before you start the synchronization"
 msgstr "同期を開始する前にデータバースのバックアップを作成してください。"
@@ -922,8 +949,8 @@ msgstr "製品バリエーションを同期する"
 msgid "left"
 msgstr "残量"
 
-msgid "Sync products \"gallery images\""
-msgstr "製品の\"ギャラリー画像\"を同期"
+msgid "Sync products \"gallery images\":"
+msgstr "製品\"ギャラリー画像\"を同期："
 
 msgid "Sync products categories (display type, thumbnail):"
 msgstr "製品カテゴリーを同期する（表示タイプ、サムネイル）:"
@@ -934,53 +961,254 @@ msgstr "タームを複製する( 属性を選択してください ):"
 msgid "none"
 msgstr "なし"
 
-msgid "Start"
-msgstr "スタート"
+msgid "Enable/disable"
+msgstr "有効／無効にする"
 
-msgid "Please add variations to product"
-msgstr "製品にバリエーションを追加してください"
+msgid "Currencies"
+msgstr "通貨"
 
-msgid "Please save translation before translate variations file paths"
-msgstr "バリエーションファイルパスを翻訳する前に翻訳を保存してください"
+msgid "Add currency"
+msgstr "通貨を追加"
 
-msgid "Variations are not downloadable"
-msgstr "バリエーションはダウンロードできません"
+msgid "Currency"
+msgstr "通貨"
 
-msgid "Download URL"
-msgstr "URLダウンロード"
+msgid "Rate"
+msgstr "レート"
 
-msgid "Variation is not downloadable"
-msgstr "バリエーションはダウンロードできません"
+msgid "default"
+msgstr "初期設定"
 
-msgid "This field is locked for editing because WPML will copy its value from the original language."
-msgstr "このファイルはWPMLが言語から値をコピーするため、編集不可です。"
+msgid "Default currency"
+msgstr "初期設定通貨"
 
-msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
-msgstr "これは%sの翻訳です。フィールドの幾つかは編集不可能です。製品の翻訳には%s を使用することをお薦めします。"
+msgid "Switch to this currency when switching language in the front-end"
+msgstr "表示言語に切り替える時、通貨も切り替える"
 
-msgid "WooCommerce Multilingual products translator"
-msgstr "WooCommerce Multilingual 製品トランスレーター"
+msgid "Keep"
+msgstr "保存"
 
-msgid "How to translate products"
-msgstr "製品の翻訳方法"
+msgid "Delete"
+msgstr "削除"
 
-msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
-msgstr "製品翻訳にはクイック編集が無効です。製品の翻訳の編集には %sを使用することをお薦めします。 %s"
+msgid " (%s)"
+msgstr "(%s)"
 
-msgid "WooCommerce Multilingual products editor"
-msgstr "WooCommerce Multilingual 製品エディター"
+msgid "The multi-currency mode cannot be enabled as a specific currency was not set. Go to the %sWooCommerce settings%s page and select the default currency for your store."
+msgstr "特定通貨が設定されていないため、複数通貨モードを有効にすることができません。%sWooCommerce settings%sページに移動し、ストアのデフォルト通貨を選択してください。"
 
-msgid "Edit this product translation"
-msgstr "この製品翻訳を編集する"
+msgid "Learn more"
+msgstr "さらに学ぶ"
 
-msgid "How to translate attributes"
-msgstr "属性の翻訳方法"
+msgid "Show only products with custom prices in secondary currencies"
+msgstr "第2通貨でカスタム価格を表示する製品だけ表示"
 
-msgid "How to translate product categories"
-msgstr "製品カテゴリーの翻訳方法"
+msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
+msgstr "このオプションがオンの時、フロントエンドで第2通貨に切替えられ、表示通貨におけるカスタム価格を持つ製品だけが表示されます。為替レートに基づいて価格が決定される製品は表示されません。"
 
-msgid "Would you like to see a quick overview?"
-msgstr "概観をご覧になりたいですか？"
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "このページから移動すると、変更が失われます。"
 
-msgid "Learn how to turn your e-commerce site multilingual"
-msgstr "Eコマースサイトを多言語にする方法を学ぶ"
+msgid "At least one currency must be enabled for this language!"
+msgstr "この言語に少なくとも通貨を一つ有効にしてください！"
+
+msgid "Currency switcher options"
+msgstr "通貨スイッチャーオプション"
+
+msgid "Currency switcher style"
+msgstr "通貨スイッチャースタイル"
+
+msgid "Currency order"
+msgstr "通貨順"
+
+msgid "Available parameters"
+msgstr "利用可能なパラメーター"
+
+msgid "Template for currency switcher"
+msgstr "通貨スイッチャー用のテンプレート"
+
+msgid "Visibility"
+msgstr "可視性"
+
+msgid "Currency switcher preview"
+msgstr "通貨スイッチャープレビュー"
+
+msgid "Drop-down menu"
+msgstr "ドロップダウンメニュー"
+
+msgid "List of currencies"
+msgstr "通貨リスト"
+
+msgid "Vertical"
+msgstr "垂直"
+
+msgid "Horizontal"
+msgstr "水平"
+
+msgid "Drag the currencies to change their order"
+msgstr "順番を変更するには通貨をドラッグしてください"
+
+msgid "%name%, %symbol%, %code%"
+msgstr "%name%、 %symbol%、%code%"
+
+msgid "Default: %name% (%symbol%) - %code%"
+msgstr "初期設定: %name% (%symbol%) - %code%"
+
+msgid "Show a currency selector on the product page template"
+msgstr "製品ページテンプレートで通貨セレクターを表示する"
+
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgstr "%sWooCommerce 製品%sの翻訳方法を設定するには、WooCommerce Multiligual %s設定%s ページをご覧ください。"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Slug"
+msgstr "スラグ"
+
+msgid "Content / Description"
+msgstr "コンテンツ / 内容"
+
+msgid "Excerpt"
+msgstr "抜粋"
+
+msgid "Purchase note"
+msgstr "購入ノート"
+
+msgid "Images"
+msgstr "画像"
+
+msgid "Custom Product attributes"
+msgstr "カスタム製品属性"
+
+msgid "Name"
+msgstr "名前"
+
+msgid "Value(s)"
+msgstr "値"
+
+msgid "Custom Fields"
+msgstr "Custom Fields"
+
+msgid "Variations data"
+msgstr "バリエーションデータ"
+
+msgid "Download Files for Variation #%s"
+msgstr "バリエーション用ダウンロードファイル #%s"
+
+msgid "Download Files"
+msgstr "ファイルダウンロード"
+
+msgid "File URL"
+msgstr "ファイル URL"
+
+msgid "Content, title, and excerpt are empty."
+msgstr "コンテンツ、タイトル、抜粋が空白です。"
+
+msgid "Search %s"
+msgstr "%sを検索"
+
+msgid "All %s"
+msgstr "全%s"
+
+msgid "Parent %s"
+msgstr "初回%s"
+
+msgid "Parent %s:"
+msgstr "初回 %s:"
+
+msgid "Edit %s"
+msgstr "編集 %s"
+
+msgid "Update %s"
+msgstr "%s更新"
+
+msgid "Add New %s"
+msgstr "新規%sを追加"
+
+msgid "New %s"
+msgstr "新規%s"
+
+msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "アドオンストリングを翻訳するには、アドオンを保存してから<b><a href=\"%s\">ストリング翻訳インターフェース</a></b>へ移動します"
+
+msgid "Product Add-ons Group \"%s\""
+msgstr "製品アドオングループ \"%s\""
+
+msgid "Description"
+msgstr "内容"
+
+msgid "Options"
+msgstr "オプション"
+
+msgid "Label"
+msgstr "ラベル"
+
+msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "追加オプションのストリングを翻訳するには、%s を保存し、<b><a href=\"%s\">ストリング翻訳インターフェース</a></b>に移動します"
+
+msgid "Language"
+msgstr "言語"
+
+msgid "Translation of"
+msgstr "次の翻訳"
+
+msgid "Subscription Price"
+msgstr "サブスクリプション価格"
+
+msgid "Sign-up Fee"
+msgstr "登録料"
+
+msgid "Calculate costs in other currencies automatically"
+msgstr "コストが他の通貨で自動的に計算されます"
+
+msgid "Set costs in other currencies manually"
+msgstr "手動で他の通貨のコストを設定する"
+
+msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
+msgstr "これは1ブロック予約当たりのコストです。他のコスト（リソースと人件費など）はこれに加算されます。"
+
+msgid "Product tabs"
+msgstr "製品タブ"
+
+msgid "Heading"
+msgstr "見出し"
+
+msgid "Tour Data"
+msgstr "ツアーデータ"
+
+msgid "Content"
+msgstr "コンテンツ"
+
+msgid "Composite Products"
+msgstr "複合製品"
+
+msgid "Product Bundles"
+msgstr "製品バンドル"
+
+msgid "One-off cost for the booking as a whole."
+msgstr "１度のお支払いだけで全てご予約。"
+
+msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
+msgstr "フロントエンドでユーザーにコストが表示されます。後の計算のために空白にしておいてください。予約に様々なコストがある場合、\"from:\"という語が前に置かれます。"
+
+msgid "Bookings"
+msgstr "予約"
+
+msgid "Resources Label"
+msgstr "リソースラベル"
+
+msgid "Resources"
+msgstr "リソース"
+
+msgid "Person Types"
+msgstr "人タイプ"
+
+msgid "Person Type Name"
+msgstr "人タイプ名前"
+
+msgid "Resources label"
+msgstr "リソースラベル"
+
+msgid "Booking currency"
+msgstr "予約通貨"

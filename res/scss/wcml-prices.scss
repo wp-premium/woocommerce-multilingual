@@ -1,0 +1,165 @@
+@import "mixins";
+@import "variables";
+
+.wcml_custom_prices_block {
+	float: left;
+	margin-top: 10px;
+	width: 100%;
+}
+
+#general_product_data .wcml_custom_prices_block {
+	padding-left: 10px;
+}
+
+.wcml_custom_prices_options_block,
+.custom_prices_message_block {
+	display: inline-block;
+	width: 100%;
+}
+
+.wcml_custom_prices_manually_block_control {
+	padding-left: 10px;
+}
+
+.wcml_custom_prices_options_block input.wcml_custom_prices_input,
+.wc-metaboxes-wrapper .wcml_custom_prices_options_block input.wcml_custom_prices_input,
+.wcml_custom_prices_manually_block input.wcml_schedule_input,
+.wc-metaboxes-wrapper .wcml_custom_prices_manually_block input.wcml_schedule_input {
+	width: 16px;
+	clear: both;
+	margin: 2px 5px 2px 0;
+	float: left;
+}
+
+.wcml_custom_prices_options_block label,
+.wcml_schedule_options label {
+	width: auto;
+	margin: 0;
+	float: left;
+}
+
+.custom_prices_message_block label {
+	width: auto;
+	margin: 0;
+	float: left;
+	color: #9d261d;
+}
+
+.wc-metaboxes-wrapper {
+	.wcml_custom_prices_manually_block .currency_blck > label,
+	.wcml_automaticaly_prices_block label {
+		clear: both;
+	}
+}
+
+.currency_blck, .wcml_schedule_dates {
+	clear: both;
+}
+
+.wcml_custom_prices_manually_block,
+.wcml_automaticaly_prices_block,
+.wcml_schedule_dates {
+	clear: both;
+	display: none;
+	padding-left: 10px;
+}
+
+.wcml_custom_prices_manually_block p,
+.wcml_automaticaly_prices_block p {
+	clear: both;
+	margin-top: 0;
+}
+
+.currency_blck {
+	float: left;
+	width: 100%;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #dfdfdf;
+	padding: 5px 0;
+	> label {
+		font-weight: bold;
+		margin-left: 0;
+	}
+}
+
+.wcml_automaticaly_prices_block > label {
+	font-weight: bold;
+	margin-left: 0;
+}
+
+.wcml_schedule_manually_block_hide,
+.block_actions,
+.wcml_custom_prices_auto_block_hide {
+	display: none;
+}
+
+.wcml_custom_prices_manually_block_show,
+.wcml_custom_prices_manually_block_hide {
+	display: none;
+	clear: both;
+	float: left;
+}
+
+.wcml_no_price_message {
+	font-style: italic;
+	font-size: 12px;
+}
+
+.wcml_schedule {
+	padding-left: 12px;
+	clear: both;
+	float: left;
+}
+
+.wcml_schedule_options {
+	float: left;
+}
+
+.wcml_schedule .wcml_schedule_options label,
+.woocommerce_variation .wcml_schedule .wcml_schedule_options label {
+	width: 200px;
+}
+
+.woocommerce_options_panel .wcml_schedule_dates input.short {
+	width: 100px;
+}
+
+.wcml_schedule label {
+	margin: 0;
+}
+
+.woocommerce_variation {
+	.currency_blck {
+		label {
+			float: left;
+			display: inline-block;
+			width: 150px;
+		}
+		p {
+			padding: 5px 20px 5px 12px;
+			input {
+				width: 50%;
+				float: left;
+				display: inline-block;
+			}
+		}
+	}
+	.wcml_schedule_dates input {
+		float: left;
+	}
+}
+
+.options_group.show_if_downloadable {
+	clear: both;
+}
+
+.wcml_price_error {
+	display: none;
+	background: #aa0000;
+	color: #fff;
+	font-size: 12px;
+	font-weight: bold;
+	margin-left: 5px;
+	float: left;
+	padding: 1px 6px;
+}

@@ -1,0 +1,36 @@
+@import "mixins";
+@import "variables";
+
+.wcml-active-currency {
+	background-color: #E5E5E5;
+}
+
+ul.wcml_currency_switcher {
+	padding: 0 !important;
+	margin: 0 !important;
+	list-style-type: none !important;
+	position: relative;
+	li {
+		cursor: pointer;
+		border: 1px solid #cdcdcd;
+	}
+	&.curr_list_vertical {
+		border-top: 1px solid #cdcdcd;
+		display: inline-block;
+	}
+	&.curr_list_horizontal li {
+		float: left;
+		position: relative;
+		padding: 2px 5px;
+		margin-left: 1px;
+		&:first-child {
+			margin-left: 0;
+		}
+	}
+	&.curr_list_vertical li {
+		border-top-width: 0;
+		cursor: pointer;
+		padding: 3px 10px;
+		margin: 0;
+	}
+}

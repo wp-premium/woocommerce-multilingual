@@ -4,15 +4,16 @@ class WCML_Extra_Product_Options{
 
     function __construct(){
 
-        add_filter( 'get_tm_product_terms', array( $this, 'filter_product_terms' ) );
-
-        add_filter( 'get_post_metadata', array( $this, 'product_options_filter'), 100, 4 );
-
-        add_action( 'updated_post_meta', array( $this, 'register_options_strings' ), 10, 4 );
+        // commented out because of wcml-1218
+        // add_filter( 'get_post_metadata', array( $this, 'product_options_filter'), 100, 4 );
+        // add_action( 'updated_post_meta', array( $this, 'register_options_strings' ), 10, 4 );
 
         add_action( 'tm_before_extra_product_options', array( $this, 'inf_translate_product_page_strings' ) );
         add_action( 'tm_before_price_rules', array( $this, 'inf_translate_strings' ) );
     }
+    
+    // commented out because of wcml-1218
+    /*
 
     function register_options_strings( $meta_id, $id, $meta_key, $options ){
         if( $meta_key != 'tm_meta' )
@@ -85,23 +86,7 @@ class WCML_Extra_Product_Options{
         return $options;
     }
 
-
-    function filter_product_terms( $product_terms ){
-        global $sitepress,$wpdb;
-
-        $translated_terms = array();
-
-        foreach($product_terms as $key => $product_term){
-            $tr_id =  apply_filters( 'translate_object_id', $key, 'product_cat', true, $sitepress->get_default_language() );
-
-            $translated_terms[$tr_id] = $wpdb->get_row( $wpdb->prepare("
-                        SELECT * FROM {$wpdb->terms} t JOIN {$wpdb->term_taxonomy} x ON x.term_id = t.term_id WHERE t.term_id = %d AND x.taxonomy = %s", $tr_id, 'product_cat' ) );
-
-        }
-
-
-        return $translated_terms;
-    }
+    */
 
     function inf_translate_strings(){
         if( isset( $_GET[ 'page' ] ) && $_GET[ 'page' ] == 'tm-global-epo' )

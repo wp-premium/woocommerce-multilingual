@@ -1,0 +1,508 @@
+@import "mixins";
+@import "variables";
+
+.dis_base {
+	opacity: 0.5;
+}
+
+.wcml-wrap {
+	@extend %wpml-wrap;
+	margin-bottom: 20px;
+	min-width: 900px;
+	.wpml-tabs {
+		margin-top: 0;
+	}
+	.otgs-ico-yes,
+	.otgs-ico-ok {
+		color: #51a351;
+	}
+	.otgs-ico-no,
+	.otgs-ico-warning,
+	.otgs-ico-delete {
+		color: #9d261d;
+	}
+	.otgs-ico-edit {
+		color: #3a87ad;
+	}
+	.otgs-ico-in-progress {
+		color: rgb(255, 184, 0);
+	}
+	.tablenav.top {
+		@media (max-width: 1199px) {
+			height: auto;
+			&.wcml-product-translation-filtering {
+				.alignright,
+				.alignleft {
+					float: none;
+					margin-bottom: 5px;
+				}
+			}
+		}
+	}
+}
+
+[class*="otgs-ico"]:before {
+	font-size: 16px;
+}
+
+.wcml-tabs {
+	min-width: 930px; //same as .wcml-wrap
+	@include clearfix();
+	.nav-tab {
+		margin-top: 5px;
+		@media (max-width: 1350px) {
+			margin-left: .2em;
+		}
+		[class*="otgs-ico"]:before {
+			font-size: 18px;
+		}
+	}
+}
+
+.wcml-section {
+	clear: both;
+	padding: 0 0 $margin-sm 0;
+	margin: 0 0 $margin-sm 0;
+	border-bottom: 1px solid #ededed;
+	min-width: 900px;
+	overflow: hidden;
+	&:last-of-type {
+		border: none;
+		margin: 0;
+	}
+}
+
+.wcml-section-content .wcml-section-content-inner {
+	margin: 0 0 20px 0;
+	padding: 0 0 10px 0;
+	border-bottom: 1px solid #ededed;
+	float: left;
+	width: 100%;
+}
+
+.wcml-section-header {
+	width: 300px;
+	float: left;
+	h3 {
+		font-weight: normal;
+		font-size: 1.4em;
+		margin-top: 0.7em;
+		.wcml-tip:before {
+			vertical-align: top;
+		}
+	}
+}
+
+.wcml-section-content {
+	float: left;
+	width: 570px;
+	margin-left: 30px;
+}
+
+.wcml-section-content-wide {
+	width: calc(100% - 360px);
+}
+
+.wcml_products {
+	margin: 20px 0;
+	position: relative;
+}
+
+/* Woocommerce styles*/
+
+.button-wrap, .widefat td .button-wrap {
+	text-align: right;
+	margin: 10px 0;
+}
+
+.currency_action_update {
+	display: inline-block;
+}
+
+.wcml-co-dialog {
+	&.hidden {
+		display: none;
+	}
+	.wpml-form-row label {
+		width: 195px;
+		text-align: left;
+	}
+	input, select {
+		width: 145px;
+	}
+	.currency_code {
+		label {
+			width: 100px;
+		}
+		select {
+			width: auto;
+		}
+	}
+
+	.wcml-co-exchange-rate {
+		label {
+			width: 100px;
+		}
+		input {
+			margin: 0 !important;
+			width: 70px;
+		}
+		.wcml-co-set-rate {
+			display: inline-block;
+			padding: 4px $margin-sm $margin-xs $margin-sm;
+		}
+		small {
+			display: block;
+		}
+	}
+
+	.wcml-co-preview {
+		label {
+			width: 120px;
+			vertical-align: middle;
+		}
+
+		.wcml-co-preview-value {
+			display: inline-block;
+			padding: $margin-xs $margin-sm;
+			border: 1px solid #555;
+			font-size: 1.4em;
+			font-weight: bold;
+			vertical-align: middle;
+			margin: $margin-sm 0;
+		}
+	}
+
+}
+
+table.widefat.currency_table {
+	float: left;
+	width: 300px;
+	border-right: none;
+	@at-root {
+		td.wcml-col-currency,
+		td.wcml-col-rate {
+			padding-top: $margin-xs;
+			padding-bottom: 0;
+			vertical-align: top;
+		}
+
+		td.wcml-col-currency {
+			.truncate {
+				max-width: 145px;
+				display: block;
+			}
+			small {
+				display: block;
+			}
+		}
+
+		td.wcml-col-rate {
+			font-size: .85em;
+		}
+
+		td.wcml-col-edit a {
+			position: relative;
+			top: -3px;
+		}
+	}
+}
+
+table.widefat.currency_delete_table {
+	float: left;
+	width: 50px;
+	border-left: none;
+
+	@at-root {
+		td.wcml-col-delete {
+			vertical-align: middle;
+			text-align: center;
+			&:first-child {
+				border-left: 1px solid #e5e5e5;
+			}
+		}
+	}
+}
+
+.currency_value .wcml-error,
+.wcml-error {
+	font-size: 10px;
+	color: red;
+	display: inline-block;
+}
+
+.trbl_variables_products {
+	padding: 10px;
+	border: 1px solid #8cceea;
+	background-color: #eff8fc;
+	border-radius: 5px;
+	label span {
+		font-weight: bold;
+	}
+}
+
+.wcml_trbl_warning {
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #f00;
+	background-color: #ffb7b7;
+	border-radius: 5px 5px;
+}
+
+#wcml_sync_variations {
+	background-color: #21759b;
+	background-image: linear-gradient(to bottom, #2a95c5, #21759b);
+	border-color: #21759b;
+	border-bottom-color: #1e6a8d;
+	box-shadow: inset 0 1px 0 rgba(120, 200, 230, 0.5);
+	color: #fff;
+	text-decoration: none;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wcml_duplicate_product_notice td {
+	border-bottom: none !important;
+}
+
+.wcml_product_status_text,
+.prod_parent_text {
+	font-style: italic;
+	color: #9A9A9A;
+}
+
+.wcml_no_found_text {
+	text-align: center;
+}
+
+/* on/off buttons */
+
+.currency_languages {
+	&:first-child {
+		border-left: 1px solid #e5e5e5;
+	}
+	position: relative;
+	text-align: center;
+	ul {
+		margin: 0;
+		text-align: center;
+		li {
+			margin: 0;
+			display: none;
+			&.on {
+				display: inline-block;
+			}
+		}
+	}
+}
+
+table.widefat.currency_lang_table {
+	border-left: none;
+	border-right: none;
+}
+
+.currency_wrap {
+	width: calc(100% - 300px - 50px);
+	float: left;
+	margin-bottom: 10px;
+}
+
+.currency_inner {
+	overflow-x: auto;
+	overflow-y: visible;
+}
+
+.currency_table,
+.currency_lang_table,
+.currency_delete_table {
+	clear: none;
+	tr {
+		height: 50px;
+	}
+}
+
+.currency_lang_table {
+	th {
+		text-align: center;
+	}
+	td {
+		vertical-align: middle;
+	}
+	&.widefat td {
+		padding-right: 0;
+		padding-left: 0;
+	}
+}
+
+.default_currency {
+	select {
+		font-size: 9px;
+		height: 24px;
+		margin: 0;
+		margin-right: 2px;
+		padding: 2px 0;
+	}
+	td {
+		border-top: 1px solid #e5e5e5;
+	}
+	.inf_message {
+		font-size: 10px;
+		font-style: italic;
+		color: #9A9A9A;
+	}
+}
+
+/* Currency switcher*/
+
+#wcml_currencies_order {
+	display: block;
+	overflow: hidden;
+	width: 100%;
+	li {
+		float: left;
+		margin: 0 8px 0 0;
+		padding: 2px 8px;
+		border: 1px solid #DFDFDF;
+		border-radius: 2px;
+		background: linear-gradient(to top, #ECECEC, #F9F9F9) repeat scroll 0 0 #F1F1F1;
+		cursor: move;
+	}
+}
+
+.wcml_currencies_order_ajx_resp {
+	padding-top: 5px;
+	color: #E68A00;
+}
+
+.explanation-text {
+	color: #999;
+}
+
+input[name="wcml_curr_template"] {
+	width: 100%;
+}
+
+.wcml_curr_style label {
+	line-height: 30px;
+}
+
+.wcml-currency-preview {
+	margin: $margin-sm 0 $margin-base;
+	display: inline-block;
+}
+
+.wcml_product_name {
+	line-height: 20px;
+}
+
+.wcml_prod_filters {
+	float: left;
+}
+
+.wcml_miss_lang p:first-child {
+	float: left;
+}
+
+#display_custom_prices_select {
+	display: inline-block;
+	width: 100%;
+}
+
+.edit_slug_input, .edit_slug_hide_link {
+	display: none;
+}
+
+/*============================================================*/
+.wcml-tip {
+	cursor: help;
+	color: #555;
+}
+
+.wcml-products {
+	a {
+		cursor: pointer;
+	}
+}
+
+.column-product_cat,
+.column-product_tag,
+.column-product_type {
+	@media(max-width: $wp-breakpoint-max) {
+		display: none;
+	}
+}
+
+.wcml-link-troubleshooting {
+	margin-top: $margin-xs;
+}
+
+.wcml-status-list {
+	li {
+		padding-left: 25px;
+		margin-bottom: $margin-base;
+		ul li {
+			margin-bottom: $margin-xs*.5;
+		}
+	}
+	&.wcml-plugins-status-list li,
+	&.wcml-tax-translation-list li {
+		margin-bottom: $margin-sm;
+	}
+	[class*="otgs-ico"]:not(.otgs-ico-help) {
+		margin-left: -25px;
+		margin-right: 5px;
+		vertical-align: baseline;
+	}
+	.button-secondary {
+		vertical-align: middle;
+	}
+	small {
+		display: block;
+	}
+}
+
+.wcml-lang-list {
+	margin: $margin-xs 0;
+	.wpml-title-flag {
+		margin-left: -25px;
+		margin-right: 5px;
+	}
+}
+
+.wcml-dismiss-warning {
+	position: relative;
+	float: right;
+	padding: 0;
+	text-decoration: none;
+	outline: none;
+}
+
+.wcml-dismiss-warning:active {
+	outline: none;
+}
+
+.wcml-notice {
+	// Styling copied from WordPress - on this class WP's JS won't trigger
+	background: #fff;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+	margin: 5px 0 15px;
+	padding: 1px 12px;
+	position: relative;
+	p {
+		margin: .5em 0;
+		padding: 2px;
+	}
+}
+.otgs-is-dismissible {
+	position: relative;
+	padding-right: 38px;
+	.notice-dismiss {
+		text-decoration: none;
+	}
+	p [class*="button-"] {
+		margin: -5px 5px;
+	}
+}
+.wcml_tt_spinner {
+  margin-right: 15px;
+  display: none;
+}
