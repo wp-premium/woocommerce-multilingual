@@ -4,104 +4,86 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nProject-Id-Version:WPML_EXPORT\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: \nLanguage:en\nMIME-Version: 1.0\n"
 
-msgid "Collapse"
-msgstr "Dölj"
+msgid "Introduction"
+msgstr "Introduktion"
 
-msgid "Expand"
-msgstr "Visa"
+msgid "Store Pages"
+msgstr "Butikssidor"
 
-msgid "Please set bundles for product"
-msgstr "Ange paket för produkt"
+msgid "Global Attributes"
+msgstr "Globala attribut"
 
-msgid "Please save translation before translate bundles texts"
-msgstr "Spara översättningen innan översättning av paketens texter görs"
+msgid "Multiple Currencies"
+msgstr "Flera valutor"
 
-msgid "Title"
-msgstr "Titel"
+msgid "Translation Interface"
+msgstr "Översättningsgränssnitt"
 
-msgid "Description"
-msgstr "Beskrivning"
+msgid "Ready!"
+msgstr "Klar!"
 
-msgid "Enter translation"
-msgstr "Skriv översättning"
+msgid "Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products."
+msgstr ""
 
-msgid "%s translation"
-msgstr "%s översättning"
+msgid "Action failed. Please refresh the page and retry."
+msgstr "Åtgärden misslyckades. Uppdatera sidan och försök igen."
 
-msgid "Show content"
-msgstr "Visa innehåll"
+msgid "Cheatin&#8217; huh?"
+msgstr "Fuskar du&#8217; va?"
 
-msgid "Edit translation"
-msgstr "Redigera översättning"
+msgid "Run the Setup Wizard"
+msgstr "Kör installationsguiden"
 
-msgid "Original content:"
-msgstr "Ursprungligt innehåll"
+msgid "Skip Setup"
+msgstr "Hoppa över installation"
 
-msgid "Close"
-msgstr "Stäng"
+msgid "WooCommerce Multilingual &rsaquo; Setup Wizard"
+msgstr "WooCommerce Multilingual &rsaquo; Installationsguide"
 
-msgid "Cancel"
-msgstr "Avbryt"
+msgid "WooCommerce Multilingual"
+msgstr "WooCommerce Multilingual"
 
-msgid "Ok"
-msgstr "Ok"
+msgid "How to translate products"
+msgstr "Hur man översätter produkter"
 
-msgid "One-off cost for the booking as a whole."
-msgstr "Engångskostnad för bokningen som helhet."
+msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
+msgstr "Snabbändring är inaktiverad för produktöversättningar. Du rekommenderas att använda %s för att ändra produktöversättningar. %s"
 
-msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
-msgstr "Detta är kostnaden per bokat block. Alla övriga kostnader (för resurser och personer) läggs till detta."
+msgid "WooCommerce Multilingual products editor"
+msgstr "WooCommerce Multilingual produktredigerare"
 
-msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
-msgstr "Kostnaden visas för användaren i frontend. Lämna det tomt för att få det beräknat. Om en bokning har olika kostnader kommer detta att föregås med ordet \"från:\"."
+msgid "Edit this product translation"
+msgstr "Ändra denna produktöversättning"
 
-msgid "Calculate costs in other currencies automatically"
-msgstr "Beräkna kostnader i andra valutor automatiskt"
+msgid "How to translate attributes"
+msgstr "Hur man översätter attribut"
 
-msgid "Set costs in other currencies manually"
-msgstr "Ange kostnader i andra valutor manuellt"
+msgid "How to translate product categories"
+msgstr "Hur man översätter produktkategorier"
 
-msgid "Invalid nonce"
-msgstr "Ogiltig nonce"
+msgid "The recommended way to translate WooCommerce products is using the\n                             %sWooCommerce Multilingual products translation%s page.\n                             Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
+msgstr ""
 
-msgid "Resources"
-msgstr "Resurser"
+msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
+msgstr "För att kunna ändra anpassade attribut måste du använda <a href=\"%s\">redigerare för anpassad produktöversättning</a>"
 
-msgid "Person types"
-msgstr "Persontyper"
+msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgstr "Du använder samma värde som för standard kategoribas. Detta är känt för att skapa konflikter vilket resulterar i att url:er inte fungerar korrekt."
 
-msgid "Resources label"
-msgstr "Etikett för resurser"
+msgid "translations"
+msgstr "översättningar"
 
-msgid "Booking currency"
-msgstr "Bokningsvaluta"
-
-msgid "Translation of"
-msgstr "Översättning av"
-
-msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "För att översätta strängar för extra alternativ, spara %s och gå till <b><a href=\"%s\">Översättningsgränssnitt för strängar</a></b>"
-
-msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "För att översätta tillägg-strängar, spara tillägg och gå till <b><a href=\"%s\">Översättningsgränssnitt för strängar</a></b>"
-
-msgid "Product Bundles"
-msgstr "Produktpaket"
-
-msgid "Please update original product"
-msgstr "Uppdatera originalprodukten"
-
-msgid "Currency switcher"
-msgstr "Valutaväxlare"
-
-msgid "Configure options"
-msgstr "Konfigurera alternativ"
-
-msgid "Currencies order updated"
-msgstr "Valutaordning har uppdaterats"
+msgid "product"
+msgstr "produkt"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior %s."
 msgstr "WooCommerce Multilingual är aktiverad men inte aktiv. Den är inte kompatibel med  <a href=\"%s\">WPML</a>-versioner före %s."
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">Woocommerce</a> versions prior %s."
+msgstr "WooCommerce Multilingual är aktiverad men inte aktiv. Den är inte kompatibel med <a href=\"%s\">Woocommerce</a> versioner före %s."
+
+msgid "You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href=\"%s\">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML."
+msgstr "Du använder WooCommerce Multilingual %s. Denna version innehåller en viktig ombyggnad av konfigurationssidans användargränssnitt och då krävs  <a href=\"%s\">WPML %s</a> eller senare. Allt fungerar fortfarande i frontend men för att konfigurera alternativ för WooCommerce Multilingual måste du uppgradera WPML."
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML Translation Management</a> versions prior %s."
 msgstr "WooCommerce Multilingual är aktiverad men inte aktiv. Den är inte kompatibel med  <a href=\"%s\">WPML Översättningshanterar</a>versioner före %s."
@@ -142,47 +124,53 @@ msgstr "Anpassad typ %s konfigurering från filen wpml-config.xml ändrades!"
 msgid "Custom taxonomy %s configuration from wpml-config.xml file was altered!"
 msgstr "Anpassad taxonomi %s konfigurering från filen wpml-config.xml ändrades!"
 
-msgid "Select the currency you want to set the options for:"
-msgstr "Välj vilken valuta du vill ange alternativ för:"
+msgid "Upgrade WPML"
+msgstr "Uppgradera WPML"
 
-msgid "All the products will be removed from the current order in order to change the currency"
-msgstr "Alla produkter tas bort från den aktuella beställningen för att kunna ändra valuta"
+msgid "Invalid language parameter: %s"
+msgstr "Ogiltig språkparameter: %s"
 
-msgid "Show all currencies"
-msgstr "Visa alla valutor"
+msgid "Source product id not found: %s"
+msgstr "Källprodukt hittades inte: %s"
 
-msgid "Currency - no orders found"
-msgstr "Valuta - inga beställningar hittades"
+msgid "Product Base"
+msgstr "Produktutbud"
 
-msgid "Order currency:"
-msgstr "Beställ valuta:"
+msgid "Product Tag Base"
+msgstr "Bassökväg för produktetiketter"
 
-msgid "All the products will be removed from the current order in order to change the language"
-msgstr "Alla produkter kommer att tas bort från den aktuella beställningen för att kunna ändra språket"
+msgid "Product Category Base"
+msgstr "Bassökväg för produktkategorier"
 
-msgid "Order language:"
-msgstr "Beställ språk:"
+msgid "Product Attribute Base"
+msgstr "Bassökväg för produktattribut"
 
-msgid "Title missing"
-msgstr "Titel saknas"
+msgid "Endpoint: %s"
+msgstr "Endpoint: %s"
+
+msgid "product-category"
+msgstr "produkt-kategori"
+
+msgid "product-tag"
+msgstr "produkt-tagg"
 
 msgid "Original language"
 msgstr "Originalspråk"
 
-msgid "Not translated"
-msgstr "Ej översatt"
+msgid "Take this and edit"
+msgstr "Ta denna och ändra"
 
-msgid "Not translated - needs update"
-msgstr "Ej översatt - behöver uppdateras"
+msgid "Add translation"
+msgstr "Lägg till översättning"
 
-msgid "In progress"
-msgstr "Pågår"
+msgid "Update translation"
+msgstr "Uppdatera översättning"
 
-msgid "Complete"
-msgstr "Färdig"
+msgid "Finish translating"
+msgstr "Avsluta översättning"
 
-msgid "The recommended way to translate WooCommerce products is using the <b><a href=\"%s\">WooCommerce Multilingual products translation</a></b> page. Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
-msgstr "Det rekommenderade sättet att översätta WooCommerce-produkter är genom att använda sidan <b><a href=\"%s\">WooCommerce Multilingual produktöversättning</a></b>. Använd endast denna sida vid översättning av element som inte finns i WooCommerce Multilingual produktöversättningstabell."
+msgid "Edit translation"
+msgstr "Redigera översättning"
 
 msgid "Edit this item inline"
 msgstr "Ändra detta objekt inline"
@@ -190,23 +178,47 @@ msgstr "Ändra detta objekt inline"
 msgid "Quick Edit"
 msgstr "Snabbändring"
 
-msgid "Content / Description"
-msgstr ""
+msgid "Translation in progress"
+msgstr "Översättning pågår"
 
-msgid "Excerpt"
-msgstr "Utdrag"
+msgid "Invalid nonce"
+msgstr "Ogiltig nonce"
 
-msgid "Images"
-msgstr "Bilder"
+msgid "Currency - no orders found"
+msgstr "Valuta - inga beställningar hittades"
 
-msgid "Variations"
-msgstr "Variationer"
+msgid "Currencies order updated"
+msgstr "Valutaordning har uppdaterats"
 
-msgid "Any %s"
-msgstr "Alla %s"
+msgid "Currency switcher"
+msgstr "Valutaväxlare"
 
-msgid "Please translate all attributes"
-msgstr "Översätt alla attribut"
+msgid "Configure options"
+msgstr "Konfigurera alternativ"
+
+msgid "Settings saved!"
+msgstr "Inställningarna har sparats!"
+
+msgid "Add new currency"
+msgstr "Lägg till ny valuta"
+
+msgid "Update currency"
+msgstr "Uppdatera valuta"
+
+msgid "Update settings for %s"
+msgstr "Uppdatera inställningar för %s"
+
+msgid "The default currency was changed. In order to show accurate prices in all currencies, you need to update the exchange rates under the %sMulti-currency%s configuration."
+msgstr "Standardvalutan har ändrats. För att kunna visa rätt pris i alla valutor måste du uppdatera växelkurserna i konfigurationen för %sMulti-currency%s."
+
+msgid "All the products will be removed from the current order in order to change the currency"
+msgstr "Alla produkter tas bort från den aktuella beställningen för att kunna ändra valuta"
+
+msgid "Show all currencies"
+msgstr "Visa alla valutor"
+
+msgid "Order currency:"
+msgstr "Beställ valuta:"
 
 msgid "Cart"
 msgstr "Kundvagn"
@@ -241,20 +253,65 @@ msgstr "Visa beställning"
 msgid "Shop"
 msgstr "Butik"
 
+msgid "All the products will be removed from the current order in order to change the language"
+msgstr "Alla produkter kommer att tas bort från den aktuella beställningen för att kunna ändra språket"
+
+msgid "Order language:"
+msgstr "Beställ språk:"
+
+msgid "Choose a file"
+msgstr "Välj en fil"
+
+msgid "At least one of these fields is required: title, content or excerpt"
+msgstr "Minst ett av dessa fält är obligatoriska: titel, innehåll eller utdrag"
+
+msgid "This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation."
+msgstr "Detta översättningsjobb kommer inte längre att vara tilldelat dig. Andra översättare kan ta det och fortsätta översättningen."
+
+msgid "This field is locked for editing because WPML will copy its value from the original language."
+msgstr "Detta fält är låst för redigering eftersom WPML kommer att kopiera värdet från originalspråket."
+
+msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
+msgstr "Det här är en översättning av %s. Några fält går inte att ändra. Du rekommenderas att använda %s för översättning av produkter."
+
+msgid "WooCommerce Multilingual products translator"
+msgstr "WooCommerce Multilingual produktöversättare"
+
+msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
+msgstr "Det ser ut som att du uppdaterar från en tidigare version av WooCommerce Multilingual. Vill du skapa översatta variationer och bilder automatiskt?"
+
+msgid "Yes, go to the troubleshooting page"
+msgstr "Ja, gå till felsökningssidan"
+
+msgid "No - dismiss"
+msgstr "Nej - avvisa"
+
+msgid "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?"
+msgstr "%sWooCommerce Multilingual%s har installerats. Vill du se en snabb översikt?"
+
+msgid "Learn how to turn your e-commerce site multilingual"
+msgstr "Lär dig hur du gör din e-handelssida flerspråkig"
+
+msgid "Dismiss"
+msgstr "Avvisa"
+
 msgid "To translate %s please use the %s translation%s page, inside the %sWooCommerce Multilingual admin%s."
 msgstr "För att översätta %s, använd %s översättnings%ssidan i %sWooCommerce Multilinguals admin%s."
 
 msgid "%s do not require translation."
 msgstr "%s behöver inte översättas."
 
-msgid "Change"
-msgstr "Byt"
+msgid "Include to translation"
+msgstr "Inkludera i översättningar"
 
-msgid "Some %s are missing translations (%d translations missing)."
-msgstr "Vissa %s saknar översättningar (%d översättningar saknas)."
+msgid "%d %s are missing translations."
+msgstr "%d %s saknar översättningar."
 
-msgid "Translate now"
-msgstr "Översätt nu"
+msgid "Translate %s"
+msgstr "Översätt %s"
+
+msgid "Exclude from translation"
+msgstr "Exkludera från översättning"
 
 msgid "All %s are translated."
 msgstr "Alla %s är översatta."
@@ -286,149 +343,188 @@ msgstr "Uppdaterade framgångsrikt %s för alla översatta %s."
 msgid "Synchronize attributes and update product variations"
 msgstr "Synkronisera attribut och uppdatera produktvariationer"
 
-msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
-msgstr "Det ser ut som att du uppdaterar från en tidigare version av WooCommerce Multilingual. Vill du skapa översatta variationer och bilder automatiskt?"
+msgid "Image"
+msgstr "Bild"
 
-msgid "Yes, go to the troubleshooting page"
-msgstr "Ja, gå till felsökningssidan"
+msgid "Product"
+msgstr "Produkt"
 
-msgid "No - dismiss"
-msgstr "Nej - avvisa"
+msgid "Type"
+msgstr "Typ"
 
-msgid "product-category"
-msgstr "produkt-kategori"
+msgid "Date"
+msgstr "Datum"
 
-msgid "product-tag"
-msgstr "produkt-tagg"
+msgid "Categories"
+msgstr "Kategorier"
 
-msgid "Please enter this text in %s"
-msgstr "Ange den här texten på %s"
+msgid "No products found"
+msgstr "Inga produkter hittade"
 
-msgid "You have to enter this text in the strings language ( %s ) so you can translate it using the WPML String Translation."
-msgstr "Du måste ange den här texten på strängens språk ( %s ) så att du kan översätta den med hjälp av WPML String Translation."
+msgid "Draft"
+msgstr "Utkast"
 
-msgid "You need to enter attribute names in %s (even though your site's default language is %s). Then, translate it to %s and the rest of the site's languages using in the %sWooCommerce Multlingual admin%s."
-msgstr "Du måste ange attributnamn på %s (trots att din sidas standardspråk är %s). Översätt det sedan till %s och resten av sidans språk med hjälp av %sWooCommerce Multlinguals admin%s."
+msgid "Private"
+msgstr "Privat"
 
-msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
-msgstr "För att kunna ändra anpassade attribut måste du använda <a href=\"%s\">redigerare för anpassad produktöversättning</a>"
-
-msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgid "Pending"
 msgstr ""
 
-msgid "translations"
-msgstr "översättningar"
+msgid "Scheduled"
+msgstr "Schemalagd"
 
-msgid "WooCommerce Multilingual"
-msgstr "WooCommerce Multilingual"
+msgid "Parent product: %s"
+msgstr "Överordnad produkt: %s"
 
-msgid "General settings"
-msgstr "Allmänna inställningar"
+msgid "Edit this item"
+msgstr "Ändra detta objekt"
 
-msgid "Products"
-msgstr "Produkter"
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "View \"%s\""
+msgstr "Visa \"%s\""
+
+msgid "View"
+msgstr "Visa"
+
+msgid "Published"
+msgstr "Publicerad"
+
+msgid "Last Modified"
+msgstr "Senast ändrad"
+
+msgid "All languages"
+msgstr "Alla språk"
+
+msgid "All categories"
+msgstr "Alla kategorier"
+
+msgid "All translation statuses"
+msgstr "All status för översättningar"
+
+msgid "Not translated or needs updating"
+msgstr "Ej översatt eller kräver uppdatering"
+
+msgid "Needs updating"
+msgstr "Behöver uppdateras"
+
+msgid "Translation complete"
+msgstr "Översättning färdig"
+
+msgid "All statuses"
+msgstr "Alla statusar"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Reset"
+msgstr "Återställ"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "%d items"
+msgstr "%d föremål"
+
+msgid "Go to the first page"
+msgstr "Gå till första sidan"
+
+msgid "Go to the previous page"
+msgstr "Gå till föregående sida"
+
+msgid "Select Page"
+msgstr "Välj sida"
+
+msgid "Current page"
+msgstr "Aktuell sida"
+
+msgid "of"
+msgstr "av"
+
+msgid "Go to the next page"
+msgstr "Gå till nästa sida"
+
+msgid "Go to the last page"
+msgstr "Gå till sista sidan"
+
+msgid "Translatable?"
+msgstr "Översättningsbar?"
+
+msgid "Enable this if you want to translate attribute values with Woocommerce Multilingual"
+msgstr "Aktivera detta om du vill översätta attributvärden med Woocommerce Multilingual"
+
+msgid "Existing translations and variations associated will be deleted."
+msgstr "Spännande översättningar och kopplade variationer kommer att tas bort."
+
+msgid "Product Translation Interface"
+msgstr "Produktöversättningsgränssnitt"
+
+msgid "The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions."
+msgstr "Det rekommenderade sättet är att använda WPML Translation Editor. Det är specialanpassat för att göra översättningsprocessen mycket enklare samtidigt som det integrerar bättre med andra WooCommerce-tillägg."
+
+msgid "WPML Translation Editor"
+msgstr "WPML Translation Editor"
+
+msgid "Native WooCommerce product editing screen"
+msgstr "Ursprunglig skärmbild för WooCommerce produktredigering"
+
+msgid "Products synchronization"
+msgstr "Produktsynkronisering"
+
+msgid "Configure specific product properties that should be synced to translations."
+msgstr "Konfigurera specifika produktegenskaper som ska synkroniseras till översättningar."
+
+msgid "Sync publishing date for translated products."
+msgstr "Synkronisera utgivningsdatum för översatta produkter."
+
+msgid "Sync products and product taxonomies order."
+msgstr "Synkronisera beställningar av produkter och produkt-taxonomier."
+
+msgid "Products Download Files"
+msgstr "Produktnedladdningsfiler"
+
+msgid "If you are using downloadable products, you can choose to have their paths\n                                            synchronized, or seperate for each language."
+msgstr "Om du använder nerladdningsbara produkter kan du välja att få dessa sökvägar\n                                            synkroniserade, eller separata för varje språk."
+
+msgid "Use the same files for translations"
+msgstr "Använd samma filer för översättning"
+
+msgid "Add separate download files for translations"
+msgstr "Lägg till separata nedladdningsfiler för översättningar"
+
+msgid "Save changes"
+msgstr "Spara ändringar"
+
+msgid "Troubleshooting page"
+msgstr "Felsökningssida"
+
+msgid "Update Translation"
+msgstr "Uppdatera översättning"
+
+msgid "Hide This Message"
+msgstr "Dölj detta meddelande"
+
+msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
+msgstr "<strong>WooCommerce-översättning finns tillgänglig</strong> &#8211; Installera eller uppdatera dina <code>%s</code>-översättningar till version <code>%s</code>."
+
+msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
+msgstr "Detta kommer automatiskt att skapa variationer för översatta produkter motsvarande de nyligen översatta attributen."
+
+msgid "Synchronize %s assignment in content"
+msgstr "Synkronisera %s-uppgifter i innehåll"
+
+msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
+msgstr "Denna åtgärd låter dig automatiskt tillämpa %s-taxonomin på ditt innehåll på olika språk. Den låter dig skanna originalinnehållet och tillämpa samma taxonomi på översatt innehåll."
 
 msgid "You have untranslated terms!"
 msgstr "Du har oöversatta termer!"
 
-msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
-msgstr "WooCommerce Multilingual är aktiverad men inte verksam. Den är inte kompatibel med  <a href=\"%s\">WPML</a> versioner före 2.0.5."
+msgid "Select currency"
+msgstr "Välj valuta"
 
-msgid "%s plugin is installed and active."
-msgstr "%s-plugin är installerat och aktivt."
-
-msgid "%s is set up."
-msgstr "%s har ställts in."
-
-msgid "%s is not set up."
-msgstr "%s har inte ställts in."
-
-msgid "%s plugin is either not installed or not active."
-msgstr "%s-plugin är antingen inte installerad eller inte aktiv."
-
-msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
-msgstr "%1$s  är installerat, men med fel version. Du behöver %1$s %2$s eller högre."
-
-msgid "Required plugins"
-msgstr "Plugins som krävs"
-
-msgid "Plugins Status"
-msgstr "Status insticksprogram"
-
-msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
-msgstr "WooCommerce Multilingual är beroende av flera insticksprogram för att fungera. Om något av dessa program saknas bör du installera och aktivera det."
-
-msgid "Update WPML"
-msgstr "Uppdatera WPML"
-
-msgid "Get WPML"
-msgstr "Skaffa WPML"
-
-msgid "Get WPML Media"
-msgstr "Skaffa WPML Media"
-
-msgid "Get WPML Translation Management"
-msgstr "Skaffa WPML översättningshantering"
-
-msgid "Get WPML String Translation"
-msgstr "Skaffa WPML strängöversättning"
-
-msgid "Download WooCommerce"
-msgstr "Ladda ner WooCommerce"
-
-msgid "Drop-down menu"
-msgstr "Rullgardinsmeny"
-
-msgid "List of currencies"
-msgstr "Lista över valutor"
-
-msgid "Show a currency selector on the product page template"
-msgstr "Visa en valutaväljare i produktsidans mall"
-
-msgid "Currency switcher options"
-msgstr "Alternativ för valutaväxlare"
-
-msgid "You can customize currency switcher on front-end"
-msgstr "Du kan anpassa valutaväxlare i front-end"
-
-msgid "Currency order"
-msgstr "Valutasortering"
-
-msgid "Drag the currencies to change their order"
-msgstr "Dra valutorna för att ändra sortering"
-
-msgid "Currency switcher style"
-msgstr "Stil på valutaväxlare"
-
-msgid "Vertical"
-msgstr "Vertikal"
-
-msgid "Horizontal"
-msgstr "Horisontell"
-
-msgid "Visibility"
-msgstr "Synlighet"
-
-msgid "Available parameters"
-msgstr "Tillgängliga parametrar"
-
-msgid "%name%, %symbol%, %code%"
-msgstr "%name%, %symbol%, %code%"
-
-msgid "Template for currency switcher"
-msgstr "Mall för valutaväxlare"
-
-msgid "Default: %name% (%symbol%) - %code%"
-msgstr "Standard: %name% (%symbol%) - %code%"
-
-msgid "Currency switcher preview"
-msgstr "Förhandsgranska valutaväxlare"
-
-msgid "Save"
-msgstr "Spara"
-
-msgid "Currency options for %s"
-msgstr "Valuta-alternativ för %s"
+msgid "Exchange Rate"
+msgstr "Växelkurs"
 
 msgid "Only numeric"
 msgstr "Endast siffror"
@@ -436,23 +532,23 @@ msgstr "Endast siffror"
 msgid "Set on %s"
 msgstr "Inställt på %s"
 
-msgid "Left (%s99.99)"
-msgstr "Vänster (%s99.99)"
-
-msgid "Right (99.99%s)"
-msgstr "Höger (99.99%s)"
-
-msgid "Left with space (%s 99.99)"
-msgstr "Vänster med mellanrum (%s 99.99)"
-
-msgid "Right with space (99.99 %s)"
-msgstr "Höger med mellanrum (99.99 %s)"
-
-msgid "Exchange Rate"
-msgstr "Växelkurs"
+msgid "Currency Preview"
+msgstr "Förhandsgranska valuta"
 
 msgid "Currency Position"
 msgstr "Valutaposition"
+
+msgid "Left"
+msgstr "Vänster"
+
+msgid "Right"
+msgstr "Höger"
+
+msgid "Left with space"
+msgstr "Vänster med mellanrum"
+
+msgid "Right with space"
+msgstr "Höger med mellanrum"
 
 msgid "Thousand Separator"
 msgstr "Tusentalsavgränsare"
@@ -466,17 +562,17 @@ msgstr "Antal decimaler"
 msgid "Rounding to the nearest integer"
 msgstr "Avrundning till närmsta heltal"
 
-msgid "disabled"
-msgstr "inaktiverad"
+msgid "Disabled"
+msgstr "Inaktiverad"
 
-msgid "up"
-msgstr "upp"
+msgid "Up"
+msgstr "Upp"
 
-msgid "down"
-msgstr "ner"
+msgid "Down"
+msgstr "Ned"
 
-msgid "nearest"
-msgstr "närmaste"
+msgid "Nearest"
+msgstr "Närmaste"
 
 msgid "Increment for nearest integer"
 msgstr "Påslag för närmsta heltal"
@@ -484,8 +580,47 @@ msgstr "Påslag för närmsta heltal"
 msgid "Autosubtract amount"
 msgstr "Subtrahera belopp automatiskt"
 
-msgid " (%s)"
-msgstr "(%s)"
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "Products"
+msgstr "Produkter"
+
+msgid "Tags"
+msgstr "Taggar"
+
+msgid "Attributes"
+msgstr "Attribut"
+
+msgid "Shipping Classes"
+msgstr "Fraktklasser"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "Multi-currency"
+msgstr "Multivaluta"
+
+msgid "Store URLs"
+msgstr "Butik-URL:er"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Troubleshooting"
+msgstr "Felsökning"
+
+msgid "Thank you for using %sWooCommerce Multilingual%s! You can express your love and\n                                    support by %s rating our plugin and saying that %sit works%s for you."
+msgstr "Tack för att du använder %sWooCommerce Multilingual%s! Du kan uttrycka ditt gillande och \n stöd genom att %s betygsätta vårt insticksprogram och berätta att %sdet fungerar%s för dig."
+
+msgid "Hide"
+msgstr "Dölj"
+
+msgid "Loading ..."
+msgstr "Laddar ..."
 
 msgid "Regular Price"
 msgstr "Ordinarie pris"
@@ -493,20 +628,17 @@ msgstr "Ordinarie pris"
 msgid "Sale Price"
 msgstr "Extrapris"
 
-msgid "Multi-currency is enabled but no secondary currencies have been set"
-msgstr "Flera valutor har aktiverats men ingen sekundär valuta har ställts in"
+msgid "Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s."
+msgstr ""
 
 msgid "Calculate prices in other currencies automatically"
 msgstr "Beräkna automatiskt priserna i andra valutor"
 
-msgid "Click to see the prices in the other currencies as they are currently shown onthe front end."
-msgstr "Klicka för att se priserna i andra valutor så som de för närvarande visas på besökssidan."
+msgid "Click to see the prices in the other currencies as they are currently shown on the front end."
+msgstr "Klicka för att se hur priserna i de andra valutorna för närvarande ser ut i frontend."
 
 msgid "Show"
 msgstr "Visa"
-
-msgid "Hide"
-msgstr "Dölj"
 
 msgid "Set prices in other currencies manually"
 msgstr "Ställ in priser i andra valutor manuellt"
@@ -529,8 +661,8 @@ msgstr "Samma som standardvaluta"
 msgid "Set dates"
 msgstr "Ställ in datum"
 
-msgid "Please enter in a value less than the regular price"
-msgstr "Ange med ett värde mindre än standardpriset"
+msgid "Collapse"
+msgstr "Dölj"
 
 msgid "From&hellip;"
 msgstr "Från&hellip;"
@@ -538,206 +670,185 @@ msgstr "Från&hellip;"
 msgid "To&hellip;"
 msgstr "Till&hellip;"
 
-msgid "Choose a file"
-msgstr "Välj en fil"
+msgid "Please enter in a value less than the regular price"
+msgstr "Ange med ett värde mindre än standardpriset"
 
-msgid "Enter translation for name"
-msgstr "Ange översättning för namn"
+msgid "Required plugins"
+msgstr "Plugins som krävs"
 
-msgid "Please set images for product"
-msgstr "Ställ in bilder för produkt"
+msgid "Plugins Status"
+msgstr "Status insticksprogram"
 
-msgid "Please save translation before translate images texts"
-msgstr "Spara översättningen innan bildtexterna översätts"
+msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
+msgstr "WooCommerce Multilingual är beroende av flera insticksprogram för att fungera. Om något av dessa program saknas bör du installera och aktivera det."
 
-msgid "Caption"
-msgstr "Bildtext"
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
+msgstr "WooCommerce Multilingual är aktiverad men inte verksam. Den är inte kompatibel med  <a href=\"%s\">WPML</a> versioner före 2.0.5."
 
-msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
-msgstr "<strong>WooCommerce-översättning finns tillgänglig</strong> &#8211; Installera eller uppdatera dina <code>%s</code>-översättningar till version <code>%s</code>."
+msgid "Update WPML"
+msgstr "Uppdatera WPML"
 
-msgid "Update Translation"
-msgstr "Uppdatera översättning"
+msgid "Get WPML"
+msgstr "Skaffa WPML"
 
-msgid "Hide This Message"
-msgstr "Dölj detta meddelande"
+msgid "Get WPML Media"
+msgstr "Skaffa WPML Media"
 
-msgid "This product is an exact duplicate of the %s product."
-msgstr "Denna produkt är en exakt kopia av produkten %s."
+msgid "Get WPML Translation Management"
+msgstr "Skaffa WPML översättningshantering"
 
-msgid "edit product"
-msgstr "redigera produkt"
+msgid "Get WPML String Translation"
+msgstr "Skaffa WPML strängöversättning"
 
-msgid "Take this and edit"
-msgstr "Ta denna och ändra"
+msgid "%s is installed and active."
+msgstr "%s är installerad och aktiv. "
 
-msgid "Update"
-msgstr "Uppdatera"
+msgid "%s is set up."
+msgstr "%s har ställts in."
 
-msgid "Language"
-msgstr "Språk"
+msgid "%s is not set up."
+msgstr "%s har inte ställts in."
 
-msgid "Edit independently."
-msgstr "Redigera oberoende."
+msgid "%s is either not installed or not active."
+msgstr "%s är antingen inte installerad eller inte aktiv."
 
-msgid "Undo (keep this product as a duplicate)"
-msgstr "Ånga (behåll denna produkt som dubblett)"
+msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
+msgstr "%1$s  är installerat, men med fel version. Du behöver %1$s %2$s eller högre."
 
-msgid "Translation in progress"
-msgstr "Översättning pågår"
+msgid "Download WooCommerce"
+msgstr "Ladda ner WooCommerce"
 
-msgid "Show slug"
-msgstr "Visa slug"
+msgid "The WordPress Multilingual Plugin"
+msgstr "Insticksprogrammet WordPress Multilingual"
 
-msgid "Edit slug"
-msgstr "Ändra slug"
+msgid "This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages."
+msgstr "Denna sida gör det möjligt att översätta alla strängar som används av WooCommerce för att bygga olika typer av URL:er. Genom att översätta dem får du helt lokaliserade URL:er som matchar språket på sidorna."
 
-msgid "Please save translation before edit slug"
-msgstr "Spara översättningen innan du ändrar slug"
+msgid "You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page."
+msgstr "Du kan ange eller ändra dina standardvärden på sidan %sInställningar för permalänkar%s eller, för endpoints, på sidan för %sKontoinställningar%s för WooCoommerce."
 
-msgid "Translation missing"
-msgstr "Översättning saknas"
+msgid "permalinks settings"
+msgstr "Inställningar för permalänkar"
 
-msgid "Add Media"
-msgstr "Lägg till media"
+msgid "Account settings"
+msgstr "Kontoinställningar"
 
-msgid "Text"
-msgstr "Text"
+msgid "Slug type"
+msgstr "Slug-typ"
 
-msgid "Visual"
-msgstr "Visuell"
+msgid "Original Slug"
+msgstr "Ursprunglig Slug"
 
-msgid "name"
-msgstr "namn"
+msgid "Shop page"
+msgstr "Butikssida"
 
-msgid "values"
-msgstr "värden"
+msgid "Product base"
+msgstr "Produktutbud"
 
-msgid "Upload file"
-msgstr "Ladda upp fil"
+msgid "Product category base"
+msgstr "Bassökväg för produktkategorier"
 
-msgid "Translate %s"
-msgstr "Översätt %s"
+msgid "Product tag base"
+msgstr "Bassökväg för produktetiketter"
 
-msgid "%d products"
-msgstr "%d produkter"
+msgid "Product attribute base"
+msgstr "Bassökväg för produktattribut"
 
-msgid " | Parent product: %s"
-msgstr "| Överordnad produkt: %s"
+msgid "Original"
+msgstr "Ursprunglig"
 
-msgid "Show all products"
-msgstr "Visa alla produkter"
+msgid "Translation to"
+msgstr "Översättning till"
 
-msgid "WooCommerce Products"
-msgstr "WooCommerce-produkter"
+msgid "Product Shop Base"
+msgstr "Bassökväg för produktbutik"
 
-msgid "All languages"
-msgstr "Alla språk"
+msgid "Welcome to WooCommerce Multilingual!"
+msgstr "Välkommen till WooCommerce Multilingual!"
 
-msgid "Any category"
-msgstr "Vilken kategori som helst"
-
-msgid "All products"
-msgstr "Alla produkter"
-
-msgid "Not translated or needs updating"
-msgstr "Ej översatt eller kräver uppdatering"
-
-msgid "Needs updating"
-msgstr "Behöver uppdateras"
-
-msgid "Translation complete"
-msgstr "Översättning färdig"
-
-msgid "All statuses"
-msgstr "Alla statusar"
-
-msgid "Search"
-msgstr "Sök"
-
-msgid "Reset"
-msgstr "Återställ"
-
-msgid "Go to the first page"
-msgstr "Gå till första sidan"
-
-msgid "Go to the previous page"
-msgstr "Gå till föregående sida"
-
-msgid "of"
-msgstr "av"
-
-msgid "Go to the next page"
-msgstr "Gå till nästa sida"
-
-msgid "Go to the last page"
-msgstr "Gå till sista sidan"
-
-msgid "Type"
-msgstr "Typ"
-
-msgid "Product"
-msgstr "Produkt"
-
-msgid "No products found"
-msgstr "Inga produkter hittade"
-
-msgid " (draft)"
-msgstr "(utkast)"
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sSlugs Translation%s to translate."
+msgid "Configure the multilingual support for your e-commerce site in just a couple of minutes."
 msgstr ""
 
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sString Translation%s to translate."
-msgstr "Din grund för produkt-permalänkar är inte översatt i %s. De översatta produkternas url:er kommer inte att fungera. Gå till %sSträngöversättning%s för att översätta."
+msgid "By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away."
+msgstr "Som standard är produkterna översättningsbara, precis som produktkategorier, produkttaggar och attribut. Så du kan börja översätta dessa direkt."
 
-msgid "Please review the %sguide for running WooCommerce multilingual with default language other than English%s."
-msgstr "Granska %svägledning för att köra flerspråkig WooCommerce med annat standardspråk än engelska%s."
+msgid "You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode."
+msgstr "Du kan dock konfigurera vilka attribut du vill översätta, installera de översatta butikssidorna eller aktivera läget för flera valutor."
 
-msgid "You should check WPML configuration files added by other plugins or manual settings on the %sMultilingual Content Setup%s section."
-msgstr "Du bör kontrollera WPML:s konfigurationsfiler som lagts till av andra insticksprogram eller manuella inställningar i sektionen %sInställningar för flerspråkigt innehåll%s."
+msgid "Start"
+msgstr "Start"
 
-msgid "Your store's base currency is %s (%s). To change it, go to the %s page."
-msgstr "Din butiks basvaluta är %s (%s). För att ändra det, gå till %s-sidan."
+msgid "No, thanks. I'll do it later."
+msgstr "Nej tack. Jag gör det senare."
 
-msgid "Products using custom currency rates as they were migrated from the previous versions - option to support different prices per language"
-msgstr "Produkter som använder basvaluta bedöms som de migrerades från den föregående versionen - allternativ att stödja andra priser per språk"
+msgid "Select translatable attributes"
+msgstr "Välj översättningsbara attribut"
 
-msgid "Are you sure?"
-msgstr "Är du säker?"
+msgid "There are no attributes defined"
+msgstr "Det finns inga angivna attribut"
 
-msgid "Delete"
-msgstr "Radera"
+msgid "Continue"
+msgstr "Fortsätt"
 
-msgid "Configuration warnings"
-msgstr "Konfigureringsvarningar"
+msgid "Later"
+msgstr "Senare"
 
-msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
-msgstr "Rapporterar olika konfigureringsproblem som kan göra att WooCommerce Multilingual inte fungerar normalt"
+msgid "One or more WooCommerce pages have not been created"
+msgstr "En eller fler WooCommerce-sidor har inte skapats"
 
-msgid "Attention required: probable problem with URLs in different languages"
-msgstr "Uppmärksamhet krävs: möjligt problem med URL:er på olika språk"
+msgid "Install missing WooCommerce pages and create translations."
+msgstr "Installera saknade WooCommerce-sidor och skapa översättningar."
 
-msgid "Your site's default language is not English and the strings language is also not English. This may lead to problems with your site's URLs in different languages."
-msgstr "Din plats standardspråk är inte engelska och strängarnas språk är inte heller engelska. Detta kan leda till problem med dina plats-URL:er på olika språk."
+msgid "Translate Store Pages"
+msgstr "Översätt butikssidor"
 
-msgid "Change the strings language to English"
-msgstr "Ändra strängarnas språk till engelska"
+msgid "All store pages must be translated in the languages configured on the site."
+msgstr "Alla butikssidor måste vara översatta till de språk som webbplatsen har konfigurerats för."
 
-msgid "Re-scan strings"
-msgstr "Skanna om strängarna"
+msgid "Select the translation interface"
+msgstr "Välj översättningsgränssnitt"
 
-msgid "Your site's default language is not English. There are some settings that require careful attention."
-msgstr "Standardspråket på din plats är inte engelska. Det finns några inställningar som kräver extra uppmärksamhet."
+msgid "Enable multiple currencies"
+msgstr "Aktivera flera valutor"
 
-msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
-msgstr "Vissa inställningar från WooCommerce Multilingual i filen wpml-config.xml har skrivits över."
+msgid "This will allow you to set prices for products in different currencies. The prices can be determined based on a given exchange rate or set explicitly for specific products."
+msgstr "Detta ger dig möjlighet att sätta produktpriser i flera valutor. Priserna kan bestämmas baserat på en bestämd valutakurs eller ställas in unikt för särskilda produkter."
+
+msgid "Enable the multi-currency mode"
+msgstr "Aktivera multi-valuta"
+
+msgid "Further actions that are necessary for making your existing content multilingual, are listed below."
+msgstr "Ytterligare åtgärder som krävs för att göra ditt befintliga innehåll flerspråkigt finns listat nedan."
+
+msgid "Start translating products"
+msgstr "Börja översätta produkter"
+
+msgid "Add secondary currencies on the %smulti-currency configuration%s page"
+msgstr "Lägg till sekundära valutor på sidan %skonfigurering av multi-valuta%s"
+
+msgid "Translate existing terms for these %sproduct attributes%s: %s"
+msgstr "Översätt befintliga termer för dessa %sproduktattribut%s: %s"
+
+msgid "Translate existing %sproduct categories%s"
+msgstr "Översätt befintliga %sproduktkategorier%s"
+
+msgid "Translate existing %sproduct tags%s"
+msgstr "Översätt befintliga %sprodukttaggar%s"
+
+msgid "%sAdd missing translations%s for shipping classes"
+msgstr "%sLägg till saknade översättningar%s för fraktklasser"
+
+msgid "Translate %sURL slugs%s to create multilingual store and product urls"
+msgstr "Översätt %sURL-slugs%s för att skapa flerspråkig butik och produkt-URL:er"
+
+msgid "Use custom settings for translations download files"
+msgstr ""
 
 msgid "WooCommerce Store Pages"
 msgstr "WooCommerce butikssidor"
 
-msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated in all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
-msgstr "För att köra en flerspråkig e-handelssida måste du översätta WooCommerce-butikssidorna till alla platsens språk. När alla sidor är installerade kan du lägga till översättningen för dem från den här menyn."
+msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated to all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
+msgstr "För att köra en flerspråkig e-handelsplats måste du ha sidorna i WooCommerce-butiken översatta till alla platsspråk. När alla sidorna har installerats kan du lägga till översättningar för dem från denna meny."
 
 msgid "One or more WooCommerce pages have not been created."
 msgstr "En eller fler WooCommerce-sidor har inte skapats."
@@ -745,137 +856,59 @@ msgstr "En eller fler WooCommerce-sidor har inte skapats."
 msgid "Install WooCommerce Pages"
 msgstr "Installera WooCommerce-sidor"
 
-msgid "WooCommerce store pages don't exist for this language:"
-msgstr "WooCommerce-butikssidor finns inte för detta språk:"
+msgid "WooCommerce store pages do not exist for these languages:"
+msgstr "Sidorna för WooCommerce-butiken finns inte för dessa språk:"
 
-msgid "WooCommerce store pages don't exist for these languages:"
-msgstr "WooCommerce-butikssidor finns inte för dessa språk:"
-
-msgid "Create missing translations."
-msgstr "Skapa saknade översättningar."
+msgid "Create missing translations"
+msgstr "Skapa saknade översättningar"
 
 msgid "These pages are currently being translated by translators via WPML: "
 msgstr "Dessa sidor översätts för närvarande av översättare via WPML:"
 
-msgid "Hide this message"
-msgstr "Dölj detta meddelande"
-
-msgid "Show details about missing translations"
-msgstr "Visa uppgifter om saknade översättningar"
-
 msgid "WooCommerce store pages are translated to all the site's languages."
 msgstr "WooCommerce-butikssidor är översatta till alla platsens språk."
 
+msgid "Configuration warnings"
+msgstr "Konfigureringsvarningar"
+
+msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
+msgstr "Rapporterar olika konfigureringsproblem som kan göra att WooCommerce Multilingual inte fungerar normalt"
+
+msgid "Your product permalink base is not translated to:"
+msgstr "Din bassökväg för produktpermalänkar har inte översatts till:"
+
+msgid "Translate URLs"
+msgstr "Översätt URL:er"
+
+msgid "Your site's default language is not English and the strings language is also not English."
+msgstr "Standardspråket för din webbplats är inte engelska och språket för strängarna är inte heller engelska."
+
+msgid "Running WooCommerce multilingual with default language other than English."
+msgstr "WooCommerce multilingual körs med ett standardspråk annat än engelska."
+
+msgid "This may cause problems with URLs in different languages."
+msgstr "Detta kan orsaka problem med URL:er på olika språk."
+
+msgid "Change default language"
+msgstr "Ändra standardspråk"
+
+msgid "Your site's default language is not English."
+msgstr "Standardspråket för din webbplats är inte engelska."
+
+msgid "There are some settings that require careful attention."
+msgstr "Det finns vissa inställningar som kräver extra uppmärksamhet."
+
+msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgstr "Vissa inställningar från WooCommerce Multilingual i filen wpml-config.xml har skrivits över."
+
+msgid "You should check WPML configuration files added by other plugins or manual settings on the %s section."
+msgstr "Du bör kontrollera de konfigurationsfiler för WPML som har lagts till av andra insticksprogram eller via manuella inställningar i sektionen %s."
+
+msgid "Multilingual Content Setup"
+msgstr "Inställningar för flerspråkigt innehåll"
+
 msgid "Taxonomies missing translations"
 msgstr "Taxonomier saknar översättningar"
-
-msgid "Ignore"
-msgstr "Ignorera"
-
-msgid "Right now, there are no taxonomy terms needing translation."
-msgstr "Just nu behöver inga taxonomitermer översättas."
-
-msgid "Product Translation Interface"
-msgstr "Produktöversättningsgränssnitt"
-
-msgid "The recommended way to translate products is using the products translation table in the WooCommerce Multilingual admin. Choose to go to the native WooCommerce interface, if your products include custom sections that require direct access."
-msgstr "Det rekommenderade sättet att översätta produkter är att använda produktöversättningstabellen i WooCommerce Multilinguals admin. Välj att gå till det inbyggda WooCommerce-gränssnittet om dina produkter inkluderar anpassade delar som kräver direktåtkomst."
-
-msgid "Choose what to do when clicking on the translation controls for products:"
-msgstr "Välj vad du vill göra när du klickar på översättningskontrollerna för produkter:"
-
-msgid "Go to the product translation table in WooCommerce Multilingual"
-msgstr "Gå till produktöversättningstabellen i WooCommerce Multilingual"
-
-msgid "Go to the native WooCommerce product editing screen"
-msgstr "Gå till den inbyggda WooCommerce produktredigeringsskärmen"
-
-msgid "Products synchronization"
-msgstr "Produktsynkronisering"
-
-msgid "Configure specific product properties that should be synced to translations."
-msgstr "Konfigurera specifika produktegenskaper som ska synkroniseras till översättningar."
-
-msgid "Sync publishing date for translated products."
-msgstr "Synkronisera utgivningsdatum för översatta produkter."
-
-msgid "Sync products and product taxonomies order."
-msgstr "Synkronisera beställningar av produkter och produkt-taxonomier."
-
-msgid "File Paths Synchronization "
-msgstr "Synkronisering av filsökvägar"
-
-msgid "If you are using downloadable products, you can choose to have their paths synchronized, or seperate for each language."
-msgstr "Om du använder nerladdningsbara produkter kan du välja att få dessa sökvägar synkroniserade eller separata för varje språk."
-
-msgid "Use the same file paths in all languages"
-msgstr "Använd samma filsökväg på alla språk"
-
-msgid "Different file paths for each language"
-msgstr "Olika filsökvägar för varje språk"
-
-msgid "Manage Currencies"
-msgstr "Hantera valutor"
-
-msgid "This will let you enable the multi-currency mode where users can see prices according to their currency preference and configured exchange rate."
-msgstr "Detta låter dig aktivera läget med flera valutor där användare kan se priser i enlighet med sina valutapreferenser och konfigurerade växelkurser."
-
-msgid "No multi-currency."
-msgstr "Inga fler valutor."
-
-msgid "Multiple currencies, independent of languages."
-msgstr "Flera valutor, oberoende av språk."
-
-msgid "Learn more"
-msgstr "Mer information"
-
-msgid "Currency"
-msgstr "Valuta"
-
-msgid "default"
-msgstr "standard"
-
-msgid "Edit"
-msgstr "Redigera"
-
-msgid "Default currency"
-msgstr "Standardvaluta"
-
-msgid "Switch to this currency when switching language in the front-end"
-msgstr "Växla till denna valuta när språket byts på besökssidan"
-
-msgid "OFF"
-msgstr "AV"
-
-msgid "ON"
-msgstr "PÅ"
-
-msgid "Keep"
-msgstr "Behåll"
-
-msgid "Please fill field"
-msgstr "Fyll i fältet"
-
-msgid "Add currency"
-msgstr "Lägg till valuta"
-
-msgid "n/a"
-msgstr "ej relevant"
-
-msgid "Show only products with custom prices in secondary currencies"
-msgstr "Visa endast produkter med anpassade priser i sekundära valutor"
-
-msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
-msgstr "När det här valet är aktiverat och du växlar till en sekundär valuta i frontend visas endast produkter med anpassade priser i den valutan. Produkter med priser som fastställs baserat på växelkursen är dolda."
-
-msgid "Troubleshooting page"
-msgstr "Felsökningssida"
-
-msgid "Run fix"
-msgstr "Fixa"
-
-msgid "Dismiss"
-msgstr "Avvisa"
 
 msgid "To run a fully translated site, you should translate all taxonomy terms. Some store elements, such as variations, depend on taxonomy translation."
 msgstr "För att driva en fullt översatt sida ska du översätta alla taxonomitermer. Vissa butikselement, såsom variationer, är beroende av taxonomiöversättningen."
@@ -883,26 +916,20 @@ msgstr "För att driva en fullt översatt sida ska du översätta alla taxonomit
 msgid "This taxonomy requires translation."
 msgstr "Denna taxonomi behöver översättas."
 
+msgid "Include in translation"
+msgstr "Inkludera i översättning"
+
 msgid "This taxonomy does not require translation."
 msgstr "Denna taxonomi behöver inte översättas."
 
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "Ändringarna du gjorde kommer att gå förlorade om du lämnar den här sidan."
+msgid "Right now, there are no taxonomy terms needing translation."
+msgstr "Just nu behöver inga taxonomitermer översättas."
 
-msgid "At least one currency must be enabled for this language!"
-msgstr "Minst en valuta måste vara aktiverad för det här språket!"
+msgid "There are no translatable product attributes defined"
+msgstr "Det finns inga angivna översättningsbara produktattribut"
 
-msgid "Synchronize %s assignment in content"
-msgstr "Synkronisera %s-uppgifter i innehåll"
-
-msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
-msgstr "Denna åtgärd låter dig automatiskt tillämpa %s-taxonomin på ditt innehåll på olika språk. Den låter dig skanna originalinnehållet och tillämpa samma taxonomi på översatt innehåll."
-
-msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
-msgstr "Detta kommer automatiskt att skapa variationer för översatta produkter motsvarande de nyligen översatta attributen."
-
-msgid "Troubleshooting"
-msgstr "Felsökning"
+msgid "Select the attribute to translate: "
+msgstr "Välj attribut att översätta: "
 
 msgid "Please make a backup of your database before you start the synchronization"
 msgstr "Skapa en säkerhetskopia av din databas innan du startar synkroniseringen."
@@ -922,8 +949,8 @@ msgstr "Synka produktvariationer:"
 msgid "left"
 msgstr "kvar"
 
-msgid "Sync products \"gallery images\""
-msgstr "Synkronisera produkter \"galleribilder\""
+msgid "Sync products \"gallery images\":"
+msgstr "Synkronisera produkter \"galleribilder\":"
 
 msgid "Sync products categories (display type, thumbnail):"
 msgstr "Synkronisera produkt-kategorier (visa typ, minibild):"
@@ -934,53 +961,254 @@ msgstr "Duplicera termer (välj attribut):"
 msgid "none"
 msgstr "ingen"
 
-msgid "Start"
-msgstr "Start"
+msgid "Enable/disable"
+msgstr "Aktivera/Inaktivera"
 
-msgid "Please add variations to product"
-msgstr "Lägg till variationer till produkt"
+msgid "Currencies"
+msgstr "Valutor"
 
-msgid "Please save translation before translate variations file paths"
-msgstr "Spara översättningen innan översättning av filvariationssökvägar sker"
+msgid "Add currency"
+msgstr "Lägg till valuta"
 
-msgid "Variations are not downloadable"
-msgstr "Variationer är inte nerladdningsbara"
+msgid "Currency"
+msgstr "Valuta"
 
-msgid "Download URL"
-msgstr "Nerladdnings-URL"
+msgid "Rate"
+msgstr "Kurs"
 
-msgid "Variation is not downloadable"
-msgstr "Variation är inte nerladdningsbar"
+msgid "default"
+msgstr "standard"
 
-msgid "This field is locked for editing because WPML will copy its value from the original language."
-msgstr "Detta fält är låst för redigering eftersom WPML kommer att kopiera värdet från originalspråket."
+msgid "Default currency"
+msgstr "Standardvaluta"
 
-msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
-msgstr "Det här är en översättning av %s. Några fält går inte att ändra. Du rekommenderas att använda %s för översättning av produkter."
+msgid "Switch to this currency when switching language in the front-end"
+msgstr "Växla till denna valuta när språket byts på besökssidan"
 
-msgid "WooCommerce Multilingual products translator"
-msgstr "WooCommerce Multilingual produktöversättare"
+msgid "Keep"
+msgstr "Behåll"
 
-msgid "How to translate products"
-msgstr "Hur man översätter produkter"
+msgid "Delete"
+msgstr "Radera"
 
-msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
-msgstr "Snabbändring är inaktiverad för produktöversättningar. Du rekommenderas att använda %s för att ändra produktöversättningar. %s"
+msgid " (%s)"
+msgstr "(%s)"
 
-msgid "WooCommerce Multilingual products editor"
-msgstr "WooCommerce Multilingual produktredigerare"
+msgid "The multi-currency mode cannot be enabled as a specific currency was not set. Go to the %sWooCommerce settings%s page and select the default currency for your store."
+msgstr "Läget för multi-valuta kan inte aktiveras eftersom en specifik valuta inte har ställts in. Gå till sidan %sWooCommerce settings%s och välj standardvaluta för din butik."
 
-msgid "Edit this product translation"
-msgstr "Ändra denna produktöversättning"
+msgid "Learn more"
+msgstr "Mer information"
 
-msgid "How to translate attributes"
-msgstr "Hur man översätter attribut"
+msgid "Show only products with custom prices in secondary currencies"
+msgstr "Visa endast produkter med anpassade priser i sekundära valutor"
 
-msgid "How to translate product categories"
-msgstr "Hur man översätter produktkategorier"
+msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
+msgstr "När det här valet är aktiverat och du växlar till en sekundär valuta i frontend visas endast produkter med anpassade priser i den valutan. Produkter med priser som fastställs baserat på växelkursen är dolda."
 
-msgid "Would you like to see a quick overview?"
-msgstr "Vill du se en snabb överblick?"
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "Ändringarna du gjorde kommer att gå förlorade om du lämnar den här sidan."
 
-msgid "Learn how to turn your e-commerce site multilingual"
-msgstr "Lär dig hur du gör din e-handelssida flerspråkig"
+msgid "At least one currency must be enabled for this language!"
+msgstr "Minst en valuta måste vara aktiverad för det här språket!"
+
+msgid "Currency switcher options"
+msgstr "Alternativ för valutaväxlare"
+
+msgid "Currency switcher style"
+msgstr "Stil på valutaväxlare"
+
+msgid "Currency order"
+msgstr "Valutasortering"
+
+msgid "Available parameters"
+msgstr "Tillgängliga parametrar"
+
+msgid "Template for currency switcher"
+msgstr "Mall för valutaväxlare"
+
+msgid "Visibility"
+msgstr "Synlighet"
+
+msgid "Currency switcher preview"
+msgstr "Förhandsgranska valutaväxlare"
+
+msgid "Drop-down menu"
+msgstr "Rullgardinsmeny"
+
+msgid "List of currencies"
+msgstr "Lista över valutor"
+
+msgid "Vertical"
+msgstr "Vertikal"
+
+msgid "Horizontal"
+msgstr "Horisontell"
+
+msgid "Drag the currencies to change their order"
+msgstr "Dra valutorna för att ändra sortering"
+
+msgid "%name%, %symbol%, %code%"
+msgstr "%name%, %symbol%, %code%"
+
+msgid "Default: %name% (%symbol%) - %code%"
+msgstr "Standard: %name% (%symbol%) - %code%"
+
+msgid "Show a currency selector on the product page template"
+msgstr "Visa en valutaväljare i produktsidans mall"
+
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgstr "För att konfigurera hur %sWooCommerce-produkter%s översätts, gå till sidan %sinställningar%s för WooCommerce Multiligual."
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Slug"
+msgstr "Slugg"
+
+msgid "Content / Description"
+msgstr "Innehåll / beskrivning"
+
+msgid "Excerpt"
+msgstr "Utdrag"
+
+msgid "Purchase note"
+msgstr "Köpnotering"
+
+msgid "Images"
+msgstr "Bilder"
+
+msgid "Custom Product attributes"
+msgstr "Anpassade produktattribut"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Value(s)"
+msgstr "Värde(n)"
+
+msgid "Custom Fields"
+msgstr "Anpassade fält"
+
+msgid "Variations data"
+msgstr "Variationsdata"
+
+msgid "Download Files for Variation #%s"
+msgstr "Ladda ned filer för variation #%s"
+
+msgid "Download Files"
+msgstr "Ladda ned filer"
+
+msgid "File URL"
+msgstr "Fil-URL"
+
+msgid "Content, title, and excerpt are empty."
+msgstr "Innehåll, titel eller utdrag är tomma."
+
+msgid "Search %s"
+msgstr "Sök %s"
+
+msgid "All %s"
+msgstr "Alla %s"
+
+msgid "Parent %s"
+msgstr "Överordnad %s"
+
+msgid "Parent %s:"
+msgstr "Överordnad %s:"
+
+msgid "Edit %s"
+msgstr "Redigera %s"
+
+msgid "Update %s"
+msgstr "Uppdatering %s"
+
+msgid "Add New %s"
+msgstr "Lägg till ny %s"
+
+msgid "New %s"
+msgstr "Nytt %s"
+
+msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "För att översätta tillägg-strängar, spara tillägg och gå till <b><a href=\"%s\">Översättningsgränssnitt för strängar</a></b>"
+
+msgid "Product Add-ons Group \"%s\""
+msgstr "Produktilläggsgrupp \"%s\""
+
+msgid "Description"
+msgstr "Beskrivning"
+
+msgid "Options"
+msgstr "Alternativ"
+
+msgid "Label"
+msgstr "Etikett"
+
+msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "För att översätta strängar för extra alternativ, spara %s och gå till <b><a href=\"%s\">Översättningsgränssnitt för strängar</a></b>"
+
+msgid "Language"
+msgstr "Språk"
+
+msgid "Translation of"
+msgstr "Översättning av"
+
+msgid "Subscription Price"
+msgstr "prenumerationspris"
+
+msgid "Sign-up Fee"
+msgstr "Registreringsavgift"
+
+msgid "Calculate costs in other currencies automatically"
+msgstr "Beräkna kostnader i andra valutor automatiskt"
+
+msgid "Set costs in other currencies manually"
+msgstr "Ange kostnader i andra valutor manuellt"
+
+msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
+msgstr "Detta är kostnaden per bokat block. Alla övriga kostnader (för resurser och personer) läggs till detta."
+
+msgid "Product tabs"
+msgstr "Produktflikar"
+
+msgid "Heading"
+msgstr "Rubrik"
+
+msgid "Tour Data"
+msgstr "Rundtursdata"
+
+msgid "Content"
+msgstr "Innehåll"
+
+msgid "Composite Products"
+msgstr "Komponera produkter"
+
+msgid "Product Bundles"
+msgstr "Produktpaket"
+
+msgid "One-off cost for the booking as a whole."
+msgstr "Engångskostnad för bokningen som helhet."
+
+msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
+msgstr "Kostnaden visas för användaren i frontend. Lämna det tomt för att få det beräknat. Om en bokning har olika kostnader kommer detta att föregås med ordet \"från:\"."
+
+msgid "Bookings"
+msgstr "Bokningar"
+
+msgid "Resources Label"
+msgstr "Etikett för resurser"
+
+msgid "Resources"
+msgstr "Resurser"
+
+msgid "Person Types"
+msgstr "Persontyper"
+
+msgid "Person Type Name"
+msgstr "Persontypsnamn"
+
+msgid "Resources label"
+msgstr "Etikett för resurser"
+
+msgid "Booking currency"
+msgstr "Bokningsvaluta"

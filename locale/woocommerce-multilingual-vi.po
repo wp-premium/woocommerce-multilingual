@@ -4,104 +4,86 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nProject-Id-Version:WPML_EXPORT\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: \nLanguage:en\nMIME-Version: 1.0\n"
 
-msgid "Collapse"
-msgstr "Thu gọn"
+msgid "Introduction"
+msgstr "Giới thiệu"
 
-msgid "Expand"
-msgstr "Mở rộng"
+msgid "Store Pages"
+msgstr "Trang cửa hàng"
 
-msgid "Please set bundles for product"
-msgstr "Vui lòng thiết lập các gói dành cho sản phẩm"
+msgid "Global Attributes"
+msgstr "Thuộc tính toàn cầu"
 
-msgid "Please save translation before translate bundles texts"
-msgstr "Vui lòng lưu bản dịch trước khi dịch các văn bản của gói ứng dụng"
+msgid "Multiple Currencies"
+msgstr "Đa tiền tệ"
 
-msgid "Title"
-msgstr "Tiêu đề"
+msgid "Translation Interface"
+msgstr "Giao diện dịch thuật"
 
-msgid "Description"
-msgstr "Miêu tả"
+msgid "Ready!"
+msgstr "Sẵn sàng!"
 
-msgid "Enter translation"
-msgstr "Nhập bản dịch"
+msgid "Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products."
+msgstr ""
 
-msgid "%s translation"
-msgstr "Bản dịch %s"
+msgid "Action failed. Please refresh the page and retry."
+msgstr "Thao tác thất bại. Hãy làm mới lại trang và thử lại."
 
-msgid "Show content"
-msgstr "Hiển thị nội dung"
+msgid "Cheatin&#8217; huh?"
+msgstr "Gian lận&#8217; ư?"
 
-msgid "Edit translation"
-msgstr "Sửa bản dịch"
+msgid "Run the Setup Wizard"
+msgstr "Hãy chạy Trình Hướng Dẫn Cài Đặt"
 
-msgid "Original content:"
-msgstr "Nội dung gốc:"
+msgid "Skip Setup"
+msgstr "Bỏ qua Cài đặt"
 
-msgid "Close"
-msgstr "Đóng"
+msgid "WooCommerce Multilingual &rsaquo; Setup Wizard"
+msgstr "Trình Hướng Dẫn Cài Đặt WooCommerce Đa Ngôn Ngữ"
 
-msgid "Cancel"
-msgstr "Hủy"
+msgid "WooCommerce Multilingual"
+msgstr "WooCommerce Multilingual"
 
-msgid "Ok"
-msgstr "Ok"
+msgid "How to translate products"
+msgstr "Cách thức dịch các sản phẩm"
 
-msgid "One-off cost for the booking as a whole."
-msgstr "Chi phí một lần cho việc đặt trước toàn bộ."
+msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
+msgstr "Tính năng sửa nhanh đã bị vô hiệu đối với các bản dịch sản phẩm. Chúng tôi khuyên dùng %s để chỉnh sửa các bản dịch sản phẩm. %s"
 
-msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
-msgstr "Đây là chi phí cho một block đặt trước. Toàn bộ các chi phí khác (dành cho các tài nguyên và loại người) sẽ được cộng vào đây."
+msgid "WooCommerce Multilingual products editor"
+msgstr "Trình soạn thảo các sản phẩm WooCommerce Multilingual"
 
-msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
-msgstr "Chi phí này sẽ được hiển thị cho người dùng trên frontend. Để trống để nó được tính toán giúp bạn. Nếu việc đặt chỗ có các loại phí khác nhau, mục này sẽ được cố định bằng thuật ngữ \"từ:\""
+msgid "Edit this product translation"
+msgstr "Sửa bản dịch sản phẩm này"
 
-msgid "Calculate costs in other currencies automatically"
-msgstr "Tự động tính toán các chi phí bằng các loại tiền tệ khác"
+msgid "How to translate attributes"
+msgstr "Cách thức dịch các thuộc tính"
 
-msgid "Set costs in other currencies manually"
-msgstr "Thiết lập chi phí bằng các loại tiền tệ khác theo cách thủ công"
+msgid "How to translate product categories"
+msgstr "Cách thức dịch danh mục sản phẩm"
 
-msgid "Invalid nonce"
-msgstr "Nonce không hợp lệ"
+msgid "The recommended way to translate WooCommerce products is using the\n                             %sWooCommerce Multilingual products translation%s page.\n                             Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
+msgstr ""
 
-msgid "Resources"
-msgstr "Tài nguyên"
+msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
+msgstr "Để chỉnh sửa các thuộc tính tùy biến, bạn cần sử dụng <a href=\"%s\">trình soạn thảo dịch thuật dành cho sản phẩm tùy biến</a>"
 
-msgid "Person types"
-msgstr "Loại người"
+msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgstr "Bạn đang sử dụng cùng một giá chị cho cơ sở danh mục thông thường. Điều này được biết sẽ tạo các xung đột dẫn đến các url không hoạt động đúng cách."
 
-msgid "Resources label"
-msgstr "Nhãn tài nguyên"
+msgid "translations"
+msgstr "các bản dịch"
 
-msgid "Booking currency"
-msgstr "Tiền tệ dùng để đặt chỗ"
-
-msgid "Translation of"
-msgstr "Bản dịch của"
-
-msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "Để dịch các chuỗi ký tự Extra Options, hãy lưu %s và truy cập <b><a href=\"%s\">Giao diện String Translation</a></b>"
-
-msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "Để dịch các chuỗi ký tự Add-ons, vui lòng lưu Add-ons và truy cập <b><a href=\"%s\">Giao diện String Translation</a></b>"
-
-msgid "Product Bundles"
-msgstr "Product Bundles"
-
-msgid "Please update original product"
-msgstr "Vui lòng cập nhật sản phẩm gốc"
-
-msgid "Currency switcher"
-msgstr "Bộ chuyển đổi ngoại tệ"
-
-msgid "Configure options"
-msgstr "Định cấu hình các tùy chọn"
-
-msgid "Currencies order updated"
-msgstr "Đã cập nhật thứ tự tiền tệ"
+msgid "product"
+msgstr "sản phẩm"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior %s."
 msgstr "WooCommerce Multilingual đã được bật nhưng không thể hoạt động. Không tương thích với các phiên bản <a href=\"%s\">WPML</a> cũ hơn %s."
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">Woocommerce</a> versions prior %s."
+msgstr "WooCommerce Multilingualđã được kích hoạt nhưng chưa hoạt động. Nó không tương thích với các phiên bản %s trước đó của <a href=\"%s\">Woocommerce</a>."
+
+msgid "You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href=\"%s\">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML."
+msgstr "Bạn đang sử dụng WooCommerce Multilingual  %s. Phiên bản này chứa bản thiết kế UI quan trọng dành cho các màn hình cấu hình và nó yêu cầu <a href=\"%s\">WPML %s</a> hoặc bản cao hơn. Mọi tính năng vẫn hoạt động tốt tại thời điểm này trên front end, nhưng để cấu hình các tùy chọn cho WooCommerce Multilingual, bạn cần nâng cấp WPML."
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML Translation Management</a> versions prior %s."
 msgstr "WooCommerce Multilingual đã được bật nhưng không thể hoạt động. Không tương thích với các phiên bản <a href=\"%s\">WPML Translation Management</a> cũ hơn %s."
@@ -142,47 +124,53 @@ msgstr "Cấu hình kiểu tùy biến %s ở tập tin wpml-config.xml đã b�
 msgid "Custom taxonomy %s configuration from wpml-config.xml file was altered!"
 msgstr "Cấu hình thẻ tùy biến (custom taxonomy) %s ở tập tin wpml-config.xml đã bị thay đổi!"
 
-msgid "Select the currency you want to set the options for:"
-msgstr "Chọn loại tiền tệ bạn muốn thiết lập các tùy chọn cho:"
+msgid "Upgrade WPML"
+msgstr "Nâng cấp WPML"
 
-msgid "All the products will be removed from the current order in order to change the currency"
-msgstr "Tất cả sản phẩm sẽ bị xóa khỏi thứ tự hiện thời để thay đổi loại tiền tệ"
+msgid "Invalid language parameter: %s"
+msgstr "Tham số ngôn ngữ không hợp lệ: %s"
 
-msgid "Show all currencies"
-msgstr "Hiển thị tất cả các loại tiền tệ"
+msgid "Source product id not found: %s"
+msgstr "Không tìm thấy ID sản phẩm nguồn: %s"
 
-msgid "Currency - no orders found"
-msgstr "Tiền tệ - không tìm thấy thứ tự"
+msgid "Product Base"
+msgstr "Nền tảng của sản phẩm"
 
-msgid "Order currency:"
-msgstr "Thứ tự của tiền tệ:"
+msgid "Product Tag Base"
+msgstr "Nền tảng thẻ sản phẩm"
 
-msgid "All the products will be removed from the current order in order to change the language"
-msgstr "Tất cả sản phẩm sẽ bị xóa khỏi thứ tự hiện thời để thay đổi ngôn ngữ"
+msgid "Product Category Base"
+msgstr "Nền tảng Danh mục sản phẩm"
 
-msgid "Order language:"
-msgstr "Thứ tự ngôn ngữ:"
+msgid "Product Attribute Base"
+msgstr "Nền tảng thuộc tính sản phẩm"
 
-msgid "Title missing"
-msgstr "Thiếu tiêu đề"
+msgid "Endpoint: %s"
+msgstr "Điểm kết thúc: %s"
+
+msgid "product-category"
+msgstr "danh mục-sản phẩm"
+
+msgid "product-tag"
+msgstr "thẻ-sản phẩm"
 
 msgid "Original language"
 msgstr "Ngôn ngữ gốc"
 
-msgid "Not translated"
-msgstr "Chưa được dịch"
+msgid "Take this and edit"
+msgstr "Nhận bản dịch và sửa"
 
-msgid "Not translated - needs update"
-msgstr "Chưa được dịch - cần cập nhật"
+msgid "Add translation"
+msgstr "Thêm bản dịch"
 
-msgid "In progress"
-msgstr "Đang xử lý"
+msgid "Update translation"
+msgstr "Cập nhật bản dịch"
 
-msgid "Complete"
-msgstr "Hoàn thành"
+msgid "Finish translating"
+msgstr "Hoàn tất việc dịch thuật"
 
-msgid "The recommended way to translate WooCommerce products is using the <b><a href=\"%s\">WooCommerce Multilingual products translation</a></b> page. Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
-msgstr "Cách thức gợi ý để dịch các sản phẩm WooCommerce là sử dụng trang <b><a href=\"%s\">dịch thuật các sản phẩm WooCommerce Multilingual</a></b>. Vui lòng chỉ sử dụng trang này để dịch các thành phần không khả dụng trong bảng dịch thuật sản phẩm WooCommerce Multilingual."
+msgid "Edit translation"
+msgstr "Sửa bản dịch"
 
 msgid "Edit this item inline"
 msgstr "Sửa mục này tại chỗ"
@@ -190,23 +178,47 @@ msgstr "Sửa mục này tại chỗ"
 msgid "Quick Edit"
 msgstr "Sửa nhanh"
 
-msgid "Content / Description"
-msgstr ""
+msgid "Translation in progress"
+msgstr "Đang dịch"
 
-msgid "Excerpt"
-msgstr "Trích dẫn"
+msgid "Invalid nonce"
+msgstr "Nonce không hợp lệ"
 
-msgid "Images"
-msgstr "Hình ảnh"
+msgid "Currency - no orders found"
+msgstr "Tiền tệ - không tìm thấy thứ tự"
 
-msgid "Variations"
-msgstr "Biến thể (variations)"
+msgid "Currencies order updated"
+msgstr "Đã cập nhật thứ tự tiền tệ"
 
-msgid "Any %s"
-msgstr "Bất kỳ %s"
+msgid "Currency switcher"
+msgstr "Bộ chuyển đổi ngoại tệ"
 
-msgid "Please translate all attributes"
-msgstr "Vui lòng dịch tất cả các thuộc tính"
+msgid "Configure options"
+msgstr "Định cấu hình các tùy chọn"
+
+msgid "Settings saved!"
+msgstr "Đã lưu cài đặt!"
+
+msgid "Add new currency"
+msgstr "Thêm loại tiền tệ mới"
+
+msgid "Update currency"
+msgstr "Cập nhật tiền tệ"
+
+msgid "Update settings for %s"
+msgstr "Cập nhật cài đặt cho %s"
+
+msgid "The default currency was changed. In order to show accurate prices in all currencies, you need to update the exchange rates under the %sMulti-currency%s configuration."
+msgstr "Loại tiền tệ mặc định đã được thay đổi. Để hiển thị các giá chính xác theo các loại tiền tệ, bạn cần cập nhật tỷ giá trong mục cấu hình %sĐa tiền tệ%s"
+
+msgid "All the products will be removed from the current order in order to change the currency"
+msgstr "Tất cả sản phẩm sẽ bị xóa khỏi thứ tự hiện thời để thay đổi loại tiền tệ"
+
+msgid "Show all currencies"
+msgstr "Hiển thị tất cả các loại tiền tệ"
+
+msgid "Order currency:"
+msgstr "Thứ tự của tiền tệ:"
 
 msgid "Cart"
 msgstr "Giỏ hàng"
@@ -241,20 +253,65 @@ msgstr "Xem đơn hàng"
 msgid "Shop"
 msgstr "Cửa hàng"
 
+msgid "All the products will be removed from the current order in order to change the language"
+msgstr "Tất cả sản phẩm sẽ bị xóa khỏi thứ tự hiện thời để thay đổi ngôn ngữ"
+
+msgid "Order language:"
+msgstr "Thứ tự ngôn ngữ:"
+
+msgid "Choose a file"
+msgstr "Chọn tập tin"
+
+msgid "At least one of these fields is required: title, content or excerpt"
+msgstr "Ít nhất một trong những trường sau đây là bắt buộc: tiêu đề, nội dung hoặc trích dẫn"
+
+msgid "This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation."
+msgstr "Công việc dịch thuật này không được giao cho bạn. Những người dịch khác sẽ có thể nhận nó và tiếp tục bản dịch."
+
+msgid "This field is locked for editing because WPML will copy its value from the original language."
+msgstr "Trường này đã bị khóa để chỉnh sửa vì WPML sẽ sao chép giá trị của nó từ ngôn ngữ gốc."
+
+msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
+msgstr "Đây là bản dịch của %s. Một vài trường dữ liệu không cho phép chỉnh sửa. Chúng tôi khuyến khích sử dụng %s để dịch các sản phẩm."
+
+msgid "WooCommerce Multilingual products translator"
+msgstr "Trình biên dịch sản phẩm WooCommerce Multilingual"
+
+msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
+msgstr "Có vẻ như bạn đang nâng cấp từ phiên bản cũ của WooCommerce Multilingual. Bạn có muốn tự động tạo các biến thể (variation) và hình ảnh đã dịch?"
+
+msgid "Yes, go to the troubleshooting page"
+msgstr "Đúng, đi tới trang xử lý sự cố"
+
+msgid "No - dismiss"
+msgstr "Không - bỏ qua"
+
+msgid "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?"
+msgstr "Bạn đã cài đặt thành công %sWooCommerce Đa Ngôn Ngữ%s. Bạn có muốn xem giới thiệu nhanh?"
+
+msgid "Learn how to turn your e-commerce site multilingual"
+msgstr "Tìm hiểu cách tạo website thương mại điện tử đa ngôn ngữ"
+
+msgid "Dismiss"
+msgstr "Bỏ qua"
+
 msgid "To translate %s please use the %s translation%s page, inside the %sWooCommerce Multilingual admin%s."
 msgstr "Để dịch %s vui lòng sử dụng trang %s dịch%s, bên trong %sphần quản trị WooCommerce Multilingual%s."
 
 msgid "%s do not require translation."
 msgstr "%s không yêu cầu có bản dịch."
 
-msgid "Change"
-msgstr "Thay đổi"
+msgid "Include to translation"
+msgstr "Gồm cả bản dịch"
 
-msgid "Some %s are missing translations (%d translations missing)."
-msgstr "Một số %s đang bị thiếu bản dịch (%d bản dịch bị thiếu)."
+msgid "%d %s are missing translations."
+msgstr "%d %s đang thiếu các bản dịch."
 
-msgid "Translate now"
-msgstr "Dịch ngay"
+msgid "Translate %s"
+msgstr "Dịch %s"
+
+msgid "Exclude from translation"
+msgstr "Không bao gồm bản dịch"
 
 msgid "All %s are translated."
 msgstr "Tất cả %s đã được dịch."
@@ -286,149 +343,188 @@ msgstr "Cập nhật thành công %s cho tất cả %s đã dịch."
 msgid "Synchronize attributes and update product variations"
 msgstr "Đồng bộ các thuộc tính và cập nhật các biến thể sản phẩm"
 
-msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
-msgstr "Có vẻ như bạn đang nâng cấp từ phiên bản cũ của WooCommerce Multilingual. Bạn có muốn tự động tạo các biến thể (variation) và hình ảnh đã dịch?"
+msgid "Image"
+msgstr "Hình ảnh"
 
-msgid "Yes, go to the troubleshooting page"
-msgstr "Đúng, đi tới trang xử lý sự cố"
+msgid "Product"
+msgstr "Sản phẩm"
 
-msgid "No - dismiss"
-msgstr "Không - bỏ qua"
+msgid "Type"
+msgstr "Kiểu"
 
-msgid "product-category"
-msgstr "danh mục-sản phẩm"
+msgid "Date"
+msgstr "Ngày"
 
-msgid "product-tag"
-msgstr "thẻ-sản phẩm"
+msgid "Categories"
+msgstr "Các chuyên mục"
 
-msgid "Please enter this text in %s"
-msgstr "Vui lòng nhập văn bản này vào %s"
+msgid "No products found"
+msgstr "Không tìm thấy sản phẩm nào"
 
-msgid "You have to enter this text in the strings language ( %s ) so you can translate it using the WPML String Translation."
-msgstr "Bạn phải nhập văn bản này vào ngôn ngữ của chuỗi ký tự ( %s ) để bạn có thể dịch nó bằng WPML String Translation."
+msgid "Draft"
+msgstr "Nháp"
 
-msgid "You need to enter attribute names in %s (even though your site's default language is %s). Then, translate it to %s and the rest of the site's languages using in the %sWooCommerce Multlingual admin%s."
-msgstr "Bạn cần nhập tên thuộc tính trong %s (mặc dù ngôn ngữ mặc định trang web của bạn là %s). Sau đó, dịch nó sang %s và phần còn lại của các ngôn ngữ trang web bằng %sphần quản trị WooCommerce Multilingual%s."
+msgid "Private"
+msgstr "Riêng tư"
 
-msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
-msgstr "Để chỉnh sửa các thuộc tính tùy biến, bạn cần sử dụng <a href=\"%s\">trình soạn thảo dịch thuật dành cho sản phẩm tùy biến</a>"
-
-msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgid "Pending"
 msgstr ""
 
-msgid "translations"
-msgstr "các bản dịch"
+msgid "Scheduled"
+msgstr "Đã lên kế hoạch"
 
-msgid "WooCommerce Multilingual"
-msgstr "WooCommerce Multilingual"
+msgid "Parent product: %s"
+msgstr "Sản phẩm cha/mẹ: %s"
 
-msgid "General settings"
-msgstr "Cài đặt chung"
+msgid "Edit this item"
+msgstr "Sửa mục này"
 
-msgid "Products"
-msgstr "Sản phẩm"
+msgid "Edit"
+msgstr "Sửa"
+
+msgid "View \"%s\""
+msgstr "Xem \"%s\""
+
+msgid "View"
+msgstr "Xem"
+
+msgid "Published"
+msgstr "Đã được đăng"
+
+msgid "Last Modified"
+msgstr "Chỉnh sửa lần cuối"
+
+msgid "All languages"
+msgstr "Tất cả ngôn ngữ"
+
+msgid "All categories"
+msgstr "Tất cả danh mục"
+
+msgid "All translation statuses"
+msgstr "Tất cả trạng thái dịch thuật"
+
+msgid "Not translated or needs updating"
+msgstr "Chưa được dịch hoặc cần cập nhật"
+
+msgid "Needs updating"
+msgstr "Cần cập nhật"
+
+msgid "Translation complete"
+msgstr "Bản dịch hoàn tất"
+
+msgid "All statuses"
+msgstr "Tất cả trạng thái"
+
+msgid "Filter"
+msgstr "Bộ lọc"
+
+msgid "Reset"
+msgstr "Đưa về mặc địch"
+
+msgid "Search"
+msgstr "Tìm kiếm"
+
+msgid "%d items"
+msgstr "%d mục"
+
+msgid "Go to the first page"
+msgstr "Đi tới trang đầu tiên"
+
+msgid "Go to the previous page"
+msgstr "Đi tới trang trước"
+
+msgid "Select Page"
+msgstr "Chọn trang"
+
+msgid "Current page"
+msgstr "Trang hiện tại"
+
+msgid "of"
+msgstr "of"
+
+msgid "Go to the next page"
+msgstr "Đi tới trang tiếp theo"
+
+msgid "Go to the last page"
+msgstr "Đi tới trang cuối cùng"
+
+msgid "Translatable?"
+msgstr "Có thể dịch?"
+
+msgid "Enable this if you want to translate attribute values with Woocommerce Multilingual"
+msgstr "Kích hoạt mục này nếu bạn muốn dịch các giá trị thuộc tính bằng Woocommerce Multilingual"
+
+msgid "Existing translations and variations associated will be deleted."
+msgstr "Các bản dịch và biến thể liên kết có sẵn sẽ bị xóa."
+
+msgid "Product Translation Interface"
+msgstr "Giao diện dịch sản phẩm"
+
+msgid "The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions."
+msgstr "Cách thức được khuyên dùng chính là sử dụng Trình Biên Tập Dịch Thuật WPML. Công cụ này đã được tùy chỉnh để giúp việc dịch thuật dễ dàng hơn cũng như cung cấp khả năng tích hợp tốt hơn với nhiều trình mở rộng WooCommerce."
+
+msgid "WPML Translation Editor"
+msgstr "Trình Biên Tập Dịch Thuật WPML"
+
+msgid "Native WooCommerce product editing screen"
+msgstr "Màn hình chỉnh sửa sản phẩm WooCommerce bản địa"
+
+msgid "Products synchronization"
+msgstr "Đồng bộ hóa sản phẩm"
+
+msgid "Configure specific product properties that should be synced to translations."
+msgstr "Tạo cấu hình các đặc tính sản phẩm cụ thể để đồng bộ chúng với các bản dịch."
+
+msgid "Sync publishing date for translated products."
+msgstr "Đồng bộ hóa ngày xuất bản cho các sản phẩm được dịch."
+
+msgid "Sync products and product taxonomies order."
+msgstr "Đồng bộ sản phẩm và thứ tự thẻ taxonomy của sản phẩm."
+
+msgid "Products Download Files"
+msgstr "Tập tin Tải về của Sản Phẩm"
+
+msgid "If you are using downloadable products, you can choose to have their paths\n                                            synchronized, or seperate for each language."
+msgstr "Nếu bạn đang sử dụng các sản phẩm có thể tải về, bạn có thể chọn các đường dẫn\n được đồng bộ của chúng hoặc đường dẫn riêng cho từng ngôn ngữ."
+
+msgid "Use the same files for translations"
+msgstr "Sử dụng các tập tin giống nhau cho các bản dịch"
+
+msgid "Add separate download files for translations"
+msgstr "Thêm các tập tin tải về riêng rẽ cho bản dịch"
+
+msgid "Save changes"
+msgstr "Lưu các thay đổi"
+
+msgid "Troubleshooting page"
+msgstr "Trang xử lý sự cố"
+
+msgid "Update Translation"
+msgstr "Cập nhật bản dịch"
+
+msgid "Hide This Message"
+msgstr "Ẩn tin nhắn này"
+
+msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
+msgstr "<strong>WooCommerce Translation Khả dụng</strong> &#8211; Cài đặt hoặc cập nhật các tính năng dịch thuật <code>%s</code> của bạn lên phiên bản <code>%s</code>."
+
+msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
+msgstr "Thao tác này sẽ tự động tạo các biến thể (variation) cho sản phẩm được dịch tương ứng với các thuộc tính đã dịch gần đây."
+
+msgid "Synchronize %s assignment in content"
+msgstr "Đồng bộ hóa thuộc tính %s trong các nội dung"
+
+msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
+msgstr "Thao tác này cho phép bạn tự động áp dụng thẻ (taxonomy) %s cho nội dung của mình trong các ngôn ngữ khác nhau. Nó sẽ quét nội dung gốc và áp dụng thẻ (taxonomy) đó đối với nội dung đã dịch."
 
 msgid "You have untranslated terms!"
 msgstr "Bạn có các cụm từ (term) chưa dịch!"
 
-msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
-msgstr "WooCommerce Multilingual đã được bật nhưng không thể hoạt động. Không tương thích với các phiên bản <a href=\"%s\">WPML</a> cũ hơn 2.0.5."
+msgid "Select currency"
+msgstr "Chọn loại tiền tệ"
 
-msgid "%s plugin is installed and active."
-msgstr "Plugin %s đã được cài đặt và kích hoạt."
-
-msgid "%s is set up."
-msgstr "%s đã được thiết lập."
-
-msgid "%s is not set up."
-msgstr "%s chưa được thiết lập."
-
-msgid "%s plugin is either not installed or not active."
-msgstr "Plugin %s chưa được cài đặt hoặc chưa kích hoạt."
-
-msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
-msgstr "%1$s đã được cài đặt, nhưng sai phiên bản. Bạn cần phiên bản %1$s %2$s hoặc cao hơn."
-
-msgid "Required plugins"
-msgstr "Plugin bắt buộc"
-
-msgid "Plugins Status"
-msgstr "Trạng thái plugin"
-
-msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
-msgstr "WooCommerce Multilingual cần một vài plugin để hoạt động. Nếu thiếu bất kỳ plugin nào, bạn cần cài đặt và kích hoạt chúng."
-
-msgid "Update WPML"
-msgstr "Cập nhật WPML"
-
-msgid "Get WPML"
-msgstr "Tải WPML"
-
-msgid "Get WPML Media"
-msgstr "Tải WPML Media"
-
-msgid "Get WPML Translation Management"
-msgstr "Tải WPML Translation Management"
-
-msgid "Get WPML String Translation"
-msgstr "Tải WPML String Translation"
-
-msgid "Download WooCommerce"
-msgstr "Tải về WooCommerce"
-
-msgid "Drop-down menu"
-msgstr "Menu thả xuống"
-
-msgid "List of currencies"
-msgstr "Danh sách các loại tiền tệ"
-
-msgid "Show a currency selector on the product page template"
-msgstr "Hiển thị bộ chọn loại tiền tệ trên template trang sản phẩm"
-
-msgid "Currency switcher options"
-msgstr "Tùy chọn bộ chuyển đổi tiền tệ"
-
-msgid "You can customize currency switcher on front-end"
-msgstr "Bạn có thể tùy chỉnh bộ chuyển đổi tiền tệ trong front-end"
-
-msgid "Currency order"
-msgstr "Thứ tự tiền tệ"
-
-msgid "Drag the currencies to change their order"
-msgstr "Kéo các loại tiền tệ để thay đổi thứ tự của chúng"
-
-msgid "Currency switcher style"
-msgstr "Kiểu bộ chuyển đổi tiền tệ"
-
-msgid "Vertical"
-msgstr "Dọc"
-
-msgid "Horizontal"
-msgstr "Ngang"
-
-msgid "Visibility"
-msgstr "Hiển thị"
-
-msgid "Available parameters"
-msgstr "Các tham số có sẵn"
-
-msgid "%name%, %symbol%, %code%"
-msgstr "%name%, %symbol%, %code%"
-
-msgid "Template for currency switcher"
-msgstr "Template dành cho bộ chuyển đổi tiền tệ"
-
-msgid "Default: %name% (%symbol%) - %code%"
-msgstr "Mặc định: %name% (%symbol%) - %code%"
-
-msgid "Currency switcher preview"
-msgstr "Xem trước bộ chuyển đổi tiền tệ"
-
-msgid "Save"
-msgstr "Lưu"
-
-msgid "Currency options for %s"
-msgstr "Tùy chọn tiền tệ cho %s"
+msgid "Exchange Rate"
+msgstr "Tỷ giá hối đoái"
 
 msgid "Only numeric"
 msgstr "Chỉ dạng số"
@@ -436,23 +532,23 @@ msgstr "Chỉ dạng số"
 msgid "Set on %s"
 msgstr "Được thiết lập vào ngày %s"
 
-msgid "Left (%s99.99)"
-msgstr "Trái (%s99.99)"
-
-msgid "Right (99.99%s)"
-msgstr "Phải (99.99%s)"
-
-msgid "Left with space (%s 99.99)"
-msgstr "Trái với dấu cách (%s 99.99)"
-
-msgid "Right with space (99.99 %s)"
-msgstr "Phải với dấu cách (99.99 %s)"
-
-msgid "Exchange Rate"
-msgstr "Tỷ giá hối đoái"
+msgid "Currency Preview"
+msgstr "Xem trước loại tiền tệ"
 
 msgid "Currency Position"
 msgstr "Vị trí tiền tệ"
+
+msgid "Left"
+msgstr "Trái"
+
+msgid "Right"
+msgstr "Phải"
+
+msgid "Left with space"
+msgstr "Bên trái có dấu cách"
+
+msgid "Right with space"
+msgstr "Bên phải có dấu cách"
 
 msgid "Thousand Separator"
 msgstr "Dấu phân tách hàng nghìn"
@@ -466,17 +562,17 @@ msgstr "Số lượng chữ số thập phân"
 msgid "Rounding to the nearest integer"
 msgstr "Làm tròn đến số nguyên gần nhất"
 
-msgid "disabled"
-msgstr "đã vô hiệu hóa"
+msgid "Disabled"
+msgstr "Đã vô hiệu hóa"
 
-msgid "up"
-msgstr "tăng"
+msgid "Up"
+msgstr "Tăng"
 
-msgid "down"
-msgstr "giảm"
+msgid "Down"
+msgstr "Giảm"
 
-msgid "nearest"
-msgstr "gần nhất"
+msgid "Nearest"
+msgstr "Gần nhất"
 
 msgid "Increment for nearest integer"
 msgstr "Gia số cho số nguyên gần nhất"
@@ -484,8 +580,47 @@ msgstr "Gia số cho số nguyên gần nhất"
 msgid "Autosubtract amount"
 msgstr "Tự động trừ số tiền"
 
-msgid " (%s)"
-msgstr "(%s)"
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Products"
+msgstr "Sản phẩm"
+
+msgid "Tags"
+msgstr "Các thẻ (tag)"
+
+msgid "Attributes"
+msgstr "Thuộc tính"
+
+msgid "Shipping Classes"
+msgstr "Các hình thức vận chuyển"
+
+msgid "Settings"
+msgstr "Cài đặt"
+
+msgid "Multi-currency"
+msgstr "Đa tiền tệ"
+
+msgid "Store URLs"
+msgstr "Các URL cửa hàng"
+
+msgid "Status"
+msgstr "Trạng thái"
+
+msgid "Troubleshooting"
+msgstr "Xử lý sự cố"
+
+msgid "Thank you for using %sWooCommerce Multilingual%s! You can express your love and\n                                    support by %s rating our plugin and saying that %sit works%s for you."
+msgstr "Cảm ơn bạn đã sử dụng %sWooCommerce Multilingual%s! Bạn có thể biểu đạt tình yêu và \n                                    sự hỗ trợ của mình bằng cách %s đánh giá plugin của chúng tôi và nói rằng %sứng dụng hữu ích%s với bạn."
+
+msgid "Hide"
+msgstr "Ẩn"
+
+msgid "Loading ..."
+msgstr "Đang tải..."
 
 msgid "Regular Price"
 msgstr "Giá thông thường"
@@ -493,20 +628,17 @@ msgstr "Giá thông thường"
 msgid "Sale Price"
 msgstr "Giá khuyến mại"
 
-msgid "Multi-currency is enabled but no secondary currencies have been set"
-msgstr "Tính năng đa tiền tệ đã kích hoạt nhưng loại tiền tệ thứ hai chưa được thiết lập"
+msgid "Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s."
+msgstr ""
 
 msgid "Calculate prices in other currencies automatically"
 msgstr "Tự động tính giá theo các loại tiền tệ khác"
 
-msgid "Click to see the prices in the other currencies as they are currently shown onthe front end."
-msgstr "Nhấp vào đây để xem giá theo các loại tiện tệ khác mà chúng đang được hiển thị ở front end."
+msgid "Click to see the prices in the other currencies as they are currently shown on the front end."
+msgstr "Nhấp để xem các  mức giá theo các loại tiền tệ khác vì chúng hiện đang được hiển thị trên front end."
 
 msgid "Show"
 msgstr "Hiển thị"
-
-msgid "Hide"
-msgstr "Ẩn"
 
 msgid "Set prices in other currencies manually"
 msgstr "Đặt thủ công mức giá theo các loại tiền tệ khác"
@@ -529,8 +661,8 @@ msgstr "Giống với tiền tệ mặc định"
 msgid "Set dates"
 msgstr "Thiết lập ngày"
 
-msgid "Please enter in a value less than the regular price"
-msgstr "Vui lòng nhập giá trị nhỏ hơn giá thông thường"
+msgid "Collapse"
+msgstr "Thu gọn"
 
 msgid "From&hellip;"
 msgstr "Từ&hellip;"
@@ -538,206 +670,185 @@ msgstr "Từ&hellip;"
 msgid "To&hellip;"
 msgstr "Sang&hellip;"
 
-msgid "Choose a file"
-msgstr "Chọn tập tin"
+msgid "Please enter in a value less than the regular price"
+msgstr "Vui lòng nhập giá trị nhỏ hơn giá thông thường"
 
-msgid "Enter translation for name"
-msgstr "Nhập bản dịch cho tên"
+msgid "Required plugins"
+msgstr "Plugin bắt buộc"
 
-msgid "Please set images for product"
-msgstr "Vui lòng thiết lập hình ảnh cho sản phẩm"
+msgid "Plugins Status"
+msgstr "Trạng thái plugin"
 
-msgid "Please save translation before translate images texts"
-msgstr "Vui lòng lưu bản dịch trước khi dịch văn bản (text) đi kèm với ảnh"
+msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
+msgstr "WooCommerce Multilingual cần một vài plugin để hoạt động. Nếu thiếu bất kỳ plugin nào, bạn cần cài đặt và kích hoạt chúng."
 
-msgid "Caption"
-msgstr "Chú thích"
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
+msgstr "WooCommerce Multilingual đã được bật nhưng không thể hoạt động. Không tương thích với các phiên bản <a href=\"%s\">WPML</a> cũ hơn 2.0.5."
 
-msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
-msgstr "<strong>WooCommerce Translation Khả dụng</strong> &#8211; Cài đặt hoặc cập nhật các tính năng dịch thuật <code>%s</code> của bạn lên phiên bản <code>%s</code>."
+msgid "Update WPML"
+msgstr "Cập nhật WPML"
 
-msgid "Update Translation"
-msgstr "Cập nhật bản dịch"
+msgid "Get WPML"
+msgstr "Tải WPML"
 
-msgid "Hide This Message"
-msgstr "Ẩn tin nhắn này"
+msgid "Get WPML Media"
+msgstr "Tải WPML Media"
 
-msgid "This product is an exact duplicate of the %s product."
-msgstr "Sản phẩm này là một bản sao y hệt của sản phẩm %s."
+msgid "Get WPML Translation Management"
+msgstr "Tải WPML Translation Management"
 
-msgid "edit product"
-msgstr "sửa sản phẩm"
+msgid "Get WPML String Translation"
+msgstr "Tải WPML String Translation"
 
-msgid "Take this and edit"
-msgstr "Nhận bản dịch và sửa"
+msgid "%s is installed and active."
+msgstr "%s đã được cài đặt và đang hoạt động."
 
-msgid "Update"
-msgstr "Cập nhật"
+msgid "%s is set up."
+msgstr "%s đã được thiết lập."
 
-msgid "Language"
-msgstr "Ngôn ngữ"
+msgid "%s is not set up."
+msgstr "%s chưa được thiết lập."
 
-msgid "Edit independently."
-msgstr "Sửa một cách độc lập."
+msgid "%s is either not installed or not active."
+msgstr "%s hoặc chưa cài đặt hoặc chưa kích hoạt."
 
-msgid "Undo (keep this product as a duplicate)"
-msgstr "Hoàn tác (giữ sản phẩm này như là một bản sao)"
+msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
+msgstr "%1$s đã được cài đặt, nhưng sai phiên bản. Bạn cần phiên bản %1$s %2$s hoặc cao hơn."
 
-msgid "Translation in progress"
-msgstr "Đang dịch"
+msgid "Download WooCommerce"
+msgstr "Tải về WooCommerce"
 
-msgid "Show slug"
-msgstr "Hiển thị slug"
+msgid "The WordPress Multilingual Plugin"
+msgstr "Plugin Đa ngôn ngữ của WordPress"
 
-msgid "Edit slug"
-msgstr "Sửa slug"
+msgid "This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages."
+msgstr "Trang này cho phép bạn dịch toàn bộ chuỗi ký tự đang được WooCommerce sử dụng để xây dựng các loại url khác nhau. Việc dịch chúng cho phép bạn bản địa hóa hoàn toàn các url phù hợp với ngôn ngữ của các trang web."
 
-msgid "Please save translation before edit slug"
-msgstr "Hãy lưu bản dịch trước khi sửa slug"
+msgid "You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page."
+msgstr "Bạn có thể nhập hoặc chỉnh sửa các giá trị mặc định trong trang %sCài đặt permalinks%s hoặc đối với các điểm cuối, trên trang WooCommerce %sCài đặt tài khoản%s."
 
-msgid "Translation missing"
-msgstr "Thiếu bản dịch"
+msgid "permalinks settings"
+msgstr "cài đặt các permalink"
 
-msgid "Add Media"
-msgstr "Thêm media"
+msgid "Account settings"
+msgstr "Cài đặt tài khoản"
 
-msgid "Text"
-msgstr "Văn bản"
+msgid "Slug type"
+msgstr "Kiểu slug"
 
-msgid "Visual"
-msgstr "Hiển thị"
+msgid "Original Slug"
+msgstr "Slug gốc"
 
-msgid "name"
-msgstr "tên"
+msgid "Shop page"
+msgstr "Trang cửa hàng"
 
-msgid "values"
-msgstr "giá trị"
+msgid "Product base"
+msgstr "Nền tảng sản phẩm"
 
-msgid "Upload file"
-msgstr "Tải lên tập tin"
+msgid "Product category base"
+msgstr "Nền tảng danh mục sản phẩm"
 
-msgid "Translate %s"
-msgstr "Dịch %s"
+msgid "Product tag base"
+msgstr "Nền tảng thẻ sản phẩm"
 
-msgid "%d products"
-msgstr "%d sản phẩm"
+msgid "Product attribute base"
+msgstr "Nền tảng thuộc tính sản phẩm"
 
-msgid " | Parent product: %s"
-msgstr "| Sản phẩm cha: %s"
+msgid "Original"
+msgstr "Bản gốc"
 
-msgid "Show all products"
-msgstr "Hiển thị tất cả sản phẩm"
+msgid "Translation to"
+msgstr "Dịch sang"
 
-msgid "WooCommerce Products"
-msgstr "WooCommerce Products"
+msgid "Product Shop Base"
+msgstr "Nền tảng cửa hàng sản phẩm"
 
-msgid "All languages"
-msgstr "Tất cả ngôn ngữ"
+msgid "Welcome to WooCommerce Multilingual!"
+msgstr "Chào mừng đến với WooCommerce Đa Ngôn Ngữ!"
 
-msgid "Any category"
-msgstr "Bất kỳ chuyên mục nào"
-
-msgid "All products"
-msgstr "Tất cả sản phẩm"
-
-msgid "Not translated or needs updating"
-msgstr "Chưa được dịch hoặc cần cập nhật"
-
-msgid "Needs updating"
-msgstr "Cần cập nhật"
-
-msgid "Translation complete"
-msgstr "Bản dịch hoàn tất"
-
-msgid "All statuses"
-msgstr "Tất cả trạng thái"
-
-msgid "Search"
-msgstr "Tìm kiếm"
-
-msgid "Reset"
-msgstr "Đưa về mặc địch"
-
-msgid "Go to the first page"
-msgstr "Đi tới trang đầu tiên"
-
-msgid "Go to the previous page"
-msgstr "Đi tới trang trước"
-
-msgid "of"
-msgstr "of"
-
-msgid "Go to the next page"
-msgstr "Đi tới trang tiếp theo"
-
-msgid "Go to the last page"
-msgstr "Đi tới trang cuối cùng"
-
-msgid "Type"
-msgstr "Kiểu"
-
-msgid "Product"
-msgstr "Sản phẩm"
-
-msgid "No products found"
-msgstr "Không tìm thấy sản phẩm nào"
-
-msgid " (draft)"
-msgstr "(nháp)"
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sSlugs Translation%s to translate."
+msgid "Configure the multilingual support for your e-commerce site in just a couple of minutes."
 msgstr ""
 
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sString Translation%s to translate."
-msgstr "Cơ số permalink sản phẩm của bạn chưa được dịch sang %s. URL cho các sản phẩm được dịch sẽ không hoạt động. Truy cập vào %sString Translation%s để dịch."
+msgid "By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away."
+msgstr "Theo mặc định, các sản phẩm có thể dịch được sẽ là sản phẩm, danh mục, thẻ sản phẩm và thuộc tính. Nên bạn có thể bắt đầu dịch các mục này ngay tức thì."
 
-msgid "Please review the %sguide for running WooCommerce multilingual with default language other than English%s."
-msgstr "Vui lòng đọc kỹ %shướng dẫn chạy WooCommerce đa ngôn ngữ với ngôn ngữ mặc định không phải là tiếng Anh%s."
+msgid "You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode."
+msgstr "Tuy nhiên, bạn có thể tạo cấu hình những thuộc tính bạn muốn dịch, cài đặt các trang cửa hàng đã dịc hoặc kích hoạt chế độ đa tiền tệ."
 
-msgid "You should check WPML configuration files added by other plugins or manual settings on the %sMultilingual Content Setup%s section."
-msgstr "Bạn nên kiểm tra các tập tin cấu hình WPML được thêm vào bởi các plugin khác hoặc cài đặt bằng tay trên mục %sThiết lập Nội dung Đa ngôn ngữ%s."
+msgid "Start"
+msgstr "Bắt đầu"
 
-msgid "Your store's base currency is %s (%s). To change it, go to the %s page."
-msgstr "Tiền tệ mặc định của cửa hàng là %s (%s). Để thay đổi, vui lòng đi tới trang %s."
+msgid "No, thanks. I'll do it later."
+msgstr "Không, cảm ơn. Tôi sẽ làm nó sau."
 
-msgid "Products using custom currency rates as they were migrated from the previous versions - option to support different prices per language"
-msgstr "Sản phẩm sử dụng tỷ giá tùy chọn khi chúng được chuyển vào từ các phiên bản trước - lựa chọn này hỗ trợ các loại giá khác nhau ở mỗi ngôn ngữ."
+msgid "Select translatable attributes"
+msgstr "Chọn các thuộc tính có thể dịch"
 
-msgid "Are you sure?"
-msgstr "Bạn có chắc không?"
+msgid "There are no attributes defined"
+msgstr "Không có các thuộc tính được định nghĩa"
 
-msgid "Delete"
-msgstr "Xóa"
+msgid "Continue"
+msgstr "Tiếp tục"
 
-msgid "Configuration warnings"
-msgstr "Cảnh bảo về thiết lập"
+msgid "Later"
+msgstr "Để sau"
 
-msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
-msgstr "Báo lỗi về cấu hình khiến WooCommerce Multilingual hoạt động không bình thường"
+msgid "One or more WooCommerce pages have not been created"
+msgstr "Một hoặc nhiều trang WooCommerce chưa được tạo"
 
-msgid "Attention required: probable problem with URLs in different languages"
-msgstr "Chú ý: có thể có vấn đề với URL trong các ngôn ngữ khác nhau"
+msgid "Install missing WooCommerce pages and create translations."
+msgstr "Cài đặt trang WooCommerce còn thiếu và tạo bản dịch."
 
-msgid "Your site's default language is not English and the strings language is also not English. This may lead to problems with your site's URLs in different languages."
-msgstr "Ngôn ngữ mặc định của bạn không phải là tiếng Anh và ngôn ngữ của các chuỗi ký tự cũng không phải là tiếng Anh. Điều này có thể dẫn đến các sự cố với URL website của bạn ở các ngôn ngữ khác nhau."
+msgid "Translate Store Pages"
+msgstr "Dịch các trang cửa hàng"
 
-msgid "Change the strings language to English"
-msgstr "Đổi ngôn ngữ của chuỗi ký tự sang tiếng Anh"
+msgid "All store pages must be translated in the languages configured on the site."
+msgstr "Các trang cửa hàng phải được dịch theo các ngôn ngữ được cấu hình trên trang web."
 
-msgid "Re-scan strings"
-msgstr "Quét lại các chuỗi ký tự"
+msgid "Select the translation interface"
+msgstr "Chọn giao diện dịch thuật"
 
-msgid "Your site's default language is not English. There are some settings that require careful attention."
-msgstr "Ngôn ngữ mặc định trang web của bạn không phải là tiếng Anh. Có một số cài đặt cần chú ý đặc biệt."
+msgid "Enable multiple currencies"
+msgstr "Kích hoạt chế độ đa tiền tệ"
 
-msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
-msgstr "Một vài cài đặt từ tập tin wpml-config.xml WooCommerce Multilingual vừa bị ghi đè."
+msgid "This will allow you to set prices for products in different currencies. The prices can be determined based on a given exchange rate or set explicitly for specific products."
+msgstr "Việc này sẽ cho phép bạn thiết lập các mức giá dành cho sản phẩn ở nhiều loại tiền tệ khác nhau. Các mức giá có thể được xác định dựa trên tỷ giá cho sẵn hoặc thiết lập riêng cho các sản phẩm cụ thể."
+
+msgid "Enable the multi-currency mode"
+msgstr "Kích hoạt chế độ đa tiền tệ"
+
+msgid "Further actions that are necessary for making your existing content multilingual, are listed below."
+msgstr "Các thao tác cần thiết khác để thiết lập chế độ đa ngôn ngữ cho nội dung có sẵn của bạn được liệt kê dưới đây."
+
+msgid "Start translating products"
+msgstr "Bắt đầu dịch các sản phẩm"
+
+msgid "Add secondary currencies on the %smulti-currency configuration%s page"
+msgstr "Thêm các loại tiền tệ thứ cấp trên trang %scấu hình đa tiền tệ%s"
+
+msgid "Translate existing terms for these %sproduct attributes%s: %s"
+msgstr "Dịch các thuật ngữ sẵn có cho các %sthuộc tính sản phẩm%s này: %s"
+
+msgid "Translate existing %sproduct categories%s"
+msgstr "Dịch các %sdanh mục sản phẩm%s có sẵn"
+
+msgid "Translate existing %sproduct tags%s"
+msgstr "Dịch các %sthẻ sản phẩm%s có sẵn"
+
+msgid "%sAdd missing translations%s for shipping classes"
+msgstr "%sThêm bản dịch còn thiếu%s có các lớp vận chuyển"
+
+msgid "Translate %sURL slugs%s to create multilingual store and product urls"
+msgstr "Dịch các %sURL slug%s để tạo cửa hàng và url đa ngôn ngữ"
+
+msgid "Use custom settings for translations download files"
+msgstr ""
 
 msgid "WooCommerce Store Pages"
 msgstr "Các trang WooCommerce Store"
 
-msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated in all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
-msgstr "Để chạy một site thương mại điện tử đa ngôn ngữ, bạn cần có các trang WooCommerce được dịch sang tất cả các ngôn ngữ của website. Khi các trang đó đã được thiết lập, bạn có thể thêm bản dịch cho chúng ở menu này."
+msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated to all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
+msgstr "Để chạy trang web thương mại điện tử đa ngôn ngữ, bạn cần dịch các trang cửa hàng WooCommerce sang tất cả các ngôn ngữ của trang web. Khi tất cả các trang được cài đặt, bạn có thể thêm bản dịch cho chúng từ menu này."
 
 msgid "One or more WooCommerce pages have not been created."
 msgstr "Một hoặc một vài trang WooCommerce chưa được tạo."
@@ -745,137 +856,59 @@ msgstr "Một hoặc một vài trang WooCommerce chưa được tạo."
 msgid "Install WooCommerce Pages"
 msgstr "Cài đặt các trang WooCommerce"
 
-msgid "WooCommerce store pages don't exist for this language:"
-msgstr "Các trang WooCommerce Store không tồn tại ở ngôn ngữ này:"
+msgid "WooCommerce store pages do not exist for these languages:"
+msgstr "Các trang cửa hàng WooCommerce không tồn tại đối với các ngôn ngữ này:"
 
-msgid "WooCommerce store pages don't exist for these languages:"
-msgstr "Các trang WooCommerce Store ở các ngôn ngữ sau không tồn tại:"
-
-msgid "Create missing translations."
-msgstr "Tạo các bản dịch bị thiếu."
+msgid "Create missing translations"
+msgstr "Tạo các bản dịch đang bị thiếu"
 
 msgid "These pages are currently being translated by translators via WPML: "
 msgstr "Các trang này hiện đang được các biên dịch viên dịch qua WPML:"
 
-msgid "Hide this message"
-msgstr "Ẩn tin nhắn này"
-
-msgid "Show details about missing translations"
-msgstr "Hiển thị chi tiết về các bản dịch bị thiếu"
-
 msgid "WooCommerce store pages are translated to all the site's languages."
 msgstr "Các trang của WooCommerce Store đã được dịch sang tất cả các ngôn ngữ."
 
+msgid "Configuration warnings"
+msgstr "Cảnh bảo về thiết lập"
+
+msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
+msgstr "Báo lỗi về cấu hình khiến WooCommerce Multilingual hoạt động không bình thường"
+
+msgid "Your product permalink base is not translated to:"
+msgstr "Nền tảng permalink của sản phẩm chưa được dịch sang:"
+
+msgid "Translate URLs"
+msgstr "Dịch các URL"
+
+msgid "Your site's default language is not English and the strings language is also not English."
+msgstr "Ngôn ngữ mặc định trang web của bạn không phải là tiếng Anh và ngôn ngữ chuỗi ký tự cũng không phải là tiếng Anh."
+
+msgid "Running WooCommerce multilingual with default language other than English."
+msgstr "Đang chạy WooCommerce đa ngôn ngữ bằng ngôn ngữ mặc định không phải là tiếng Anh."
+
+msgid "This may cause problems with URLs in different languages."
+msgstr "Điều này có thể gây ra sự cố với các URL trong các ngôn ngữ khác."
+
+msgid "Change default language"
+msgstr "Thay đổi ngôn ngữ mặc định"
+
+msgid "Your site's default language is not English."
+msgstr "Ngôn ngữ mặc định cho trang web của bạn không phải là tiếng Anh."
+
+msgid "There are some settings that require careful attention."
+msgstr "Có một số cài đặt cần phải đặc biệt chú ý."
+
+msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgstr "Một vài cài đặt từ tập tin wpml-config.xml WooCommerce Multilingual vừa bị ghi đè."
+
+msgid "You should check WPML configuration files added by other plugins or manual settings on the %s section."
+msgstr "Bạn nên kiểm tra các tập tin cấu hình WPML được thêm bằng các plugin hoặc cài đặt thủ công khác trong mục %s."
+
+msgid "Multilingual Content Setup"
+msgstr "Thiết lập nội dung đa ngôn ngữ"
+
 msgid "Taxonomies missing translations"
 msgstr "Các thẻ (taxonomies) thiếu bản dịch"
-
-msgid "Ignore"
-msgstr "Bỏ qua"
-
-msgid "Right now, there are no taxonomy terms needing translation."
-msgstr "Hiện tại, không có cụm từ (taxonomy term) cần dịch."
-
-msgid "Product Translation Interface"
-msgstr "Giao diện dịch sản phẩm"
-
-msgid "The recommended way to translate products is using the products translation table in the WooCommerce Multilingual admin. Choose to go to the native WooCommerce interface, if your products include custom sections that require direct access."
-msgstr "Chúng tôi khuyến khích sử dụng bảng dịch sản phẩm trong mục quản trị của WooCommerce Multilingual để dịch các sản phẩm. Chọn để đi đến giao diện WooCommerce, nếu sản phẩm của bạn gồm các mục tùy biến cần truy cập trực tiếp."
-
-msgid "Choose what to do when clicking on the translation controls for products:"
-msgstr "Chọn điều cần làm khi nhấp vào các biểu tượng dịch dành cho sản phẩm:"
-
-msgid "Go to the product translation table in WooCommerce Multilingual"
-msgstr "Đi tới bảng dịch sản phẩm trong WooCommerce Multilingual"
-
-msgid "Go to the native WooCommerce product editing screen"
-msgstr "Đi đến màn hình chỉnh sửa sản phẩm của Woocommerce"
-
-msgid "Products synchronization"
-msgstr "Đồng bộ hóa sản phẩm"
-
-msgid "Configure specific product properties that should be synced to translations."
-msgstr "Tạo cấu hình các đặc tính sản phẩm cụ thể để đồng bộ chúng với các bản dịch."
-
-msgid "Sync publishing date for translated products."
-msgstr "Đồng bộ hóa ngày xuất bản cho các sản phẩm được dịch."
-
-msgid "Sync products and product taxonomies order."
-msgstr "Đồng bộ sản phẩm và thứ tự thẻ taxonomy của sản phẩm."
-
-msgid "File Paths Synchronization "
-msgstr "Đồng bộ hóa đường dẫn tập tin"
-
-msgid "If you are using downloadable products, you can choose to have their paths synchronized, or seperate for each language."
-msgstr "Nếu bạn đang sử dụng kiểu sản phẩm có thể tải về (downloadable product), bạn có thể chọn đường dẫn để đồng bộ, hoặc tách riêng cho mỗi ngôn ngữ."
-
-msgid "Use the same file paths in all languages"
-msgstr "Sử dụng một đường dẫn tập tin trong tất cả ngôn ngữ"
-
-msgid "Different file paths for each language"
-msgstr "Đường dẫn tập tin khác nhau cho từng ngôn ngữ"
-
-msgid "Manage Currencies"
-msgstr "Quản lý tiền tệ"
-
-msgid "This will let you enable the multi-currency mode where users can see prices according to their currency preference and configured exchange rate."
-msgstr "Điều này cho phép bạn kích hoạt chức năng đa tiền tệ giúp người truy cập có thể xem các loại giá theo lựa chọn tiền tệ của mình và theo tỷ giá hối đoái định sẵn."
-
-msgid "No multi-currency."
-msgstr "Không có tính năng đa tiền tệ."
-
-msgid "Multiple currencies, independent of languages."
-msgstr "Nhều loại tiền tệ, độc lập với các ngôn ngữ."
-
-msgid "Learn more"
-msgstr "Tìm hiểu thêm"
-
-msgid "Currency"
-msgstr "Tiền tệ"
-
-msgid "default"
-msgstr "mặc định"
-
-msgid "Edit"
-msgstr "Sửa"
-
-msgid "Default currency"
-msgstr "Tiền tệ mặc định"
-
-msgid "Switch to this currency when switching language in the front-end"
-msgstr "Chuyển sang loại tiền tệ này khi chuyển ngôn ngữ ở front-end."
-
-msgid "OFF"
-msgstr "TẮT"
-
-msgid "ON"
-msgstr "BẬT"
-
-msgid "Keep"
-msgstr "Giữ"
-
-msgid "Please fill field"
-msgstr "Hãy điền trường dữ liệu"
-
-msgid "Add currency"
-msgstr "Thêm tiền tệ"
-
-msgid "n/a"
-msgstr "n/a"
-
-msgid "Show only products with custom prices in secondary currencies"
-msgstr "Chỉ hiển thị các sản phẩm có các mức giá tùy biến bằng các loại tiền tệ thứ hai"
-
-msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
-msgstr "Khi tùy chọn này ở chế độ 'bật', khi bạn chuyển đổi sang loại tiền tệ thứ hai trên front end, chỉ các sản phẩm với giá tùy chỉnh bằng loại tiền tệ đó được hiển thị. Các sản phẩm với các mức giá được quyết định dựa trên tỷ giá hối đoái sẽ bị ẩn đi."
-
-msgid "Troubleshooting page"
-msgstr "Trang xử lý sự cố"
-
-msgid "Run fix"
-msgstr "Chạy bản sửa lỗi"
-
-msgid "Dismiss"
-msgstr "Bỏ qua"
 
 msgid "To run a fully translated site, you should translate all taxonomy terms. Some store elements, such as variations, depend on taxonomy translation."
 msgstr "Để chạy một trang web được dịch hoàn chỉnh, bạn phải dịch tất cả các cụm từ (taxonomy term). Một số yếu tố liên quan tới gian hàng, chẳng hạn như các biến thể, phụ thuộc vào việc dịch thẻ taxonomy."
@@ -883,26 +916,20 @@ msgstr "Để chạy một trang web được dịch hoàn chỉnh, bạn phải
 msgid "This taxonomy requires translation."
 msgstr "Thẻ (taxonomy) này cần phải dịch."
 
+msgid "Include in translation"
+msgstr "Đi kèm trong bản dịch"
+
 msgid "This taxonomy does not require translation."
 msgstr "Thẻ (taxonomy) này KHÔNG cần phải dịch."
 
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "Các thay đổi bạn thực hiện sẽ bị mất nếu bạn rời khỏi trang này."
+msgid "Right now, there are no taxonomy terms needing translation."
+msgstr "Hiện tại, không có cụm từ (taxonomy term) cần dịch."
 
-msgid "At least one currency must be enabled for this language!"
-msgstr "Phải kích hoạt ít nhất một loại tiền tệ cho ngôn ngữ này!"
+msgid "There are no translatable product attributes defined"
+msgstr "Không có thuộc tính sản phẩm có thể dịch được định nghĩa"
 
-msgid "Synchronize %s assignment in content"
-msgstr "Đồng bộ hóa thuộc tính %s trong các nội dung"
-
-msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
-msgstr "Thao tác này cho phép bạn tự động áp dụng thẻ (taxonomy) %s cho nội dung của mình trong các ngôn ngữ khác nhau. Nó sẽ quét nội dung gốc và áp dụng thẻ (taxonomy) đó đối với nội dung đã dịch."
-
-msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
-msgstr "Thao tác này sẽ tự động tạo các biến thể (variation) cho sản phẩm được dịch tương ứng với các thuộc tính đã dịch gần đây."
-
-msgid "Troubleshooting"
-msgstr "Xử lý sự cố"
+msgid "Select the attribute to translate: "
+msgstr "Chọn thuộc tính để dịch:"
 
 msgid "Please make a backup of your database before you start the synchronization"
 msgstr "Vui lòng tạo bản sao lưu cho cơ sở dữ liệu của bạn trước khi bạn thực hiện quá trình đồng bộ hóa"
@@ -922,8 +949,8 @@ msgstr "Đồng bộ các biến thể của sản phẩm:"
 msgid "left"
 msgstr "còn lại"
 
-msgid "Sync products \"gallery images\""
-msgstr "Đồng bộ \"thư viện hình ảnh\" của sản phẩm"
+msgid "Sync products \"gallery images\":"
+msgstr "Đồng bộ sản phẩm \"ảnh thư viện\":"
 
 msgid "Sync products categories (display type, thumbnail):"
 msgstr "Đồng bộ danh mục sản phẩm (kiểu hiển thị, ảnh nhỏ):"
@@ -934,53 +961,254 @@ msgstr "Tạo bản sao các cụm từ (hãy chọn thuộc tính):"
 msgid "none"
 msgstr "không"
 
-msgid "Start"
-msgstr "Bắt đầu"
+msgid "Enable/disable"
+msgstr "Bật/tắt"
 
-msgid "Please add variations to product"
-msgstr "Vui lòng thêm các biến thể vào sản phẩm"
+msgid "Currencies"
+msgstr "Tiền tệ"
 
-msgid "Please save translation before translate variations file paths"
-msgstr "Hãy lưu bản dịch trước khi dịch các đường dẫn tập tin biến thể"
+msgid "Add currency"
+msgstr "Thêm tiền tệ"
 
-msgid "Variations are not downloadable"
-msgstr "Biến thể (variation) không thể tải về"
+msgid "Currency"
+msgstr "Tiền tệ"
 
-msgid "Download URL"
-msgstr "URL tải xuống"
+msgid "Rate"
+msgstr "Tỷ giá"
 
-msgid "Variation is not downloadable"
-msgstr "Biến thể (variation) không thể tải về"
+msgid "default"
+msgstr "mặc định"
 
-msgid "This field is locked for editing because WPML will copy its value from the original language."
-msgstr "Trường này đã bị khóa để chỉnh sửa vì WPML sẽ sao chép giá trị của nó từ ngôn ngữ gốc."
+msgid "Default currency"
+msgstr "Tiền tệ mặc định"
 
-msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
-msgstr "Đây là bản dịch của %s. Một vài trường dữ liệu không cho phép chỉnh sửa. Chúng tôi khuyến khích sử dụng %s để dịch các sản phẩm."
+msgid "Switch to this currency when switching language in the front-end"
+msgstr "Chuyển sang loại tiền tệ này khi chuyển ngôn ngữ ở front-end."
 
-msgid "WooCommerce Multilingual products translator"
-msgstr "Trình biên dịch sản phẩm WooCommerce Multilingual"
+msgid "Keep"
+msgstr "Giữ"
 
-msgid "How to translate products"
-msgstr "Cách thức dịch các sản phẩm"
+msgid "Delete"
+msgstr "Xóa"
 
-msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
-msgstr "Tính năng sửa nhanh đã bị vô hiệu đối với các bản dịch sản phẩm. Chúng tôi khuyên dùng %s để chỉnh sửa các bản dịch sản phẩm. %s"
+msgid " (%s)"
+msgstr "(%s)"
 
-msgid "WooCommerce Multilingual products editor"
-msgstr "Trình soạn thảo các sản phẩm WooCommerce Multilingual"
+msgid "The multi-currency mode cannot be enabled as a specific currency was not set. Go to the %sWooCommerce settings%s page and select the default currency for your store."
+msgstr "Chế độ đa tiền tệ không thể được kích hoạt vì loại tiền tệ cụ thể chưa được thiết lập. Truy cập trang %scài đặt WooCommerce%s và chọn loại tiền tệ mặc định cho cửa hàng của bạn."
 
-msgid "Edit this product translation"
-msgstr "Sửa bản dịch sản phẩm này"
+msgid "Learn more"
+msgstr "Tìm hiểu thêm"
 
-msgid "How to translate attributes"
-msgstr "Cách thức dịch các thuộc tính"
+msgid "Show only products with custom prices in secondary currencies"
+msgstr "Chỉ hiển thị các sản phẩm có các mức giá tùy biến bằng các loại tiền tệ thứ hai"
 
-msgid "How to translate product categories"
-msgstr "Cách thức dịch danh mục sản phẩm"
+msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
+msgstr "Khi tùy chọn này ở chế độ 'bật', khi bạn chuyển đổi sang loại tiền tệ thứ hai trên front end, chỉ các sản phẩm với giá tùy chỉnh bằng loại tiền tệ đó được hiển thị. Các sản phẩm với các mức giá được quyết định dựa trên tỷ giá hối đoái sẽ bị ẩn đi."
 
-msgid "Would you like to see a quick overview?"
-msgstr "Bạn có muốn xem nhanh miêu tả chung?"
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "Các thay đổi bạn thực hiện sẽ bị mất nếu bạn rời khỏi trang này."
 
-msgid "Learn how to turn your e-commerce site multilingual"
-msgstr "Tìm hiểu cách tạo website thương mại điện tử đa ngôn ngữ"
+msgid "At least one currency must be enabled for this language!"
+msgstr "Phải kích hoạt ít nhất một loại tiền tệ cho ngôn ngữ này!"
+
+msgid "Currency switcher options"
+msgstr "Tùy chọn bộ chuyển đổi tiền tệ"
+
+msgid "Currency switcher style"
+msgstr "Kiểu bộ chuyển đổi tiền tệ"
+
+msgid "Currency order"
+msgstr "Thứ tự tiền tệ"
+
+msgid "Available parameters"
+msgstr "Các tham số có sẵn"
+
+msgid "Template for currency switcher"
+msgstr "Template dành cho bộ chuyển đổi tiền tệ"
+
+msgid "Visibility"
+msgstr "Hiển thị"
+
+msgid "Currency switcher preview"
+msgstr "Xem trước bộ chuyển đổi tiền tệ"
+
+msgid "Drop-down menu"
+msgstr "Menu thả xuống"
+
+msgid "List of currencies"
+msgstr "Danh sách các loại tiền tệ"
+
+msgid "Vertical"
+msgstr "Dọc"
+
+msgid "Horizontal"
+msgstr "Ngang"
+
+msgid "Drag the currencies to change their order"
+msgstr "Kéo các loại tiền tệ để thay đổi thứ tự của chúng"
+
+msgid "%name%, %symbol%, %code%"
+msgstr "%name%, %symbol%, %code%"
+
+msgid "Default: %name% (%symbol%) - %code%"
+msgstr "Mặc định: %name% (%symbol%) - %code%"
+
+msgid "Show a currency selector on the product page template"
+msgstr "Hiển thị bộ chọn loại tiền tệ trên template trang sản phẩm"
+
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgstr "Để định cấu hình cách thức dịch các %s sản phẩm WooCommerce%s, hãy truy cập trang %scài đặt%s WooCommerce Đa ngôn ngữ."
+
+msgid "Title"
+msgstr "Tiêu đề"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Content / Description"
+msgstr "Nội dung / Mô tả"
+
+msgid "Excerpt"
+msgstr "Trích dẫn"
+
+msgid "Purchase note"
+msgstr "Lưu ý về mua hàng"
+
+msgid "Images"
+msgstr "Hình ảnh"
+
+msgid "Custom Product attributes"
+msgstr "Tùy chỉnh thuộc tính sản phẩm"
+
+msgid "Name"
+msgstr "Tên"
+
+msgid "Value(s)"
+msgstr "(Các) Giá trị"
+
+msgid "Custom Fields"
+msgstr "Trường tùy biến"
+
+msgid "Variations data"
+msgstr "Dữ liệu biến thể"
+
+msgid "Download Files for Variation #%s"
+msgstr "Tải về các tập tin cho biến thể #%s"
+
+msgid "Download Files"
+msgstr "Tải về các tập tin"
+
+msgid "File URL"
+msgstr "URL của tập tin"
+
+msgid "Content, title, and excerpt are empty."
+msgstr "Nội dung, tiêu đề, và trích dẫn đang để trống."
+
+msgid "Search %s"
+msgstr "Tìm kiếm %s"
+
+msgid "All %s"
+msgstr "Tất cả %s"
+
+msgid "Parent %s"
+msgstr "Mục cha (parent) %s"
+
+msgid "Parent %s:"
+msgstr "Mục cha (parent) %s:"
+
+msgid "Edit %s"
+msgstr "Sửa %s"
+
+msgid "Update %s"
+msgstr "Cập nhật %s"
+
+msgid "Add New %s"
+msgstr "Thêm %s mới"
+
+msgid "New %s"
+msgstr "Mới %s"
+
+msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "Để dịch các chuỗi ký tự Add-ons, vui lòng lưu Add-ons và truy cập <b><a href=\"%s\">Giao diện String Translation</a></b>"
+
+msgid "Product Add-ons Group \"%s\""
+msgstr "Nhóm chương trình phụ trợ của sản phẩm \"%s\""
+
+msgid "Description"
+msgstr "Miêu tả"
+
+msgid "Options"
+msgstr "Tùy chọn"
+
+msgid "Label"
+msgstr "nhãn"
+
+msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "Để dịch các chuỗi ký tự Extra Options, hãy lưu %s và truy cập <b><a href=\"%s\">Giao diện String Translation</a></b>"
+
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+msgid "Translation of"
+msgstr "Bản dịch của"
+
+msgid "Subscription Price"
+msgstr "Mức giá Thuê bao"
+
+msgid "Sign-up Fee"
+msgstr "Đăng ký miễn phí"
+
+msgid "Calculate costs in other currencies automatically"
+msgstr "Tự động tính toán các chi phí bằng các loại tiền tệ khác"
+
+msgid "Set costs in other currencies manually"
+msgstr "Thiết lập chi phí bằng các loại tiền tệ khác theo cách thủ công"
+
+msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
+msgstr "Đây là chi phí cho một block đặt trước. Toàn bộ các chi phí khác (dành cho các tài nguyên và loại người) sẽ được cộng vào đây."
+
+msgid "Product tabs"
+msgstr "Các tab sản phẩm"
+
+msgid "Heading"
+msgstr "Tiêu đề"
+
+msgid "Tour Data"
+msgstr "Dữ liệu hành trình"
+
+msgid "Content"
+msgstr "Nội dung"
+
+msgid "Composite Products"
+msgstr "Sản phẩm phức hợp"
+
+msgid "Product Bundles"
+msgstr "Product Bundles"
+
+msgid "One-off cost for the booking as a whole."
+msgstr "Chi phí một lần cho việc đặt trước toàn bộ."
+
+msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
+msgstr "Chi phí này sẽ được hiển thị cho người dùng trên frontend. Để trống để nó được tính toán giúp bạn. Nếu việc đặt chỗ có các loại phí khác nhau, mục này sẽ được cố định bằng thuật ngữ \"từ:\""
+
+msgid "Bookings"
+msgstr "Đặt hàng"
+
+msgid "Resources Label"
+msgstr "Nhãn tài nguyên"
+
+msgid "Resources"
+msgstr "Tài nguyên"
+
+msgid "Person Types"
+msgstr "Kiểu người"
+
+msgid "Person Type Name"
+msgstr "Tên kiểu người"
+
+msgid "Resources label"
+msgstr "Nhãn tài nguyên"
+
+msgid "Booking currency"
+msgstr "Tiền tệ dùng để đặt chỗ"

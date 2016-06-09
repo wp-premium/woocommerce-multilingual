@@ -101,6 +101,14 @@
             <key name="subject" />
             <key name="heading" />
         </key>
+        <key name="woocommerce_failed_order_settings">
+            <key name="subject" />
+            <key name="heading" />
+        </key>
+        <key name="woocommerce_customer_on_hold_order_settings">
+            <key name="subject" />
+            <key name="heading" />
+        </key>
 		<key name="woocommerce_customer_refunded_order_settings">
 			<key name="subject_full" />
 			<key name="heading_full" />

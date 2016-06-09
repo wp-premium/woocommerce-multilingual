@@ -1,0 +1,37 @@
+<h1>{{ strings.heading }}</h1>
+
+<p>{{ strings.description }}</p>
+
+<ul>
+
+{% if multi_currency_on %}
+<li>  {{ multi_currency_link|raw }}  </li>
+{% endif %}
+
+{% if untranslated_attr_terms %}
+<li>  {{ untranslated_attr_terms|raw }}  </li>
+{% endif %}
+
+{% if untranslated_categories %}
+<li>  {{ untranslated_categories|raw }}  </li>
+{% endif %}
+
+{% if untranslated_tags %}
+<li>  {{ untranslated_tags|raw }}  </li>
+{% endif %}
+
+{% if untranslated_shipping_classes %}
+<li>  {{ untranslated_shipping_classes|raw }}  </li>
+{% endif %}
+
+
+<li>{{ url_translation|raw }}</li>
+
+</ul>
+
+
+<p class="wcml-setup-actions step">
+    <a href="{{ continue_url }}" class="button button-primary button-large">{{ strings.continue }}</a>
+</p>
+
+

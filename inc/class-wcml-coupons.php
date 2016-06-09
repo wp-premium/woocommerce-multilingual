@@ -1,0 +1,73 @@
+<?php
+
+class WCML_Coupons{
+
+    private $woocommerce_wpml;
+    private $sitepress;
+
+    public function __construct( &$woocommerce_wpml, &$sitepress ){
+        $this->woocommerce_wpml = $woocommerce_wpml;
+        $this->sitepress = $sitepress;
+
+        add_action( 'woocommerce_coupon_loaded', array( $this, 'wcml_coupon_loaded' ) );
+        add_action( 'admin_init', array( $this, 'icl_adjust_terms_filtering' ) );
+    }
+
+    public function wcml_coupon_loaded( $coupons_data ){
+        $product_ids  = array();
+        $exclude_product_ids  = array();
+        $product_categories_ids  = array();
+        $exclude_product_categories_ids  = array();
+
+        foreach( $coupons_data->product_ids as $prod_id ){
+            $post_type = get_post_field( 'post_type', $prod_id );
+            $trid = $this->sitepress->get_element_trid( $prod_id, 'post_' . $post_type );
+            $translations = $this->sitepress->get_element_translations( $trid, 'post_' . $post_type );
+            foreach( $translations as $translation ){
+                $product_ids[] = $translation->element_id;
+            }
+        }
+        foreach( $coupons_data->exclude_product_ids as $prod_id ){
+            $post_type = get_post_field( 'post_type', $prod_id );
+            $trid = $this->sitepress->get_element_trid( $prod_id, 'post_' . $post_type );
+            $translations = $this->sitepress->get_element_translations( $trid, 'post_' . $post_type );
+            foreach( $translations as $translation ){
+                $exclude_product_ids[] = $translation->element_id;
+            }
+        }
+
+        foreach( $coupons_data->product_categories as $cat_id ){
+            $term = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $cat_id, 'product_cat' );
+            $trid = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_product_cat' );
+            $translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat' );
+
+            foreach( $translations as $translation ){
+                $product_categories_ids[] = $translation->term_id;
+            }
+        }
+
+        foreach( $coupons_data->exclude_product_categories as $cat_id ){
+            $term = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $cat_id,'product_cat' );
+            $trid = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_product_cat' );
+            $translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat' );
+            foreach( $translations as $translation ){
+                $exclude_product_categories_ids[] = $translation->term_id;
+            }
+        }
+
+        $coupons_data->product_ids = $product_ids;
+        $coupons_data->exclude_product_ids = $exclude_product_ids;
+        $coupons_data->product_categories = $product_categories_ids;
+        $coupons_data->exclude_product_categories = $exclude_product_categories_ids;
+
+        return $coupons_data;
+    }
+
+    public function icl_adjust_terms_filtering(){
+        if( is_admin() && isset( $_GET[ 'action' ] ) && $_GET['action'] == 'woocommerce_json_search_products_and_variations' ){
+            global $icl_adjust_id_url_filter_off;
+            $icl_adjust_id_url_filter_off = true;
+        }
+    }
+
+}

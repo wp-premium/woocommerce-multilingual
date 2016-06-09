@@ -4,104 +4,86 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nProject-Id-Version:WPML_EXPORT\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: \nLanguage:en\nMIME-Version: 1.0\n"
 
-msgid "Collapse"
-msgstr "收起"
+msgid "Introduction"
+msgstr ""
 
-msgid "Expand"
-msgstr "展開"
+msgid "Store Pages"
+msgstr ""
 
-msgid "Please set bundles for product"
-msgstr "請為產品設定捆綁包"
+msgid "Global Attributes"
+msgstr ""
 
-msgid "Please save translation before translate bundles texts"
-msgstr "請在翻譯捆綁文字之前儲存翻譯"
+msgid "Multiple Currencies"
+msgstr ""
 
-msgid "Title"
-msgstr "標題"
+msgid "Translation Interface"
+msgstr ""
 
-msgid "Description"
-msgstr "說明"
+msgid "Ready!"
+msgstr ""
 
-msgid "Enter translation"
-msgstr "輸入翻譯"
+msgid "Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products."
+msgstr ""
 
-msgid "%s translation"
-msgstr "%s翻譯"
+msgid "Action failed. Please refresh the page and retry."
+msgstr ""
 
-msgid "Show content"
-msgstr "顯示內容"
+msgid "Cheatin&#8217; huh?"
+msgstr ""
 
-msgid "Edit translation"
-msgstr "編輯翻譯"
+msgid "Run the Setup Wizard"
+msgstr ""
 
-msgid "Original content:"
-msgstr "原內容："
+msgid "Skip Setup"
+msgstr ""
 
-msgid "Close"
-msgstr "關閉"
+msgid "WooCommerce Multilingual &rsaquo; Setup Wizard"
+msgstr ""
 
-msgid "Cancel"
-msgstr "取消"
+msgid "WooCommerce Multilingual"
+msgstr "WooCommerce Multilingual"
 
-msgid "Ok"
-msgstr "確定"
+msgid "How to translate products"
+msgstr "如何翻譯產品"
 
-msgid "One-off cost for the booking as a whole."
-msgstr "一次性的預訂總費用。"
+msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
+msgstr "產品翻譯禁用快速編輯。我們推薦使用%s編輯產品翻譯。%s"
 
-msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
-msgstr "這是每個預訂時間段的費用。所有其他費用（針對資源和人員）被新增到這個。"
+msgid "WooCommerce Multilingual products editor"
+msgstr "WooCommerce Multilingual產品編輯器"
 
-msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
-msgstr "成本被顯示到前端的使用者。留空讓系統為您自動計算。如果預訂有變化的成本，這將是會有前置詞詞「起價：」。"
+msgid "Edit this product translation"
+msgstr "編輯此產品翻譯"
 
-msgid "Calculate costs in other currencies automatically"
-msgstr "自動以其他貨幣計算成本"
+msgid "How to translate attributes"
+msgstr "如何翻譯內容"
 
-msgid "Set costs in other currencies manually"
-msgstr "手動以其他貨幣設定成本"
+msgid "How to translate product categories"
+msgstr "如何翻譯產品類別"
 
-msgid "Invalid nonce"
-msgstr "無效nonce"
+msgid "The recommended way to translate WooCommerce products is using the\n                             %sWooCommerce Multilingual products translation%s page.\n                             Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
+msgstr ""
 
-msgid "Resources"
-msgstr "資源"
+msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
+msgstr "為了編輯自訂屬性，您需要使用<a href=\"%s\">自訂產品翻譯編輯器</a>"
 
-msgid "Person types"
-msgstr "人員類型"
+msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgstr "您使用與常規分類別基礎相同的值。眾所周知，這會造成導致URL不能正常工作的衝突。"
 
-msgid "Resources label"
-msgstr "資源標籤"
+msgid "translations"
+msgstr "翻譯"
 
-msgid "Booking currency"
-msgstr "預訂貨幣"
-
-msgid "Translation of"
-msgstr "翻譯："
-
-msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "要翻譯「額外選項」字串，請儲存%s並轉到<b><a href=\"%s\">字串翻譯介面</a></b>"
-
-msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr "要翻譯外掛程式字串，請儲存外掛程式並轉到<b><a href=\"%s\">字串翻譯介面</a></b>"
-
-msgid "Product Bundles"
-msgstr "產品捆綁"
-
-msgid "Please update original product"
-msgstr "請更新原有的產品"
-
-msgid "Currency switcher"
-msgstr "貨幣切換器"
-
-msgid "Configure options"
-msgstr "組態選項"
-
-msgid "Currencies order updated"
-msgstr "已更新貨幣順序"
+msgid "product"
+msgstr "產品"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior %s."
 msgstr "WooCommerce Multilingual已啟用但未生效。它不相容<a href=\"%s\">%s之前版本的WPML</a>。"
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">Woocommerce</a> versions prior %s."
+msgstr "WooCommerce Multilingual已啟用但無效。它與%s之前的<a href=\"%s\">Woocommerce</a> 版本不相容。"
+
+msgid "You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href=\"%s\">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML."
+msgstr "您正在使用WooCommerce Multilingual %s。該版本包含了組態螢幕的重要的使用者介面重新設計，它需要<a href=\"%s\">WPML %s</a>或更高版本。目前在前端一切仍然正常工作，但要設定WooCommerce Multilingual的選項，您需要升級WPML。"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML Translation Management</a> versions prior %s."
 msgstr "WooCommerce Multilingual已啟用但未生效。它不相容<a href=\"%s\">%s之前版本的WPML翻譯管理</a>。"
@@ -142,47 +124,53 @@ msgstr "來自wpml-config.xml檔案的自訂類型%s配置已被變更！"
 msgid "Custom taxonomy %s configuration from wpml-config.xml file was altered!"
 msgstr "來自wpml-config.xml檔案的自訂分類%s配置已被變更！"
 
-msgid "Select the currency you want to set the options for:"
-msgstr "選擇要設定選項的貨幣："
+msgid "Upgrade WPML"
+msgstr "升級WPML"
 
-msgid "All the products will be removed from the current order in order to change the currency"
-msgstr "會從當前訂單移除所有的產品以變更貨幣"
+msgid "Invalid language parameter: %s"
+msgstr "無效的語言參數：%s"
 
-msgid "Show all currencies"
-msgstr "顯示所有貨幣"
+msgid "Source product id not found: %s"
+msgstr "源產品id找不到：%s"
 
-msgid "Currency - no orders found"
-msgstr "貨幣 - 沒有找到訂單"
+msgid "Product Base"
+msgstr "產品基礎"
 
-msgid "Order currency:"
-msgstr "訂單貨幣："
+msgid "Product Tag Base"
+msgstr "產品標籤基礎"
 
-msgid "All the products will be removed from the current order in order to change the language"
-msgstr "會從當前訂單移除所有的產品以變更語言"
+msgid "Product Category Base"
+msgstr "產品類別基礎"
 
-msgid "Order language:"
-msgstr "訂單語言："
+msgid "Product Attribute Base"
+msgstr "產品屬性基礎"
 
-msgid "Title missing"
-msgstr "標題缺失"
+msgid "Endpoint: %s"
+msgstr "端點：%s"
+
+msgid "product-category"
+msgstr "產品類別"
+
+msgid "product-tag"
+msgstr "產品標籤"
 
 msgid "Original language"
 msgstr "原始語言"
 
-msgid "Not translated"
-msgstr "未翻譯"
+msgid "Take this and edit"
+msgstr "承接並編輯"
 
-msgid "Not translated - needs update"
-msgstr "未翻譯-需要更新"
+msgid "Add translation"
+msgstr "新增翻譯"
 
-msgid "In progress"
-msgstr "進行中"
+msgid "Update translation"
+msgstr "更新翻譯"
 
-msgid "Complete"
-msgstr "完成"
+msgid "Finish translating"
+msgstr "完成翻譯"
 
-msgid "The recommended way to translate WooCommerce products is using the <b><a href=\"%s\">WooCommerce Multilingual products translation</a></b> page. Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
-msgstr "翻譯WooCommerce產品推薦的方式是使用<b><a href=\"%s\">WooCommerce Multilingual產品翻譯</a></b>頁面。請將該頁面僅用於翻譯WooCommerce Multilingual產品翻譯表中沒有的元素。"
+msgid "Edit translation"
+msgstr "編輯翻譯"
 
 msgid "Edit this item inline"
 msgstr "線上編輯此項目"
@@ -190,23 +178,47 @@ msgstr "線上編輯此項目"
 msgid "Quick Edit"
 msgstr "快速編輯"
 
-msgid "Content / Description"
-msgstr ""
+msgid "Translation in progress"
+msgstr "正在進行翻譯"
 
-msgid "Excerpt"
-msgstr "片段"
+msgid "Invalid nonce"
+msgstr "無效nonce"
 
-msgid "Images"
-msgstr "影像"
+msgid "Currency - no orders found"
+msgstr "貨幣 - 沒有找到訂單"
 
-msgid "Variations"
-msgstr "變數"
+msgid "Currencies order updated"
+msgstr "已更新貨幣順序"
 
-msgid "Any %s"
-msgstr "任何%s"
+msgid "Currency switcher"
+msgstr "貨幣切換器"
 
-msgid "Please translate all attributes"
-msgstr "請翻譯所有內容"
+msgid "Configure options"
+msgstr "设定選項"
+
+msgid "Settings saved!"
+msgstr "設定已儲存！"
+
+msgid "Add new currency"
+msgstr "新增貨幣"
+
+msgid "Update currency"
+msgstr "更新貨幣"
+
+msgid "Update settings for %s"
+msgstr "更新%s的設定"
+
+msgid "The default currency was changed. In order to show accurate prices in all currencies, you need to update the exchange rates under the %sMulti-currency%s configuration."
+msgstr "預設貨幣已改變。為了在所有的貨幣中顯示準確的價格，您需要在%s多幣種%s組態中更新匯率。"
+
+msgid "All the products will be removed from the current order in order to change the currency"
+msgstr "會從當前訂單移除所有的產品以變更貨幣"
+
+msgid "Show all currencies"
+msgstr "顯示所有貨幣"
+
+msgid "Order currency:"
+msgstr "訂單貨幣："
 
 msgid "Cart"
 msgstr "購物車"
@@ -241,20 +253,65 @@ msgstr "檢視訂單"
 msgid "Shop"
 msgstr "商店"
 
+msgid "All the products will be removed from the current order in order to change the language"
+msgstr "會從當前訂單移除所有的產品以變更語言"
+
+msgid "Order language:"
+msgstr "訂單語言："
+
+msgid "Choose a file"
+msgstr "選擇檔案"
+
+msgid "At least one of these fields is required: title, content or excerpt"
+msgstr ""
+
+msgid "This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation."
+msgstr ""
+
+msgid "This field is locked for editing because WPML will copy its value from the original language."
+msgstr "此欄位被鎖定，無法編輯，因為WPML將從原語言複製其值。"
+
+msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
+msgstr "這是%s的翻譯。有些欄位是不可編輯的。我們推薦使用%s翻譯產品。"
+
+msgid "WooCommerce Multilingual products translator"
+msgstr "WooCommerce Multilingual產品翻譯"
+
+msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
+msgstr "似乎您是從之前版本的WooCommerce Multilingual升級。想自動建立已翻譯的變數和影像嗎？"
+
+msgid "Yes, go to the troubleshooting page"
+msgstr "是，轉到故障排除頁面"
+
+msgid "No - dismiss"
+msgstr "否 - 取消"
+
+msgid "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?"
+msgstr ""
+
+msgid "Learn how to turn your e-commerce site multilingual"
+msgstr "瞭解如何將您的電子商務網站變為多語系"
+
+msgid "Dismiss"
+msgstr "解雇"
+
 msgid "To translate %s please use the %s translation%s page, inside the %sWooCommerce Multilingual admin%s."
 msgstr "要翻譯%s，請使用%s翻譯%s頁面，在%sWooCommerce Multilingual管理%s內。"
 
 msgid "%s do not require translation."
 msgstr "%s不需要翻譯。"
 
-msgid "Change"
-msgstr "變更"
+msgid "Include to translation"
+msgstr "列入翻譯"
 
-msgid "Some %s are missing translations (%d translations missing)."
-msgstr "一些%s缺少翻譯（缺少%d個翻譯）。"
+msgid "%d %s are missing translations."
+msgstr "%d個%s缺少翻譯。"
 
-msgid "Translate now"
-msgstr "現在翻譯"
+msgid "Translate %s"
+msgstr "翻譯 %s"
+
+msgid "Exclude from translation"
+msgstr "從翻譯中排除"
 
 msgid "All %s are translated."
 msgstr "所有%s都已翻譯。"
@@ -286,149 +343,188 @@ msgstr "成功更新%s（為所有翻譯的%s）。"
 msgid "Synchronize attributes and update product variations"
 msgstr "同步內容，並更新產品的變數"
 
-msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
-msgstr "似乎您是從之前版本的WooCommerce Multilingual升級。想自動建立已翻譯的變數和影像嗎？"
+msgid "Image"
+msgstr "圖片"
 
-msgid "Yes, go to the troubleshooting page"
-msgstr "是，轉到故障排除頁面"
+msgid "Product"
+msgstr "產品"
 
-msgid "No - dismiss"
-msgstr "否 - 取消"
+msgid "Type"
+msgstr "類型"
 
-msgid "product-category"
-msgstr "產品類別"
+msgid "Date"
+msgstr "日期"
 
-msgid "product-tag"
-msgstr "產品標籤"
+msgid "Categories"
+msgstr "分類"
 
-msgid "Please enter this text in %s"
-msgstr "請以%s輸入此文字"
+msgid "No products found"
+msgstr "沒有找到產品"
 
-msgid "You have to enter this text in the strings language ( %s ) so you can translate it using the WPML String Translation."
-msgstr "您必須以字串語言 ( %s )輸入此文字，這樣您就可以使用WPML字串翻譯進行翻譯。"
+msgid "Draft"
+msgstr "草稿"
 
-msgid "You need to enter attribute names in %s (even though your site's default language is %s). Then, translate it to %s and the rest of the site's languages using in the %sWooCommerce Multlingual admin%s."
-msgstr "您需要以%s輸入內容名稱（即使您網站的預設語言是%s）。然後，翻譯為%s和%sWooCommerce Multlingual管理%s中使用的網站其餘語言。"
+msgid "Private"
+msgstr "自有"
 
-msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
-msgstr "為了編輯自訂屬性，您需要使用<a href=\"%s\">自訂產品翻譯編輯器</a>"
-
-msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgid "Pending"
 msgstr ""
 
-msgid "translations"
-msgstr "翻譯"
+msgid "Scheduled"
+msgstr "已計畫"
 
-msgid "WooCommerce Multilingual"
-msgstr "WooCommerce Multilingual"
+msgid "Parent product: %s"
+msgstr "父級產品：%s"
 
-msgid "General settings"
-msgstr "常規設定"
+msgid "Edit this item"
+msgstr "編輯此項目"
 
-msgid "Products"
-msgstr "產品"
+msgid "Edit"
+msgstr "編輯"
+
+msgid "View \"%s\""
+msgstr "檢視\"%s\""
+
+msgid "View"
+msgstr "查看"
+
+msgid "Published"
+msgstr "已發佈"
+
+msgid "Last Modified"
+msgstr "上一次變更"
+
+msgid "All languages"
+msgstr "所有語言"
+
+msgid "All categories"
+msgstr "所有類別"
+
+msgid "All translation statuses"
+msgstr "所有翻譯狀態"
+
+msgid "Not translated or needs updating"
+msgstr "未翻譯或需要更新"
+
+msgid "Needs updating"
+msgstr "需要更新"
+
+msgid "Translation complete"
+msgstr "翻譯完成"
+
+msgid "All statuses"
+msgstr "所有狀態"
+
+msgid "Filter"
+msgstr "篩選器"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Search"
+msgstr "搜尋"
+
+msgid "%d items"
+msgstr "%d個項目"
+
+msgid "Go to the first page"
+msgstr "轉到首頁"
+
+msgid "Go to the previous page"
+msgstr "轉到前一頁"
+
+msgid "Select Page"
+msgstr "選擇頁面"
+
+msgid "Current page"
+msgstr "當前頁面"
+
+msgid "of"
+msgstr "/"
+
+msgid "Go to the next page"
+msgstr "轉到下一頁"
+
+msgid "Go to the last page"
+msgstr "轉到末頁"
+
+msgid "Translatable?"
+msgstr "可翻譯？"
+
+msgid "Enable this if you want to translate attribute values with Woocommerce Multilingual"
+msgstr "如果您想透過Woocommerce Multilingual翻譯屬性值，請啟用此選項"
+
+msgid "Existing translations and variations associated will be deleted."
+msgstr "現有的翻譯和相關的變數將被移除。"
+
+msgid "Product Translation Interface"
+msgstr "產品翻譯介面"
+
+msgid "The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions."
+msgstr ""
+
+msgid "WPML Translation Editor"
+msgstr ""
+
+msgid "Native WooCommerce product editing screen"
+msgstr ""
+
+msgid "Products synchronization"
+msgstr "產品同步"
+
+msgid "Configure specific product properties that should be synced to translations."
+msgstr "配置應該同步到翻譯的具體的產品屬性。"
+
+msgid "Sync publishing date for translated products."
+msgstr "為翻譯的產品同步發佈日期。"
+
+msgid "Sync products and product taxonomies order."
+msgstr "同步產品和產品分類別順序。"
+
+msgid "Products Download Files"
+msgstr "產品下載檔案"
+
+msgid "If you are using downloadable products, you can choose to have their paths\n                                            synchronized, or seperate for each language."
+msgstr "如果使用可下載的產品，您可以選擇同步它們的路徑\n，或針對每種語言單獨操作。"
+
+msgid "Use the same files for translations"
+msgstr "翻譯使用相同的檔案"
+
+msgid "Add separate download files for translations"
+msgstr "新增單獨下載檔案進行翻譯"
+
+msgid "Save changes"
+msgstr "儲存變更"
+
+msgid "Troubleshooting page"
+msgstr "故障排除頁面"
+
+msgid "Update Translation"
+msgstr "更新翻譯"
+
+msgid "Hide This Message"
+msgstr "隱藏此訊息"
+
+msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
+msgstr "<strong>可用WooCommerce翻譯</strong> &#8211；安裝或更新您的<code>%s</code>翻譯至版本<code>%s</code>。"
+
+msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
+msgstr "這將為翻譯的產品自動生成變數，對應於最近翻譯的內容。"
+
+msgid "Synchronize %s assignment in content"
+msgstr "同步內容中的%s分配"
+
+msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
+msgstr "此操作可以讓您自動以不同的語言套用%s分類別到您的內容。它會掃描原始內容並套用相同的分類別到翻譯的內容。"
 
 msgid "You have untranslated terms!"
 msgstr "您有未翻譯的術語！"
 
-msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
-msgstr "WooCommerce Multilingual已啟用，但不生效。它不相容早於版本2.0.5的 <a href=\"%s\">WPML</a>。"
+msgid "Select currency"
+msgstr "選擇貨幣"
 
-msgid "%s plugin is installed and active."
-msgstr "%s插件已安裝並激活。"
-
-msgid "%s is set up."
-msgstr "%s已設定。"
-
-msgid "%s is not set up."
-msgstr "%s未設定。"
-
-msgid "%s plugin is either not installed or not active."
-msgstr "%s插件未安裝或沒有激活。"
-
-msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
-msgstr "%1$s已安裝，但版本不正確。您需要%1$s %2$s或更高。"
-
-msgid "Required plugins"
-msgstr "所需插件"
-
-msgid "Plugins Status"
-msgstr "外掛程式狀態"
-
-msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
-msgstr "WooCommerce Multilingual依賴於幾個外掛程式才能工作。如果缺少任何所需的外掛程式，應先安裝並激活缺少的外掛程式。"
-
-msgid "Update WPML"
-msgstr "更新WPML"
-
-msgid "Get WPML"
-msgstr "獲得WPML"
-
-msgid "Get WPML Media"
-msgstr "獲取WPML媒體"
-
-msgid "Get WPML Translation Management"
-msgstr "獲取WPML翻譯管理"
-
-msgid "Get WPML String Translation"
-msgstr "獲取WPML字串翻譯"
-
-msgid "Download WooCommerce"
-msgstr "下載WooCommerce"
-
-msgid "Drop-down menu"
-msgstr "下拉功能表"
-
-msgid "List of currencies"
-msgstr "貨幣清單"
-
-msgid "Show a currency selector on the product page template"
-msgstr "在產品頁面範本上顯示貨幣選擇"
-
-msgid "Currency switcher options"
-msgstr "貨幣切換器選項"
-
-msgid "You can customize currency switcher on front-end"
-msgstr "您可以在前端自訂貨幣切換器"
-
-msgid "Currency order"
-msgstr "貨幣順序"
-
-msgid "Drag the currencies to change their order"
-msgstr "拖動貨幣改變它們的順序"
-
-msgid "Currency switcher style"
-msgstr "貨幣切換器樣式"
-
-msgid "Vertical"
-msgstr "垂直"
-
-msgid "Horizontal"
-msgstr "水平"
-
-msgid "Visibility"
-msgstr "可見性"
-
-msgid "Available parameters"
-msgstr "可用參數"
-
-msgid "%name%, %symbol%, %code%"
-msgstr "%name%, %symbol%, %code%"
-
-msgid "Template for currency switcher"
-msgstr "貨幣切換器範本"
-
-msgid "Default: %name% (%symbol%) - %code%"
-msgstr "預設值：%name% (%symbol%) - %code%"
-
-msgid "Currency switcher preview"
-msgstr "貨幣切換器預覽"
-
-msgid "Save"
-msgstr "保存"
-
-msgid "Currency options for %s"
-msgstr "%s的貨幣選項"
+msgid "Exchange Rate"
+msgstr "匯率"
 
 msgid "Only numeric"
 msgstr "僅數字"
@@ -436,23 +532,23 @@ msgstr "僅數字"
 msgid "Set on %s"
 msgstr "在%s上設定"
 
-msgid "Left (%s99.99)"
-msgstr "左（%s99.99）"
-
-msgid "Right (99.99%s)"
-msgstr "右（99.99%s）"
-
-msgid "Left with space (%s 99.99)"
-msgstr "左（帶空白）（%s 99.99）"
-
-msgid "Right with space (99.99 %s)"
-msgstr "右（帶空白）（99.99%s）"
-
-msgid "Exchange Rate"
-msgstr "匯率"
+msgid "Currency Preview"
+msgstr "貨幣預覽"
 
 msgid "Currency Position"
 msgstr "貨幣位置"
+
+msgid "Left"
+msgstr "左"
+
+msgid "Right"
+msgstr "右"
+
+msgid "Left with space"
+msgstr "左邊，帶空格"
+
+msgid "Right with space"
+msgstr "右邊，帶空格"
 
 msgid "Thousand Separator"
 msgstr "千位分隔符號"
@@ -466,16 +562,16 @@ msgstr "小數數"
 msgid "Rounding to the nearest integer"
 msgstr "最接近整數四捨五入"
 
-msgid "disabled"
-msgstr "禁用"
+msgid "Disabled"
+msgstr "已禁用"
 
-msgid "up"
-msgstr "向上"
+msgid "Up"
+msgstr "上"
 
-msgid "down"
-msgstr "向下"
+msgid "Down"
+msgstr "下"
 
-msgid "nearest"
+msgid "Nearest"
 msgstr "最近"
 
 msgid "Increment for nearest integer"
@@ -484,8 +580,47 @@ msgstr "最接近整數增量"
 msgid "Autosubtract amount"
 msgstr "自動減去量"
 
-msgid " (%s)"
-msgstr "(%s)"
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Products"
+msgstr "產品"
+
+msgid "Tags"
+msgstr "標籤"
+
+msgid "Attributes"
+msgstr "屬性"
+
+msgid "Shipping Classes"
+msgstr "發運類別"
+
+msgid "Settings"
+msgstr "設置"
+
+msgid "Multi-currency"
+msgstr "多幣種"
+
+msgid "Store URLs"
+msgstr "商店URL"
+
+msgid "Status"
+msgstr "狀態"
+
+msgid "Troubleshooting"
+msgstr "疑難排解"
+
+msgid "Thank you for using %sWooCommerce Multilingual%s! You can express your love and\n                                    support by %s rating our plugin and saying that %sit works%s for you."
+msgstr "感謝使用%sWooCommerce Multilingual%s！您可以透過%s給我們的外掛程式評分，\n說%s本軟體對您有用%s，表達您的喜愛並給我們支援。"
+
+msgid "Hide"
+msgstr "隱藏"
+
+msgid "Loading ..."
+msgstr "載入中..."
 
 msgid "Regular Price"
 msgstr "正常價格"
@@ -493,20 +628,17 @@ msgstr "正常價格"
 msgid "Sale Price"
 msgstr "銷售價格"
 
-msgid "Multi-currency is enabled but no secondary currencies have been set"
-msgstr "已啟用多幣種，但沒有設定第二個貨幣"
+msgid "Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s."
+msgstr ""
 
 msgid "Calculate prices in other currencies automatically"
 msgstr "以其他貨幣自動計算價格"
 
-msgid "Click to see the prices in the other currencies as they are currently shown onthe front end."
-msgstr "點擊以其他貨幣檢視價格（因為它們當前在前端顯示）。"
+msgid "Click to see the prices in the other currencies as they are currently shown on the front end."
+msgstr "按檢視其他貨幣的價格，因為它們目前在前端顯示。"
 
 msgid "Show"
 msgstr "顯示"
-
-msgid "Hide"
-msgstr "隱藏"
 
 msgid "Set prices in other currencies manually"
 msgstr "手動以其他貨幣設定價格"
@@ -529,8 +661,8 @@ msgstr "同預設貨幣"
 msgid "Set dates"
 msgstr "設定日期"
 
-msgid "Please enter in a value less than the regular price"
-msgstr "請輸入低於常規價格的數值"
+msgid "Collapse"
+msgstr "收起"
 
 msgid "From&hellip;"
 msgstr "從&hellip;"
@@ -538,206 +670,185 @@ msgstr "從&hellip;"
 msgid "To&hellip;"
 msgstr "到&hellip;"
 
-msgid "Choose a file"
-msgstr "選擇檔案"
+msgid "Please enter in a value less than the regular price"
+msgstr "請輸入低於常規價格的數值"
 
-msgid "Enter translation for name"
-msgstr "輸入名稱翻譯"
+msgid "Required plugins"
+msgstr "所需插件"
 
-msgid "Please set images for product"
-msgstr "請設定產品影像"
+msgid "Plugins Status"
+msgstr "外掛程式狀態"
 
-msgid "Please save translation before translate images texts"
-msgstr "翻譯影像文字之前，請儲存翻譯"
+msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
+msgstr "WooCommerce Multilingual依賴於幾個外掛程式才能工作。如果缺少任何所需的外掛程式，應先安裝並激活缺少的外掛程式。"
 
-msgid "Caption"
-msgstr "標題"
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
+msgstr "WooCommerce Multilingual已啟用，但不生效。它不相容早於版本2.0.5的 <a href=\"%s\">WPML</a>。"
 
-msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
-msgstr "<strong>可用WooCommerce翻譯</strong> &#8211；安裝或更新您的<code>%s</code>翻譯至版本<code>%s</code>。"
+msgid "Update WPML"
+msgstr "更新WPML"
 
-msgid "Update Translation"
-msgstr "更新翻譯"
+msgid "Get WPML"
+msgstr "獲得WPML"
 
-msgid "Hide This Message"
-msgstr "隱藏此訊息"
+msgid "Get WPML Media"
+msgstr "獲取WPML媒體"
 
-msgid "This product is an exact duplicate of the %s product."
-msgstr "此產品是%s產品的準確複製。"
+msgid "Get WPML Translation Management"
+msgstr "獲取WPML翻譯管理"
 
-msgid "edit product"
-msgstr "編輯產品"
+msgid "Get WPML String Translation"
+msgstr "獲取WPML字串翻譯"
 
-msgid "Take this and edit"
-msgstr "承接並編輯"
+msgid "%s is installed and active."
+msgstr "%s已安裝並激活。"
 
-msgid "Update"
-msgstr "更新"
+msgid "%s is set up."
+msgstr "%s已設定。"
 
-msgid "Language"
-msgstr "語言"
+msgid "%s is not set up."
+msgstr "%s未設定。"
 
-msgid "Edit independently."
-msgstr "獨立編輯。"
+msgid "%s is either not installed or not active."
+msgstr "%s未安裝或未激活。"
 
-msgid "Undo (keep this product as a duplicate)"
-msgstr "撤銷（保留此產品為複本）"
+msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
+msgstr "%1$s已安裝，但版本不正確。您需要%1$s %2$s或更高。"
 
-msgid "Translation in progress"
-msgstr "正在進行翻譯"
+msgid "Download WooCommerce"
+msgstr "下載WooCommerce"
 
-msgid "Show slug"
-msgstr "顯示別名"
+msgid "The WordPress Multilingual Plugin"
+msgstr "WordPress Multilingual外掛程式"
 
-msgid "Edit slug"
-msgstr "編輯別名"
+msgid "This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages."
+msgstr "此頁面允許您翻譯WooCommerce用於建置不同類型URL的所有字串。翻譯它們使您能夠擁有對應頁面語言的完全在地化的URL。"
 
-msgid "Please save translation before edit slug"
-msgstr "請在編輯別名之前儲存翻譯"
+msgid "You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page."
+msgstr "您可以在%s固定連結設定%s頁面上輸入或修改預設值，對於端點，則是在%s帳戶設定%s頁面上。"
 
-msgid "Translation missing"
-msgstr "翻譯缺失"
+msgid "permalinks settings"
+msgstr "固定連結設定"
 
-msgid "Add Media"
-msgstr "新增媒體"
+msgid "Account settings"
+msgstr "帳戶設定"
 
-msgid "Text"
-msgstr "文字"
+msgid "Slug type"
+msgstr "別名類型"
 
-msgid "Visual"
-msgstr "視覺化"
+msgid "Original Slug"
+msgstr "原始別名"
 
-msgid "name"
-msgstr "名稱"
+msgid "Shop page"
+msgstr "商店頁面"
 
-msgid "values"
-msgstr "值"
+msgid "Product base"
+msgstr "產品基礎"
 
-msgid "Upload file"
-msgstr "上傳檔案"
+msgid "Product category base"
+msgstr "產品類別基礎"
 
-msgid "Translate %s"
-msgstr "翻譯 %s"
+msgid "Product tag base"
+msgstr "產品標籤基礎"
 
-msgid "%d products"
-msgstr "%d個產品"
+msgid "Product attribute base"
+msgstr "產品屬性基礎"
 
-msgid " | Parent product: %s"
-msgstr "| 父產品：%s"
+msgid "Original"
+msgstr "原始"
 
-msgid "Show all products"
-msgstr "顯示所有產品"
+msgid "Translation to"
+msgstr "翻譯至"
 
-msgid "WooCommerce Products"
-msgstr "WooCommerce產品"
+msgid "Product Shop Base"
+msgstr "產品商店基礎"
 
-msgid "All languages"
-msgstr "所有語言"
-
-msgid "Any category"
-msgstr "任何類別"
-
-msgid "All products"
-msgstr "所有產品"
-
-msgid "Not translated or needs updating"
-msgstr "未翻譯或需要更新"
-
-msgid "Needs updating"
-msgstr "需要更新"
-
-msgid "Translation complete"
-msgstr "翻譯完成"
-
-msgid "All statuses"
-msgstr "所有狀態"
-
-msgid "Search"
-msgstr "搜尋"
-
-msgid "Reset"
-msgstr "重置"
-
-msgid "Go to the first page"
-msgstr "轉到首頁"
-
-msgid "Go to the previous page"
-msgstr "轉到前一頁"
-
-msgid "of"
-msgstr "/"
-
-msgid "Go to the next page"
-msgstr "轉到下一頁"
-
-msgid "Go to the last page"
-msgstr "轉到末頁"
-
-msgid "Type"
-msgstr "類型"
-
-msgid "Product"
-msgstr "產品"
-
-msgid "No products found"
-msgstr "沒有找到產品"
-
-msgid " (draft)"
-msgstr "（草稿）"
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sSlugs Translation%s to translate."
+msgid "Welcome to WooCommerce Multilingual!"
 msgstr ""
 
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sString Translation%s to translate."
-msgstr "沒有在%s中翻譯您的產品永久連結基礎。已翻譯產品的網址將無法正常工作。轉到%s字串翻譯%s進行翻譯。"
+msgid "Configure the multilingual support for your e-commerce site in just a couple of minutes."
+msgstr ""
 
-msgid "Please review the %sguide for running WooCommerce multilingual with default language other than English%s."
-msgstr "請檢視%s使用預設語言而非英文執行WooCommerce Multilingual指南%s。"
+msgid "By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away."
+msgstr ""
 
-msgid "You should check WPML configuration files added by other plugins or manual settings on the %sMultilingual Content Setup%s section."
-msgstr "您應該檢查由其他外掛程式新增的WPML設定檔或%sMultilingual內容設定%s部分上的手動設定。"
+msgid "You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode."
+msgstr ""
 
-msgid "Your store's base currency is %s (%s). To change it, go to the %s page."
-msgstr "您的商店的基本貨幣是%s (%s)。要變更它，請轉到%s頁面。"
+msgid "Start"
+msgstr "開始"
 
-msgid "Products using custom currency rates as they were migrated from the previous versions - option to support different prices per language"
-msgstr "產品使用自訂的貨幣費率，因為它們從之前的版本遷移 - 此選項用於支持按語言設定不同價格"
+msgid "No, thanks. I'll do it later."
+msgstr ""
 
-msgid "Are you sure?"
-msgstr "確定嗎？"
+msgid "Select translatable attributes"
+msgstr ""
 
-msgid "Delete"
-msgstr "刪除"
+msgid "There are no attributes defined"
+msgstr ""
 
-msgid "Configuration warnings"
-msgstr "配置警告"
+msgid "Continue"
+msgstr "繼續"
 
-msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
-msgstr "報告會使WooCommerce Multilingual無法正常工作的其他配置問題"
+msgid "Later"
+msgstr ""
 
-msgid "Attention required: probable problem with URLs in different languages"
-msgstr "需要注意：問題可能在於不同語言的網址"
+msgid "One or more WooCommerce pages have not been created"
+msgstr "尚未建立一個或多個WooCommerce頁面"
 
-msgid "Your site's default language is not English and the strings language is also not English. This may lead to problems with your site's URLs in different languages."
-msgstr "您網站的預設語言不是英文，字串語言也不是英文。這可能會導致您網站使用不同語言的網址出現問題。"
+msgid "Install missing WooCommerce pages and create translations."
+msgstr ""
 
-msgid "Change the strings language to English"
-msgstr "變更字串語言為英文"
+msgid "Translate Store Pages"
+msgstr ""
 
-msgid "Re-scan strings"
-msgstr "重新掃描字串"
+msgid "All store pages must be translated in the languages configured on the site."
+msgstr ""
 
-msgid "Your site's default language is not English. There are some settings that require careful attention."
-msgstr "您的網站預設語言不是英文。有需要特別注意的一些設定。"
+msgid "Select the translation interface"
+msgstr ""
 
-msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
-msgstr "WooCommerce Multilingual WPML-config.xml檔案中的一些設定已被覆寫。"
+msgid "Enable multiple currencies"
+msgstr ""
+
+msgid "This will allow you to set prices for products in different currencies. The prices can be determined based on a given exchange rate or set explicitly for specific products."
+msgstr ""
+
+msgid "Enable the multi-currency mode"
+msgstr "啟用多幣種模式"
+
+msgid "Further actions that are necessary for making your existing content multilingual, are listed below."
+msgstr ""
+
+msgid "Start translating products"
+msgstr ""
+
+msgid "Add secondary currencies on the %smulti-currency configuration%s page"
+msgstr ""
+
+msgid "Translate existing terms for these %sproduct attributes%s: %s"
+msgstr ""
+
+msgid "Translate existing %sproduct categories%s"
+msgstr ""
+
+msgid "Translate existing %sproduct tags%s"
+msgstr ""
+
+msgid "%sAdd missing translations%s for shipping classes"
+msgstr ""
+
+msgid "Translate %sURL slugs%s to create multilingual store and product urls"
+msgstr ""
+
+msgid "Use custom settings for translations download files"
+msgstr ""
 
 msgid "WooCommerce Store Pages"
 msgstr "WooCommerce商店頁面"
 
-msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated in all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
-msgstr "要運行一個多語系電子商務網站，您需要將WooCommerce商店頁面翻譯為所有的網站語言。一旦安裝了所有頁面，您可以從此菜單為它們添加翻譯。"
+msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated to all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
+msgstr "要執行一個多語系電子商務網站，您需要將WooCommerce商店頁面翻譯為網站的所有語言。一旦所有的頁面都已安裝，您可以從這個功能表新增它們的翻譯。"
 
 msgid "One or more WooCommerce pages have not been created."
 msgstr "一個或多個WooCommerce網頁尚未創建。"
@@ -745,137 +856,59 @@ msgstr "一個或多個WooCommerce網頁尚未創建。"
 msgid "Install WooCommerce Pages"
 msgstr "安裝WooCommerce Pages"
 
-msgid "WooCommerce store pages don't exist for this language:"
-msgstr "WooCommerce商店頁面不存在此語言："
+msgid "WooCommerce store pages do not exist for these languages:"
+msgstr "WooCommerce商店頁面沒有這些語言版本："
 
-msgid "WooCommerce store pages don't exist for these languages:"
-msgstr "WooCommerce商店頁面不存在這些語言："
-
-msgid "Create missing translations."
-msgstr "創建缺失的翻譯。"
+msgid "Create missing translations"
+msgstr "建立缺少的翻譯"
 
 msgid "These pages are currently being translated by translators via WPML: "
 msgstr "這些頁面目前正在被翻譯者透過WPML進行翻譯："
 
-msgid "Hide this message"
-msgstr "隱藏此訊息"
-
-msgid "Show details about missing translations"
-msgstr "顯示關於缺失翻譯的詳情"
-
 msgid "WooCommerce store pages are translated to all the site's languages."
 msgstr "WooCommerce商店頁面被翻譯成網站的所有語言。"
 
+msgid "Configuration warnings"
+msgstr "配置警告"
+
+msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
+msgstr "報告會使WooCommerce Multilingual無法正常工作的其他配置問題"
+
+msgid "Your product permalink base is not translated to:"
+msgstr "您的產品固定連結基礎沒有被翻譯為："
+
+msgid "Translate URLs"
+msgstr "翻譯URL"
+
+msgid "Your site's default language is not English and the strings language is also not English."
+msgstr "您網站的預設語言不是英文，字串語言也不是英文。"
+
+msgid "Running WooCommerce multilingual with default language other than English."
+msgstr "用英文以外的預設語言執行WooCommerce Multilingual。"
+
+msgid "This may cause problems with URLs in different languages."
+msgstr "這可能會導致不同語言的URL的問題。"
+
+msgid "Change default language"
+msgstr "更改默認語言"
+
+msgid "Your site's default language is not English."
+msgstr "您網站的預設語言不是英文。"
+
+msgid "There are some settings that require careful attention."
+msgstr "有些設定需要認真注意。"
+
+msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgstr "WooCommerce Multilingual WPML-config.xml檔案中的一些設定已被覆寫。"
+
+msgid "You should check WPML configuration files added by other plugins or manual settings on the %s section."
+msgstr "您應該檢查由其他外掛程式新增的WPML設定檔或或%s部分的手動設定。"
+
+msgid "Multilingual Content Setup"
+msgstr "多語內容設定"
+
 msgid "Taxonomies missing translations"
 msgstr "分類別缺少翻譯"
-
-msgid "Ignore"
-msgstr "略過"
-
-msgid "Right now, there are no taxonomy terms needing translation."
-msgstr "目前沒有需要翻譯的分類別術語。"
-
-msgid "Product Translation Interface"
-msgstr "產品翻譯介面"
-
-msgid "The recommended way to translate products is using the products translation table in the WooCommerce Multilingual admin. Choose to go to the native WooCommerce interface, if your products include custom sections that require direct access."
-msgstr "翻譯產品的推薦方式是使用WooCommerce Multilingual管理頁面中的產品翻譯表。如果您的產品包含需要直接存取的自訂部分，請選擇進入原生的WooCommerce介面。"
-
-msgid "Choose what to do when clicking on the translation controls for products:"
-msgstr "選擇當按產品的翻譯控制按鈕時的操作："
-
-msgid "Go to the product translation table in WooCommerce Multilingual"
-msgstr "進入WooCommerce Multilingual的產品翻譯表"
-
-msgid "Go to the native WooCommerce product editing screen"
-msgstr "進入WooCommerce產品編輯螢幕"
-
-msgid "Products synchronization"
-msgstr "產品同步"
-
-msgid "Configure specific product properties that should be synced to translations."
-msgstr "配置應該同步到翻譯的具體的產品屬性。"
-
-msgid "Sync publishing date for translated products."
-msgstr "為翻譯的產品同步發佈日期。"
-
-msgid "Sync products and product taxonomies order."
-msgstr "同步產品和產品分類別順序。"
-
-msgid "File Paths Synchronization "
-msgstr "檔案位置同步"
-
-msgid "If you are using downloadable products, you can choose to have their paths synchronized, or seperate for each language."
-msgstr "如果您使用的是可下載的產品，您可以選擇同步其路徑，或按語言分離。"
-
-msgid "Use the same file paths in all languages"
-msgstr "在所有語言中使用相同的檔案位置"
-
-msgid "Different file paths for each language"
-msgstr "為每一種語言使用不同的檔案位置"
-
-msgid "Manage Currencies"
-msgstr "管理貨幣"
-
-msgid "This will let you enable the multi-currency mode where users can see prices according to their currency preference and configured exchange rate."
-msgstr "這將使您能夠啟用多幣種模式，使用者可以根據自己的貨幣偏好和配置的匯率檢視價格。"
-
-msgid "No multi-currency."
-msgstr "無多種貨幣。"
-
-msgid "Multiple currencies, independent of languages."
-msgstr "獨立於語言的多種貨幣。"
-
-msgid "Learn more"
-msgstr "了解更多"
-
-msgid "Currency"
-msgstr "貨幣"
-
-msgid "default"
-msgstr "默認"
-
-msgid "Edit"
-msgstr "編輯"
-
-msgid "Default currency"
-msgstr "預設貨幣"
-
-msgid "Switch to this currency when switching language in the front-end"
-msgstr "在前端切換語系時，切換到這個貨幣"
-
-msgid "OFF"
-msgstr "關閉"
-
-msgid "ON"
-msgstr "開"
-
-msgid "Keep"
-msgstr "保留"
-
-msgid "Please fill field"
-msgstr "請填寫欄位"
-
-msgid "Add currency"
-msgstr "新增貨幣"
-
-msgid "n/a"
-msgstr "不可用"
-
-msgid "Show only products with custom prices in secondary currencies"
-msgstr "以第二種貨幣顯示含自訂價格的產品"
-
-msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
-msgstr "開啟此選項後，當在前端切換到第二貨幣時，只顯示以該貨幣自訂價格的產品。以匯率確定價格的產品則是隱藏的。"
-
-msgid "Troubleshooting page"
-msgstr "故障排除頁面"
-
-msgid "Run fix"
-msgstr "運行修補程式"
-
-msgid "Dismiss"
-msgstr "解雇"
 
 msgid "To run a fully translated site, you should translate all taxonomy terms. Some store elements, such as variations, depend on taxonomy translation."
 msgstr "要執行完全翻譯的網站，您應該翻譯所有分類別術語。一些商店元素，如變數，依賴於分類別翻譯。"
@@ -883,26 +916,20 @@ msgstr "要執行完全翻譯的網站，您應該翻譯所有分類別術語。
 msgid "This taxonomy requires translation."
 msgstr "此分類別需要翻譯。"
 
+msgid "Include in translation"
+msgstr "列入翻譯"
+
 msgid "This taxonomy does not require translation."
 msgstr "此分類別並不需要翻譯。"
 
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "如果您離開此頁面，您所做的變更將丟失。"
+msgid "Right now, there are no taxonomy terms needing translation."
+msgstr "目前沒有需要翻譯的分類別術語。"
 
-msgid "At least one currency must be enabled for this language!"
-msgstr "必須為此語言至少啟用一種貨幣！"
+msgid "There are no translatable product attributes defined"
+msgstr "沒有定義可翻譯的產品屬性"
 
-msgid "Synchronize %s assignment in content"
-msgstr "同步內容中的%s分配"
-
-msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
-msgstr "此操作可以讓您自動以不同的語言套用%s分類別到您的內容。它會掃描原始內容並套用相同的分類別到翻譯的內容。"
-
-msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
-msgstr "這將為翻譯的產品自動生成變數，對應於最近翻譯的內容。"
-
-msgid "Troubleshooting"
-msgstr "疑難排解"
+msgid "Select the attribute to translate: "
+msgstr "選擇要翻譯的屬性："
 
 msgid "Please make a backup of your database before you start the synchronization"
 msgstr "開始同步之前，請製作您的資料庫備份"
@@ -922,8 +949,8 @@ msgstr "同步產品變數："
 msgid "left"
 msgstr "剩餘"
 
-msgid "Sync products \"gallery images\""
-msgstr "同步產品「圖庫影像」"
+msgid "Sync products \"gallery images\":"
+msgstr "同步產品\"庫影像\"："
 
 msgid "Sync products categories (display type, thumbnail):"
 msgstr "同步產品類別（顯示類型、縮略圖）："
@@ -934,53 +961,254 @@ msgstr "複製詞彙（請選擇屬性）："
 msgid "none"
 msgstr "無"
 
-msgid "Start"
-msgstr "開始"
+msgid "Enable/disable"
+msgstr "啟用/禁用"
 
-msgid "Please add variations to product"
-msgstr "請新增變數到產品"
+msgid "Currencies"
+msgstr "貨幣"
 
-msgid "Please save translation before translate variations file paths"
-msgstr "請在翻譯變數檔案位置之前儲存翻譯"
+msgid "Add currency"
+msgstr "新增貨幣"
 
-msgid "Variations are not downloadable"
-msgstr "變數不可下載"
+msgid "Currency"
+msgstr "貨幣"
 
-msgid "Download URL"
-msgstr "下載網址"
+msgid "Rate"
+msgstr "匯率"
 
-msgid "Variation is not downloadable"
-msgstr "變數不可下載"
+msgid "default"
+msgstr "默認"
 
-msgid "This field is locked for editing because WPML will copy its value from the original language."
-msgstr "此欄位被鎖定，無法編輯，因為WPML將從原語言複製其值。"
+msgid "Default currency"
+msgstr "預設貨幣"
 
-msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
-msgstr "這是%s的翻譯。有些欄位是不可編輯的。我們推薦使用%s翻譯產品。"
+msgid "Switch to this currency when switching language in the front-end"
+msgstr "在前端切換語系時，切換到這個貨幣"
 
-msgid "WooCommerce Multilingual products translator"
-msgstr "WooCommerce Multilingual產品翻譯"
+msgid "Keep"
+msgstr "保留"
 
-msgid "How to translate products"
-msgstr "如何翻譯產品"
+msgid "Delete"
+msgstr "刪除"
 
-msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
-msgstr "產品翻譯禁用快速編輯。我們推薦使用%s編輯產品翻譯。%s"
+msgid " (%s)"
+msgstr "(%s)"
 
-msgid "WooCommerce Multilingual products editor"
-msgstr "WooCommerce Multilingual產品編輯器"
+msgid "The multi-currency mode cannot be enabled as a specific currency was not set. Go to the %sWooCommerce settings%s page and select the default currency for your store."
+msgstr "不能啟用多幣種模式，因為未設定一個特定的貨幣。轉到%sWooCommerce設定%s頁面，為您的商店選擇預設貨幣。"
 
-msgid "Edit this product translation"
-msgstr "編輯此產品翻譯"
+msgid "Learn more"
+msgstr "了解更多"
 
-msgid "How to translate attributes"
-msgstr "如何翻譯內容"
+msgid "Show only products with custom prices in secondary currencies"
+msgstr "以第二種貨幣顯示含自訂價格的產品"
 
-msgid "How to translate product categories"
-msgstr "如何翻譯產品類別"
+msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
+msgstr "開啟此選項後，當在前端切換到第二貨幣時，只顯示以該貨幣自訂價格的產品。以匯率確定價格的產品則是隱藏的。"
 
-msgid "Would you like to see a quick overview?"
-msgstr "您想檢視快速概覽嗎？"
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "如果您離開此頁面，您所做的變更將丟失。"
 
-msgid "Learn how to turn your e-commerce site multilingual"
-msgstr "瞭解如何將您的電子商務網站變為多語系"
+msgid "At least one currency must be enabled for this language!"
+msgstr "必須為此語言至少啟用一種貨幣！"
+
+msgid "Currency switcher options"
+msgstr "貨幣切換器選項"
+
+msgid "Currency switcher style"
+msgstr "貨幣切換器樣式"
+
+msgid "Currency order"
+msgstr "貨幣順序"
+
+msgid "Available parameters"
+msgstr "可用參數"
+
+msgid "Template for currency switcher"
+msgstr "貨幣切換器範本"
+
+msgid "Visibility"
+msgstr "可見性"
+
+msgid "Currency switcher preview"
+msgstr "貨幣切換器預覽"
+
+msgid "Drop-down menu"
+msgstr "下拉功能表"
+
+msgid "List of currencies"
+msgstr "貨幣清單"
+
+msgid "Vertical"
+msgstr "垂直"
+
+msgid "Horizontal"
+msgstr "水平"
+
+msgid "Drag the currencies to change their order"
+msgstr "拖動貨幣改變它們的順序"
+
+msgid "%name%, %symbol%, %code%"
+msgstr "%name%, %symbol%, %code%"
+
+msgid "Default: %name% (%symbol%) - %code%"
+msgstr "預設值：%name% (%symbol%) - %code%"
+
+msgid "Show a currency selector on the product page template"
+msgstr "在產品頁面範本上顯示貨幣選擇"
+
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgstr ""
+
+msgid "Title"
+msgstr "標題"
+
+msgid "Slug"
+msgstr "別名"
+
+msgid "Content / Description"
+msgstr "內容/說明"
+
+msgid "Excerpt"
+msgstr "片段"
+
+msgid "Purchase note"
+msgstr "購買備註"
+
+msgid "Images"
+msgstr "影像"
+
+msgid "Custom Product attributes"
+msgstr "自訂產品屬性"
+
+msgid "Name"
+msgstr "名稱"
+
+msgid "Value(s)"
+msgstr "值"
+
+msgid "Custom Fields"
+msgstr "自訂欄位"
+
+msgid "Variations data"
+msgstr ""
+
+msgid "Download Files for Variation #%s"
+msgstr "下載變數 #%s 的檔案"
+
+msgid "Download Files"
+msgstr "下載檔案"
+
+msgid "File URL"
+msgstr "檔案 URL"
+
+msgid "Content, title, and excerpt are empty."
+msgstr ""
+
+msgid "Search %s"
+msgstr "搜尋%s"
+
+msgid "All %s"
+msgstr "所有%s"
+
+msgid "Parent %s"
+msgstr "父級%s"
+
+msgid "Parent %s:"
+msgstr "父級%s:"
+
+msgid "Edit %s"
+msgstr "編輯%s"
+
+msgid "Update %s"
+msgstr "更新%s"
+
+msgid "Add New %s"
+msgstr "新增%s"
+
+msgid "New %s"
+msgstr "新%s"
+
+msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "要翻譯外掛程式字串，請儲存外掛程式並轉到<b><a href=\"%s\">字串翻譯介面</a></b>"
+
+msgid "Product Add-ons Group \"%s\""
+msgstr "產品附加元件組\"%s\""
+
+msgid "Description"
+msgstr "說明"
+
+msgid "Options"
+msgstr "選項"
+
+msgid "Label"
+msgstr "標籤"
+
+msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "要翻譯「額外選項」字串，請儲存%s並轉到<b><a href=\"%s\">字串翻譯介面</a></b>"
+
+msgid "Language"
+msgstr "語言"
+
+msgid "Translation of"
+msgstr "翻譯："
+
+msgid "Subscription Price"
+msgstr "訂用價格"
+
+msgid "Sign-up Fee"
+msgstr "註冊費"
+
+msgid "Calculate costs in other currencies automatically"
+msgstr "自動以其他貨幣計算成本"
+
+msgid "Set costs in other currencies manually"
+msgstr "手動以其他貨幣設定成本"
+
+msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
+msgstr "這是每個預訂時間段的費用。所有其他費用（針對資源和人員）被新增到這個。"
+
+msgid "Product tabs"
+msgstr "產品標籤"
+
+msgid "Heading"
+msgstr "標題"
+
+msgid "Tour Data"
+msgstr "旅行社資料"
+
+msgid "Content"
+msgstr "內容"
+
+msgid "Composite Products"
+msgstr "組合產品"
+
+msgid "Product Bundles"
+msgstr "產品捆綁"
+
+msgid "One-off cost for the booking as a whole."
+msgstr "一次性的預訂總費用。"
+
+msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
+msgstr "成本被顯示到前端的使用者。留空讓系統為您自動計算。如果預訂有變化的成本，這將是會有前置詞詞「起價：」。"
+
+msgid "Bookings"
+msgstr "預訂"
+
+msgid "Resources Label"
+msgstr "資源標籤"
+
+msgid "Resources"
+msgstr "資源"
+
+msgid "Person Types"
+msgstr "人員類型"
+
+msgid "Person Type Name"
+msgstr "人員類型名稱"
+
+msgid "Resources label"
+msgstr "資源標籤"
+
+msgid "Booking currency"
+msgstr "預訂貨幣"

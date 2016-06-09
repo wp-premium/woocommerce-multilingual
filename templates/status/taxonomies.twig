@@ -1,0 +1,50 @@
+<div class="wcml-section">
+    <div class="wcml-section-header">
+        <h3>
+            {{ strings.tax_missing }}
+            <i class="otgs-ico-help wcml-tip" data-tip="{{ strings.run_site|e }}"></i>
+        </h3>
+    </div>
+    <div class="wcml-section-content js-tax-translation">
+        <input type="hidden" id="wcml_ingore_taxonomy_translation_nonce" value="{{ nonces.ignore_tax }}"/>
+        <ul class="wcml-status-list wcml-tax-translation-list">
+            {% set no_tax_to_update = true %}
+            {% for taxonomy in taxonomies if ( taxonomy.tax != 'product_type' and taxonomy.untranslated != 0 ) %}
+			    {% set no_tax_to_update = false %}
+                <li class="js-tax-translation-{{ taxonomy.tax }}">
+                    {% if taxonomy.untranslated %}
+                        {% if taxonomy.fully_trans %}
+                            <i class="otgs-ico-ok"></i>
+                            {{ strings.not_req_trnsl|format( taxonomy.name ) }}
+                            <small class="actions">
+                                <a class="unignore-{{ taxonomy.tax }}" href="#unignore-{{ taxonomy.tax }}" title="{{ strings.req_trnsl|e }}">
+                                    {{ strings.incl_trnsl }}
+                                </a>
+                            </small>
+                        {% else %}
+                            <i class="otgs-ico-warning"></i>
+                            {{ strings.miss_trnsl|format( taxonomy.untranslated, taxonomy.name ) }}
+                            <a class="button-secondary" href="{{ taxonomy.url }}">
+                                {{ strings.trnsl|format( taxonomy.name ) }}
+                            </a>
+                            <small class="actions">
+                                <a class="ignore-{{ taxonomy.tax }}" href="#ignore-{{ taxonomy.tax }}" title="{{ strings.doesnot_req_trnsl }}">
+                                    {{ strings.exclude }}
+                                </a>
+                            </small>
+                        {% endif %}
+                    {% else %}
+                        <i class="otgs-ico-ok"></i>
+                        {{ strings.all_trnsl|format( taxonomy.name ) }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% if no_tax_to_update %}
+                <li>
+                    <i class="otgs-ico-ok"></i>
+                    {{ strings.not_to_trnsl }}
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
