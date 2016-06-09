@@ -201,11 +201,15 @@ class WCML_Languages_Upgrader{
      */
     function has_available_update( $locale, $wc_version = false ) {
         $wc_version = $wc_version ? $wc_version : WC_VERSION;
+
         $version = get_option( 'woocommerce_language_pack_version_'.$locale, array( '0', $locale ) );
+
+        $is_new_version = !is_array( $version ) || version_compare( $version[0], $wc_version, '<' ) || $version[1] !== $locale;
+        $mo_file_absent = !file_exists( sprintf( WP_LANG_DIR . '/plugins/woocommerce-%s.mo', $locale ) );
 
         $notices = maybe_unserialize( get_option( 'wcml_translations_upgrade_notice' ) );
 
-        if ( 'en_US' !== $locale && ( ! is_array( $version ) || version_compare( $version[0], $wc_version, '<' ) || $version[1] !== $locale ) ) {
+        if ( 'en_US' !== $locale && ( $is_new_version || $mo_file_absent ) ) {
             if ( $this->check_if_language_pack_exists( $locale, $wc_version ) ){
 
                 if( !$notices || !in_array( $locale, $notices )){
@@ -247,12 +251,17 @@ class WCML_Languages_Upgrader{
      * Display Translations upgrade notice message
      */
     function translation_upgrade_notice(){
-        $screen = get_current_screen();
 
+        $screen = get_current_screen();
         $notices = maybe_unserialize( get_option( 'wcml_translations_upgrade_notice' ) );
 
         if ( 'update-core' !== $screen->id && !empty ( $notices ) && !get_option( 'hide_wcml_translations_message' ) ) {
-            include( WCML_PLUGIN_PATH.'/menu/sub/notice-translation-upgrade.php' );
+
+            wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice.js', array( 'jquery' ), WCML_VERSION );
+            wp_enqueue_script( 'wcml-lang-notice');
+
+            $lang_notices = new WCML_Languages_Upgrade_Notice( $notices );
+            $lang_notices->show();
         }
     }
 

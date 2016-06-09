@@ -4,104 +4,86 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nProject-Id-Version:WPML_EXPORT\nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage-Team: \nLanguage:en\nMIME-Version: 1.0\n"
 
-msgid "Collapse"
-msgstr "Σύμπτυξη"
+msgid "Introduction"
+msgstr "Εισαγωγή"
 
-msgid "Expand"
-msgstr "Ανάπτυξη"
+msgid "Store Pages"
+msgstr "Σελίδες καταστήματος"
 
-msgid "Please set bundles for product"
+msgid "Global Attributes"
+msgstr "Γενικές ιδιότητες"
+
+msgid "Multiple Currencies"
+msgstr "Πολλαπλά νομίσματα"
+
+msgid "Translation Interface"
+msgstr "Περιβάλλον εργασίας μετάφρασης"
+
+msgid "Ready!"
+msgstr "Έτοιμο!"
+
+msgid "Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products."
 msgstr ""
 
-msgid "Please save translation before translate bundles texts"
+msgid "Action failed. Please refresh the page and retry."
+msgstr "Η ενέργεια απέτυχε. Ανανεώστε τη σελίδα και προσπαθήστε ξανά."
+
+msgid "Cheatin&#8217; huh?"
+msgstr "Τεχνικό σφάλμα"
+
+msgid "Run the Setup Wizard"
+msgstr "Εκτέλεση οδηγού ρύθμισης παραμέτρων"
+
+msgid "Skip Setup"
+msgstr "Παράλειψη ρύθμισης παραμέτρων"
+
+msgid "WooCommerce Multilingual &rsaquo; Setup Wizard"
+msgstr "Πολυγλωσσικό WooCommerce &rsaquo; Οδηγός ρύθμισης παραμέτρων"
+
+msgid "WooCommerce Multilingual"
+msgstr "Πολυγλωσσικό WooCommerce"
+
+msgid "How to translate products"
+msgstr "Πώς μεταφράζονται τα προϊόντα"
+
+msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
+msgstr "Η λειτουργία γρήγορης επεξεργασίας είναι απενεργοποιημένη για τις μεταφράσεις των προϊόντων. Συνίσταται να χρησιμοποιείτε το %s για την επεξεργασία μεταφράσεων προϊόντων. %s"
+
+msgid "WooCommerce Multilingual products editor"
+msgstr "Επεξεργαστής προϊόντων πολυγλωσσικού WooCommerce"
+
+msgid "Edit this product translation"
+msgstr "Επεξεργασία αυτής της μετάφρασης προϊόντος"
+
+msgid "How to translate attributes"
+msgstr "Πώς μεταφράζονται οι ιδιότητες"
+
+msgid "How to translate product categories"
+msgstr "Πώς μεταφράζονται οι κατηγορίες προϊόντων"
+
+msgid "The recommended way to translate WooCommerce products is using the\n                             %sWooCommerce Multilingual products translation%s page.\n                             Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
 msgstr ""
 
-msgid "Title"
-msgstr "Τίτλος"
+msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
+msgstr "Προκειμένου να επεξεργαστείτε προσαρμοσμένες ιδιότητες πρέπει να χρησιμοποιήσετε το <a href=\"%s\">πρόγραμμα επεξεργασίας μετάφρασης προσαρμοσμένων προϊόντων</a> "
 
-msgid "Description"
-msgstr "Περιγραφή"
+msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
+msgstr "Χρησιμοποιείτε την ίδια τιμή με αυτή της κανονικής βάσης κατηγοριών. Είναι γνωστό ότι αυτό δημιουργεί διενέξεις που έχουν ως αποτέλεσμα την εσφαλμένη λειτουργία των URL."
 
-msgid "Enter translation"
-msgstr "Εισαγάγετε μετάφραση"
+msgid "translations"
+msgstr "μεταφράσεις"
 
-msgid "%s translation"
-msgstr "Μετάφραση στη γλώσσα: %s"
-
-msgid "Show content"
-msgstr "Εμφάνιση περιεχομένου"
-
-msgid "Edit translation"
-msgstr "Επεξεργασία μετάφρασης"
-
-msgid "Original content:"
-msgstr "Αρχικό περιεχόμενο:"
-
-msgid "Close"
-msgstr "Κλείσιμο"
-
-msgid "Cancel"
-msgstr "Άκυρο"
-
-msgid "Ok"
-msgstr "Ok"
-
-msgid "One-off cost for the booking as a whole."
-msgstr ""
-
-msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
-msgstr ""
-
-msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
-msgstr ""
-
-msgid "Calculate costs in other currencies automatically"
-msgstr ""
-
-msgid "Set costs in other currencies manually"
-msgstr ""
-
-msgid "Invalid nonce"
-msgstr "Μη έγκυρο nonce"
-
-msgid "Resources"
-msgstr ""
-
-msgid "Person types"
-msgstr ""
-
-msgid "Resources label"
-msgstr ""
-
-msgid "Booking currency"
-msgstr ""
-
-msgid "Translation of"
-msgstr ""
-
-msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr ""
-
-msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
-msgstr ""
-
-msgid "Product Bundles"
-msgstr ""
-
-msgid "Please update original product"
-msgstr "Παρακαλούμε ενημερώστε το αρχικό προϊόν"
-
-msgid "Currency switcher"
-msgstr ""
-
-msgid "Configure options"
-msgstr ""
-
-msgid "Currencies order updated"
-msgstr ""
+msgid "product"
+msgstr "προϊόν"
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior %s."
 msgstr "Το WooCommerce Multilingual είναι ενεργοποιημένο αλλά δεν εκτελείται. Δεν είναι συμβατό με τις εκδόσεις του  <a href=\"%s\">WPML</a> πριν την έκδοση %s."
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">Woocommerce</a> versions prior %s."
+msgstr "Το πολυγλωσσικό WooCommerce είναι ενεργοποιημένο αλλά δεν εκτελείται. Δεν είναι συμβατό με τις εκδόσεις του <a href=\"%s\">Woocommerce</a> πριν την έκδοση %s."
+
+msgid "You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href=\"%s\">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML."
+msgstr "Χρησιμοποιείτε το WooCommerce Multilingual %s. Αυτή η έκδοση περιλαμβάνει ένα σημαντικό επανασχεδιασμό του περιβάλλοντος εργασίας του χρήστη για τις οθόνες ρύθμισης παραμέτρων και απαιτεί <a href=\"%s\">WPML %s</a> ή μεταγενέστερο. Τα πάντα λειτουργούν ακόμα στην εφαρμογή προσκηνίου, αλλά προκειμένου να ρυθμίσετε επιλογές για το WooCommerce Multilingual, πρέπει να αναβαθμίσετε σε WPML."
 
 msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML Translation Management</a> versions prior %s."
 msgstr "Το WooCommerce Multilingual είναι ενεργοποιημένο αλλά δεν εκτελείται. Δεν είναι συμβατό με τις εκδόσεις του <a href=\"%s\">WPML Translation Management</a> πριν την έκδοση %s."
@@ -131,7 +113,7 @@ msgid "Finished! You can visit the %sstrings translation%s screen to translate t
 msgstr "Αυτό ήταν! Τώρα μπορείτε να μεταβείτε στην οθόνη %sstrings translation%s για να μεταφράσετε τις συμβολοσειρές."
 
 msgid "wpml-config.xml file missing from WooCommerce Multilingual folder."
-msgstr ""
+msgstr "Το αρχείο wpml-config.xml λείπει από τον φάκελο του πολυγλωσσικού WooCommerce."
 
 msgid "Custom field %s configuration from wpml-config.xml file was altered!"
 msgstr "Η ρύθμιση παραμέτρων του προσαρμοσμένου πεδίου %s από το αρχείο wpml-config.xml μεταβλήθηκε!"
@@ -142,71 +124,101 @@ msgstr "Η ρύθμιση παραμέτρων του προσαρμοσμένο
 msgid "Custom taxonomy %s configuration from wpml-config.xml file was altered!"
 msgstr "Η ρύθμιση παραμέτρων της προσαρμοσμένης ταξινόμησης %s από το αρχείο wpml-config.xml μεταβλήθηκε!"
 
-msgid "Select the currency you want to set the options for:"
-msgstr ""
+msgid "Upgrade WPML"
+msgstr "Αναβάθμιση WPML"
+
+msgid "Invalid language parameter: %s"
+msgstr "Μη έγκυρη παράμετρος γλώσσας: %s"
+
+msgid "Source product id not found: %s"
+msgstr "Το ID του προϊόντος πηγής δεν βρέθηκε: %s"
+
+msgid "Product Base"
+msgstr "Βάση προϊόντος"
+
+msgid "Product Tag Base"
+msgstr "Βάση ετικέτας προϊόντος"
+
+msgid "Product Category Base"
+msgstr "Βάση κατηγορίας προϊόντος"
+
+msgid "Product Attribute Base"
+msgstr "Βάση ιδιότητας προϊόντος"
+
+msgid "Endpoint: %s"
+msgstr "Τελικό σημείο: %s"
+
+msgid "product-category"
+msgstr "προϊόν-κατηγορία"
+
+msgid "product-tag"
+msgstr "προϊόν-ετικέτα"
+
+msgid "Original language"
+msgstr "Αρχική γλώσσα"
+
+msgid "Take this and edit"
+msgstr "Αποδοχή εργασίας και μετάφραση"
+
+msgid "Add translation"
+msgstr "Προσθήκη μετάφρασης"
+
+msgid "Update translation"
+msgstr "Ενημέρωση μετάφρασης"
+
+msgid "Finish translating"
+msgstr "Ολοκλήρωση μετάφρασης"
+
+msgid "Edit translation"
+msgstr "Επεξεργασία μετάφρασης"
+
+msgid "Edit this item inline"
+msgstr "Ενσωματωμένη επεξεργασία αυτού του στοιχείου"
+
+msgid "Quick Edit"
+msgstr "Γρήγορη επεξεργασία"
+
+msgid "Translation in progress"
+msgstr "Μετάφραση σε εξέλιξη"
+
+msgid "Invalid nonce"
+msgstr "Μη έγκυρο nonce"
+
+msgid "Currency - no orders found"
+msgstr "Νόμισμα – δεν βρέθηκαν παραγγελίες"
+
+msgid "Currencies order updated"
+msgstr "Η σειρά των νομισμάτων ενημερώθηκε"
+
+msgid "Currency switcher"
+msgstr "Eναλλαγέας νομίσματος "
+
+msgid "Configure options"
+msgstr "Ρύθμιση επιλογών"
+
+msgid "Settings saved!"
+msgstr "Οι ρυθμίσεις αποθηκεύτηκαν!"
+
+msgid "Add new currency"
+msgstr "Προσθήκη νέου νομίσματος"
+
+msgid "Update currency"
+msgstr "Ενημέρωση νομίσματος"
+
+msgid "Update settings for %s"
+msgstr "Ενημέρωση ρυθμίσεων για το %s"
+
+msgid "The default currency was changed. In order to show accurate prices in all currencies, you need to update the exchange rates under the %sMulti-currency%s configuration."
+msgstr "Το προεπιλεγμένο νόμισμα άλλαξε. Προκειμένου να φαίνονται οι ακριβείς τιμές σε όλα τα νομίσματα, πρέπει να ενημερώσετε τις συναλλαγματικές ισοτιμίες στη ρύθμιση παραμέτρου %sπολλαπλά νομίσματα%s."
 
 msgid "All the products will be removed from the current order in order to change the currency"
-msgstr ""
+msgstr "Όλα τα προϊόντα θα απομακρυνθούν από την τρέχουσα σειρά προκειμένου να γίνει αλλαγή του νομίσματος"
 
 msgid "Show all currencies"
 msgstr "Εμφάνιση όλων των νομισμάτων"
 
-msgid "Currency - no orders found"
-msgstr ""
-
 msgid "Order currency:"
-msgstr ""
-
-msgid "All the products will be removed from the current order in order to change the language"
-msgstr ""
-
-msgid "Order language:"
-msgstr ""
-
-msgid "Title missing"
-msgstr "Λείπει ο τίτλος"
-
-msgid "Original language"
-msgstr ""
-
-msgid "Not translated"
-msgstr "Δεν μεταφράστηκε"
-
-msgid "Not translated - needs update"
-msgstr "Μη μεταφρασμένο - χρειάζεται ενημέρωση"
-
-msgid "In progress"
-msgstr "Σε εξέλιξη"
-
-msgid "Complete"
-msgstr "Ολοκληρώθηκε"
-
-msgid "The recommended way to translate WooCommerce products is using the <b><a href=\"%s\">WooCommerce Multilingual products translation</a></b> page. Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table."
-msgstr ""
-
-msgid "Edit this item inline"
-msgstr ""
-
-msgid "Quick Edit"
-msgstr ""
-
-msgid "Content / Description"
-msgstr ""
-
-msgid "Excerpt"
-msgstr "Απόσπασμα"
-
-msgid "Images"
-msgstr "Εικόνες"
-
-msgid "Variations"
-msgstr "Παραλλαγές"
-
-msgid "Any %s"
-msgstr "Οιαδήποτε/οιοσδήποτε/οιοδήποτε %s"
-
-msgid "Please translate all attributes"
-msgstr "Παρακαλούμε μεταφράστε όλες τις ιδιότητες"
+msgstr "Νόμισμα παραγγελίας:"
 
 msgid "Cart"
 msgstr "Καλάθι"
@@ -241,20 +253,65 @@ msgstr "Προβολή παραγγελίας"
 msgid "Shop"
 msgstr "Κατάστημα"
 
+msgid "All the products will be removed from the current order in order to change the language"
+msgstr "Όλα τα προϊόντα θα απομακρυνθούν από την τρέχουσα σειρά προκειμένου να γίνει αλλαγή γλώσσας"
+
+msgid "Order language:"
+msgstr "Γλώσσα παραγγελίας:"
+
+msgid "Choose a file"
+msgstr "Επιλέξτε ένα αρχείο"
+
+msgid "At least one of these fields is required: title, content or excerpt"
+msgstr "Απαιτείται τουλάχιστον ένα από τα εξής πεδία: τίτλος, περιεχόμενο ή απόσπασμα"
+
+msgid "This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation."
+msgstr "Αυτή η μεταφραστική εργασία δεν θα είναι πια ανατεθειμένη σε εσάς. Άλλοι μεταφραστές θα έχουν τη δυνατότητα να την αναλάβουν και να συνεχίσουν τη μετάφραση."
+
+msgid "This field is locked for editing because WPML will copy its value from the original language."
+msgstr "Το πεδίο είναι κλειδωμένο για επεξεργασία καθώς το WPML θα αντιγράψει την τιμή από τη γλώσσα προέλευσης."
+
+msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
+msgstr "Το παρόν αποτελεί μετάφραση του %s. Μερικά πεδία δεν είναι επεξεργάσιμα. Συνίσταται να χρησιμοποιείτε το %s για τη μετάφραση προϊόντων."
+
+msgid "WooCommerce Multilingual products translator"
+msgstr "Μεταφραστής προϊόντων πολυγλωσσικού WooCommerce"
+
+msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
+msgstr "Φαίνεται πως αναβαθμίζετε μία παλαιότερη έκδοση του πολυγλωσσικού WooCommerce. Θα θέλατε να δημιουργηθούν αυτόματα μεταφρασμένες παραλλαγές και εικόνες;"
+
+msgid "Yes, go to the troubleshooting page"
+msgstr "Ναι, μετάβαση στη σελίδα επίλυσης προβλημάτων"
+
+msgid "No - dismiss"
+msgstr "Όχι - απόρριψη"
+
+msgid "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?"
+msgstr "Εγκαταστήσατε με επιτυχία το %sΠολυγλωσσικό WooCommerce%s. Θέλετε να δείτε μια γρήγορη επισκόπηση;"
+
+msgid "Learn how to turn your e-commerce site multilingual"
+msgstr "Κάντε πολυγλωσσικό τον ιστότοπο ηλεκτρονικού εμπορίου σας"
+
+msgid "Dismiss"
+msgstr "Ματαίωση"
+
 msgid "To translate %s please use the %s translation%s page, inside the %sWooCommerce Multilingual admin%s."
 msgstr "Για μετάφραση των %s, παρακαλούμε χρησιμοποιήστε τη σελίδα %s μετάφρασης%s μέσα από τη %sΔιαχείριση του πολυγλωσσικού WooCommerce%s."
 
 msgid "%s do not require translation."
 msgstr "Δεν απαιτείται μετάφραση για %s."
 
-msgid "Change"
-msgstr "Αλλαγή"
+msgid "Include to translation"
+msgstr "Να περιληφθεί στη μετάφραση"
 
-msgid "Some %s are missing translations (%d translations missing)."
-msgstr "Για ορισμένα αντικείμενα (%s) δεν υπάρχουν μεταφράσεις (λείπουν οι μεταφράσεις για %d αντικείμενα)."
+msgid "%d %s are missing translations."
+msgstr "Απουσιάζουν μεταφράσεις από τα εξής: %d %s."
 
-msgid "Translate now"
-msgstr "Μετάφραση τώρα"
+msgid "Translate %s"
+msgstr "Μετάφραση %s"
+
+msgid "Exclude from translation"
+msgstr "Να μην περιληφθεί στη μετάφραση"
 
 msgid "All %s are translated."
 msgstr "Όλα τα αντικείμενα (%s) είναι μεταφρασμένα."
@@ -286,206 +343,284 @@ msgstr "Επιτυχής ενημέρωση %s για όλες τις μεταφ
 msgid "Synchronize attributes and update product variations"
 msgstr "Συγχρονισμός ιδιοτήτων και ενημέρωση παραλλαγών προϊόντων"
 
-msgid "Looks like you are upgrading from a previous version of WooCommerce Multilingual. Would you like to automatically create translated variations and images?"
-msgstr "Φαίνεται πως αναβαθμίζετε μία παλαιότερη έκδοση του πολυγλωσσικού WooCommerce. Θα θέλατε να δημιουργηθούν αυτόματα μεταφρασμένες παραλλαγές και εικόνες;"
+msgid "Image"
+msgstr "Εικόνα"
 
-msgid "Yes, go to the troubleshooting page"
-msgstr "Ναι, μετάβαση στη σελίδα επίλυσης προβλημάτων"
+msgid "Product"
+msgstr "Προϊόν"
 
-msgid "No - dismiss"
-msgstr "Όχι - απόρριψη"
+msgid "Type"
+msgstr "Τύπος"
 
-msgid "product-category"
+msgid "Date"
+msgstr "Ημερομηνία"
+
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+msgid "No products found"
+msgstr "Δεν βρέθηκε κανένα προϊόν"
+
+msgid "Draft"
+msgstr "Πρόχειρο"
+
+msgid "Private"
+msgstr "Ιδιωτικό"
+
+msgid "Pending"
 msgstr ""
 
-msgid "product-tag"
-msgstr ""
+msgid "Scheduled"
+msgstr "Προγραμματίστηκε"
 
-msgid "Please enter this text in %s"
-msgstr ""
+msgid "Parent product: %s"
+msgstr "Γονικό προϊόν: %s"
 
-msgid "You have to enter this text in the strings language ( %s ) so you can translate it using the WPML String Translation."
-msgstr ""
+msgid "Edit this item"
+msgstr "Επεξεργαστείτε αυτό το στοιχείο"
 
-msgid "You need to enter attribute names in %s (even though your site's default language is %s). Then, translate it to %s and the rest of the site's languages using in the %sWooCommerce Multlingual admin%s."
-msgstr "Πρέπει να εισαγάγετε τις ονομασίες των ιδιοτήτων στα %s (αν και η προεπιλεγμένη γλώσσα του ιστότοπου σας είναι %s). Μετά μεταφράστε το στα %s και τις λοιπές γλώσσες του ιστότοπου σας μέσω της %sπολυγλωσσικής διαχείρισης του WooCommerce%s."
+msgid "Edit"
+msgstr "Επεξεργασία"
 
-msgid "In order to edit custom attributes you need to use the <a href=\"%s\">custom product translation editor</a>"
-msgstr ""
+msgid "View \"%s\""
+msgstr "Προβολή \"%s\""
 
-msgid "You are using the same value as for the regular category base. This is known to create conflicts resulting in urls not working properly."
-msgstr ""
+msgid "View"
+msgstr "Προβολή"
 
-msgid "translations"
-msgstr "μεταφράσεις"
+msgid "Published"
+msgstr "Δημοσιευμένο"
 
-msgid "WooCommerce Multilingual"
-msgstr "Πολυγλωσσικό WooCommerce"
+msgid "Last Modified"
+msgstr "Τελευταία τροποποίηση"
 
-msgid "General settings"
-msgstr "Γενικές ρυθμίσεις"
+msgid "All languages"
+msgstr "Όλες οι γλώσσες"
 
-msgid "Products"
-msgstr "Προϊόντα"
+msgid "All categories"
+msgstr "Όλες οι κατηγορίες"
+
+msgid "All translation statuses"
+msgstr "Όλες οι καταστάσεις μετάφρασης"
+
+msgid "Not translated or needs updating"
+msgstr "Δεν έχει μεταφραστεί ή πρέπει να γίνει ενημέρωση"
+
+msgid "Needs updating"
+msgstr "Χρειάζεται ενημέρωση"
+
+msgid "Translation complete"
+msgstr "Η μετάφραση ολοκληρώθηκε"
+
+msgid "All statuses"
+msgstr "Όλες οι καταστάσεις"
+
+msgid "Filter"
+msgstr "Φιλτράρισμα"
+
+msgid "Reset"
+msgstr "Επαναφορά"
+
+msgid "Search"
+msgstr "Αναζήτηση"
+
+msgid "%d items"
+msgstr "%d στοιχεία"
+
+msgid "Go to the first page"
+msgstr "Μετάβαση στην πρώτη σελίδα"
+
+msgid "Go to the previous page"
+msgstr "Μετάβαση στην προηγούμενη σελίδα"
+
+msgid "Select Page"
+msgstr "Επιλογή σελίδας"
+
+msgid "Current page"
+msgstr "Τρέχουσα σελίδα"
+
+msgid "of"
+msgstr "από"
+
+msgid "Go to the next page"
+msgstr "Μετάβαση στην επόμενη σελίδα"
+
+msgid "Go to the last page"
+msgstr "Μετάβαση στην τελευταία σελίδα"
+
+msgid "Translatable?"
+msgstr "Μεταφράσιμο;"
+
+msgid "Enable this if you want to translate attribute values with Woocommerce Multilingual"
+msgstr "Ενεργοποιήστε το αν θέλετε να μεταφράζετε τιμές χαρακτηριστικών με το πολυγλωσσικό Woocommerce"
+
+msgid "Existing translations and variations associated will be deleted."
+msgstr "Οι υπάρχουσες συνδεδεμένες μεταφράσεις και παραλλαγές θα διαγραφούν."
+
+msgid "Product Translation Interface"
+msgstr "Διεπαφή Μετάφρασης Προϊόντων"
+
+msgid "The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions."
+msgstr "Ο συνιστώμενος τρόπος είναι μέσω του Προγράμματος επεξεργασίας μεταφράσεων WPML. Είναι βελτιστοποιημένο ώστε να διευκολύνει κατά πολύ τη διαδικασία μετάφρασης, ενώ προσφέρει παράλληλα καλύτερη ενσωμάτωση με διάφορες επεκτάσεις του WooCommerce."
+
+msgid "WPML Translation Editor"
+msgstr "Πρόγραμμα επεξεργασίας μεταφράσεων WPML"
+
+msgid "Native WooCommerce product editing screen"
+msgstr "Εγγενής οθόνη επεξεργασίας προϊόντος WooCommerce"
+
+msgid "Products synchronization"
+msgstr "Συγχρονισμός προϊόντων"
+
+msgid "Configure specific product properties that should be synced to translations."
+msgstr "Ρύθμιση παραμέτρων συγκεκριμένων ιδιοτήτων προϊόντων οι οποίες πρέπει να συγχρονίζονται στις μεταφράσεις."
+
+msgid "Sync publishing date for translated products."
+msgstr "Συγχρονισμός ημερομηνίας έκδοσης μεταφρασμένων προϊόντων."
+
+msgid "Sync products and product taxonomies order."
+msgstr "Συγχρονισμός των προϊόντων και της σειράς ταξινόμησης προϊόντων."
+
+msgid "Products Download Files"
+msgstr "Αρχεία λήψης προϊόντων"
+
+msgid "If you are using downloadable products, you can choose to have their paths\n                                            synchronized, or seperate for each language."
+msgstr "Αν χρησιμοποιείτε προϊόντα με δυνατότητα λήψης, μπορείτε να επιλέξετε να συγχρονίζονται\n οι διαδρομές τους ή κάθε γλώσσα να είναι ανεξάρτητη."
+
+msgid "Use the same files for translations"
+msgstr "Χρήση των ίδιων αρχείων για μεταφράσεις"
+
+msgid "Add separate download files for translations"
+msgstr "Προσθήκη ξεχωριστών αρχείων λήψης για μεταφράσεις"
+
+msgid "Save changes"
+msgstr "Αποθήκευση αλλαγών"
+
+msgid "Troubleshooting page"
+msgstr "Σελίδα επίλυσης προβλημάτων"
+
+msgid "Update Translation"
+msgstr "Ενημέρωση μετάφρασης"
+
+msgid "Hide This Message"
+msgstr "Απόκρυψη αυτού του μηνύματος "
+
+msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
+msgstr "<strong>Διαθέσιμη μετάφραση του WooCommerce</strong> &#8211; Εγκατάσταση ή ενημέρωση των <code>%s</code> μεταφράσεών σας στην έκδοση <code>%s</code>."
+
+msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
+msgstr "Έτσι δημιουργούνται αυτόματα παραλλαγές των μεταφρασμένων προϊόντων σύμφωνα με τις πρόσφατα μεταφρασμένες ιδιότητες."
+
+msgid "Synchronize %s assignment in content"
+msgstr "Συγχρονισμός της εργασίας (%s) στο περιεχόμενο"
+
+msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
+msgstr "Με αυτή την ενέργεια μπορείτε να εφαρμόζετε αυτόματα την ταξινόμηση %s στο περιεχόμενό σας σε διαφορετικές γλώσσες. Θα σαρώνεται το αρχικό σας περιεχόμενο και θα εφαρμόζεται η ίδια ταξινόμηση στο μεταφρασμένο περιεχόμενο."
 
 msgid "You have untranslated terms!"
 msgstr "Έχετε μη μεταφρασμένους όρους!"
 
-msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
-msgstr "Το πολυγλωσσικό WooCommerce είναι ενεργοποιημένο αλλά δεν εκτελείται. Δεν είναι συμβατό με τις  <a href=\"%s\">WPML</a> εκδόσεις πριν την έκδοση 2.0.5."
+msgid "Select currency"
+msgstr "Επιλογή νομίσματος"
 
-msgid "%s plugin is installed and active."
-msgstr "Η προσθήκη %s είναι εγκατεστημένη και ενεργή."
-
-msgid "%s is set up."
-msgstr ""
-
-msgid "%s is not set up."
-msgstr ""
-
-msgid "%s plugin is either not installed or not active."
-msgstr "Η προσθήκη %s είτε δεν είναι εγκατεστημέν είτε δεν είναι ενεργή."
-
-msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
-msgstr "Το %1$s  είναι εγκατεστημένο αλλά η έκδοση είναι εσφαλμένη. Απαιτείται έκδοση %1$s %2$s ή πιο πρόσφατη."
-
-msgid "Required plugins"
-msgstr "Απαιτούμενες προσθήκες"
-
-msgid "Plugins Status"
-msgstr "Κατάσταση προσθηκών"
-
-msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
-msgstr "Χρειάζονται αρκετές προσθήκες για να καταστεί δυνατή η εκτέλεση του πολυγλωσσικού WooCommerce. Αν λείπει οποιαδήποτε προσθήκη θα πρέπει να την εγκαταστήσετε.και να την ενεργοποιήσετε."
-
-msgid "Update WPML"
-msgstr "Ενημέρωση WPML"
-
-msgid "Get WPML"
-msgstr "Λήψη WPML"
-
-msgid "Get WPML Media"
-msgstr "Λήψη WPML Media"
-
-msgid "Get WPML Translation Management"
-msgstr "Λήψη Διαχείρισης Μετάφρασης WPML"
-
-msgid "Get WPML String Translation"
-msgstr "Λήψη μετάφρασης συμβολοσειράς WPML"
-
-msgid "Download WooCommerce"
-msgstr "Λήψη WooCommerce"
-
-msgid "Drop-down menu"
-msgstr "Πτυσσόμενο μενού"
-
-msgid "List of currencies"
-msgstr ""
-
-msgid "Show a currency selector on the product page template"
-msgstr ""
-
-msgid "Currency switcher options"
-msgstr ""
-
-msgid "You can customize currency switcher on front-end"
-msgstr ""
-
-msgid "Currency order"
-msgstr ""
-
-msgid "Drag the currencies to change their order"
-msgstr ""
-
-msgid "Currency switcher style"
-msgstr ""
-
-msgid "Vertical"
-msgstr "Κάθετα"
-
-msgid "Horizontal"
-msgstr "Οριζόντια"
-
-msgid "Visibility"
-msgstr "Ορατότητα"
-
-msgid "Available parameters"
-msgstr ""
-
-msgid "%name%, %symbol%, %code%"
-msgstr ""
-
-msgid "Template for currency switcher"
-msgstr ""
-
-msgid "Default: %name% (%symbol%) - %code%"
-msgstr ""
-
-msgid "Currency switcher preview"
-msgstr ""
-
-msgid "Save"
-msgstr "Αποθήκευση"
-
-msgid "Currency options for %s"
-msgstr ""
+msgid "Exchange Rate"
+msgstr "Συναλλαγματική ισοτιμία"
 
 msgid "Only numeric"
 msgstr "Μόνο αριθμητικοί χαρακτήρες"
 
 msgid "Set on %s"
-msgstr ""
+msgstr "Ορίστηκε: %s"
 
-msgid "Left (%s99.99)"
-msgstr ""
-
-msgid "Right (99.99%s)"
-msgstr ""
-
-msgid "Left with space (%s 99.99)"
-msgstr ""
-
-msgid "Right with space (99.99 %s)"
-msgstr ""
-
-msgid "Exchange Rate"
-msgstr ""
+msgid "Currency Preview"
+msgstr "Προεπισκόπηση νομίσματος"
 
 msgid "Currency Position"
-msgstr ""
+msgstr "Θέση νομίσματος"
+
+msgid "Left"
+msgstr "Αριστερά"
+
+msgid "Right"
+msgstr "Δεξιά"
+
+msgid "Left with space"
+msgstr "Αριστερά με κενό"
+
+msgid "Right with space"
+msgstr "Δεξιά με κενό"
 
 msgid "Thousand Separator"
-msgstr ""
+msgstr "Σύμβολο διαχωρισμού χιλιάδων"
 
 msgid "Decimal Separator"
-msgstr ""
+msgstr "Σύμβολο διαχωρισμού δεκαδικών"
 
 msgid "Number of Decimals"
-msgstr ""
+msgstr "Αριθμός δεκαδικών ψηφίων"
 
 msgid "Rounding to the nearest integer"
-msgstr ""
+msgstr "Στρογγυλοποίηση στον πλησιέστερο ακέραιο "
 
-msgid "disabled"
-msgstr "απενεργοποιημένο"
+msgid "Disabled"
+msgstr "Απενεργοποιημένο"
 
-msgid "up"
-msgstr ""
+msgid "Up"
+msgstr "Πάνω"
 
-msgid "down"
-msgstr ""
+msgid "Down"
+msgstr "Κάτω"
 
-msgid "nearest"
-msgstr ""
+msgid "Nearest"
+msgstr "Πλησιέστερο"
 
 msgid "Increment for nearest integer"
-msgstr ""
+msgstr "Αύξηση προς τον πλησιέστερο ακέραιο"
 
 msgid "Autosubtract amount"
-msgstr ""
+msgstr "Αυτόματη αφαίρεση ποσού"
 
-msgid " (%s)"
-msgstr "(%s)"
+msgid "Cancel"
+msgstr "Άκυρο"
+
+msgid "Save"
+msgstr "Αποθήκευση"
+
+msgid "Products"
+msgstr "Προϊόντα"
+
+msgid "Tags"
+msgstr "Ετικέτες"
+
+msgid "Attributes"
+msgstr "Ιδότητες"
+
+msgid "Shipping Classes"
+msgstr "Κλάσεις αποστολής"
+
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgid "Multi-currency"
+msgstr "Πολλαπλά νομίσματα"
+
+msgid "Store URLs"
+msgstr "Δ/νσεις URL καταστήματος"
+
+msgid "Status"
+msgstr "Κατάσταση"
+
+msgid "Troubleshooting"
+msgstr "Αντιμετώπιση προβλημάτων"
+
+msgid "Thank you for using %sWooCommerce Multilingual%s! You can express your love and\n                                    support by %s rating our plugin and saying that %sit works%s for you."
+msgstr "Ευχαριστούμε που χρησιμοποιείτε το %sWooCommerce Multilingual%s! Μπορείτε να εκφράσετε την αγάπη και\n την υποστήριξή σας %s αξιολογώντας την προσθήκη μας και δηλώνοντας ότι %sσας βοηθάει%s."
+
+msgid "Hide"
+msgstr "Απόκρυψη"
+
+msgid "Loading ..."
+msgstr "Φόρτωση ..."
 
 msgid "Regular Price"
 msgstr "Συνήθης τιμή"
@@ -493,20 +628,17 @@ msgstr "Συνήθης τιμή"
 msgid "Sale Price"
 msgstr "Τιμή κατόπιν έκπτωσης"
 
-msgid "Multi-currency is enabled but no secondary currencies have been set"
+msgid "Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s."
 msgstr ""
 
 msgid "Calculate prices in other currencies automatically"
 msgstr "Αυτόματος υπολογισμός τιμών σε άλλα νομίσματα"
 
-msgid "Click to see the prices in the other currencies as they are currently shown onthe front end."
-msgstr "Κάντε κλικ για να δείτε τις τιμές στα άλλα νομίσματα, όπως εμφανίζονται στο περιβάλλον χρήσης."
+msgid "Click to see the prices in the other currencies as they are currently shown on the front end."
+msgstr "Κάντε κλικ για να δείτε τις τιμές σε άλλα νομίσματα όπως εμφανίζονται αυτή τη στιγμή στο προσκήνιο."
 
 msgid "Show"
 msgstr "Εμφάνιση"
-
-msgid "Hide"
-msgstr "Απόκρυψη"
 
 msgid "Set prices in other currencies manually"
 msgstr "Μη αυτόματος ορισμός τιμών σε άλλα νομίσματα"
@@ -529,8 +661,8 @@ msgstr "Όπως στο προεπιλεγμένο νόμισμα"
 msgid "Set dates"
 msgstr "Ορισμός ημερομηνιών"
 
-msgid "Please enter in a value less than the regular price"
-msgstr ""
+msgid "Collapse"
+msgstr "Σύμπτυξη"
 
 msgid "From&hellip;"
 msgstr "Από&hellip;"
@@ -538,206 +670,185 @@ msgstr "Από&hellip;"
 msgid "To&hellip;"
 msgstr "Σε&hellip;"
 
-msgid "Choose a file"
-msgstr "Επιλέξτε ένα αρχείο"
+msgid "Please enter in a value less than the regular price"
+msgstr "Δώστε μία τιμή μικρότερη από την κανονική"
 
-msgid "Enter translation for name"
+msgid "Required plugins"
+msgstr "Απαιτούμενες προσθήκες"
+
+msgid "Plugins Status"
+msgstr "Κατάσταση προσθηκών"
+
+msgid "WooCommerce Multilingual depends on several plugins to work. If any required plugin is missing, you should install and activate it."
+msgstr "Χρειάζονται αρκετές προσθήκες για να καταστεί δυνατή η εκτέλεση του πολυγλωσσικού WooCommerce. Αν λείπει οποιαδήποτε προσθήκη θα πρέπει να την εγκαταστήσετε.και να την ενεργοποιήσετε."
+
+msgid "WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href=\"%s\">WPML</a> versions prior 2.0.5."
+msgstr "Το πολυγλωσσικό WooCommerce είναι ενεργοποιημένο αλλά δεν εκτελείται. Δεν είναι συμβατό με τις  <a href=\"%s\">WPML</a> εκδόσεις πριν την έκδοση 2.0.5."
+
+msgid "Update WPML"
+msgstr "Ενημέρωση WPML"
+
+msgid "Get WPML"
+msgstr "Λήψη WPML"
+
+msgid "Get WPML Media"
+msgstr "Λήψη WPML Media"
+
+msgid "Get WPML Translation Management"
+msgstr "Λήψη Διαχείρισης Μετάφρασης WPML"
+
+msgid "Get WPML String Translation"
+msgstr "Λήψη μετάφρασης συμβολοσειράς WPML"
+
+msgid "%s is installed and active."
+msgstr "Η προσθήκη %s εγκαταστάθηκε και ενεργοποιήθηκε."
+
+msgid "%s is set up."
+msgstr "%s έχει ρυθμιστεί."
+
+msgid "%s is not set up."
+msgstr "%s δεν έχει ρυθμιστεί."
+
+msgid "%s is either not installed or not active."
+msgstr "%s μη εγκατεστημένο ή ανενεργό."
+
+msgid "%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. "
+msgstr "Το %1$s  είναι εγκατεστημένο αλλά η έκδοση είναι εσφαλμένη. Απαιτείται έκδοση %1$s %2$s ή πιο πρόσφατη."
+
+msgid "Download WooCommerce"
+msgstr "Λήψη WooCommerce"
+
+msgid "The WordPress Multilingual Plugin"
+msgstr "Προσθήκη WordPress Multilingual"
+
+msgid "This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages."
+msgstr "Αυτή η σελίδα σας επιτρέπει να μεταφράσετε όλες τις συμβολοσειρές που χρησιμοποιούνται από το WooCommerce στη δημιουργία διαφορετικών τύπων URL. Μεταφράζοντάς τις έχετε τη δυνατότητα να έχετε πλήρως τοπικοποιημένα URL που θα ταιριάζουν με τη γλώσσα των σελίδων."
+
+msgid "You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page."
+msgstr "Μπορείτε να δώσετε ή να επεξεργαστείτε τις προεπιλεγμένες τιμές στη σελίδα %sΡυθμίσεων μόνιμων συνδέσμων%s ή, για τα τελικά σημεία, στη σελίδα %sΡυθμίσεων λογαριασμού%s του WooCommerce."
+
+msgid "permalinks settings"
+msgstr "Ρυθμίσεις μόνιμων συνδέσμων"
+
+msgid "Account settings"
+msgstr "Ρυθμίσεις λογαριασμού"
+
+msgid "Slug type"
+msgstr "Τύπος slug"
+
+msgid "Original Slug"
+msgstr "Αρχικό slug"
+
+msgid "Shop page"
+msgstr "Σελίδα καταστήματος"
+
+msgid "Product base"
+msgstr "Βάση προϊόντος"
+
+msgid "Product category base"
+msgstr "Βάση κατηγορίας προϊόντος"
+
+msgid "Product tag base"
+msgstr "Βάση ετικέτας προϊόντος"
+
+msgid "Product attribute base"
+msgstr "Βάση χαρακτηριστικού προϊόντος"
+
+msgid "Original"
+msgstr "Πρωτότυπο"
+
+msgid "Translation to"
+msgstr "Μετάφραση σε"
+
+msgid "Product Shop Base"
+msgstr "Βάση καταστήματος προϊόντος"
+
+msgid "Welcome to WooCommerce Multilingual!"
+msgstr "Καλώς ήρθατε στο Πολυγλωσσικό WooCommerce!"
+
+msgid "Configure the multilingual support for your e-commerce site in just a couple of minutes."
 msgstr ""
 
-msgid "Please set images for product"
-msgstr "Παρακαλούμε ορίστε εικόνες για το προϊόν"
+msgid "By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away."
+msgstr "Από προεπιλογή, τα προϊόντα είναι μεταφράσιμα, ακριβώς όπως οι κατηγορίες προϊόντων, οι ετικέτες προϊόντων και οι ιδιότητες. Μπορείτε να αρχίσετε να τα μεταφράζετε αμέσως."
 
-msgid "Please save translation before translate images texts"
-msgstr "Παρακαλούμε αποθηκεύστε τη μετάφραση προτού μεταφράσετε τα κείμενα των εικόνων"
+msgid "You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode."
+msgstr "Μπορείτε, ωστόσο, να ορίσετε ποιες ιδιότητες θέλετε να μεταφράσετε, να εγκαταστήσετε τις μεταφρασμένες σελίδες καταστήματος ή να ενεργοποιήσετε τη λειτουργία πολλαπλών νομισμάτων."
 
-msgid "Caption"
-msgstr "Λεζάντα"
+msgid "Start"
+msgstr "Έναρξη"
 
-msgid "<strong>WooCommerce Translation Available</strong> &#8211; Install or update your <code>%s</code> translations to version <code>%s</code>."
-msgstr ""
+msgid "No, thanks. I'll do it later."
+msgstr "Όχι ευχαριστώ. Θα το κάνω αργότερα."
 
-msgid "Update Translation"
-msgstr ""
+msgid "Select translatable attributes"
+msgstr "Επιλέξτε μεταφράσιμες ιδιότητες"
 
-msgid "Hide This Message"
-msgstr ""
+msgid "There are no attributes defined"
+msgstr "Δεν έχουν οριστεί ιδιότητες"
 
-msgid "This product is an exact duplicate of the %s product."
-msgstr "Το προϊόν αυτό αποτελεί ακριβές αντίγραφο του προϊόντος %s."
+msgid "Continue"
+msgstr "Συνέχεια"
 
-msgid "edit product"
-msgstr "επεξεργασία προϊόντος"
+msgid "Later"
+msgstr "Αργότερα"
 
-msgid "Take this and edit"
-msgstr "Αποδοχή εργασίας και μετάφραση"
+msgid "One or more WooCommerce pages have not been created"
+msgstr "Μία ή περισσότερες σελίδες WooCommerce δεν δημιουργήθηκαν"
 
-msgid "Update"
-msgstr "Ενημέρωση"
+msgid "Install missing WooCommerce pages and create translations."
+msgstr "Εγκατάσταση σελίδων WooCommerce που απουσιάζουν και δημιουργία μεταφράσεων."
 
-msgid "Language"
-msgstr "Γλώσσα"
+msgid "Translate Store Pages"
+msgstr "Μετάφραση σελίδων καταστήματος"
 
-msgid "Edit independently."
-msgstr "Επεξεργασία ανεξάρτητα."
+msgid "All store pages must be translated in the languages configured on the site."
+msgstr "Όλες οι σελίδες καταστήματος πρέπει να μεταφραστούν στις γλώσσες που έχουν οριστεί στον ιστότοπο."
 
-msgid "Undo (keep this product as a duplicate)"
-msgstr "Αναίρεση (να παραμείνει το προϊόν ως διπλότυπο)"
+msgid "Select the translation interface"
+msgstr "Επιλέξτε το περιβάλλον εργασίας μετάφρασης"
 
-msgid "Translation in progress"
-msgstr "Μετάφραση σε εξέλιξη"
+msgid "Enable multiple currencies"
+msgstr "Ενεργοποίηση πολλαπλών νομισμάτων"
 
-msgid "Show slug"
-msgstr ""
+msgid "This will allow you to set prices for products in different currencies. The prices can be determined based on a given exchange rate or set explicitly for specific products."
+msgstr "Αυτή η επιλογή θα σας επιτρέπει να ορίζετε τις τιμές των προϊόντων σε διαφορετικά νομίσματα. Οι τιμές μπορούν να οριστούν βάσει μιας δεδομένης τιμής συναλλάγματος ή να οριστούν μη αυτόματα για συγκεκριμένα προϊόντα."
 
-msgid "Edit slug"
-msgstr ""
+msgid "Enable the multi-currency mode"
+msgstr "Ενεργοποίηση της λειτουργίας πολλαπλού νομίσματος"
 
-msgid "Please save translation before edit slug"
-msgstr ""
+msgid "Further actions that are necessary for making your existing content multilingual, are listed below."
+msgstr "Παρακάτω αναγράφονται περαιτέρω ενέργειες που απαιτούνται για να κάνετε το υπάρχον περιεχόμενό σας πολυγλωσσικό."
 
-msgid "Translation missing"
-msgstr "Δεν υπάρχει μετάφραση"
+msgid "Start translating products"
+msgstr "Έναρξη μετάφρασης προϊόντων"
 
-msgid "Add Media"
-msgstr "Προσθήκη μέσων"
+msgid "Add secondary currencies on the %smulti-currency configuration%s page"
+msgstr "Προσθήκη δευτερευόντων νομισμάτων στη σελίδα %sρύθμιση πολλαπλών νομισμάτων%s"
 
-msgid "Text"
-msgstr "Κείμενο"
+msgid "Translate existing terms for these %sproduct attributes%s: %s"
+msgstr "Μετάφραση υπαρχόντων όρων για αυτές τις %sιδιότητες προϊόντος%s: %s"
 
-msgid "Visual"
-msgstr "Οπτικό"
+msgid "Translate existing %sproduct categories%s"
+msgstr "Μετάφραση υπαρχόντων %sκατηγοριών προϊόντων%s"
 
-msgid "name"
-msgstr "όνομα"
+msgid "Translate existing %sproduct tags%s"
+msgstr "Μετάφραση υπαρχόντων %sετικετών προϊόντων%s"
 
-msgid "values"
-msgstr "τιμές"
+msgid "%sAdd missing translations%s for shipping classes"
+msgstr "%sΠροσθήκη μεταφράσεων που λείπουν%s για κλάσεις αποστολής"
 
-msgid "Upload file"
-msgstr "Αποστολή αρχείου"
+msgid "Translate %sURL slugs%s to create multilingual store and product urls"
+msgstr "Μετάφραση %sslug URL%s για δημιουργία URL πολυγλωσσικού καταστήματος και προϊόντων"
 
-msgid "Translate %s"
-msgstr "Μετάφραση %s"
-
-msgid "%d products"
-msgstr "%d προϊόντα"
-
-msgid " | Parent product: %s"
-msgstr "| Γονικό προϊόν: %s"
-
-msgid "Show all products"
-msgstr "Προβολή όλων των προϊόντων"
-
-msgid "WooCommerce Products"
-msgstr "Προϊόντα WooCommerce"
-
-msgid "All languages"
-msgstr "Όλες οι γλώσσες"
-
-msgid "Any category"
-msgstr "Οποιαδήποτε κατηγορία"
-
-msgid "All products"
-msgstr "Όλα τα προϊόντα"
-
-msgid "Not translated or needs updating"
-msgstr "Δεν έχει μεταφραστεί ή πρέπει να γίνει ενημέρωση"
-
-msgid "Needs updating"
-msgstr "Χρειάζεται ενημέρωση"
-
-msgid "Translation complete"
-msgstr "Η μετάφραση ολοκληρώθηκε"
-
-msgid "All statuses"
-msgstr "Όλες οι καταστάσεις"
-
-msgid "Search"
-msgstr "Αναζήτηση"
-
-msgid "Reset"
-msgstr "Επαναφορά"
-
-msgid "Go to the first page"
-msgstr "Μετάβαση στην πρώτη σελίδα"
-
-msgid "Go to the previous page"
-msgstr "Μετάβαση στην προηγούμενη σελίδα"
-
-msgid "of"
-msgstr "από"
-
-msgid "Go to the next page"
-msgstr "Μετάβαση στην επόμενη σελίδα"
-
-msgid "Go to the last page"
-msgstr "Μετάβαση στην τελευταία σελίδα"
-
-msgid "Type"
-msgstr "Τύπος"
-
-msgid "Product"
-msgstr "Προϊόν"
-
-msgid "No products found"
-msgstr "Δεν βρέθηκε κανένα προϊόν"
-
-msgid " (draft)"
-msgstr "(προσχέδιο)"
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sSlugs Translation%s to translate."
-msgstr ""
-
-msgid "Your product permalink base is not translated in %s. The urls for the translated products will not work. Go to the %sString Translation%s to translate."
-msgstr ""
-
-msgid "Please review the %sguide for running WooCommerce multilingual with default language other than English%s."
-msgstr ""
-
-msgid "You should check WPML configuration files added by other plugins or manual settings on the %sMultilingual Content Setup%s section."
-msgstr ""
-
-msgid "Your store's base currency is %s (%s). To change it, go to the %s page."
-msgstr "Το νόμισμα βάσης του καταστήματός σας είναι: %s (%s). Για να το αλλάξετε, μεταβείτε στη σελίδα %s."
-
-msgid "Products using custom currency rates as they were migrated from the previous versions - option to support different prices per language"
-msgstr "Προϊόντα που χρησιμοποιούν προσαρμοσμένες συναλλαγματικές ισοτιμίες, όπως αυτές μεταφέρθηκαν από τις προηγούμενες εκδόσεις -επιλογή υποστήριξης διαφορτικών τιμών ανά γλώσσα"
-
-msgid "Are you sure?"
-msgstr "Είστε βέβαιοι;"
-
-msgid "Delete"
-msgstr "Διαγραφή"
-
-msgid "Configuration warnings"
-msgstr "Προειδοποιήσεις ρύθμισης παραμέτρων"
-
-msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
-msgstr "Αναφορά διαφόρων ζητημάτων που αφορούν τη ρύθμιση παραμέτρων, τα οποία μπορεί να έχουν ως αποτέλεσμα να μην εκτελείται κανονικά το WooCommerce Multilingual"
-
-msgid "Attention required: probable problem with URLs in different languages"
-msgstr "Προσοχή: πιθανό πρόβλημα σχετικά με διευθύνσεις URL σε διαφορετικές γλώσσες"
-
-msgid "Your site's default language is not English and the strings language is also not English. This may lead to problems with your site's URLs in different languages."
-msgstr "Η προεπιλεγμένη γλώσσα του τόπου σας δεν είναι τα Αγγλικά και η γλώσσα των συμβολοσειρών επίσης δεν είναι η Αγγλική. Αυτό μπορεί να προκαλέσει προβλήματα αναφορικά με διευθύνσεις URL του ιστοτόπου σας οι οποίες είναι σε διαφορετικές γλώσσες."
-
-msgid "Change the strings language to English"
-msgstr "Αλλαγή της γλώσσας των συμβολοσειρών σε Αγγλικά"
-
-msgid "Re-scan strings"
-msgstr "Εκ νέου σάρωση των συμβολοσειρών"
-
-msgid "Your site's default language is not English. There are some settings that require careful attention."
-msgstr ""
-
-msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgid "Use custom settings for translations download files"
 msgstr ""
 
 msgid "WooCommerce Store Pages"
 msgstr "Σελίδες καταστήματος WooCommerce"
 
-msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated in all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
-msgstr "Για να έχετε έναν πολυγλωσσικό τόπο ηλεκτρονικού εμπορίου, πρέπει να μεταφράσετε τις σελίδες του καταστήματος WooCommerce σε όλες τις γλώσσες του τόπου. Αφού στηθούν όλες οι σελίδες μπορείτε να προσθέσετε τις μεταφράσεις τους μέσω αυτού του μενού."
+msgid "To run a multilingual e-commerce site, you need to have the WooCommerce shop pages translated to all the site's languages. Once all the pages are installed you can add the translations for them from this menu."
+msgstr "Για να καταστεί δυνατή η λειτουργία ενός πολυγλωσσικού ιστότοπου ηλεκτρονικού εμπορίου, πρέπει οι σελίδες του καταστήματος WooCommerce να μεταφραστούν σε όλες τις γλώσσες του ιστότοπου. Μόλις εγκατασταθούν όλες οι σελίδες, μπορείτε να προσθέσετε μεταφράσεις από αυτό το μενού."
 
 msgid "One or more WooCommerce pages have not been created."
 msgstr "Μία ή περισσότερες σελίδες του WooCommerce δεν έχουν δημιουργηθεί."
@@ -745,137 +856,59 @@ msgstr "Μία ή περισσότερες σελίδες του WooCommerce δ�
 msgid "Install WooCommerce Pages"
 msgstr "Στήσιμο σελίδων WooCommerce"
 
-msgid "WooCommerce store pages don't exist for this language:"
-msgstr "Δεν υπάρχουν σελίδες καταστήματος WooCommerce για αυτή τη γλώσσα:"
+msgid "WooCommerce store pages do not exist for these languages:"
+msgstr "Δεν υπάρχουν σελίδες καταστήματος του WooCommerce για τις εξής γλώσσες:"
 
-msgid "WooCommerce store pages don't exist for these languages:"
-msgstr "Δεν υπάρχουν σελίδες καταστήματος WooCommerce για αυτές τις γλώσσες:"
-
-msgid "Create missing translations."
-msgstr "Δημιουργία των μεταφράσεων που λείπουν."
+msgid "Create missing translations"
+msgstr "Δημιουργία μεταφράσεων που λείπουν"
 
 msgid "These pages are currently being translated by translators via WPML: "
-msgstr ""
-
-msgid "Hide this message"
-msgstr "Απόκρυψη αυτού του μηνύματος"
-
-msgid "Show details about missing translations"
-msgstr "Εμφάνιση λεπτομερειών σχετικά με τις μεταφράσεις που λείπουν"
+msgstr "Αυτές οι σελίδες μεταφράζονται αυτή τη στιγμή από μεταφραστές μέσω του WPML:"
 
 msgid "WooCommerce store pages are translated to all the site's languages."
 msgstr "Οι σελίδες καταστήματος WooCommerce μεταφράζονται σε όλες τις γλώσσες του ιστότοπου."
 
+msgid "Configuration warnings"
+msgstr "Προειδοποιήσεις ρύθμισης παραμέτρων"
+
+msgid "Reporting miscelaneous configuration issues that can make WooCommerce Multilingual not run normally"
+msgstr "Αναφορά διαφόρων ζητημάτων που αφορούν τη ρύθμιση παραμέτρων, τα οποία μπορεί να έχουν ως αποτέλεσμα να μην εκτελείται κανονικά το WooCommerce Multilingual"
+
+msgid "Your product permalink base is not translated to:"
+msgstr "Η βάση μόνιμων συνδέσμων των προϊόντων σας δεν έχει μεταφραστεί σε:"
+
+msgid "Translate URLs"
+msgstr "Μετάφραση των URL"
+
+msgid "Your site's default language is not English and the strings language is also not English."
+msgstr "Ούτε η προεπιλεγμένη γλώσσα του ιστότοπού σας ούτε η γλώσσα των συμβολοσειρών είναι τα αγγλικά."
+
+msgid "Running WooCommerce multilingual with default language other than English."
+msgstr "Εκτέλεση του WooCommerce multilingual με προεπιλεγμένη μια γλώσσα άλλη εκτός των αγγλικών."
+
+msgid "This may cause problems with URLs in different languages."
+msgstr "Αυτό μπορεί να προκαλέσει προβλήματα με URL σε διαφορετικές γλώσσες."
+
+msgid "Change default language"
+msgstr "Αλλαγή προεπιλεγμένης γλώσσας"
+
+msgid "Your site's default language is not English."
+msgstr "Η προεπιλεγμένη γλώσσα του ιστότοπού σας δεν είναι τα αγγλικά."
+
+msgid "There are some settings that require careful attention."
+msgstr "Υπάρχουν μερικές ρυθμίσεις που απαιτούν αυξημένη προσοχή."
+
+msgid "Some settings from the WooCommerce Multilingual wpml-config.xml file have been overwritten."
+msgstr "Μερικές ρυθμίσεις από το αρχείο wpml-config.xml του πολυγλωσσικού WooCommerce έχουν αντικατασταθεί."
+
+msgid "You should check WPML configuration files added by other plugins or manual settings on the %s section."
+msgstr "Πρέπει να ελέγξετε τα αρχεία ρύθμισης παραμέτρων του WPML που έχουν προστεθεί από άλλες προσθήκες ή τις μη αυτόματες ρυθμίσεις στην ενότητα %s."
+
+msgid "Multilingual Content Setup"
+msgstr "Διαμόρφωση πολυγλωσσικού περιεχομένου"
+
 msgid "Taxonomies missing translations"
 msgstr "Μεταφράσεις των ταξινομήσεων που δεν υπάρχουν"
-
-msgid "Ignore"
-msgstr "Παράβλεψη"
-
-msgid "Right now, there are no taxonomy terms needing translation."
-msgstr "Αυτή τη στιγμή δεν υπάρχουν όροι ταξινόμησης για τους οποίους απαιτείται μετάφραση."
-
-msgid "Product Translation Interface"
-msgstr "Διεπαφή Μετάφρασης Προϊόντων"
-
-msgid "The recommended way to translate products is using the products translation table in the WooCommerce Multilingual admin. Choose to go to the native WooCommerce interface, if your products include custom sections that require direct access."
-msgstr "Ο συνιστώμενος τρόπος μετάφρασης προϊόντων είναι μέσω του πίνακα προϊόντων στη διαχείριση του πολυγλωσσικού WooCommerce. Επιλέξτε την εγγενή διεπαφή του WooCommerce εάν στα προϊόντα σας περιλαμβάνονται προσαρμοσμένα τμήματα για τα οποία απαιτείται άμεση πρόσβαση."
-
-msgid "Choose what to do when clicking on the translation controls for products:"
-msgstr "Επιλέξτε τι θα γίνεται όταν πραγματοποιείται κλικ σε στοιχείο ελέγχου μετάφρασης προϊόντος:"
-
-msgid "Go to the product translation table in WooCommerce Multilingual"
-msgstr "Μετάβαση στον πίνακα μετάφρασης προϊόντων του πολυγλωσσικού WooCommerce"
-
-msgid "Go to the native WooCommerce product editing screen"
-msgstr "Μετάβαση στην εγγενή οθόνη επεξεργασίας προϊόντων του WooCommerce"
-
-msgid "Products synchronization"
-msgstr "Συγχρονισμός προϊόντων"
-
-msgid "Configure specific product properties that should be synced to translations."
-msgstr "Ρύθμιση παραμέτρων συγκεκριμένων ιδιοτήτων προϊόντων οι οποίες πρέπει να συγχρονίζονται στις μεταφράσεις."
-
-msgid "Sync publishing date for translated products."
-msgstr "Συγχρονισμός ημερομηνίας έκδοσης μεταφρασμένων προϊόντων."
-
-msgid "Sync products and product taxonomies order."
-msgstr ""
-
-msgid "File Paths Synchronization "
-msgstr "Συγχρονισμός διαδρομών αρχείων"
-
-msgid "If you are using downloadable products, you can choose to have their paths synchronized, or seperate for each language."
-msgstr "Αν χρησιμοποιείτε προϊόντα με δυνατότητα λήψης, μπορείτε να επιλέξετε ότι θα συγχρονίζονται οι διαδρομές τους ή ότι κάθε γλώσσα θα είναι ανεξάρτητη."
-
-msgid "Use the same file paths in all languages"
-msgstr "Χρησιμοποιήστε τις ίδιες διαδρομές αρχείων σε όλες τις γλώσσες"
-
-msgid "Different file paths for each language"
-msgstr "Διαφορετικές διαδρομές αρχείων για κάθε γλώσσα"
-
-msgid "Manage Currencies"
-msgstr "Διαχείριση νομισμάτων"
-
-msgid "This will let you enable the multi-currency mode where users can see prices according to their currency preference and configured exchange rate."
-msgstr "Αυτό θα σας επιτρέψει να ενεργοποιήσετε τη λειτουργία πολλαπλών νομισμάτων, κατά την οποία οι χρήστες μπορούν να βλέπουν τιμές σύμφωνα με τη νομισματική τους προτίμηση και την ορισθείσα συναλλαγματική ισοτιμία."
-
-msgid "No multi-currency."
-msgstr ""
-
-msgid "Multiple currencies, independent of languages."
-msgstr ""
-
-msgid "Learn more"
-msgstr "Μάθετε περισσότερα"
-
-msgid "Currency"
-msgstr "Νόμισμα"
-
-msgid "default"
-msgstr "προεπιλογή"
-
-msgid "Edit"
-msgstr "Επεξεργασία"
-
-msgid "Default currency"
-msgstr "Προεπιλεγμένο νόμισμα"
-
-msgid "Switch to this currency when switching language in the front-end"
-msgstr "Μετάβαση σε αυτό το νόμισμα όταν αλλάζει η γλώσσα του περιβάλλοντος χρήσης"
-
-msgid "OFF"
-msgstr "ΟΧΙ"
-
-msgid "ON"
-msgstr "ΝΑΙ"
-
-msgid "Keep"
-msgstr "Διατήρηση"
-
-msgid "Please fill field"
-msgstr "Παρακαλούμε συμπληρώστε το πεδίο"
-
-msgid "Add currency"
-msgstr "Προσθήκη νομίσματος"
-
-msgid "n/a"
-msgstr "μη διαθέσιμο"
-
-msgid "Show only products with custom prices in secondary currencies"
-msgstr ""
-
-msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
-msgstr ""
-
-msgid "Troubleshooting page"
-msgstr "Σελίδα επίλυσης προβλημάτων"
-
-msgid "Run fix"
-msgstr "Εκτέλεση διόρθωσης"
-
-msgid "Dismiss"
-msgstr "Ματαίωση"
 
 msgid "To run a fully translated site, you should translate all taxonomy terms. Some store elements, such as variations, depend on taxonomy translation."
 msgstr "Για να έχετε έναν πλήρως μεταφρασμένο ιστότοπο, θα πρέπει να μεταφράσετε όλους τους όρους ταξινόμησης. Ορισμένα στοιχεία του καταστήματος, όπως οι παραλλαγές, εξαρτώνται από τη μετάφραση της ταξινόμησης."
@@ -883,26 +916,20 @@ msgstr "Για να έχετε έναν πλήρως μεταφρασμένο ι
 msgid "This taxonomy requires translation."
 msgstr "Απαιτείται μετάφραση για αυτή την ταξινόμηση."
 
+msgid "Include in translation"
+msgstr "Να περιληφθεί στη μετάφραση"
+
 msgid "This taxonomy does not require translation."
 msgstr "Δεν απαιτείται μετάφραση για αυτή την ταξινόμηση."
 
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "Οι αλλαγές που πραγματοποιήσατε θα χαθούν εάν πλοηγηθείτε εκτός της παρούσας σελίδας."
+msgid "Right now, there are no taxonomy terms needing translation."
+msgstr "Αυτή τη στιγμή δεν υπάρχουν όροι ταξινόμησης για τους οποίους απαιτείται μετάφραση."
 
-msgid "At least one currency must be enabled for this language!"
-msgstr ""
+msgid "There are no translatable product attributes defined"
+msgstr "Δεν έχουν οριστεί χαρακτηριστικά μεταφράσιμου προϊόντος"
 
-msgid "Synchronize %s assignment in content"
-msgstr "Συγχρονισμός της εργασίας (%s) στο περιεχόμενο"
-
-msgid "This action lets you automatically apply the %s taxonomy to your content in different  languages. It will scan the original content and apply the same taxonomy to translated content."
-msgstr "Με αυτή την ενέργεια μπορείτε να εφαρμόζετε αυτόματα την ταξινόμηση %s στο περιεχόμενό σας σε διαφορετικές γλώσσες. Θα σαρώνεται το αρχικό σας περιεχόμενο και θα εφαρμόζεται η ίδια ταξινόμηση στο μεταφρασμένο περιεχόμενο."
-
-msgid "This will automatically generate variations for translated products corresponding to recently translated attributes."
-msgstr "Έτσι δημιουργούνται αυτόματα παραλλαγές των μεταφρασμένων προϊόντων σύμφωνα με τις πρόσφατα μεταφρασμένες ιδιότητες."
-
-msgid "Troubleshooting"
-msgstr "Αντιμετώπιση προβλημάτων"
+msgid "Select the attribute to translate: "
+msgstr "Επιλέξτε το χαρακτηριστικό προς μετάφραση:"
 
 msgid "Please make a backup of your database before you start the synchronization"
 msgstr "Παρακαλούμε δημιουργήστε αντίγραφο ασφαλείας της βάσης δεδομένων σας πριν ξεκινήσετε τον συγχρονισμό"
@@ -922,65 +949,266 @@ msgstr "Συγχρονισμός μεταβλητών προϊόντων:"
 msgid "left"
 msgstr "αριστερά"
 
-msgid "Sync products \"gallery images\""
-msgstr "Συγχρονισμός προϊόντων \"εικόνων Συλλογής\""
+msgid "Sync products \"gallery images\":"
+msgstr "Συγχρονισμός προϊόντων \"συλλογή εικόνων\":"
 
 msgid "Sync products categories (display type, thumbnail):"
-msgstr ""
+msgstr "Συγχρονισμός κατηγοριών προϊόντων (τύπος εμφάνισης, μικρογραφία):"
 
 msgid "Duplicate terms ( please select attribute ):"
-msgstr ""
+msgstr "Αντιγραφή όρων ( επιλέξτε ιδιότητα ):"
 
 msgid "none"
 msgstr "κανένα"
 
-msgid "Start"
-msgstr "Έναρξη"
+msgid "Enable/disable"
+msgstr "Ενεργοποίηση/απενεργοποίηση"
 
-msgid "Please add variations to product"
-msgstr "Παρακαλούμε προσθέστε παραλλαγές στο προϊόν"
+msgid "Currencies"
+msgstr "Νομίσματα"
 
-msgid "Please save translation before translate variations file paths"
-msgstr "Αποθηκεύστε τη μετάφραση προτού μεταφράσετε τις παραλλαγές και τις διαδρομές αρχείων"
+msgid "Add currency"
+msgstr "Προσθήκη νομίσματος"
 
-msgid "Variations are not downloadable"
-msgstr "Δεν είναι δυνατή η λήψη των παραλλαγών"
+msgid "Currency"
+msgstr "Νόμισμα"
 
-msgid "Download URL"
-msgstr "Διεύθυνση URL λήψης"
+msgid "Rate"
+msgstr "Ισοτιμία"
 
-msgid "Variation is not downloadable"
-msgstr "Δεν είναι δυνατή η λήψη της παραλλαγής"
+msgid "default"
+msgstr "προεπιλογή"
 
-msgid "This field is locked for editing because WPML will copy its value from the original language."
-msgstr "Το πεδίο είναι κλειδωμένο για επεξεργασία καθώς το WPML θα αντιγράψει την τιμή από τη γλώσσα προέλευσης."
+msgid "Default currency"
+msgstr "Προεπιλεγμένο νόμισμα"
 
-msgid "This is a translation of %s. Some of the fields are not editable. It's recommended to use the %s for translating products."
-msgstr ""
+msgid "Switch to this currency when switching language in the front-end"
+msgstr "Μετάβαση σε αυτό το νόμισμα όταν αλλάζει η γλώσσα του περιβάλλοντος χρήσης"
 
-msgid "WooCommerce Multilingual products translator"
-msgstr ""
+msgid "Keep"
+msgstr "Διατήρηση"
 
-msgid "How to translate products"
-msgstr "Πώς μεταφράζονται τα προϊόντα"
+msgid "Delete"
+msgstr "Διαγραφή"
 
-msgid "Quick edit is disabled for product translations. It's recommended to use the %s for editing products translations. %s"
-msgstr ""
+msgid " (%s)"
+msgstr "(%s)"
 
-msgid "WooCommerce Multilingual products editor"
-msgstr ""
+msgid "The multi-currency mode cannot be enabled as a specific currency was not set. Go to the %sWooCommerce settings%s page and select the default currency for your store."
+msgstr "Η λειτουργία πολλαπλών νομισμάτων δεν μπορεί να ενεργοποιηθεί καθώς ένα συγκεκριμένο νόμισμα δεν έχει οριστεί. Πηγαίνετε στη σελίδα %sρυθμίσεων του WooCommerce%s και επιλέξτε το προεπιλεγμένο νόμισμα για το κατάστημά σας."
 
-msgid "Edit this product translation"
-msgstr ""
+msgid "Learn more"
+msgstr "Μάθετε περισσότερα"
 
-msgid "How to translate attributes"
-msgstr "Πώς μεταφράζονται οι ιδιότητες"
+msgid "Show only products with custom prices in secondary currencies"
+msgstr "Εμφάνιση μόνο των προϊόντων με τιμές προσαρμοσμένες σε δευτερεύοντα νομίσματα"
 
-msgid "How to translate product categories"
-msgstr "Πώς μεταφράζονται οι κατηγορίες προϊόντων"
+msgid "When this option is on, when you switch to a secondary currency on the front end, only the products with custom prices in that currency are being displayed. Products with prices determined based on the exchange rate are hidden."
+msgstr "Όταν είναι ενεργοποιημένη αυτή η επιλογή και αλλάζετε σε ένα δευτερεύον νόμισμα στο προσκήνιο, εμφανίζονται μόνο τα προϊόντα με τιμές προσαρμοσμένες σε αυτό το νόμισμα. Προϊόντα με τιμές που καθορίζονται βάσει της συναλλαγματικής ισοτιμίας αποκρύπτονται."
 
-msgid "Would you like to see a quick overview?"
-msgstr "Θα θέλατε να δείτε μία γρήγορη γενική παρουσίαση;"
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "Οι αλλαγές που πραγματοποιήσατε θα χαθούν εάν πλοηγηθείτε εκτός της παρούσας σελίδας."
 
-msgid "Learn how to turn your e-commerce site multilingual"
-msgstr "Κάντε πολυγλωσσικό τον ιστότοπο ηλεκτρονικού εμπορίου σας"
+msgid "At least one currency must be enabled for this language!"
+msgstr "Πρέπει να ενεργοποιηθεί τουλάχιστον ένα νόμισμα για αυτή τη γλώσσα!"
+
+msgid "Currency switcher options"
+msgstr "Επιλογές εναλλαγής νομίσματος"
+
+msgid "Currency switcher style"
+msgstr "Στυλ εναλλαγής νομίσματος"
+
+msgid "Currency order"
+msgstr "Σειρά νομισμάτων"
+
+msgid "Available parameters"
+msgstr "Διαθέσιμες παράμετροι"
+
+msgid "Template for currency switcher"
+msgstr "Πρότυπο για εναλλαγή νομίσματος"
+
+msgid "Visibility"
+msgstr "Ορατότητα"
+
+msgid "Currency switcher preview"
+msgstr "Προεπισκόπηση εναλλαγής νομίσματος"
+
+msgid "Drop-down menu"
+msgstr "Πτυσσόμενο μενού"
+
+msgid "List of currencies"
+msgstr "Λίστα νομισμάτων"
+
+msgid "Vertical"
+msgstr "Κάθετα"
+
+msgid "Horizontal"
+msgstr "Οριζόντια"
+
+msgid "Drag the currencies to change their order"
+msgstr "Σύρετε τα νομίσματα για να αλλάξετε τη σειρά τους"
+
+msgid "%name%, %symbol%, %code%"
+msgstr "%name%, %symbol%, %code% "
+
+msgid "Default: %name% (%symbol%) - %code%"
+msgstr "Προεπιλογή: %name% (%symbol%) – %code%"
+
+msgid "Show a currency selector on the product page template"
+msgstr "Εμφάνιση ενός επιλογέα νομίσματος στο πρότυπο της σελίδας προϊόντων"
+
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgstr "Για να ρυθμίσετε τον τρόπο που μεταφράζονται τα %sπροϊόντα του WooCommerce%s, επισκεφτείτε τη σελίδα %sρυθμίσεων%s του Πολυγλωσσικού WooCommerce."
+
+msgid "Title"
+msgstr "Τίτλος"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Content / Description"
+msgstr "Περιεχόμενο / Περιγραφή"
+
+msgid "Excerpt"
+msgstr "Απόσπασμα"
+
+msgid "Purchase note"
+msgstr "Σημείωση αγοράς"
+
+msgid "Images"
+msgstr "Εικόνες"
+
+msgid "Custom Product attributes"
+msgstr "Ιδιότητες προσαρμοσμένων προϊόντων"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "Value(s)"
+msgstr "Τιμή(-ές)"
+
+msgid "Custom Fields"
+msgstr "Προσαρμοσμένα πεδία"
+
+msgid "Variations data"
+msgstr "Δεδομένα παραλλαγών"
+
+msgid "Download Files for Variation #%s"
+msgstr "Λήψη αρχείων για παραλλαγή #%s"
+
+msgid "Download Files"
+msgstr "Λήψη αρχείων"
+
+msgid "File URL"
+msgstr "URL αρχείου"
+
+msgid "Content, title, and excerpt are empty."
+msgstr "Το περιεχόμενο, ο τίτλος και το απόσπασμα είναι κενά."
+
+msgid "Search %s"
+msgstr "Αναζήτηση %s"
+
+msgid "All %s"
+msgstr "Όλα τα %s"
+
+msgid "Parent %s"
+msgstr "Γονικό %s"
+
+msgid "Parent %s:"
+msgstr "Γονικό %s:"
+
+msgid "Edit %s"
+msgstr "Επεξεργασία %s"
+
+msgid "Update %s"
+msgstr "Ενημέρωση %s"
+
+msgid "Add New %s"
+msgstr "Προσθήκη νέας %s"
+
+msgid "New %s"
+msgstr "Νέο %s"
+
+msgid "To translate Add-ons strings please save Add-ons and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "Για να γίνει μετάφραση των συμβολοσειρών προσθήκης αποθηκεύστε τις προσθήκες και πηγαίνετε στο <b><a href=\"%s\">Περιβάλλον εργασίας μετάφρασης συμβολοσειρών</a></b> "
+
+msgid "Product Add-ons Group \"%s\""
+msgstr "Ομάδα προσθηκών προϊόντος \"%s\""
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Options"
+msgstr "Επιλογές"
+
+msgid "Label"
+msgstr "Ετικέτα"
+
+msgid "To translate Extra Options strings please save %s and go to the <b><a href=\"%s\">String Translation interface</a></b>"
+msgstr "Για να γίνει μετάφραση των συμβολοσειρών Πρόσθετες επιλογές αποθηκεύστε %s  και πηγαίνετε στo <b><a href=\"%s\">Περιβάλλον εργασίας μετάφρασης συμβολοσειρών</a></b> "
+
+msgid "Language"
+msgstr "Γλώσσα"
+
+msgid "Translation of"
+msgstr "Μετάφραση του:"
+
+msgid "Subscription Price"
+msgstr "Τιμή συνδρομής"
+
+msgid "Sign-up Fee"
+msgstr "Τέλος εγγραφής"
+
+msgid "Calculate costs in other currencies automatically"
+msgstr "Αυτόματος υπολογισμός κόστους σε άλλα νομίσματα"
+
+msgid "Set costs in other currencies manually"
+msgstr "Μη αυτόματος ορισμός κόστους σε άλλα νομίσματα"
+
+msgid "This is the cost per block booked. All other costs (for resources and persons) are added to this."
+msgstr "Αυτό είναι το κόστος της κράτησης για κάθε μπλοκ. Όλα τα άλλα κόστη (για πόρους και πρόσωπα) έχουν προστεθεί σε αυτό."
+
+msgid "Product tabs"
+msgstr "Ετικέτες προϊόντος"
+
+msgid "Heading"
+msgstr "Κεφαλίδα"
+
+msgid "Tour Data"
+msgstr "Δεδομένα ταξιδιού"
+
+msgid "Content"
+msgstr "Περιεχόμενο"
+
+msgid "Composite Products"
+msgstr "Σύνθετα προϊόντα"
+
+msgid "Product Bundles"
+msgstr "Πακέτα προϊόντων"
+
+msgid "One-off cost for the booking as a whole."
+msgstr "Συνολικό εφάπαξ ποσό πληρωμής για την κράτηση."
+
+msgid "The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word \"from:\"."
+msgstr "Το κόστος εμφανίζεται στον χρήστη στο προσκήνιο. Αφήστε το κενό για να γίνει υπολογισμός του. Αν μια κράτηση έχει διάφορα κόστη, θα ακολουθεί τη λέξη \"από:\"."
+
+msgid "Bookings"
+msgstr "Κρατήσεις"
+
+msgid "Resources Label"
+msgstr "Ετικέτα πόρων"
+
+msgid "Resources"
+msgstr "Πόροι"
+
+msgid "Person Types"
+msgstr "Τύποι προσώπων"
+
+msgid "Person Type Name"
+msgstr "Όνομα τύπου προσώπου"
+
+msgid "Resources label"
+msgstr "Ετικέτα πόρων"
+
+msgid "Booking currency"
+msgstr "Νόμισμα κράτησης"

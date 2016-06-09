@@ -55,7 +55,7 @@ class WCML_Accommodation_Bookings{
 
         if( ( !$check || $woocommerce_wpml->products->is_original_product( $post_id ) ) && $woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
 
-            $currencies = $woocommerce_wpml->multi_currency_support->get_currencies();
+            $currencies = $woocommerce_wpml->multi_currency->get_currencies();
 
             $wc_currencies = get_woocommerce_currencies();
 
@@ -109,7 +109,7 @@ class WCML_Accommodation_Bookings{
 
             if( $_POST['_wcml_custom_costs'] == 1 ){
 
-                $currencies = $woocommerce_wpml->multi_currency_support->get_currencies();
+                $currencies = $woocommerce_wpml->multi_currency->get_currencies();
 
                 foreach( $currencies as $code => $currency ){
 
@@ -149,7 +149,7 @@ class WCML_Accommodation_Bookings{
             $meta_key == '_price' &&
             $woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
             !is_admin() &&
-            ( $currency = $woocommerce_wpml->multi_currency_support->get_client_currency() ) != get_option( 'woocommerce_currency' )
+            ( $currency = $woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
         ) {
 
             remove_filter( 'get_post_metadata', array( $this, 'product_price_filter' ), 9, 4 );

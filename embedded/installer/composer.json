@@ -1,0 +1,31 @@
+{
+  "name": "otgs/installer",
+  "description": "Installs and updates WPML and Toolset dependencies automatically",
+  "keywords": ["plugins", "install", "utils", "update"],
+  "homepage": "https://git.onthegosystems.com/installer/installer",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Mihai Grigori",
+      "email": "mihai@wpml.org",
+      "homepage": "http://www.wp-types.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.2.0",
+    "composer/installers": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.5"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.7.x-dev",
+      "dev-develop": "1.7.x-dev"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}

@@ -1,0 +1,412 @@
+<?php
+  
+// Our case:
+// Muli-currency can be enabled by an option in wp_options - wcml_multi_currency_enabled
+// User currency will be set in the woocommerce session as 'client_currency'
+//     
+  
+class WCML_Multi_Currency{
+
+    public $currencies = array();
+    public $currency_codes = array();
+
+    private $client_currency;
+    
+    private $exchange_rates = array();
+    
+    public $currencies_without_cents = array('JPY', 'TWD', 'KRW', 'BIF', 'BYR', 'CLP', 'GNF', 'ISK', 'KMF', 'PYG', 'RWF', 'VUV', 'XAF', 'XOF', 'XPF');
+
+    /**
+     * @var WCML_Multi_Currency_Prices
+     */
+    public $prices;
+    /**
+     * @var WCML_Multi_Currency_Coupons
+     */
+    public $coupons;
+    /**
+     * @var WCML_Multi_Currency_Shipping
+     */
+    public $shipping;
+
+    /**
+     * @var WCML_Multi_Currency_Reports
+     */
+    public $reports;
+    /**
+     * @var WCML_Multi_Currency_Orders
+     */
+    public $orders;
+    /**
+     * @var WCML_Admin_Currency_Selector
+     */
+    public $admin_currency_selector;
+    /**
+     * @var WCML_Custom_Prices
+     */
+    public $custom_prices;
+    /**
+     * @var WCML_Currency_Switcher
+     */
+    public $currency_switcher;
+
+    public $W3TC = false;
+
+    /**
+     * @var woocommerce_wpml
+     */
+    public $woocommerce_wpml;
+    
+    public function __construct(){
+        global $woocommerce_wpml;
+
+        $this->woocommerce_wpml =& $woocommerce_wpml;
+
+        WCML_Multi_Currency_Install::set_up( $this, $woocommerce_wpml );
+
+        if( $this->_load_filters()) {
+            $this->prices   = new WCML_Multi_Currency_Prices( $this );
+            $this->coupons  = new WCML_Multi_Currency_Coupons();
+            $this->shipping = new WCML_Multi_Currency_Shipping( $this );
+        }
+        $this->reports                  = new WCML_Multi_Currency_Reports();
+        $this->orders                   = new WCML_Multi_Currency_Orders( $this );
+        $this->admin_currency_selector  = new WCML_Admin_Currency_Selector();
+        $this->custom_prices            = new WCML_Custom_Prices();
+        $this->currency_switcher        = new WCML_Currency_Switcher;
+
+
+        if( defined('W3TC') ){
+            $this->W3TC = new WCML_W3TC_Multi_Currency();
+        }
+
+        WCML_Multi_Currency_Resources::set_up( $this );
+        WCML_Multi_Currency_Configuration::set_up( $this, $woocommerce_wpml );
+
+        $this->init_currencies();
+
+        add_filter('init', array($this, 'init'), 5);
+
+        if( is_ajax() ){
+            add_action('wp_ajax_nopriv_wcml_switch_currency', array($this, 'switch_currency'));
+            add_action('wp_ajax_wcml_switch_currency', array($this, 'switch_currency'));
+        }
+
+    }
+
+    private function _load_filters(){
+        $load = false;
+
+        if(!is_admin() && $this->get_client_currency() != get_option('woocommerce_currency')){
+            $load = true;
+        }else{
+            if(is_ajax() && $this->get_client_currency() != get_option('woocommerce_currency')){
+
+                $ajax_actions = apply_filters('wcml_multi_currency_is_ajax',
+                    array(
+                        'woocommerce_get_refreshed_fragments',
+                        'woocommerce_update_order_review',
+                        'woocommerce-checkout',
+                        'woocommerce_checkout',
+                        'woocommerce_add_to_cart',
+                        'woocommerce_update_shipping_method',
+                        'woocommerce_json_search_products_and_variations'
+                    )
+                );
+
+                if( ( isset( $_POST['action'] ) && in_array( $_POST['action'], $ajax_actions ) ) ||
+                    (  isset( $_GET['action'] ) && in_array( $_GET['action'], $ajax_actions ) ) ){
+                    $load = true;
+                }
+
+            }
+        }
+
+        return apply_filters('wcml_load_multi_currency', $load);
+    }
+
+    public function init() {
+
+        add_filter( 'wcml_get_client_currency', array($this, 'get_client_currency') );
+
+    }
+
+    public function enable(){
+        $this->woocommerce_wpml->settings['enable_multi_currency'] = WCML_MULTI_CURRENCIES_INDEPENDENT;
+        $this->woocommerce_wpml->update_settings();
+    }
+
+    public function disable(){
+        $this->woocommerce_wpml->settings['enable_multi_currency'] = WCML_MULTI_CURRENCIES_DISABLED;
+        $this->woocommerce_wpml->update_settings();
+    }
+
+    public function init_currencies(){
+        global $sitepress;
+
+        $this->currencies =& $this->woocommerce_wpml->settings['currency_options'];
+
+        $save_to_db = false;
+
+        $active_languages = $sitepress->get_active_languages();
+
+        $currency_defaults = array(
+            'rate'                  => 0,
+            'position'              => 'left',
+            'thousand_sep'          => ',',
+            'decimal_sep'           => '.',
+            'num_decimals'          => 2,
+            'rounding'              => 'disabled',
+            'rounding_increment'    => 1,
+            'auto_subtract'         => 0
+        );
+
+        foreach($this->currencies as $code => $currency){
+            foreach($currency_defaults as $key => $val){
+                if(!isset($currency[$key])){
+                    $this->currencies[$code][$key] = $val;
+                    $save_to_db = true;
+                }
+            }
+
+            foreach($active_languages as $language){
+                if(!isset($currency['languages'][$language['code']])){
+                    $this->currencies[$code]['languages'][$language['code']] = 1;
+                    $save_to_db = true;
+                }
+            }
+        }
+
+        $this->currency_codes = array_keys($this->currencies);
+
+        // default language currencies
+        foreach($active_languages as $language){
+            if(!isset($this->woocommerce_wpml->settings['default_currencies'][$language['code']])){
+                $this->woocommerce_wpml->settings['default_currencies'][$language['code']] = 0;
+                $save_to_db = true;
+            }
+        }
+
+        // sanity check
+        if(isset($this->woocommerce_wpml->settings['default_currencies'])){
+            foreach($this->woocommerce_wpml->settings['default_currencies'] as $language => $value){
+                if(!isset($active_languages[$language])){
+                    unset($this->woocommerce_wpml->settings['default_currencies'][$language]);
+                    $save_to_db = true;
+                }
+                if(!empty($value) && !in_array($value, $this->currency_codes)){
+                    $this->woocommerce_wpml->settings['default_currencies'][$language] = 0;
+                    $save_to_db = true;
+                }
+            }
+        }
+
+        // add missing currencies to currencies_order
+        if(isset($this->woocommerce_wpml->settings['currencies_order'])){
+            foreach ($this->currency_codes as $currency) {
+                if (!in_array($currency, $this->woocommerce_wpml->settings['currencies_order'])) {
+                    $this->woocommerce_wpml->settings['currencies_order'][] = $currency;
+                    $save_to_db = true;
+                }
+            }
+        }
+
+        if($save_to_db){
+            $this->woocommerce_wpml->update_settings();
+        }
+
+        // force disable multi-currency when the default currency is empty
+        $wc_currency    = get_option('woocommerce_currency');
+        if(empty($wc_currency)){
+            $this->woocommerce_wpml->settings['enable_multi_currency'] = WCML_MULTI_CURRENCIES_DISABLED;
+        }
+
+    }
+
+    public function get_currencies( $include_default = false ){
+
+        // by default, exclude default currency
+        $currencies = array();
+        $default_currency = get_option('woocommerce_currency');
+
+        foreach($this->currencies as $key => $value){
+            if( $default_currency != $key || $include_default ){
+                $currencies[$key] = $value;
+            }
+        }
+
+        return $currencies;
+    }
+
+    public function get_currency_codes(){
+        return $this->currency_codes;
+    }
+
+    public function get_currency_details_by_code( $code ){
+
+        if( isset( $this->currencies[ $code ] ) ){
+            return $this->currencies[ $code ] ;
+        }
+
+        return false;
+    }
+
+    public function get_exchange_rates(){
+
+        if(empty($this->exchange_rates)){
+
+            $this->exchange_rates = array(get_option('woocommerce_currency') => 1);
+            $woo_currencies = get_woocommerce_currencies(); 
+            
+            $currencies = $this->get_currencies();
+            foreach($currencies as $code => $currency){
+                if(!empty($woo_currencies[$code])){
+                    $this->exchange_rates[$code] = $currency['rate'];
+                }
+            }
+        }
+
+        return apply_filters('wcml_exchange_rates', $this->exchange_rates);
+    }
+
+    public function get_client_currency(){
+        global $woocommerce, $sitepress, $wpdb;
+
+        $default_currencies   = $this->woocommerce_wpml->settings['default_currencies'];
+        $current_language     = $sitepress->get_current_language();
+        $current_language     = ( $current_language != 'all' && !is_null( $current_language ) ) ? $current_language : $sitepress->get_default_language();
+
+        if( is_product() &&
+            isset($this->woocommerce_wpml->settings['display_custom_prices']) &&
+            $this->woocommerce_wpml->settings['display_custom_prices'] ){
+
+            $product_obj = wc_get_product();
+            $current_product_id = $product_obj->id;
+            $original_product_language = $this->woocommerce_wpml->products->get_original_product_language( $current_product_id );
+            $default = false;
+
+            if( $product_obj->is_type( 'variable' ) ){
+                foreach( $product_obj->get_children() as $child ){
+                    if( !get_post_meta( apply_filters( 'translate_object_id', $child , get_post_type( $child ), true, $original_product_language ), '_wcml_custom_prices_status', true ) ){
+                        $default = true;
+                        break;
+                    }
+                }
+            }elseif( !get_post_meta( apply_filters( 'translate_object_id', $current_product_id , get_post_type( $current_product_id ), true, $original_product_language ), '_wcml_custom_prices_status', true ) ){
+                $default = true;
+            }
+
+            if( $default ){
+                $this->client_currency = get_option('woocommerce_currency');
+            }
+
+        }
+
+        if( isset($_GET['pay_for_order']) && $_GET['pay_for_order'] == true && isset($_GET['key']) ){
+            $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_order_key' AND meta_value = %s", $_GET['key']));
+            if( $order_id ){
+                $this->client_currency = get_post_meta( $order_id, '_order_currency', true );
+            }
+        }
+
+
+        if(isset($_POST['action']) && $_POST['action'] == 'wcml_switch_currency' && !empty($_POST['currency'])){
+            $this->client_currency = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        }
+
+        if( isset( $_GET['action'] ) &&
+            $_GET['action'] === 'woocommerce_json_search_products_and_variations' &&
+            !empty( $_COOKIE['_wcml_order_currency'] ) ) {
+            $this->client_currency = $_COOKIE['_wcml_order_currency'];
+        }
+
+        if( is_null($this->client_currency) && isset($default_currencies[$current_language]) && $default_currencies[$current_language] && !empty($woocommerce->session) && $current_language != $woocommerce->session->get('client_currency_language') ){
+            $this->client_currency = $default_currencies[$current_language];
+        }
+
+        //edit order page
+        if( isset( $_SERVER[ 'HTTP_REFERER' ] ) ){
+            $arg = parse_url( $_SERVER[ 'HTTP_REFERER' ] );
+            if( isset( $arg[ 'query' ] ) ){
+                parse_str( $arg[ 'query' ], $arg );
+                if( isset( $arg[ 'post' ] ) && get_post_type( $arg[ 'post' ] ) == 'shop_order' ){
+                    $this->client_currency = get_post_meta( $arg[ 'post' ], '_order_currency', true );
+                }
+            }
+        }
+
+        // client currency in general / if enabled for this language
+        if(is_null($this->client_currency) && !empty($woocommerce->session) ){
+            $session_currency = $woocommerce->session->get('client_currency');
+            if($session_currency && !empty($this->currencies[$session_currency]['languages'][$current_language])){
+                $this->client_currency = $woocommerce->session->get('client_currency');
+            }
+
+        }
+
+        if(is_null($this->client_currency)){
+            $woocommerce_currency = get_option('woocommerce_currency');
+
+            // fall on WC currency if enabled for this language
+            if(!empty($this->currencies[$woocommerce_currency]['languages'][$current_language])){
+                $this->client_currency = $woocommerce_currency;
+            }else{
+                // first currency enabled for this language
+                foreach($this->currencies as $code => $data){
+                    if(!empty($data['languages'][$current_language])){
+                        $this->client_currency = $code;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(!empty($woocommerce->session) && $this->client_currency){
+            $woocommerce->session->set('client_currency', $this->client_currency);
+            $woocommerce->session->set('client_currency_language',$current_language);
+        }
+
+        return apply_filters('wcml_client_currency', $this->client_currency);
+    }
+
+    public function set_client_currency($currency){
+        global $woocommerce,$sitepress;
+
+        $this->client_currency = $currency;
+
+        $woocommerce->session->set('client_currency', $currency);
+        $woocommerce->session->set('client_currency_language', $sitepress->get_current_language());
+
+
+        do_action('wcml_set_client_currency', $currency);
+
+    }
+
+    public function switch_currency(){
+
+        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        if(!$nonce || !wp_verify_nonce($nonce, 'switch_currency')){
+            echo json_encode(array('error' => __('Invalid nonce', 'woocommerce-multilingual')));
+            die();
+        }
+
+        $currency = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+        $this->set_client_currency($currency);
+
+        // force set user cookie when user is not logged in
+        global $woocommerce, $current_user;
+        if(empty($woocommerce->session->data) && empty($current_user->ID)){
+            $woocommerce->session->set_customer_session_cookie(true);
+        }
+
+        do_action('wcml_switch_currency', $currency );
+
+        exit;
+
+    }
+
+
+
+}
+

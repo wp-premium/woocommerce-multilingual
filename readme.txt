@@ -1,17 +1,17 @@
-﻿=== WooCommerce Multilingual - run WooCommerce with WPML ===
-Contributors: AmirHelzer, dominykasgel, dgwatkins, adelval
+=== WooCommerce Multilingual - run WooCommerce with WPML ===
+Contributors: AmirHelzer, dominykasgel, dgwatkins, adelval, sergey.r, mihaimihai
 Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilingual/
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
-Requires at least: 3.0
-Tested up to: 4.5.2
-Stable tag: 3.7.16
+Requires at least: 3.9
+Tested up to: 4.5.1
+Stable tag: 3.8
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
 == Description ==
 
-This 'glue' plugin makes it possible to run fully multilingual e-commerce sites using [WooCommerce](http://wordpress.org/extend/plugins/woocommerce/) and [WPML](http://wpml.org). It makes products and store pages translatable, lets visitors switch languages and order products in their language.
+This 'glue' plugin makes it possible to run fully multilingual e-commerce sites using [WooCommerce](https://wordpress.org/plugins/woocommerce/) and [WPML](http://wpml.org). It makes products and store pages translatable, lets visitors switch languages and order products in their language.
 
 = Features =
 
@@ -27,9 +27,9 @@ This 'glue' plugin makes it possible to run fully multilingual e-commerce sites 
 
 For step by step instructions on setting up a multilingual shop, please go to [WooCommerce Multilingual Manual](http://wpml.org/documentation/related-projects/woocommerce-multilingual/) page.
 
-After installing, go to WPML->WooCommerce Multilingual. The 'General settings' tab will let you translate the store pages and report what taxonomy requires translation.
+After installing, follow the steps of the setup wizard to translate the store pages, configure what attributes should be translated, enable the multi-currency mode and other settings.
 
-Then, continue to the 'Products' and any categories, tags and custom taxonomy that you use.
+Then, continue to the 'Products' and any categories, tags and attributes that you use.
 
 When you need help, go to [WooCommerce Multilingual support forum](http://wpml.org/forums/topic-tag/woocommerce/).
 
@@ -43,18 +43,46 @@ You will also need [WPML](http://wpml.org), together with the String Translation
 
 WooCommerce Multilingual checks that the following versions of WPML and their components are active:
 
-* WPML Multilingual CMS       - 3.1.5
+* WPML Multilingual CMS       - 3.4
 * WPML String Translation     - 2.0
-* WPML Translation Management - 1.9
+* WPML Translation Management - 2.2
 * WPML Media                  - 2.1
 
 Without having all these running, WooCommerce Multilingual will not be able to run.
 
 == Installation ==
 
+= Minimum Requirements =
+
+* WordPress 3.9 or later
+* PHP version 5.6 or later
+* MySQL version 5.6 or later
+
+* WooCommerce 2.1 or later
+* WPML Multilingual CMS 3.4 or later
+* WPML String Translation 2.0 or later
+* WPML Translation Management 2.2 or later
+* WPML Media 2.1 or later
+
+= WordPress automatic installation =
+In your WordPress dashboard, go to the Plugins section and click 'Add new'.
+
+= WPML Installer =
+If you're already using WPML on your site, in your WordPress dashboard, go to the Plugins section, click 'Add new' and go to the 'Commercial' tab.
+
+= Manual Installation =
 1. Upload 'woocommerce-multilingual' to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Translate the shop pages
+
+= Setup =
+After installing the plugin either automatically or manually:
+
+1. Follow the steps of the setup wizard for the basic required configuration
+2. Translate existing content: products, attributes, permalink bases
+3. Optionally, add secondary currencies
+
+= Updating =
+Once you installer WooCommerce Multilingual, the built in Installer works together with the WordPress automatic update built in logic to make the updating process as easy as it can be.
 
 == Frequently Asked Questions ==
 
@@ -70,13 +98,53 @@ Make sure that your theme is not hard-coding any URL. Always use API calls to re
 
 In order for the checkout and store pages to appear translated, you need to create several WordPress pages and insert the WooCommerce shortcodes into them. You'll have to go over the [documentation](http://wpml.org/documentation/related-projects/woocommerce-multilingual/) and see that you performed all steps on the way.
 
+= Can I have different urls for the store in the different languages =
+
+Yes. You can translate the product permalink base, product category base, product tag base and the product attribute base on the Store URLs section.
+
+= Why do my product category pages return a 404 error? =
+
+In this case, you may need to translate the product category base. You can do that on the Store URLs section.
+
+= Can I set the prices in the secondary currencies? =
+
+By default, the prices in the secondary currencies are determined using the exchange rates that you fill in when you add or edit a currency. On individual products, however, you can override this and set prices manually for the secondary currencies.
+
+= Can I have separate currencies for each language? =
+
+Yes. By default, each currency will be available for all languages, but you can customize this and disable certain currencies on certain languages.
+
+= Is this plugin compatible with other WooCommerce extensions? =
+
+WooCommerce Multilingual is compatible with all major WooCommerce extensions. We're continuously work on checking and maintaining compatibility and collaborate closely with the authors of these extensions.
+
+
+
 == Screenshots ==
 
-1. Translation controls for products
-2. Product categories translations
-3. Multiple currencies
+1. Products translation screen
+2. Product translation editor
+3. Global attributes translation
+4. Multiple currencies
+5. Status Page
+6. Shop URLs translation screen
 
 == Changelog ==
+
+= 3.8 =
+* A new design, a new look and feel complementing the new WPML 3.4
+* A new translation editor for the products
+* New options for translating product attributes
+* An enhanced and dedicated configuration screen for multi-currency
+* Easier translation of URLs
+* Immediate attention to configuration issues on the Status page
+* Improved support for the WooCommerce REST API
+* Straightforward setup wizard to run WooCommerce Multilingual
+* Bundled Installer makes it effortless to add in the required plugins
+* Option for downloadable products to share files under each product
+* Other price types can be set custom values for secondary currencies
+* Translating WooCommerce email strings also got simpler
+* Numerous bug fixes and enhancements
 
 = 3.7.16 =
 * Compatibility with WooCommerce 2.6 (woocommerce_term_meta tables removed)
@@ -99,7 +167,6 @@ In order for the checkout and store pages to appear translated, you need to crea
 * Improvements for how the gateways strings are registered for translation
 * Updated logic for registering and translating Shipping zones and methods according to changes in WooCommerce 2.6
 
-
 = 3.7.12 =
 * Fixed a bug that made the shop pages return 404 errors on WordPress 4.5
 * Fixed warnings caused by terms translated before the WooCommerce Multilingual activation
@@ -113,7 +180,6 @@ In order for the checkout and store pages to appear translated, you need to crea
 * Removed backward compatibility with WooCommerce versions older than 2.1
 * Small compatibility fixes for the upcoming WordPress 4.5
 * Fixed a problem with the pagination on the products list page under the WooCommerce Multilingual section
-* Updated the troubleshooting page
 
 = 3.7.10 =
 * Fixed a small issue with the product translations editor (additional toolbar showing)
@@ -139,8 +205,6 @@ In order for the checkout and store pages to appear translated, you need to crea
 * Fixed a compatibility issue with WooCommerce Subscriptions: a fatal error was triggered during the checkout process in some circumstances
 * Fixed other compatibility issues with WooCommerce Subscriptions: endpoints, incorrect signup fee in secondary currency
 * Fixed a compatibility issue with WooCommerce Payment Gateways: some strings were registered/changed when on checkout
-* Fixed a compatibility issue with Gravity Forms Product Add-ons: some strings were not showing as translated on the product summary on the cart page
-* Fixed a compatibility issue with the Bishop theme
 * Bug fix: variations created with Any were not showing the user selected attribute when added to the cart
 * Bug fix: it was not possible to changeor or set the "Set prices in other currencies manually" option for a duplicate product
 * Fixed a compatibiilty issue with WooCommerce Bulk Stock Management (the 'out of stock' flag was not synced)
