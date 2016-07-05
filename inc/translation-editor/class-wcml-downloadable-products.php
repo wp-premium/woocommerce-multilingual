@@ -55,7 +55,7 @@ class WCML_Downloadable_Products{
 
     public function load_custom_files_js_css(){
         wp_register_style( 'wpml-wcml-files', WCML_PLUGIN_URL . '/res/css/wcml-files.css', null, WCML_VERSION );
-        wp_register_script( 'wcml-scripts-files', WCML_PLUGIN_URL . '/res/js/files.js', array( 'jquery' ), WCML_VERSION );
+        wp_register_script( 'wcml-scripts-files', WCML_PLUGIN_URL . '/res/js/files' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
 
         wp_enqueue_style('wpml-wcml-files');
         wp_enqueue_script('wcml-scripts-files');

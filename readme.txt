@@ -131,6 +131,19 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
+= 3.8.1 =
+* Fixed one compatibility issue with WooCommerce Ajax Cart: cart quantities were not updating
+* Fixed one compatibility issue with WooCommerce Bookings: incorrect bookings were shown in the backend when toggling between admin languages
+* Fixed one compatibility issue with the Adventure Tours theme
+* Fixed one compatibility issue with the Aurum theme
+* Fixed compatibility issues with the Composite Products plugin
+* Bug fix: auto-generated slugs on the products translation editor were not made unique
+* Bug fix: sometimes prices with decimals were subtracted 0.01
+* Made translation controls on the WooCommerce products page disabled by default
+* Optimized autoloading of PHP classes for better performance
+
+
+
 = 3.8 =
 * A new design, a new look and feel complementing the new WPML 3.4
 * A new translation editor for the products

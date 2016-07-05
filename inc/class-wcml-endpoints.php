@@ -6,21 +6,21 @@ class WCML_Endpoints{
 
     function __construct(){
 
-        //endpoints hooks
-        $this->register_endpoints_translations();
-        $this->maybe_flush_rules();
         add_action( 'icl_ajx_custom_call', array( $this, 'rewrite_rule_endpoints' ), 11, 2 );
         add_action( 'woocommerce_update_options', array( $this, 'add_endpoints' ) );
         add_filter( 'pre_update_option_rewrite_rules', array( $this, 'update_rewrite_rules' ), 100, 2 );
 
         add_filter( 'page_link', array( $this, 'endpoint_permalink_filter' ), 10, 2 ); //after WPML
 
-        if(!is_admin()){
+        if( !is_admin() ){
+            //endpoints hooks
+            $this->register_endpoints_translations();
+            $this->maybe_flush_rules();
+
             add_filter('pre_get_posts', array($this, 'check_if_endpoint_exists'));
         }
 
         add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
-
 
     }
 

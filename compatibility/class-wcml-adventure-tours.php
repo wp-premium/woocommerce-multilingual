@@ -346,8 +346,12 @@ class WCML_Adventure_tours{
 
     function is_variable_tour( $is_variable, $product_id ){
 
-        if( $is_variable && get_post_meta( $product_id, '_variable_tour', true ) == 'yes' ){
+        $var_tour_meta = get_post_meta( $product_id, '_variable_tour', true );
+
+        if( $is_variable && $var_tour_meta == 'yes' ){
             $is_variable = true;
+        }elseif( $var_tour_meta == 'no' ){
+            $is_variable = false;
         }
 
         return $is_variable;

@@ -2,16 +2,16 @@
 
 class WCML_Multi_Currency_Install{
     static $multi_currency;
-    static $woocommerce_wcml;
+    static $woocommerce_wpml;
 
     public static function set_up( &$multi_currency, &$woocommerce_wpml ){
 
         self::$multi_currency   =& $multi_currency;
-        self::$woocommerce_wcml =& $woocommerce_wpml;
+        self::$woocommerce_wpml =& $woocommerce_wpml;
 
-        if(empty(self::$woocommerce_wcml->settings['multi_currency']['set_up'])){
-            self::$woocommerce_wcml->settings['multi_currency']['set_up'] = 1;
-            self::$woocommerce_wcml->update_settings();
+        if(empty(self::$woocommerce_wpml->settings['multi_currency']['set_up'])){
+            self::$woocommerce_wpml->settings['multi_currency']['set_up'] = 1;
+            self::$woocommerce_wpml->update_settings();
 
             self::set_default_currencies_languages();
         }
@@ -22,7 +22,7 @@ class WCML_Multi_Currency_Install{
     public static function set_default_currencies_languages( $old_value = false, $new_value = false ){
         global $sitepress;
 
-        $settings = self::$woocommerce_wcml->get_settings();
+        $settings = self::$woocommerce_wpml->get_settings();
         $active_languages = $sitepress->get_active_languages();
         $wc_currency = $new_value ? $new_value : get_option('woocommerce_currency');
 
@@ -45,7 +45,7 @@ class WCML_Multi_Currency_Install{
             }
         }
 
-        self::$woocommerce_wcml->update_settings( $settings );
+        self::$woocommerce_wpml->update_settings( $settings );
 
     }
 

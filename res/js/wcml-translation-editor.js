@@ -102,12 +102,14 @@ jQuery( function($){
 
 			if( title != '' && slug_field.val() == '' ){
 
+				var job_id = $('#icl_tm_editor input[name=job_id]').val();
+
 				slug_field.prop('readonly', 'on');
 				$.ajax({
 					url: ajaxurl,
 					type: 'POST',
 					dataType: 'json',
-					data: { action: 'wcml_editor_auto_slug', title: title },
+					data: { action: 'wcml_editor_auto_slug', title: title, job_id: job_id },
 					success: function(response) {
 						slug_field.val( response.slug );
 						slug_field.removeAttr('readonly');

@@ -14,8 +14,6 @@ class WCML_WC_Strings{
         add_action( 'registered_taxonomy', array ( $this, 'translate_attributes_label_in_wp_taxonomies' ), 100, 3 );
     }
 
-
-
     function init(){
         global $pagenow, $sitepress;
 
@@ -24,25 +22,23 @@ class WCML_WC_Strings{
             $this->current_language = $sitepress->get_default_language();
         }
 
-
-
         //translate attribute label
         add_filter('woocommerce_attribute_label',array($this,'translated_attribute_label'),10,3);
         add_filter('woocommerce_cart_item_name',array($this,'translated_cart_item_name'),10,3);
         add_filter('woocommerce_checkout_product_title',array($this,'translated_checkout_product_title'),10,2);
 
-        if(is_admin() && $pagenow == 'options-permalink.php'){
+        if( is_admin() && $pagenow == 'options-permalink.php' ){
             add_filter( 'gettext_with_context', array( $this, 'category_base_in_strings_language' ), 99, 3 );
             add_action( 'admin_footer', array( $this, 'show_custom_url_base_translation_links' ) );
             add_action('admin_footer', array($this, 'show_custom_url_base_language_requirement'));
         }
         add_action( 'woocommerce_product_options_attributes', array ( $this, 'notice_after_woocommerce_product_options_attributes' ) );
 
-        add_filter( 'woocommerce_attribute_taxonomies', array( $this, 'translate_attribute_taxonomies_labels') );
+        if( !is_admin() ){
+            add_filter( 'woocommerce_attribute_taxonomies', array( $this, 'translate_attribute_taxonomies_labels') );
+        }
 
         add_filter('woocommerce_get_breadcrumb', array($this, 'filter_woocommerce_breadcrumbs' ), 10, 2 );
-
-
     }
 
     function translated_attribute_label($label, $name, $product_obj = false){

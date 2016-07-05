@@ -310,6 +310,7 @@ class WCML_Synchronize_Product_Data{
         $args = array();
         $args[ 'post_parent' ] = is_null( $tr_parent_id )? 0 : $tr_parent_id;
         //sync product date
+
         if( !empty( $this->woocommerce_wpml->settings[ 'products_sync_date' ] ) ){
             $args[ 'post_date' ] = $orig_product->post_date;
         }
@@ -387,9 +388,11 @@ class WCML_Synchronize_Product_Data{
                     if( $is_original ){
                         if( !$translation->original ){
                             $this->sync_product_data( $product->id, $translation->element_id, $translation->language_code );
+                            $this->sync_date_and_parent( $product->id, $translation->element_id, $translation->language_code );
                         }
                     }elseif( $translation->original ){
                         $this->sync_product_data( $translation->element_id, $product->id, $this->sitepress->get_language_for_element( $product->id, 'post_product' ) );
+                        $this->sync_date_and_parent( $translation->element_id, $product->id, $this->sitepress->get_language_for_element( $product->id, 'post_product' ) );
                     }
                 }
             }
