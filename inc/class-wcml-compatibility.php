@@ -100,7 +100,11 @@ class WCML_Compatibility {
         if ( is_plugin_active( 'woocommerce-ajax-layered-nav/ajax_layered_nav-widget.php' ) ) {
             $this->wc_ajax_layered_nav_widget = new WCML_Ajax_Layered_Nav_Widget();
         }
-		
+
+        if ( is_plugin_active( 'woocommerce-ajax-cart/wooajaxcart.php' ) ) {
+            $this->wc_ajax_cart = new WCML_WC_Ajax_Cart();
+        }
+
         // woocommerce composite products
         if ( isset( $GLOBALS[ 'woocommerce_composite_products' ] ) ) {
             $this->wc_composite_products = new WCML_Composite_Products();
@@ -128,6 +132,12 @@ class WCML_Compatibility {
         if( function_exists( 'adventure_tours_check' ) ){
             $this->adventure_tours = new WCML_Adventure_tours();
         }
+
+        //Aurum Theme
+        if( wp_get_theme() == 'Aurum' ){
+            new WCML_Aurum();
+        }
+
     }
 
 }

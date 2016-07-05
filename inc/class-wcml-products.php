@@ -289,7 +289,7 @@ class WCML_Products{
     }
 
     public function woocommerce_json_search_found_products( $found_products ){
-        $new_found_products = array();
+
         foreach( $found_products as $post => $formatted_product_name ) {
             $parent = wp_get_post_parent_id( $post );
             if( ( isset( $_COOKIE [ '_wcml_dashboard_order_language' ] )
@@ -307,7 +307,7 @@ class WCML_Products{
             }
         }
 
-        return $new_found_products;
+        return isset ( $new_found_products ) ? $new_found_products : $found_products ;
     }
 
     //update menu_order fro translations after ordering original products

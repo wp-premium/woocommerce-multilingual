@@ -269,11 +269,13 @@ class WCML_Multi_Currency_Prices{
 
     public function apply_rounding_rules($price, $currency = false ){
 
-        if( !$currency )
+        if( !$currency ){
             $currency = $this->multi_currency->get_client_currency();
+        }
+
         $currency_options = $this->woocommerce_wpml->settings['currency_options'][$currency];
 
-        if($currency_options['rounding'] != 'disabled'){
+        if( $currency_options['rounding'] != 'disabled' ){
 
             if($currency_options['rounding_increment'] > 1){
                 $price  = $price / $currency_options['rounding_increment'];
@@ -314,7 +316,7 @@ class WCML_Multi_Currency_Prices{
         } else {
 
             // Use configured number of decimals
-            $price = floor( $price * pow( 10, $currency_options['num_decimals']) ) / pow( 10, $currency_options['num_decimals'] );
+            $price = floor( $price * pow( 10, $currency_options['num_decimals']) + 0.0001 ) / pow( 10, $currency_options['num_decimals'] );
 
         }
 
@@ -426,7 +428,9 @@ class WCML_Multi_Currency_Prices{
     public function filter_woocommerce_cart_subtotal( $cart_subtotal, $compound, $obj ){
         global $woocommerce;
         remove_filter( 'woocommerce_cart_subtotal', array( $this, 'filter_woocommerce_cart_subtotal'), 100, 3 );
-        $woocommerce->cart->calculate_totals();
+        if( apply_filters( 'wcml_calculate_totals_exception', true ) ) {
+            $woocommerce->cart->calculate_totals();
+        }
         $cart_subtotal = $woocommerce->cart->get_cart_subtotal( $compound );
         add_filter( 'woocommerce_cart_subtotal', array( $this, 'filter_woocommerce_cart_subtotal'), 100, 3 );
 
