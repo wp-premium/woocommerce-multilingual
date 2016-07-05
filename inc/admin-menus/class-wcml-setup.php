@@ -47,7 +47,9 @@ class WCML_Setup {
         );
 
         if( current_user_can( 'manage_options' ) ) {
-            add_action( 'admin_menu', array($this, 'admin_menus') );
+            if ( isset( $_GET['page'] ) && $_GET['page'] === 'wcml-setup' ) {
+                add_action( 'admin_menu', array( $this, 'admin_menus' ) );
+            }
             add_action( 'admin_init', array($this, 'setup_wizard') );
 
             add_action( 'admin_init', array($this, 'handle_steps'), 0 );
@@ -235,7 +237,7 @@ class WCML_Setup {
     }
 
     public function setup_translation_interface(){
-        $ui = new WCML_Setup_Translation_interface_UI( $this->woocommerce_wpml, $this->next_step_url() );
+        $ui = new WCML_Setup_Translation_Interface_UI( $this->woocommerce_wpml, $this->next_step_url() );
         echo $ui->get_view();
     }
 

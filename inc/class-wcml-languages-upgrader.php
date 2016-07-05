@@ -251,13 +251,14 @@ class WCML_Languages_Upgrader{
      * Display Translations upgrade notice message
      */
     function translation_upgrade_notice(){
+        global $woocommerce_wpml;
 
         $screen = get_current_screen();
         $notices = maybe_unserialize( get_option( 'wcml_translations_upgrade_notice' ) );
 
         if ( 'update-core' !== $screen->id && !empty ( $notices ) && !get_option( 'hide_wcml_translations_message' ) ) {
 
-            wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice.js', array( 'jquery' ), WCML_VERSION );
+            wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
             wp_enqueue_script( 'wcml-lang-notice');
 
             $lang_notices = new WCML_Languages_Upgrade_Notice( $notices );

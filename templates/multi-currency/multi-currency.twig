@@ -80,7 +80,7 @@
                             {% for code, currency in currencies %}
                             <tr id="currency_row_{{ code }}" class="wcml-row-currency">
                                 <td class="wcml-col-currency">
-                                    <span class="truncate">{{ attribute(wc_currencies, code) }}</span>
+                                    <span class="truncate">{{ attribute(wc_currencies, code)|raw }}</span>
                                     <small>{{ attribute( currencies_positions, code )|raw }}</small>
                                 </td>
                                 <td class="wcml-col-rate">{{ get_rate(wc_currency, currency.rate, code) }}</td>

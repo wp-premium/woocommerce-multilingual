@@ -919,7 +919,7 @@ class WCML_Bookings{
     function load_assets( ){
         global $pagenow, $woocommerce_wpml;
 
-        if( $pagenow == 'post.php' || $pagenow == 'post-new.php' ){
+        if( ( $pagenow == 'post.php' && isset( $_GET[ 'post' ] ) && wc_get_product( $_GET[ 'post' ] )->product_type == 'booking' ) || $pagenow == 'post-new.php' ){
 
 	        wp_register_style( 'wcml-bookings-css', WCML_PLUGIN_URL . '/compatibility/res/css/wcml-bookings.css', array(), WCML_VERSION );
             wp_enqueue_style( 'wcml-bookings-css' );
@@ -1568,18 +1568,30 @@ class WCML_Bookings{
 
         if ( ( isset( $query->query_vars['post_type'] ) && $query->query_vars['post_type'] == 'wc_booking' ) ) {
 
+            $current_lang = $sitepress->get_current_language();
+
             $product_ids = $wpdb->get_col( $wpdb->prepare(
                 "SELECT element_id
 					FROM {$wpdb->prefix}icl_translations
-					WHERE language_code = %s AND element_type = 'post_product'", $sitepress->get_current_language() ) );
+					WHERE language_code = %s AND element_type = 'post_product'", $current_lang ) );
 
-            $query->query_vars[ 'meta_query' ][] = array(
-                array(
-                    'key'   => '_booking_product_id',
-                    'value' => $product_ids,
-                    'compare ' => 'IN'
-                )
-            );
+            $product_ids = array_diff( $product_ids, array( NULL ) );
+
+            if( ( !isset( $_GET['lang'] ) || ( isset( $_GET['lang'] ) && $_GET['lang'] != 'all' ) ) ){
+                $query->query_vars[ 'meta_query' ][] = array(
+                    'relation' => 'OR',
+                    array(
+                        'key'   => '_language_code',
+                        'value' => $current_lang,
+                        'compare ' => '='
+                    ),
+                    array(
+                        'key'   => '_booking_product_id',
+                        'value' => $product_ids,
+                        'compare ' => 'IN'
+                    )
+                );
+            }
         }
     }
 

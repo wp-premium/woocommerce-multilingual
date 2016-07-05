@@ -1,6 +1,22 @@
 jQuery(document).ready(function($){
     var i;
-    var ids = ['_virtual','_downloadable','product-type','_backorders','_manage_stock','_stock','_stock_status','_sold_individually','comment_status','_tax_status','_tax_class','parent_id','crosssell_ids','upsell_ids'];
+    var ids = [
+        '_virtual',
+        '_downloadable',
+        'product-type',
+        '_backorders',
+        '_manage_stock',
+        '_stock',
+        '_stock_status',
+        '_sold_individually',
+        'comment_status',
+        '_tax_status',
+        '_tax_class',
+        'parent_id',
+        'crosssell_ids',
+        'upsell_ids'
+    ];
+
     if( unlock_fields.file_paths == 1 ){
         ids.push('_download_type');
     }
@@ -13,7 +29,19 @@ jQuery(document).ready(function($){
         $('#'+ids[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     }
 
-    var buttons = ['add_variation','link_all_variations','attribute_taxonomy','save_attributes','add_new_attribute','product_attributes .remove_row','add_attribute','select_all_attributes','select_no_attributes'];
+    var buttons = [
+        'add_variation',
+        'link_all_variations',
+        'attribute_taxonomy',
+        'save_attributes',
+        'add_new_attribute',
+        'product_attributes .remove_row',
+        'add_attribute',
+        'select_all_attributes',
+        'select_no_attributes',
+        'edit-post-status',
+        'edit-visibility'
+    ];
     buttons = buttons.concat( non_standard_fields.classes );
 
     if( unlock_fields.file_paths == 1 ){
@@ -32,13 +60,30 @@ jQuery(document).ready(function($){
         $('.'+buttons[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     }
 
+    $('a.edit-post-status span,#visibility .edit-visibility span').bind({
+        click: function(e) {
+            return false;
+        }
+    });
 
     $('.remove_variation').each(function(){
         $(this).attr('disabled','disabled');
         $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','right'));
     });
 
-    var inpt_names = ['_width','_height','_sku','_length','_weight','product_length','_regular_price','_sale_price','_sale_price_dates_from','_sale_price_dates_to'];
+    var inpt_names = [
+        '_width',
+        '_height',
+        '_sku',
+        '_length',
+        '_weight',
+        'product_length',
+        '_regular_price',
+        '_sale_price',
+        '_sale_price_dates_from',
+        '_sale_price_dates_to'
+    ];
+
     if( unlock_fields.file_paths == 1 ){
         inpt_names.push('_download_limit');
         inpt_names.push('_download_expiry');
@@ -72,8 +117,8 @@ jQuery(document).ready(function($){
     }
 
     $('#product_attributes td textarea,#product_attributes input[type="text"]').each(function(){
-       $(this).attr('readonly','readonly');
-       $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
+        $(this).attr('readonly','readonly');
+        $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     });
 
 
@@ -109,7 +154,21 @@ var wcml_lock_variation_fields = function(){
     });
 
     var i = 0;
-    var inpt_names = ['_width','_height','_sku','_length','_weight','product_length','_regular_price','_sale_price','_sale_price_dates_from','_sale_price_dates_to','_stock','_download_limit','_download_expiry'];
+    var inpt_names = [
+        '_width',
+        '_height',
+        '_sku',
+        '_length',
+        '_weight',
+        'product_length',
+        '_regular_price',
+        '_sale_price',
+        '_sale_price_dates_from',
+        '_sale_price_dates_to',
+        '_stock',
+        '_download_limit',
+        '_download_expiry'
+    ];
 
     for (i = 0; i < inpt_names.length; i++) {
 
@@ -154,7 +213,3 @@ var wcml_lock_variation_fields = function(){
     }
 
 }
-
-
-
-

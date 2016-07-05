@@ -22,8 +22,9 @@ class WCML_Multi_Currency_Resources{
     }
 
     private static function load_inline_js(){
+        global $woocommerce_wpml;
 
-        wp_register_script('wcml-mc-scripts', WCML_PLUGIN_URL . '/res/js/wcml-multi-currency.js', array('jquery'), WCML_VERSION, true);
+        wp_register_script('wcml-mc-scripts', WCML_PLUGIN_URL . '/res/js/wcml-multi-currency' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION, true);
 
         wp_enqueue_script('wcml-mc-scripts');
 

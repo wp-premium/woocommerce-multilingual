@@ -269,7 +269,7 @@ class WCML_Custom_Prices{
 
     private function load_custom_prices_js_css(){
         wp_register_style( 'wpml-wcml-prices', WCML_PLUGIN_URL . '/res/css/wcml-prices.css', null, WCML_VERSION );
-        wp_register_script( 'wcml-tm-scripts-prices', WCML_PLUGIN_URL . '/res/js/prices.js', array( 'jquery' ), WCML_VERSION );
+        wp_register_script( 'wcml-tm-scripts-prices', WCML_PLUGIN_URL . '/res/js/prices' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
 
         wp_enqueue_style('wpml-wcml-prices');
         wp_enqueue_script('wcml-tm-scripts-prices');

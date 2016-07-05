@@ -64,6 +64,8 @@ class WCML_Multi_Currency{
 
         WCML_Multi_Currency_Install::set_up( $this, $woocommerce_wpml );
 
+        $this->init_currencies();
+        
         if( $this->_load_filters()) {
             $this->prices   = new WCML_Multi_Currency_Prices( $this );
             $this->coupons  = new WCML_Multi_Currency_Coupons();
@@ -82,8 +84,6 @@ class WCML_Multi_Currency{
 
         WCML_Multi_Currency_Resources::set_up( $this );
         WCML_Multi_Currency_Configuration::set_up( $this, $woocommerce_wpml );
-
-        $this->init_currencies();
 
         add_filter('init', array($this, 'init'), 5);
 
@@ -320,7 +320,12 @@ class WCML_Multi_Currency{
             $this->client_currency = $_COOKIE['_wcml_order_currency'];
         }
 
-        if( is_null($this->client_currency) && isset($default_currencies[$current_language]) && $default_currencies[$current_language] && !empty($woocommerce->session) && $current_language != $woocommerce->session->get('client_currency_language') ){
+        if( is_null($this->client_currency) &&
+            isset($default_currencies[$current_language]) &&
+            $default_currencies[$current_language] &&
+            !empty($woocommerce->session) &&
+            $current_language != $woocommerce->session->get('client_currency_language') )
+        {
             $this->client_currency = $default_currencies[$current_language];
         }
 
@@ -336,15 +341,14 @@ class WCML_Multi_Currency{
         }
 
         // client currency in general / if enabled for this language
-        if(is_null($this->client_currency) && !empty($woocommerce->session) ){
+        if( is_null( $this->client_currency ) && !empty( $woocommerce->session ) ){
             $session_currency = $woocommerce->session->get('client_currency');
             if($session_currency && !empty($this->currencies[$session_currency]['languages'][$current_language])){
                 $this->client_currency = $woocommerce->session->get('client_currency');
             }
-
         }
 
-        if(is_null($this->client_currency)){
+        if( is_null( $this->client_currency ) ){
             $woocommerce_currency = get_option('woocommerce_currency');
 
             // fall on WC currency if enabled for this language

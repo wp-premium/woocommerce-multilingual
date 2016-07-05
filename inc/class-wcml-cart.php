@@ -189,7 +189,10 @@ class WCML_Cart
         if ( apply_filters( 'translate_cart_subtotal_exception', false, $cart ) ){
             return;
         }
-        $cart->calculate_totals();
+        if( apply_filters( 'wcml_calculate_totals_exception', true ) ){
+            $cart->calculate_totals();
+        }
+
     }
 
     // refresh cart total to return correct price from WC object
