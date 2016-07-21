@@ -14,8 +14,9 @@ class WCML_Endpoints{
 
         if( !is_admin() ){
             //endpoints hooks
-            $this->register_endpoints_translations();
             $this->maybe_flush_rules();
+            $this->register_endpoints_translations();
+
 
             add_filter('pre_get_posts', array($this, 'check_if_endpoint_exists'));
         }
@@ -106,9 +107,9 @@ class WCML_Endpoints{
     }
 
     function update_rewrite_rules( $value, $old_value ){
-        remove_filter( 'pre_update_option_rewrite_rules', array( $this, 'update_rewrite_rules' ), 100, 2 );
         $this->add_endpoints();
-        flush_rewrite_rules();
+        $this->flush_rules_for_endpoints_translations();
+
         return $value;
     }
 

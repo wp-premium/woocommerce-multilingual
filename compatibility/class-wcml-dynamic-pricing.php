@@ -8,7 +8,7 @@ class WCML_Dynamic_Pricing{
             add_filter('woocommerce_dynamic_pricing_is_applied_to', array($this, 'woocommerce_dynamic_pricing_is_applied_to'),10,5);
             add_filter('woocommerce_dynamic_pricing_get_rule_amount',array($this,'woocommerce_dynamic_pricing_get_rule_amount'),10,4);
             add_filter('dynamic_pricing_product_rules',array($this,'dynamic_pricing_product_rules'));
-            add_filter('translate_cart_subtotal_exception',array($this,'translate_cart_subtotal_exception'),10,2);
+            add_filter('wcml_calculate_totals_exception', array($this, 'calculate_totals_exception'));
 
         }
     }
@@ -74,8 +74,8 @@ class WCML_Dynamic_Pricing{
         return $rules;
     }
 
-    function translate_cart_subtotal_exception( $value, $cart ){
-        return true;
+    function calculate_totals_exception( ){
+        return false;
     }
 
 }

@@ -131,6 +131,9 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         }
 
         $custom_fields = $this->get_product_custom_fields_to_translate( $this->product->id );
+        if( $this->product->product_type === 'external' ){
+            $custom_fields = array_diff( $custom_fields, array( '_product_url', '_button_text' ) );
+        }
 
         if( $custom_fields ) {
             $custom_fields_section = new WPML_Editor_UI_Field_Section( __( 'Custom Fields', 'woocommerce-multilingual' ) );
@@ -193,6 +196,13 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             if( isset( $files_section ) && !$is_variable ){
                 $this->add_field( $files_section );
             }
+        }
+
+        if( $this->product->product_type === 'external' ){
+            $external_product_section = new WPML_Editor_UI_Field_Section( __( 'External Product', 'woocommerce-multilingual' ) );
+            $external_product_section->add_field( new WPML_Editor_UI_Single_Line_Field( '_product_url', __( 'Product url', 'woocommerce-multilingual' ), $this->data, true ) );
+            $external_product_section->add_field( new WPML_Editor_UI_Single_Line_Field( '_button_text', __( 'Button text', 'woocommerce-multilingual' ), $this->data, true ) );
+            $this->add_field( $external_product_section );
         }
 
         do_action( 'wcml_gui_additional_box_html', $this, $this->product->id, $this->data );

@@ -319,35 +319,43 @@ class WCML_Upgrade{
 
         $woocommerce_permalinks = maybe_unserialize( get_option('woocommerce_permalinks') );
 
-        foreach($woocommerce_permalinks as $base_key => $base){
+        if( is_array( $woocommerce_permalinks ) ) {
+            foreach ( $woocommerce_permalinks as $base_key => $base ) {
 
-            $base_key = trim($base_key, '/');
+                $base_key = trim( $base_key, '/' );
 
-            if($base) {
-                $taxonomy = false;
+                if ( $base ) {
+                    $taxonomy = false;
 
-                switch( $base_key ){
-                    case 'category_base': $taxonomy = 'product_cat'; break;
-                    case 'tag_base':      $taxonomy = 'product_tag'; break;
-                    case 'attribute_base':$taxonomy = 'attribute'; break;
+                    switch ( $base_key ) {
+                        case 'category_base':
+                            $taxonomy = 'product_cat';
+                            break;
+                        case 'tag_base':
+                            $taxonomy = 'product_tag';
+                            break;
+                        case 'attribute_base':
+                            $taxonomy = 'attribute';
+                            break;
+                    }
+
+                    if ( $taxonomy ) {
+                        $wpdb->update(
+                            $wpdb->prefix . 'icl_strings',
+                            array(
+                                'context' => 'WordPress',
+                                'name' => sprintf( 'URL %s tax slug', $taxonomy )
+                            ),
+                            array(
+                                'context' => sprintf( 'URL %s slugs - %s', $taxonomy, $base ),
+                                'name' => sprintf( 'Url %s slug: %s', $taxonomy, $base )
+                            )
+                        );
+
+                    }
                 }
 
-                if($taxonomy) {
-                    $wpdb->update(
-                        $wpdb->prefix . 'icl_strings',
-                        array(
-                            'context'   => 'WordPress',
-                            'name'      => sprintf('URL %s tax slug', $taxonomy)
-                        ),
-                        array(
-                            'context'   => sprintf('URL %s slugs - %s', $taxonomy, $base),
-                            'name'      => sprintf('Url %s slug: %s', $taxonomy, $base)
-                        )
-                    );
-
-                }
             }
-
         }
 
         $endpoint_keys = array( 'order-pay', 'order-received', 'view-order', 'edit-account', 'edit-address', 'lost-password', 'customer-logout', 'add-payment-method' );
@@ -379,6 +387,10 @@ class WCML_Upgrade{
 
         }
 
+        if( !isset($woocommerce_wpml->terms) ){
+            global $sitepress;
+            $woocommerce_wpml->terms = new WCML_Terms( $woocommerce_wpml, $sitepress, $wpdb );
+        }
         $woocommerce_wpml->terms->check_if_sync_terms_needed();
 
         $wcml_settings = get_option('_wcml_settings');

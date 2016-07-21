@@ -8,11 +8,13 @@ class WCML_Resources {
     private static $pagenow;
 
     private static $woocommerce_wpml;
+    private static $sitepress;
 
-    public static function set_up_resources( &$woocommerce_wpml ) {
+    public static function set_up_resources( &$woocommerce_wpml, &$sitepress ) {
         global $pagenow;
 
         self::$woocommerce_wpml =& $woocommerce_wpml;
+        self::$sitepress =& $sitepress;
 
         self::$page = isset($_GET['page']) ? $_GET['page'] : null;
         self::$tab = isset($_GET['tab']) ? $_GET['tab'] : null;
@@ -100,8 +102,14 @@ class WCML_Resources {
         }
 
         if ( !is_admin() ) {
+            $referer = isset( $_SERVER[ 'HTTP_REFERER' ] ) ? $_SERVER[ 'HTTP_REFERER' ] : '';
+
             wp_register_script( 'cart-widget', WCML_PLUGIN_URL . '/res/js/cart_widget' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
             wp_enqueue_script( 'cart-widget' );
+            wp_localize_script( 'cart-widget', 'actions', array(
+                'is_lang_switched' => self::$sitepress->get_language_from_url( $referer ) !=  self::$sitepress->get_current_language() ? 1 : 0,
+                'is_currency_switched' => isset( $_GET[ 'wcmlc' ] ) ? 1 : 0
+            ) );
         } else {
             wp_register_script( 'wcml-messages', WCML_PLUGIN_URL . '/res/js/wcml-messages' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
             wp_enqueue_script( 'wcml-messages' );

@@ -1,10 +1,16 @@
 <?php
 
+/**
+ * Class WCML_Multi_Currency_Table_Rate_Shipping
+ *
+ * This is only required for versions of WooCommerce Table Rating older than 3.0
+ */
+
 class WCML_Multi_Currency_Table_Rate_Shipping{
 
     public static function set_up(){
         // table rate shipping support
-        if(defined('TABLE_RATE_SHIPPING_VERSION')){
+        if( defined('TABLE_RATE_SHIPPING_VERSION' ) && version_compare( TABLE_RATE_SHIPPING_VERSION, '3.0', '<' ) ){
             add_filter('woocommerce_table_rate_query_rates', array(__CLASS__, 'table_rate_shipping_rates'));
             add_filter('woocommerce_table_rate_instance_settings', array(__CLASS__, 'table_rate_instance_settings'));
         }

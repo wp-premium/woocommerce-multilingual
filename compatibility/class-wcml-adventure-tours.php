@@ -338,14 +338,16 @@ class WCML_Adventure_tours{
     function add_tour_tax_id( $variation_term_taxonomy_ids ){
         global $wpdb;
         $tour_taxonomy_id = $wpdb->get_var( "SELECT tt.term_taxonomy_id FROM {$wpdb->terms} AS t LEFT JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id WHERE t.name = 'tour' AND tt.taxonomy = 'product_type'" );
-        $variation_term_taxonomy_ids[] = $tour_taxonomy_id;
+
+        if( $tour_taxonomy_id ){
+            $variation_term_taxonomy_ids[] = $tour_taxonomy_id;
+        }
 
         return $variation_term_taxonomy_ids;
 
     }
 
     function is_variable_tour( $is_variable, $product_id ){
-
         $var_tour_meta = get_post_meta( $product_id, '_variable_tour', true );
 
         if( $is_variable && $var_tour_meta == 'yes' ){
