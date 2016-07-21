@@ -1,11 +1,11 @@
 === WooCommerce Multilingual - run WooCommerce with WPML ===
-Contributors: AmirHelzer, dominykasgel, dgwatkins, adelval, sergey.r, mihaimihai
+Contributors: AmirHelzer, sergey.r, mihaimihai, EduardMaghakyan
 Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilingual/
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.5.1
-Stable tag: 3.8
+Tested up to: 4.5.3
+Stable tag: 3.8.2
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -131,6 +131,20 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
+= 3.8.2 =
+* Bug fix: cart strings not displaying in the correct language in some conditions
+* Bug fix: prices in secondary currencies were not updated on the front end after changing the price (the cache was not invalidated)
+* Bug fix: shipping classes were not synchronized for translated products in some circumstances
+* Bug fix: translated endpoints were missing from the rewrite rules after updating the permalinks
+* Bug fix: stock status was sometimes not synchronized correctly when changing the stock manually
+* Bug fix: when using the default category base the language switcher did not show translated urls on the front end
+* Updated the cart cache hashes logic according to new WooCommerce logic
+* Added a new filter: 'wcml_product_custom_prices'
+* Added separate section for translatable fields for external products in the translations editor
+* Fixed compatibility issues with WooCommerce Table Rate Shipping 3.0+
+* Fixed one compatibility issue with WooCommerce Dynamic Pricing: the discount was not shown on the mini-cart
+* Fixed compatibility with Product Add-ons: strings were not translated
+
 = 3.8.1 =
 * Fixed one compatibility issue with WooCommerce Ajax Cart: cart quantities were not updating
 * Fixed one compatibility issue with WooCommerce Bookings: incorrect bookings were shown in the backend when toggling between admin languages
@@ -141,8 +155,6 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * Bug fix: sometimes prices with decimals were subtracted 0.01
 * Made translation controls on the WooCommerce products page disabled by default
 * Optimized autoloading of PHP classes for better performance
-
-
 
 = 3.8 =
 * A new design, a new look and feel complementing the new WPML 3.4

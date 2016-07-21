@@ -4,24 +4,31 @@ class WCML_Product_Addons{
 
     function __construct(){
 
-        add_filter('get_product_addons_product_terms',array($this,'addons_product_terms'));
-        add_filter('get_product_addons_fields',array($this,'product_addons_filter'),10,2);
+        add_filter( 'get_product_addons_product_terms', array( $this, 'addons_product_terms' ) );
+        add_filter( 'get_product_addons_fields', array( $this, 'product_addons_filter'), 10, 2 );
 
-        add_action('updated_post_meta',array($this,'register_addons_strings'),10,4);
-        add_action('added_post_meta',array($this,'register_addons_strings'),10,4);
+        add_action( 'updated_post_meta', array( $this, 'register_addons_strings' ), 10 ,4 );
+        add_action( 'added_post_meta', array( $this, 'register_addons_strings' ), 10, 4 );
+        add_filter( 'get_post_metadata', array( $this, 'translate_addons_strings' ), 10, 4 );
 
         global $pagenow;
-        if($pagenow == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type']=='product' && isset($_GET['page']) && $_GET['page']=='global_addons' && !isset($_GET['edit'])){
-            add_action('admin_notices', array($this, 'inf_translate_strings'));
+        if( $pagenow == 'edit.php' &&
+            isset( $_GET[ 'post_type' ] ) &&
+            $_GET[ 'post_type' ]=='product' &&
+            isset( $_GET[ 'page' ] ) &&
+            $_GET[ 'page' ]=='global_addons' &&
+            !isset( $_GET[ 'edit' ] )
+        ){
+            add_action( 'admin_notices', array( $this, 'inf_translate_strings' ) );
         }
 
         add_action( 'addons_panel_start', array( $this, 'inf_translate_strings' ) );
 
         if( is_admin() ) {
 
-            add_action('wcml_gui_additional_box_html', array($this, 'custom_box_html'), 10, 3);
-            add_filter('wcml_gui_additional_box_data', array($this, 'custom_box_html_data'), 10, 4);
-            add_action('wcml_update_extra_fields',array($this,'addons_update'),10,3);
+            add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
+            add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 4 );
+            add_action( 'wcml_update_extra_fields', array( $this,'addons_update' ), 10, 3 );
         }
     }
 
@@ -38,6 +45,32 @@ class WCML_Product_Addons{
                 }
             }
         }
+    }
+
+    function translate_addons_strings( $null, $object_id, $meta_key, $single ){
+
+        if( $meta_key == '_product_addons' && get_post_type( $object_id ) == 'global_product_addon' ){
+
+            remove_filter( 'get_post_metadata', array( $this, 'translate_addons_strings' ), 10, 4 );
+            $addons = get_post_meta( $object_id, $meta_key, true);
+            add_filter( 'get_post_metadata', array( $this, 'translate_addons_strings' ), 10, 4 );
+
+            foreach ($addons as $key => $addon) {
+                //register name
+                $addons[ $key ][ 'name' ] = apply_filters( 'wpml_translate_single_string', $addon['name'], 'wc_product_addons_strings', $object_id . '_addon_' . $addon['type'] . '_' . $addon['position'] . '_name' );
+                //register description
+                $addons[ $key ][ 'description' ] = apply_filters( 'wpml_translate_single_string', $addon['description'], 'wc_product_addons_strings', $object_id . '_addon_' . $addon['type'] . '_' . $addon['position'] . '_description' );
+                //register options labels
+                foreach ($addon['options'] as $opt_key => $option) {
+                    $addons[ $key ][ 'options' ][ $opt_key ][ 'label' ] = apply_filters( 'wpml_translate_single_string', $option['label'], 'wc_product_addons_strings', $object_id . '_addon_' . $addon['type'] . '_' . $addon['position'] . '_option_label_' . $key );
+                }
+            }
+
+            return array( 0 => $addons );
+        }
+
+        return $null;
+
     }
 
     function product_addons_filter($addons, $object_id){
