@@ -17,7 +17,7 @@ class WCML_Cart
         add_action( 'wp_ajax_nopriv_woocommerce_add_to_cart', array( $this, 'wcml_refresh_fragments' ), 0 );
 
         //cart
-        add_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ) );
+        add_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ), 100 );
         add_action( 'woocommerce_get_cart_item_from_session', array( $this, 'translate_cart_contents' ), 10, 3 );
         add_action( 'woocommerce_cart_loaded_from_session', array( $this, 'translate_cart_subtotal' ) );
         add_action( 'woocommerce_before_checkout_process', array( $this, 'wcml_refresh_cart_total' ) );
@@ -186,9 +186,6 @@ class WCML_Cart
 
     public function translate_cart_subtotal( $cart ) {
 
-        if ( apply_filters( 'translate_cart_subtotal_exception', false, $cart ) ){
-            return;
-        }
         if( apply_filters( 'wcml_calculate_totals_exception', true ) ){
             $cart->calculate_totals();
         }

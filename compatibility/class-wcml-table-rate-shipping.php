@@ -26,7 +26,7 @@ class WCML_Table_Rate_Shipping{
 
     public function default_shipping_class_id($args){
         global $sitepress, $woocommerce_wpml;
-        if($sitepress->get_current_language() != $sitepress->get_default_language() && !empty($args['shipping_class_id'])){
+        if( !empty($args['shipping_class_id'])){
 
             $args['shipping_class_id'] = apply_filters( 'translate_object_id',$args['shipping_class_id'], 'product_shipping_class', false, $sitepress->get_default_language());
 
@@ -42,7 +42,7 @@ class WCML_Table_Rate_Shipping{
 
     public function shipping_class_id_in_default_language( $terms, $post_id, $taxonomy ) {
         global $sitepress, $icl_adjust_id_url_filter_off;
-        if ( isset( $_POST['calc_shipping'] ) && $taxonomy == 'product_shipping_class' ) {
+        if ( !is_admin() && $taxonomy == 'product_shipping_class' ) {
 
             foreach( $terms as $k => $term ){
                 $shipping_class_id = apply_filters( 'translate_object_id', $term->term_id, 'product_shipping_class', false, $sitepress->get_default_language());

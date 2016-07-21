@@ -114,7 +114,7 @@ class woocommerce_wpml {
             return false;
         }
 
-        $this->compatibility        = new WCML_Compatibility();
+        $this->compatibility        = new WCML_Compatibility( $sitepress, $this, $wpdb );
 
         $actions_that_need_mc = array(
                 'save-mc-options',
@@ -171,7 +171,7 @@ class woocommerce_wpml {
 
         WCML_Install::initialize( $this, $sitepress );
 
-        WCML_Resources::set_up_resources( $this );
+        WCML_Resources::set_up_resources( $this, $sitepress );
 
         add_filter('woocommerce_get_checkout_payment_url', array('WCML_Links', 'filter_woocommerce_redirect_location'));
         add_filter('woocommerce_get_cancel_order_url', array('WCML_Links', 'filter_woocommerce_redirect_location'));

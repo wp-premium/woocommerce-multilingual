@@ -25,13 +25,18 @@ class WCML_Multi_Currency_Shipping{
         foreach($methods as $k => $method){
 
             // exceptions
+            $is_old_table_rate = defined('TABLE_RATE_SHIPPING_VERSION' ) &&
+                                 version_compare( TABLE_RATE_SHIPPING_VERSION, '3.0', '<' ) &&
+                                 preg_match('/^table_rate-[0-9]+ : [0-9]+$/', $k);
+
             if(
-                isset($shipping_methods[$method->id]) && isset($shipping_methods[$method->id]->settings['type']) && $shipping_methods[$method->id]->settings['type'] == 'percent'
-                || preg_match('/^table_rate-[0-9]+ : [0-9]+$/', $k)
+                isset($shipping_methods[$method->id]) &&
+                isset($shipping_methods[$method->id]->settings['type']) &&
+                $shipping_methods[$method->id]->settings['type'] == 'percent'
+                || $is_old_table_rate
             ){
                 continue;
             }
-
 
             foreach($method->taxes as $j => $tax){
 

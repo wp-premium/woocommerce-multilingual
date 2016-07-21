@@ -39,7 +39,6 @@ jQuery(document).ready(function($){
         'add_attribute',
         'select_all_attributes',
         'select_no_attributes',
-        'edit-post-status',
         'edit-visibility'
     ];
     buttons = buttons.concat( non_standard_fields.classes );
@@ -60,7 +59,7 @@ jQuery(document).ready(function($){
         $('.'+buttons[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     }
 
-    $('a.edit-post-status span,#visibility .edit-visibility span').bind({
+    $('#visibility .edit-visibility span').bind({
         click: function(e) {
             return false;
         }

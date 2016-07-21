@@ -51,13 +51,7 @@ class WCML_Terms{
         add_filter('get_terms',array($this,'filter_coupons_terms'),10,3);
         add_filter('get_terms',array($this,'filter_shipping_classes_terms'),10,3);
 
-
         add_filter( 'woocommerce_get_product_terms', array( $this, 'get_product_terms_filter' ), 10, 4 );
-
-        add_filter( 'pre_update_option_woocommerce_flat_rate_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
-        add_filter( 'pre_update_option_woocommerce_international_delivery_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
-        add_action('wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs_from_ajax'), 9);
-
         add_action( 'created_term_translation', array( $this, 'set_flag_to_sync'), 10, 3 );
     }
     
@@ -96,21 +90,6 @@ class WCML_Terms{
             $term_wc_meta = get_term_meta($original_tax->term_id, false, 1);
             foreach ( $term_wc_meta as $key => $values ) {
                 update_term_meta( $result['term_id'], $key, array_pop( $values ) );
-            }
-
-        }
-
-        //update flat rate options for shipping classes
-        if( $original_tax->taxonomy == 'product_shipping_class' ){
-
-            $settings = get_option( 'woocommerce_flat_rate_settings' );
-            if( is_array( $settings ) ){
-                update_option( 'woocommerce_flat_rate_settings', $this->update_woocommerce_shipping_settings_for_class_costs( $settings ) );
-            }
-
-            $settings = get_option( 'woocommerce_international_delivery_settings' );
-            if( is_array( $settings ) ){
-                update_option( 'woocommerce_international_delivery_settings', $this->update_woocommerce_shipping_settings_for_class_costs( $settings ) );
             }
 
         }
@@ -947,66 +926,7 @@ class WCML_Terms{
         return $filtered_terms;
     }
 
-    function update_woocommerce_shipping_settings_for_class_costs( $settings ){
 
-        remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
-        foreach( $settings as $setting_key => $value ){
-
-            if(  substr($setting_key, 0, 11) == 'class_cost_' ){
-
-                $shipp_class_key = substr($setting_key, 11 );
-
-                if( is_numeric( $shipp_class_key ) ){
-                    $shipp_class = get_term( $shipp_class_key, 'product_shipping_class' );
-                }else{
-                    $shipp_class = get_term_by( 'slug', $shipp_class_key, 'product_shipping_class' );
-                }
-
-                $trid = $this->sitepress->get_element_trid( $shipp_class->term_taxonomy_id, 'tax_product_shipping_class' );
-
-                $translations = $this->sitepress->get_element_translations( $trid, 'tax_product_shipping_class' );
-
-                foreach( $translations as $translation ){
-
-                    $tr_shipp_class = get_term_by( 'term_taxonomy_id', $translation->element_id, 'product_shipping_class' );
-
-                    if( is_numeric( $shipp_class_key ) ){
-                        $settings[ 'class_cost_'.$tr_shipp_class->term_id ] = $value;
-                    }else{
-                        $settings[ 'class_cost_'.$tr_shipp_class->slug ] = $value;
-                    }
-
-                }
-
-            }
-
-        }
-        add_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
-
-        return $settings;
-    }
-
-    function update_woocommerce_shipping_settings_for_class_costs_from_ajax(){
-
-        if (isset($_POST['data']['woocommerce_flat_rate_type']) && $_POST['data']['woocommerce_flat_rate_type'] == 'class') {
-
-            $settings = array();
-            foreach ($_POST['data'] as $key => $value) {
-                if (substr($key, 0, 33) == 'woocommerce_flat_rate_class_cost_') {
-                    $settings[substr($key, 22)] = $value;
-                }
-            }
-
-            $updated_costs_settings = $this->update_woocommerce_shipping_settings_for_class_costs($settings);
-
-            $flat_rate_setting_id = 'woocommerce_flat_rate_' . $_POST['data']['instance_id'] . '_settings';
-            $settings = get_option($flat_rate_setting_id, true);
-
-            $settings = array_replace($settings, $updated_costs_settings);
-
-            update_option($flat_rate_setting_id, $settings);
-        }
-    }
 
 
     function set_flag_to_sync( $taxonomy, $el_id, $language_code ){

@@ -4,15 +4,12 @@ class WCML_Custom_Prices{
 
     private $woocommerce_wpml;
 
-    public function __construct(){
-        add_filter('init', array($this, 'custom_prices_init') );
+    public function __construct( &$woocommerce_wpml ){
+        add_filter( 'init', array( $this, 'custom_prices_init' ) );
+        $this->woocommerce_wpml = $woocommerce_wpml;
     }
 
     public function custom_prices_init(){
-        global $woocommerce_wpml;
-
-        $this->woocommerce_wpml =& $woocommerce_wpml;
-
         if ( is_admin() ) {
             add_action( 'woocommerce_variation_options', array($this, 'add_individual_variation_nonce'), 10, 3 );
 
@@ -227,6 +224,8 @@ class WCML_Custom_Prices{
             }
 
         }
+
+        $custom_prices = apply_filters( 'wcml_product_custom_prices', $custom_prices, $product_id, $currency );
 
         return $custom_prices;
     }
