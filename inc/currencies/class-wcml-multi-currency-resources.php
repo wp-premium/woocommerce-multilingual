@@ -28,8 +28,12 @@ class WCML_Multi_Currency_Resources{
 
         wp_enqueue_script('wcml-mc-scripts');
 
-        $script_vars['wcml_mc_nonce'] = wp_create_nonce( 'switch_currency' );
-        $script_vars['wcml_spinner'] = WCML_PLUGIN_URL . '/res/images/ajax-loader.gif';
+        $script_vars['wcml_mc_nonce']   = wp_create_nonce( 'switch_currency' );
+        $script_vars['wcml_spinner']    = WCML_PLUGIN_URL . '/res/images/ajax-loader.gif';
+        $script_vars['current_currency']= array(
+            'code'  => self::$multi_currency->get_client_currency(),
+            'symbol'=> get_woocommerce_currency_symbol( self::$multi_currency->get_client_currency() )
+        );
 
         if( !empty(self::$multi_currency->W3TC) ){
             $script_vars['w3tc'] = 1;

@@ -2,7 +2,14 @@
 
 class WCML_Accommodation_Bookings{
 
-    function __construct(){
+    /**
+     * @var woocommerce_wpml
+     */
+    private $woocommerce_wpml;
+
+    function __construct( &$woocommerce_wpml ){
+
+	    $this->woocommerce_wpml = $woocommerce_wpml;
 
         add_action( 'woocommerce_accommodation_bookings_after_booking_base_cost' , array( $this, 'wcml_price_field_after_booking_base_cost' ) );
         add_action( 'woocommerce_accommodation_bookings_after_booking_pricing_override_block_cost' , array( $this, 'wcml_price_field_after_booking_pricing_override_block_cost' ), 10, 2 );
@@ -10,6 +17,8 @@ class WCML_Accommodation_Bookings{
 
         add_action( 'save_post', array( $this, 'save_custom_costs' ), 110, 2 );
         add_filter( 'get_post_metadata', array( $this, 'product_price_filter'), 9, 4 );
+
+        add_action( 'init', array( $this, 'load_assets' ), 100 );
     }
 
     function wcml_price_field_after_booking_base_cost( $post_id ){
@@ -25,9 +34,8 @@ class WCML_Accommodation_Bookings{
     }
 
     function after_bookings_pricing( $post_id ){
-        global $woocommerce_wpml;
 
-        if( $woocommerce_wpml->products->is_original_product( $post_id ) && $woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
+        if( $this->woocommerce_wpml->products->is_original_product( $post_id ) && $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
 
             $custom_costs_status = get_post_meta( $post_id, '_wcml_custom_costs_status', true );
 
@@ -51,11 +59,10 @@ class WCML_Accommodation_Bookings{
     }
 
     function echo_wcml_price_field( $post_id, $field, $pricing = false, $check = true, $resource_id = false ){
-        global $woocommerce_wpml;
 
-        if( ( !$check || $woocommerce_wpml->products->is_original_product( $post_id ) ) && $woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
+        if( ( !$check || $this->woocommerce_wpml->products->is_original_product( $post_id ) ) && $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
 
-            $currencies = $woocommerce_wpml->multi_currency->get_currencies();
+            $currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
 
             $wc_currencies = get_woocommerce_currencies();
 
@@ -99,7 +106,6 @@ class WCML_Accommodation_Bookings{
     }
 
     function save_custom_costs( $post_id, $post ){
-        global $woocommerce_wpml;
 
         $nonce = filter_input( INPUT_POST, '_wcml_custom_costs_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
@@ -109,7 +115,7 @@ class WCML_Accommodation_Bookings{
 
             if( $_POST['_wcml_custom_costs'] == 1 ){
 
-                $currencies = $woocommerce_wpml->multi_currency->get_currencies();
+                $currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
 
                 foreach( $currencies as $code => $currency ){
 
@@ -142,19 +148,18 @@ class WCML_Accommodation_Bookings{
     }
 
     function product_price_filter( $value, $object_id, $meta_key, $single ){
-        global $woocommerce_wpml;
 
         if(
             get_post_type( $object_id ) == 'product' &&
             $meta_key == '_price' &&
-            $woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+            $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
             !is_admin() &&
-            ( $currency = $woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
+            ( $currency = $this->woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
         ) {
 
             remove_filter( 'get_post_metadata', array( $this, 'product_price_filter' ), 9, 4 );
 
-            $original_language = $woocommerce_wpml->products->get_original_product_language( $object_id );
+            $original_language = $this->woocommerce_wpml->products->get_original_product_language( $object_id );
             $original_product = apply_filters( 'translate_object_id', $object_id, 'product', true, $original_language );
 
             if ( get_post_meta( $original_product, '_wcml_custom_costs_status' ) ) {
@@ -166,6 +171,11 @@ class WCML_Accommodation_Bookings{
         }
 
         return isset( $price) ? $price : $value;
+    }
+
+    public function load_assets(){
+
+        $this->woocommerce_wpml->compatibility->bookings->load_assets( 'accommodation-booking' );
     }
 
 }

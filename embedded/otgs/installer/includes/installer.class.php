@@ -1220,15 +1220,16 @@ final class WP_Installer{
             if(is_serialized($datas)){
                 $data =  unserialize($datas);            
                 $this->api_debug_log($data);
+
+                if( !empty( $data->subscription_data ) ){
+                    $subscription_data =  $data->subscription_data;
+                }
+
+                do_action( 'installer_fetched_subscription_data',  $data, $repository_id);
+
             }else{
-                $this->api_debug_log($datas);    
+                $this->api_debug_log($datas);
             }
-
-            if(!empty($data->subscription_data)){
-                $subscription_data =  $data->subscription_data;
-            }
-
-            do_action( 'installer_fetched_subscription_data',  $data, $repository_id);
 
         }else{
             

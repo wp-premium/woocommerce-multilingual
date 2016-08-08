@@ -412,4 +412,15 @@ class WCML_Products{
         return $args;
     }
 
+    /*
+     * get meta ids for multiple values post meta key
+     */
+    public function get_mid_ids_by_key( $post_id, $meta_key ) {
+        $ids = $this->wpdb->get_col( $this->wpdb->prepare( "SELECT meta_id FROM {$this->wpdb->postmeta} WHERE post_id = %d AND meta_key = %s", $post_id, $meta_key ) );
+        if( $ids )
+            return $ids;
+
+        return false;
+    }
+
 }

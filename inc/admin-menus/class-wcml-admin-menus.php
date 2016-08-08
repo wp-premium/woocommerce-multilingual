@@ -4,22 +4,26 @@ class WCML_Admin_Menus{
 
     private static $woocommerce_wpml;
     private static $sitepress;
+    private static $wpdb;
 
-    public static function set_up_menus( &$woocommerce_wpml, &$sitepress, $check_dependencies ){
+    public static function set_up_menus( &$woocommerce_wpml, &$sitepress, &$wpdb, $check_dependencies ){
         self::$woocommerce_wpml =& $woocommerce_wpml;
         self::$sitepress =& $sitepress;
-        
-        add_action('admin_menu', array(__CLASS__, 'register_menus'));
+        self::$wpdb =& $wpdb;
+
+        add_action( 'admin_menu', array(__CLASS__, 'register_menus' ) );
 
         if( self::is_page_without_admin_language_switcher() ){
             self::remove_wpml_admin_language_switcher();
         }
 
         if( is_admin() && !is_null( $sitepress ) && $check_dependencies ){
-            add_action('admin_footer', array(__CLASS__, 'documentation_links'));
+            add_action( 'admin_footer', array(__CLASS__, 'documentation_links' ) );
             add_action( 'admin_head', array( __CLASS__, 'hide_multilingual_content_setup_box' ) );
             add_action( 'admin_init', array( __CLASS__, 'restrict_admin_with_redirect' ) );
         }
+
+        add_filter( 'woocommerce_prevent_admin_access', array( __CLASS__, 'check_user_admin_access' ) );
 
     }
 
@@ -32,8 +36,7 @@ class WCML_Admin_Menus{
                     __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'wpml_manage_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'));
 
             }else{
-                global $wpdb, $sitepress;
-                $user_lang_pairs = get_user_meta(get_current_user_id(), $wpdb->prefix.'language_pairs', true);
+                $user_lang_pairs = get_user_meta(get_current_user_id(), self::$wpdb->prefix.'language_pairs', true);
                 if( !empty( $user_lang_pairs ) ){
                     add_menu_page(__('WooCommerce Multilingual', 'woocommerce-multilingual'),
                         __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'translate',
@@ -239,6 +242,18 @@ class WCML_Admin_Menus{
         $message .= '</p></div>';
 
         echo $message;
+    }
+
+    public static function check_user_admin_access( $prevent_access ){
+
+        if( self::$woocommerce_wpml->check_dependencies && self::$woocommerce_wpml->check_design_update ){
+            $user_lang_pairs = get_user_meta( get_current_user_id(), self::$wpdb->prefix.'language_pairs', true );
+            if( current_user_can( 'wpml_manage_woocommerce_multilingual' ) || !empty( $user_lang_pairs ) ){
+                return false;
+            }
+        }
+
+        return $prevent_access;
     }
 
 }

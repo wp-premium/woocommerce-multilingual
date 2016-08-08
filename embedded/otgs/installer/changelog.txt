@@ -1,3 +1,6 @@
+= 1.7.10 =
+* Fixed a notice that was appearing when the site key registration failed
+
 = 1.7.9 =
 * Save the client_id value from the site_key_validation API call response and make it available via WP_Installer_API::get_ts_client_id API call
 

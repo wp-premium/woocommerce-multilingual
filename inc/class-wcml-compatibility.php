@@ -36,7 +36,7 @@ class WCML_Compatibility {
 
         //WooCommerce Table Rate Shipping plugin
         if(defined('TABLE_RATE_SHIPPING_VERSION')){
-            $this->table_rate_shipping = new WCML_Table_Rate_Shipping();
+            $this->table_rate_shipping = new WCML_Table_Rate_Shipping( $this->sitepress, $this->woocommerce_wpml );
         }
         
         //WooCommerce Subscriptions
@@ -51,7 +51,7 @@ class WCML_Compatibility {
 
         //Product Bundle
         if(class_exists('WC_Product_Bundle')){
-            $this->product_bundles = new WCML_Product_Bundles();
+            $this->product_bundles = new WCML_Product_Bundles( $this->sitepress, $this->woocommerce_wpml );
         }
         
          // WooCommerce Variation Swatches and Photos
@@ -61,7 +61,7 @@ class WCML_Compatibility {
      
         // Product Add-ons
         if(class_exists( 'Product_Addon_Display' )){
-            $this->product_addons = new WCML_Product_Addons();
+            $this->product_addons = new WCML_Product_Addons( $this->sitepress );
         }
 
         // Product Per Product Shipping
@@ -89,8 +89,8 @@ class WCML_Compatibility {
         }
 
         // Dynamic Pricing
-        if(class_exists( 'WC_Dynamic_Pricing' )){
-            $this->dynamic_pricing = new WCML_Dynamic_Pricing();
+        if ( class_exists('WC_Dynamic_Pricing') ) {
+            $this->dynamic_pricing = new WCML_Dynamic_Pricing( $this->sitepress );
         }
 
         // WooCommerce Bookings
@@ -99,7 +99,7 @@ class WCML_Compatibility {
 
             // WooCommerce Accommodation Bookings
             if( defined( 'WC_ACCOMMODATION_BOOKINGS_VERSION' ) ){
-                $this->bookings = new WCML_Accommodation_Bookings();
+                $this->accomodation_bookings = new WCML_Accommodation_Bookings(  $this->woocommerce_wpml );
             }
         }
 
@@ -124,7 +124,7 @@ class WCML_Compatibility {
 
         // woocommerce composite products
         if ( isset( $GLOBALS[ 'woocommerce_composite_products' ] ) ) {
-            $this->wc_composite_products = new WCML_Composite_Products();
+            $this->wc_composite_products = new WCML_Composite_Products(  $this->sitepress, $this->woocommerce_wpml );
         }
 				
         // woocommerce checkout addons
@@ -153,6 +153,11 @@ class WCML_Compatibility {
         //Aurum Theme
         if( wp_get_theme() == 'Aurum' ){
             new WCML_Aurum();
+        }
+
+        // Visual Products Configurator
+        if( class_exists( 'Vpc' ) ){
+            $this->vpc = new WCML_Vpc();
         }
 
     }

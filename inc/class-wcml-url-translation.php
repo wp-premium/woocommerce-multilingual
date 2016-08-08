@@ -32,6 +32,8 @@ class WCML_Url_Translation {
 
         add_action( 'wp_ajax_wcml_update_base_translation', array( $this, 'wcml_update_base_translation' ) );
 
+        add_filter( 'redirect_canonical', array( $this, 'check_wc_tax_url_on_redirect' ), 10, 2 );
+
     }
 
     function set_up() {
@@ -444,7 +446,8 @@ class WCML_Url_Translation {
 				unset( $buff_value );
 			}
 		}
-		
+
+
         return $value;
     }
 
@@ -684,5 +687,23 @@ class WCML_Url_Translation {
         die();
 
 
+    }
+
+    // return correct redirect URL for WC standard taxonomies when pretty permalink uses with lang as parametr in WPML
+    function check_wc_tax_url_on_redirect( $redirect_url, $requested_url ){
+        global $wp_query;
+
+        if( is_tax() ){
+            $original = @parse_url( $requested_url );
+            parse_str( $original['query'], $query_args ) ;
+            if( ( isset( $query_args[ 'product_cat' ] ) || isset( $query_args[ 'product_tag' ] ) ) && isset ( $query_args[ 'lang' ] ) ){
+                $obj = $wp_query->get_queried_object();
+                $tax_url = get_term_link( (int)$obj->term_id, $obj->taxonomy ) ;
+
+                return $tax_url;
+            }
+        }
+
+        return $redirect_url;
     }
 }

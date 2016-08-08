@@ -344,8 +344,8 @@ class WCML_Multi_Currency_Configuration{
         foreach( $keys as $key ){
             $iclTranslationManagement->settings[ 'custom_fields_readonly_config' ][] = $key;
             if( !isset( $sitepress_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $key ] ) ||
-                $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $key ] != 1 ) {
-                $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $key ] = 1;
+                $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $key ] != WPML_COPY_CUSTOM_FIELD ) {
+                $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $key ] = WPML_COPY_CUSTOM_FIELD;
                 $save = true;
             }
 
@@ -355,8 +355,8 @@ class WCML_Multi_Currency_Configuration{
                     $iclTranslationManagement->settings[ 'custom_fields_readonly_config' ][] = $new_key;
 
                     if( !isset( $sitepress_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $new_key ] ) ||
-                        $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $new_key ] != 0) {
-                        $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $new_key ] = 0;
+                        $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $new_key ] != WPML_IGNORE_CUSTOM_FIELD) {
+                        $wpml_settings[ 'translation-management' ][ 'custom_fields_translation' ][ $new_key ] = WPML_IGNORE_CUSTOM_FIELD;
                         $save = true;
                     }
                 }

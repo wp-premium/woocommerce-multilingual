@@ -101,6 +101,9 @@ class WCML_Bookings {
             //lock fields on translations pages
             add_filter( 'wcml_js_lock_fields_ids', array( $this, 'wcml_js_lock_fields_ids' ) );
             add_filter( 'wcml_after_load_lock_fields_js', array( $this, 'localize_lock_fields_js' ) );
+
+            //allow filtering resources by language
+            add_filter( 'get_booking_resources_args', array( $this, 'filter_get_booking_resources_args' ) );
         }
 
         if( !is_admin() || isset( $_POST['action'] ) && $_POST['action'] == 'wc_bookings_calculate_costs' ){
@@ -418,70 +421,44 @@ class WCML_Bookings {
 
     }
 
-    function sync_resources( $original_product_id, $trnsl_product_id, $lang_code, $duplicate = true ){
-        $orig_resources = $this->wpdb->get_results( $this->wpdb->prepare( "SELECT resource_id, sort_order FROM {$this->wpdb->prefix}wc_booking_relationships WHERE product_id = %d", $original_product_id ) );
+    function sync_resources( $original_product_id, $translated_product_id, $lang_code, $duplicate = true ){
 
-        $trnsl_product_resources = $this->wpdb->get_col( $this->wpdb->prepare( "SELECT resource_id FROM {$this->wpdb->prefix}wc_booking_relationships WHERE product_id = %d", $trnsl_product_id ) );
+        $original_resources = $this->wpdb->get_results( $this->wpdb->prepare(
+            "SELECT resource_id, sort_order FROM {$this->wpdb->prefix}wc_booking_relationships WHERE product_id = %d",
+            $original_product_id ) );
 
-        foreach ($orig_resources as $resource) {
+        $translated_resources = $this->wpdb->get_col( $this->wpdb->prepare(
+            "SELECT resource_id FROM {$this->wpdb->prefix}wc_booking_relationships WHERE product_id = %d",
+            $translated_product_id ) );
 
-            $trns_resource_id = apply_filters( 'translate_object_id', $resource->resource_id, 'bookable_resource', false, $lang_code );
+        $used_translated_resources = array();
 
-            if ( !is_null( $trns_resource_id ) && in_array( $trns_resource_id, $trnsl_product_resources ) ) {
+        foreach ($original_resources as $resource) {
 
-                if ( ( $key = array_search( $trns_resource_id, $trnsl_product_resources ) ) !== false ) {
+            $translated_resource_id = apply_filters( 'translate_object_id', $resource->resource_id, 'bookable_resource', false, $lang_code );
+            if( !is_null( $translated_resource_id ) ){
 
-                    unset($trnsl_product_resources[$key]);
-
-                    $this->wpdb->update(
-                        $this->wpdb->prefix . 'wc_booking_relationships',
-                        array(
-                            'sort_order' => $resource->sort_order
-                        ),
-                        array(
-                            'product_id' => $trnsl_product_id,
-                            'resource_id' => $trns_resource_id
-                        )
-                    );
-
-                    update_post_meta( $trns_resource_id, 'qty', get_post_meta( $resource->resource_id, 'qty', true ) );
-                    update_post_meta( $trns_resource_id, '_wc_booking_availability', get_post_meta( $resource->resource_id, '_wc_booking_availability', true ) );
-
-                }
-
-            } else {
-
-                if( $duplicate ){
-
-                    $trns_resource_id = $this->duplicate_resource( $trnsl_product_id, $resource, $lang_code );
-
+                if( in_array( $translated_resource_id, $translated_resources ) ){
+                    $this->update_product_resource( $translated_product_id, $translated_resource_id, $resource );
                 }else{
-
-                    continue;
-
+                    $this->add_product_resource( $translated_product_id, $translated_resource_id, $resource );
                 }
-
-
+                $used_translated_resources[] = $translated_resource_id;
+            } else {
+                if( $duplicate ){
+                    $this->duplicate_resource( $translated_product_id, $resource, $lang_code );
+                }
             }
 
         }
 
-        foreach ($trnsl_product_resources as $trnsl_product_resource) {
-
-            $this->wpdb->delete(
-                $this->wpdb->prefix . 'wc_booking_relationships',
-                array(
-                    'product_id' => $trnsl_product_id,
-                    'resource_id' => $trnsl_product_resource
-                )
-            );
-
-            wp_delete_post( $trnsl_product_resource );
-
+        $removed_translated_resources_id = array_diff( $translated_resources, $used_translated_resources);
+        foreach ( $removed_translated_resources_id as $resource_id ){
+            $this->remove_resource_from_product( $translated_product_id, $resource_id );
         }
 
-        $this->sync_resource_costs( $original_product_id, $trnsl_product_id, '_resource_base_costs', $lang_code );
-        $this->sync_resource_costs( $original_product_id, $trnsl_product_id, '_resource_block_costs', $lang_code );
+        $this->sync_resource_costs( $original_product_id, $translated_product_id, '_resource_base_costs', $lang_code );
+        $this->sync_resource_costs( $original_product_id, $translated_product_id, '_resource_block_costs', $lang_code );
 
     }
 
@@ -514,6 +491,53 @@ class WCML_Bookings {
         delete_post_meta( $trns_resource_id, '_icl_lang_duplicate_of' );
 
         return $trns_resource_id;
+    }
+
+    public function add_product_resource( $product_id, $resource_id, $resource_data ){
+
+        $this->wpdb->insert(
+            $this->wpdb->prefix . 'wc_booking_relationships',
+            array(
+                'sort_order' => $resource_data->sort_order,
+                'product_id' => $product_id,
+                'resource_id' => $resource_id
+            )
+        );
+
+        update_post_meta( $resource_id, 'qty', get_post_meta( $resource_data->resource_id, 'qty', true ) );
+        update_post_meta( $resource_id, '_wc_booking_availability', get_post_meta( $resource_data->resource_id, '_wc_booking_availability', true ) );
+
+    }
+
+    public function remove_resource_from_product( $product_id, $resource_id ){
+
+        $this->wpdb->delete(
+            $this->wpdb->prefix . 'wc_booking_relationships',
+            array(
+                'product_id'  => $product_id,
+                'resource_id' => $resource_id
+            )
+        );
+
+    }
+
+    public function update_product_resource( $product_id, $resource_id,  $resource_data ){
+
+        $this->wpdb->update(
+            $this->wpdb->prefix . 'wc_booking_relationships',
+            array(
+                'sort_order' => $resource_data->sort_order
+            ),
+            array(
+                'product_id' => $product_id,
+                'resource_id' => $resource_id
+            )
+        );
+
+        update_post_meta( $resource_id, 'qty', get_post_meta( $resource_data->resource_id, 'qty', true ) );
+        update_post_meta( $resource_id, '_wc_booking_availability', get_post_meta( $resource_data->resource_id, '_wc_booking_availability', true ) );
+
+
     }
 
     function sync_persons( $original_product_id, $tr_product_id, $lang_code, $duplicate = true ){
@@ -847,12 +871,12 @@ class WCML_Bookings {
 
     }
 
-    function load_assets( ){
+    function load_assets( $external_product_type = false ){
         global $pagenow;
 
         $product = $pagenow == 'post.php' && isset( $_GET[ 'post' ] ) ? wc_get_product( $_GET[ 'post' ] ) : false;
 
-        if( ( $product && $product->product_type == 'booking' ) || $pagenow == 'post-new.php' ){
+        if( ( $product && ( $product->product_type == 'booking' || $product->product_type == $external_product_type ) ) || $pagenow == 'post-new.php' ){
 
 	        wp_register_style( 'wcml-bookings-css', WCML_PLUGIN_URL . '/compatibility/res/css/wcml-bookings.css', array(), WCML_VERSION );
             wp_enqueue_style( 'wcml-bookings-css' );
@@ -1840,6 +1864,22 @@ class WCML_Bookings {
         ) );
 
         return $ids;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return array
+     */
+    public function filter_get_booking_resources_args( $args ){
+
+        $screen = get_current_screen();
+        if( $screen->id == 'product' ){
+            $args['suppress_filters'] = false;
+        }
+
+        return $args;
+
     }
 
 	/**

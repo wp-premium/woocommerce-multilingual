@@ -1,8 +1,8 @@
 <?php
+$installer_path = 'embedded/otgs/installer';
+if( file_exists( WCML_PLUGIN_PATH . '/' . $installer_path . '/loader.php' ) ){
 
-if( file_exists( WCML_PLUGIN_PATH . '/embedded/installer/loader.php' ) ){
-
-    include WCML_PLUGIN_PATH . '/embedded/installer/loader.php' ;
+    include WCML_PLUGIN_PATH . '/' . $installer_path . '/loader.php' ;
     $args = array(
         'plugins_install_tab' => 1
     );
