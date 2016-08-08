@@ -12,7 +12,7 @@ class WCML_xDomain_Data {
      */
     function __construct() {
         add_filter( 'wpml_cross_domain_language_data', array($this, 'pass_data_to_domain') );
-        add_action( 'init', array($this, 'check_request') );
+        add_action( 'before_woocommerce_init', array($this, 'check_request') );
     }
 
     /**
@@ -74,11 +74,14 @@ class WCML_xDomain_Data {
 
             if ( isset($data['session']) ) {
                 setcookie( 'wp_woocommerce_session_' . COOKIEHASH, $data['session'], $session_expiration, COOKIEPATH, COOKIE_DOMAIN, $secure );
+                $_COOKIE[ 'wp_woocommerce_session_' . COOKIEHASH ] = $data['session'];
             }
 
             if ( isset($data['hash ']) ) {
                 setcookie( 'woocommerce_cart_hash', $data['hash'], $session_expiration, COOKIEPATH, COOKIE_DOMAIN, $secure );
                 setcookie( 'woocommerce_items_in_cart', $data['items'], $session_expiration, COOKIEPATH, COOKIE_DOMAIN, $secure );
+                $_COOKIE[ 'woocommerce_cart_hash' ] = $data['hash'];
+                $_COOKIE[ 'woocommerce_items_in_cart' ] = $data['items'];
             }
 
         }

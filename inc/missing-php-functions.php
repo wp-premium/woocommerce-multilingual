@@ -74,4 +74,28 @@ function wcml_translate_single_string_filter( $original_value, $context, $name, 
         return $original_value;
     }
 }
+
+// two WordPress functions that were added in 4.4.0
+if( version_compare( $GLOBALS['wp_version'], '4.4.0' , '<' ) ){
+
+    if( !function_exists( 'get_the_post_thumbnail_url' ) ){
+        function get_the_post_thumbnail_url( $post = null, $size = 'post-thumbnail' ) {
+            $post_thumbnail_id = get_post_thumbnail_id( $post );
+            if ( ! $post_thumbnail_id ) {
+                return false;
+            }
+            return wp_get_attachment_image_url( $post_thumbnail_id, $size );
+        }
+    }
+
+    if( !function_exists( 'wp_get_attachment_image_url' ) ) {
+        function wp_get_attachment_image_url( $attachment_id, $size = 'thumbnail', $icon = false ) {
+            $image = wp_get_attachment_image_src( $attachment_id, $size, $icon );
+            return isset( $image['0'] ) ? $image['0'] : false;
+        }
+    }
+
+}
+
+
 ?>

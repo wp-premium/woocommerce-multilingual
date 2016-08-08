@@ -111,7 +111,7 @@ class WCML_Cart
         global $woocommerce;
 
         $exists_products = array();
-        remove_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ) );
+        remove_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ), 100 );
 
         foreach( $cart_contents as $key => $cart_content ){
             $cart_contents = apply_filters( 'wcml_check_on_duplicated_products_in_cart', $cart_contents, $key, $cart_content );
@@ -128,7 +128,7 @@ class WCML_Cart
             }
         }
 
-        add_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ) );
+        add_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ), 100 );
         return $cart_contents;
     }
 
@@ -186,7 +186,7 @@ class WCML_Cart
 
     public function translate_cart_subtotal( $cart ) {
 
-        if( apply_filters( 'wcml_calculate_totals_exception', true ) ){
+        if( apply_filters( 'wcml_calculate_totals_exception', true, $cart ) ){
             $cart->calculate_totals();
         }
 

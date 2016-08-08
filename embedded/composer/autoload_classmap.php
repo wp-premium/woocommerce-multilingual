@@ -102,6 +102,7 @@ return array(
     'WCML_Upgrade' => $baseDir . '/inc/class-wcml-upgrade.php',
     'WCML_Url_Translation' => $baseDir . '/inc/class-wcml-url-translation.php',
     'WCML_Variation_Swatches_and_Photos' => $baseDir . '/compatibility/class-wcml-variation-swatches-and-photos.php',
+    'WCML_Vpc' => $baseDir . '/compatibility/class-wcml-vpc.php',
     'WCML_W3TC_Multi_Currency' => $baseDir . '/inc/currencies/class-wcml-w3tc-multi-currency.php',
     'WCML_WC_Ajax_Cart' => $baseDir . '/compatibility/class-wcml-wc-ajax-cart.php',
     'WCML_WC_Gateways' => $baseDir . '/inc/class-wcml-wc-gateways.php',
