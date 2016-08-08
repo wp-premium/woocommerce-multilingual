@@ -22,23 +22,24 @@
     padding: 6px 7px;
 }
 
-.wcml_wc_booking_cost_field label,
-.wcml_wc_booking_base_cost_field label,
-.wcml_wc_display_cost_field label{
-    text-align: right;
-    margin-left: -160px;
-}
-
 .wcml_custom_costs{
     padding: 9px 9px 0;
     display: inline-block;
     width: 100%;
+    float:left;
+    margin-top:10px;
 }
 
-#bookings_pricing .wcml_custom_costs label{
+#bookings_pricing .wcml_custom_costs label,
+.woocommerce_options_panel .wcml_custom_costs label{
     width: auto;
     margin: 0 5px;
     float: left;
+}
+.woocommerce_options_panel .wcml_bookings_range_block label{
+    width: 10px;;
+    margin: 0;
+    padding: inherit;
 }
 
 #bookings_pricing .wcml_custom_cost_field label,

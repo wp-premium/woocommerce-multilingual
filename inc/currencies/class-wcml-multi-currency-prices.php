@@ -273,6 +273,10 @@ class WCML_Multi_Currency_Prices{
             $currency = $this->multi_currency->get_client_currency();
         }
 
+        if( is_null($this->woocommerce_wpml) ){
+            global $woocommerce_wpml;
+            $this->woocommerce_wpml = $woocommerce_wpml;
+        }
         $currency_options = $this->woocommerce_wpml->settings['currency_options'][$currency];
 
         if( $currency_options['rounding'] != 'disabled' ){
@@ -523,6 +527,7 @@ class WCML_Multi_Currency_Prices{
         if(isset($this->multi_currency->currencies[$currency_code]['num_decimals']) ){
             $value = $this->multi_currency->currencies[$currency_code]['num_decimals'];
         }
+
         return $value;
     }
 

@@ -10,10 +10,13 @@ jQuery(document).ready(function(){
         wcml_load_currency( jQuery(this).attr('rel') );
     });
 
+    if( typeof woocommerce_price_slider_params != 'undefined' ){
+        woocommerce_price_slider_params.currency_symbol = wcml_mc_settings.current_currency.symbol;
+    }
 });
 
 
-function wcml_load_currency(currency){
+function wcml_load_currency( currency ){
     var ajax_loader = jQuery('<img style=\"margin-left:10px;\" width=\"16\" heigth=\"16\" src=\"' + wcml_mc_settings.wcml_spinner +'\" />')
     jQuery('.wcml_currency_switcher').attr('disabled', 'disabled');
     jQuery('.wcml_currency_switcher').after();

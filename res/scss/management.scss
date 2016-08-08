@@ -179,32 +179,30 @@ table.widefat.currency_table {
 	float: left;
 	width: 300px;
 	border-right: none;
-	@at-root {
-		td.wcml-col-currency,
-		td.wcml-col-rate {
-			padding-top: $margin-xs;
-			padding-bottom: 0;
-			vertical-align: top;
-		}
 
-		td.wcml-col-currency {
-			.truncate {
-				max-width: 145px;
-				display: block;
-			}
-			small {
-				display: block;
-			}
-		}
+	td.wcml-col-currency,
+	td.wcml-col-rate {
+		padding-top: $margin-xs;
+		padding-bottom: 0;
+		vertical-align: top;
+	}
 
-		td.wcml-col-rate {
-			font-size: .85em;
+	td.wcml-col-currency {
+		.truncate {
+			max-width: 145px;
+			display: block;
 		}
+		small {
+			display: block;
+		}
+	}
+	td.wcml-col-edit a {
+		position: relative;
+		top: -3px;
+	}
 
-		td.wcml-col-edit a {
-			position: relative;
-			top: -3px;
-		}
+	td.wcml-col-rate {
+		font-size: .85em;
 	}
 }
 
@@ -212,8 +210,7 @@ table.widefat.currency_delete_table {
 	float: left;
 	width: 50px;
 	border-left: none;
-
-	@at-root {
+	clear: none;
 		td.wcml-col-delete {
 			vertical-align: middle;
 			text-align: center;
@@ -221,13 +218,12 @@ table.widefat.currency_delete_table {
 				border-left: 1px solid #e5e5e5;
 			}
 		}
-	}
 }
 
 .currency_value .wcml-error,
 .wcml-error {
 	font-size: 10px;
-	color: red;
+	color: #f00;
 	display: inline-block;
 }
 
@@ -492,6 +488,7 @@ input[name="wcml_curr_template"] {
 		padding: 2px;
 	}
 }
+
 .otgs-is-dismissible {
 	position: relative;
 	padding-right: 38px;
@@ -502,7 +499,8 @@ input[name="wcml_curr_template"] {
 		margin: -5px 5px;
 	}
 }
+
 .wcml_tt_spinner {
-  margin-right: 15px;
-  display: none;
+	margin-right: 15px;
+	display: none;
 }

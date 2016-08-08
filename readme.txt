@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.5.3
-Stable tag: 3.8.2
+Stable tag: 3.8.4
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -131,11 +131,29 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
+= 3.8.4 =
+* Bug fix: minimum required amount was not calculated correctly for secondary currencies (not included in the previous version)
+
+= 3.8.3 =
+* Added improvements to the Translation Editor for translating custom fields for products and variations
+* Added access for translator subscribers to translate content
+* Fixed compatibility issues with WooCommerce Visual Products Configurator (wrong amount in cart)
+* Fixed a compatibility issue with WooCommerce Product Addons (untranslated labels)
+* Fixed compatibility issues with WooCommerce Composite products
+* Fixed some new compatibility issues with WooCommerce Bookings
+* Bug fix: when using language as parameter and the 'dropdown' option was used for the product categories widget, translated urls were not working
+* Bug fix: shipping costs were not showing on the secondary languages in some cases
+* Bug fix: the shipping costs were not calculated correctly for currencies using less decimals than the default currency
+* Bug fix: adding a product to the cart and then adding its translation too could lead to a fatal error
+* Bug fix: switching the language on the cart page when using different domains for different languages was emptying the cart
+* Bug fix: minimum required amount was not calculated correctly for secondary currencies
+* Bug fix: incorrect currency symbol was displayed on the 'Filter by Price' widget
+
 = 3.8.2 =
 * Bug fix: cart strings not displaying in the correct language in some conditions
 * Bug fix: prices in secondary currencies were not updated on the front end after changing the price (the cache was not invalidated)
 * Bug fix: shipping classes were not synchronized for translated products in some circumstances
-* Bug fix: translated endpoints were missing from the rewrite rules after updating the permalinks
+* Bug fix: translated endpoints were missing from teh rewrite rules after updating the permalinkst pull
 * Bug fix: stock status was sometimes not synchronized correctly when changing the stock manually
 * Bug fix: when using the default category base the language switcher did not show translated urls on the front end
 * Updated the cart cache hashes logic according to new WooCommerce logic

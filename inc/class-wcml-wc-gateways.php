@@ -97,8 +97,8 @@ class WCML_WC_Gateways{
 
     }
 
-    function translate_gateway_title( $title, $gateway_id ) {
-        $title = apply_filters( 'wpml_translate_single_string', $title, 'woocommerce', $gateway_id .'_gateway_title', $this->current_language );
+    function translate_gateway_title( $title, $gateway_id, $language = false ) {
+        $title = apply_filters( 'wpml_translate_single_string', $title, 'woocommerce', $gateway_id .'_gateway_title', $language ? $language : $this->current_language );
         return $title;
     }
 
