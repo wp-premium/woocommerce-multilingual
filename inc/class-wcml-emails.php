@@ -44,14 +44,14 @@ class WCML_Emails{
         add_action('woocommerce_order_partially_refunded_notification', array($this,'refresh_email_lang'), 9);
 
 
-        //admin emails
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_completed_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'admin_email' ), 9 );
-        add_action( 'woocommerce_before_resend_order_emails', array( $this, 'admin_email' ), 9 );
+        //new order admins email
+        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_completed_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_before_resend_order_emails', array( $this, 'backend_new_order_admin_email' ), 9 );
 
         add_filter( 'icl_st_admin_string_return_cached', array( $this, 'admin_string_return_cached' ), 10, 2 );
 
@@ -63,8 +63,11 @@ class WCML_Emails{
         }
 
         add_filter( 'get_post_metadata', array( $this, 'filter_payment_method_string' ), 10, 4 );
-        add_filter( 'woocommerce_order_get_items', array( $this, 'filter_order_items' ), 10, 2 );
-        add_filter( 'woocommerce_order_items_meta_get_formatted', array( $this, 'filter_formatted_items' ), 10, 2 );
+
+        if( !isset( $_GET['post_type'] ) || $_GET['post_type'] != 'shop_order' ){
+            add_filter( 'woocommerce_order_get_items', array( $this, 'filter_order_items' ), 10, 2 );
+            add_filter( 'woocommerce_order_items_meta_get_formatted', array( $this, 'filter_formatted_items' ), 10, 2 );
+        }
     }
 
     function email_refresh_in_ajax(){
@@ -202,7 +205,7 @@ class WCML_Emails{
     }
 
 
-    function admin_email($order_id){
+    function new_order_admin_email($order_id){
         global $woocommerce;
         if(isset( $woocommerce->mailer()->emails['WC_Email_New_Order'] )){
             $recipients = explode(',',$woocommerce->mailer()->emails['WC_Email_New_Order']->get_recipient());
@@ -226,6 +229,12 @@ class WCML_Emails{
             }
             $woocommerce->mailer()->emails['WC_Email_New_Order']->enabled = false;
             $this->refresh_email_lang($order_id);
+        }
+    }
+
+    public function backend_new_order_admin_email( $order_id ){
+        if( isset( $_POST[ 'wc_order_action' ] ) && $_POST[ 'wc_order_action' ] == 'send_email_new_order' ){
+            $this->new_order_admin_email( $order_id );
         }
     }
 
@@ -278,7 +287,7 @@ class WCML_Emails{
 
     function filter_formatted_items( $formatted_meta, $object ){
 
-        if(  $object->product->variation_id ){
+        if( $object->product->variation_id ){
 
             $current_prod_variation_id = apply_filters( 'translate_object_id', $object->product->variation_id, 'product_variation', false );
 
@@ -420,7 +429,7 @@ class WCML_Emails{
             $section_name = str_replace( '_settings', '', $section_name );
             if( isset( $_GET['section'] ) && $_GET['section'] == $section_name ){
 
-                $option_settings = get_option($emails_option);
+                $option_settings = get_option( $emails_option );
                 foreach ($option_settings as $setting_key => $setting_value) {
                     if ( in_array( $setting_key, $text_keys ) ) {
                         $input_name = str_replace( '_settings', '', $emails_option ).'_'.$setting_key;
@@ -448,7 +457,7 @@ class WCML_Emails{
                             if (input.length) {
                                 input.parent().append('<div class="translation_controls"></div>');
                                 input.parent().find('.translation_controls').append('<a href="<?php echo $st_page ?>" style="margin-left: 10px"><?php _e('translations', 'woocommerce-multilingual') ?></a>');
-                                jQuery('#<?php echo $emails_option.'_'.$setting_key.'_language_selector' ?>').appendTo(input.parent().find('.translation_controls'));
+                                jQuery('#<?php echo $emails_option.'_'.$setting_key.'_language_selector' ?>').prependTo(input.parent().find('.translation_controls'));
                             }
                         </script>
                     <?php }

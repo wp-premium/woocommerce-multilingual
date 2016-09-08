@@ -47,6 +47,8 @@ class WCML_Products{
         add_action( 'woocommerce_after_product_ordering', array( $this, 'update_all_products_translations_ordering' ) );
         //filter to copy excerpt value
         add_filter( 'wpml_copy_from_original_custom_fields', array( $this, 'filter_excerpt_field_content_copy' ) );
+
+        add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
     }
 
     // Check if original product
@@ -219,6 +221,15 @@ class WCML_Products{
                     </a>
             <?php } ?>
         <?php }
+    }
+
+    public function wcml_override_is_translator( $is_translator, $user_id, $args ){
+
+        if( current_user_can( 'wpml_operate_woocommerce_multilingual' ) ){
+            return true;
+        }
+
+        return $is_translator;
     }
 
     //product quickedit

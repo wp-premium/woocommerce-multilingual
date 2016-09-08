@@ -28,13 +28,26 @@ class WCML_Admin_Menus{
     }
 
     public static function register_menus(){
+        global $WPML_Translation_Management;
+
         if( self::$woocommerce_wpml->check_dependencies && self::$woocommerce_wpml->check_design_update){
             $top_page = apply_filters('icl_menu_main_page', basename(ICL_PLUGIN_PATH) .'/menu/languages.php');
 
-            if(current_user_can('wpml_manage_woocommerce_multilingual')){
+            if( current_user_can('wpml_manage_woocommerce_multilingual') ){
                 add_submenu_page($top_page, __('WooCommerce Multilingual', 'woocommerce-multilingual'),
                     __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'wpml_manage_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'));
 
+            }elseif( current_user_can('wpml_operate_woocommerce_multilingual') ){
+                add_menu_page( __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ), __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
+                    'wpml_operate_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'), WCML_PLUGIN_URL . '/res/images/icon16.png' );
+
+                //force add translations-queue page for shop manager
+                $wp_api = self::$sitepress->get_wp_api();
+                if ( !$wp_api->current_user_can( 'wpml_manage_translation_management' ) ) {
+                    $wp_api->add_submenu_page( null,
+                        __( 'Translations', 'wpml-translation-management' ), __( 'Translations', 'wpml-translation-management' ),
+                        'wpml_operate_woocommerce_multilingual', WPML_TM_FOLDER . '/menu/translations-queue.php', array( $WPML_Translation_Management, 'translation_queue_page' ) );
+                }
             }else{
                 $user_lang_pairs = get_user_meta(get_current_user_id(), self::$wpdb->prefix.'language_pairs', true);
                 if( !empty( $user_lang_pairs ) ){

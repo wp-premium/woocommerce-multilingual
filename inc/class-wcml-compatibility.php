@@ -160,6 +160,12 @@ class WCML_Compatibility {
             $this->vpc = new WCML_Vpc();
         }
 
+        // WooCommerce Show Single Variations
+        if( defined( 'JCK_WSSV_PATH' ) ){
+            new WCML_JCK_WSSV();
+        }
+
+
     }
 
 }

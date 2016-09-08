@@ -231,7 +231,7 @@ class WCML_Translation_Editor{
                     if ( !$this->woocommerce_wpml->settings['trnsl_interface'] ) {
                         $use_tm_editor = 0;
                     }
-                } elseif ( $current_screen->id === 'wpml_page_wpml-wcml' ) {
+                } elseif ( $current_screen->id === 'wpml_page_wpml-wcml' || $current_screen->id === 'toplevel_page_wpml-wcml' ) {
                     $use_tm_editor = 1;
                 }
             }

@@ -34,7 +34,7 @@ function wcml_load_currency( currency ){
                 alert(response.error);
             }else{
                 jQuery('.wcml_currency_switcher').removeAttr('disabled');
-                if(typeof wcml_mc_settings.w3tc != 'undefined '){
+                if(typeof wcml_mc_settings.w3tc !== 'undefined'){
                     var original_url = window.location.href;
                     original_url = original_url.replace(/&wcmlc(\=[^&]*)?(?=&|$)|wcmlc(\=[^&]*)?(&|$)/, '');
                     original_url = original_url.replace(/\?$/, '');

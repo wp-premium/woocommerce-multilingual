@@ -1040,7 +1040,8 @@ final class WP_Installer{
                     $this->settings['repositories'][$repository_id]['subscription'] = array('key' => $site_key, 'data' => $subscription_data);
                     $this->save_settings();
                 } else {
-                    $error = __( 'Invalid site key for the current site.', 'installer' );
+                    $error = __( 'Invalid site key for the current site.', 'installer' )
+                        . '<br /><div class="installer-footnote">' .  __('Please note that the site key is case sensitive.', 'installer') . '</div>';
                 }
 
             } catch (Exception $e ){
@@ -2100,23 +2101,42 @@ final class WP_Installer{
         }        
         
     }
-    
+
     public function show_purchase_notice_under_plugin($plugin_file, $plugin_data, $status){
-        
+
         $wp_list_table = _get_list_table('WP_Plugins_List_Table');
-        ?>
-        
-        <tr class="plugin-update-tr"><td colspan="<?php echo $wp_list_table->get_column_count(); ?>" class="plugin-update colspanchange">
-            <div class="update-message installer-q-icon">
-            <?php 
-                printf(__('You need to have a valid subscription in order to get upgrades or support for this plugin. %sPurchase a subscription or enter an existing site key%s.', 'installer'),
-                    '<a href="' . $this->menu_url() . '">', '</a>');
+        $wp_version = preg_replace( '/-(.+)$/', '', $GLOBALS['wp_version'] );
+
+        if( version_compare( $wp_version, '4.6', '>=' ) ){
+
             ?>
-            </div>
-        </tr>
-        
-        <?php 
-        
+            <tr class="plugin-update-tr installer-plugin-update-tr">
+                <td colspan="<?php echo $wp_list_table->get_column_count(); ?>" class="plugin-update colspanchange">
+                    <div class="notice inline notice-warning notice-alt">
+                        <p class="installer-q-icon">
+                            <?php printf( __('You must have a valid subscription in order to get upgrades or support for this plugin. %sPurchase a subscription or enter an existing site key%s.', 'installer'),
+                                '<a href="' . $this->menu_url() . '">', '</a>'); ?>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <?php
+
+        } else {
+
+            ?>
+            <tr class="plugin-update-tr">
+                <td colspan="<?php echo $wp_list_table->get_column_count(); ?>" class="plugin-update colspanchange">
+                    <div class="update-message installer-q-icon">
+                        <?php printf( __('You must have a valid subscription in order to get upgrades or support for this plugin. %sPurchase a subscription or enter an existing site key%s.', 'installer'),
+                            '<a href="' . $this->menu_url() . '">', '</a>'); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php
+
+        }
+
     }
     
     public function localize_strings(){
