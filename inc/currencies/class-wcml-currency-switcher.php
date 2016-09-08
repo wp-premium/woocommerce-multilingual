@@ -49,7 +49,9 @@ class WCML_Currency_Switcher {
             array(
                 'format'         => $_POST['template'] ? $_POST['template'] : '%name% (%symbol%) - %code%',
                 'switcher_style' => $_POST['switcher_type'],
-                'orientation'    => $_POST['orientation']) );
+                'orientation'    => $_POST['orientation']
+            )
+        );
 
         die();
     }
@@ -148,6 +150,14 @@ class WCML_Currency_Switcher {
                 $preview .= '</select>';
             } else {
                 $preview .= '</ul>';
+            }
+
+        } else{
+
+            if( is_admin() ){
+
+                $preview .= '<i>' . __("You haven't added any secondary currencies.", 'woocommerce-multilingual') . '</i>';
+
             }
 
         }

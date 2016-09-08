@@ -177,6 +177,7 @@ body {
     color: #ccc;
     width: 100%;
     display: -ms-inline-flexbox;
+    display: -webkit-inline-box;
     display: inline-flex
 }
 .wcml-setup-steps li {

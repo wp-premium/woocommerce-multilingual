@@ -203,6 +203,10 @@ table.widefat.currency_table {
 
 	td.wcml-col-rate {
 		font-size: .85em;
+		.truncate {
+			max-width: 75px;
+			display: block;
+		}
 	}
 }
 

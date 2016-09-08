@@ -34,6 +34,10 @@ class WCML_Url_Translation {
 
         add_filter( 'redirect_canonical', array( $this, 'check_wc_tax_url_on_redirect' ), 10, 2 );
 
+        add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
+
+        add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
+
     }
 
     function set_up() {
@@ -705,5 +709,61 @@ class WCML_Url_Translation {
         }
 
         return $redirect_url;
+    }
+
+    public function translate_query_var_for_product($public_query_vars){
+        global $woocommerce_wpml, $sitepress;
+
+        $product_permalink  = $woocommerce_wpml->strings->product_permalink_slug();
+        $string_language = $woocommerce_wpml->strings->get_string_language( $product_permalink, $this->url_strings_context(), $this->url_string_name('product') );
+
+        if( $sitepress->get_current_language() != $string_language ){
+            $translated_slug = $this->get_translated_product_base_by_lang( false,$product_permalink );
+
+            if(isset($_GET[$translated_slug])){
+                $buff = $_GET[$translated_slug];
+                unset($_GET[$translated_slug]);
+                $_GET[$product_permalink] = $buff;
+            }
+
+        }
+
+        return $public_query_vars;
+    }
+
+    public function get_translated_product_base_by_lang($language = false, $product_slug = false){
+        global $woocommerce_wpml;
+
+        if(!$language){
+            global $sitepress;
+            $language = $sitepress->get_current_language();
+
+        }
+
+        if(!$product_slug){
+            $product_slug  = $woocommerce_wpml->strings->product_permalink_slug();
+        }
+
+        if ( version_compare( WPML_ST_VERSION, '2.3', '>=' ) ) {
+            $translated_slug = apply_filters( 'wpml_get_translated_slug', $product_slug, 'product' , $language );
+        }elseif ( apply_filters( 'wpml_slug_translation_available', false) ) {
+            $translated_slug = apply_filters( 'wpml_get_translated_slug', 'product' , $language );
+        } else {
+            $translated_slug = apply_filters( 'wpml_translate_single_string', $product_slug, $this->url_strings_context(), $this->url_string_name( 'product' ) );
+        }
+
+        return $translated_slug;
+    }
+
+    public function encode_shop_slug($location, $status){
+        if(get_post_type(get_query_var('p')) == 'product'){
+            global $sitepress;
+            $language = $sitepress->get_language_for_element(get_query_var('p'), 'post_product');
+            $base_slug = $this->get_translated_product_base_by_lang($language);
+
+            $location = str_replace($base_slug , urlencode($base_slug),$location);
+        }
+
+        return $location;
     }
 }

@@ -67,6 +67,7 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
         'WCML_Extra_Product_Options' => __DIR__ . '/../..' . '/compatibility/class-wcml-extra-product-options.php',
         'WCML_Flatsome' => __DIR__ . '/../..' . '/compatibility/class-wcml-flatsome.php',
         'WCML_Install' => __DIR__ . '/../..' . '/inc/class-wcml-install.php',
+        'WCML_JCK_WSSV' => __DIR__ . '/../..' . '/compatibility/class-wcml-jck-wssv.php',
         'WCML_Languages_Upgrade_Notice' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-languages-upgrade-notice.php',
         'WCML_Languages_Upgrader' => __DIR__ . '/../..' . '/inc/class-wcml-languages-upgrader.php',
         'WCML_Links' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-links.php',

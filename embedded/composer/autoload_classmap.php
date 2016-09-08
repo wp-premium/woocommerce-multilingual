@@ -42,6 +42,7 @@ return array(
     'WCML_Extra_Product_Options' => $baseDir . '/compatibility/class-wcml-extra-product-options.php',
     'WCML_Flatsome' => $baseDir . '/compatibility/class-wcml-flatsome.php',
     'WCML_Install' => $baseDir . '/inc/class-wcml-install.php',
+    'WCML_JCK_WSSV' => $baseDir . '/compatibility/class-wcml-jck-wssv.php',
     'WCML_Languages_Upgrade_Notice' => $baseDir . '/inc/template-classes/class-wcml-languages-upgrade-notice.php',
     'WCML_Languages_Upgrader' => $baseDir . '/inc/class-wcml-languages-upgrader.php',
     'WCML_Links' => $baseDir . '/inc/admin-menus/class-wcml-links.php',

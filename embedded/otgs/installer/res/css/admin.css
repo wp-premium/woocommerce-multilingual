@@ -15,18 +15,26 @@
 .installer-status-activated{color: #333366; font-weight: bold; }
 
 .js-status-success p{
-    color: #FF9900;   
+    color: #FF9900;
     padding: 4px;
 }
 
 .installer-green-text{
-    color:#006600; 
+    color:#006600;
     font-weight:bold;
 }
 
 .installer-red-text{
-    color:#b22121; 
+    color:#b22121;
     font-weight:bold;
+}
+
+.installer-footnote{
+    color:#3d5e69;
+    display:block;
+    float: left;
+    font-style: italic;
+    font-size: 90%;
 }
 
 .installer-products-list li{
@@ -85,6 +93,13 @@
 
 .installer-q-icon:before{
     content: '\f223' !important;
+    font-family: dashicons !important;
+    color: #f56e28;
+    font: 20px/1 "dashicons";
+}
+
+.installer-plugin-update-tr td{
+    padding-left:3px !important;
 }
 
 .otgsi_yellow_bg{
@@ -95,12 +110,12 @@
     width:480px;
     border: solid 1px #999;
     padding:10px;
-    border-radius: 5px;    
+    border-radius: 5px;
 }
 
 .installer-plugins-list-compact{
     background-color: #fff;
-    border-collapse: collapse;   
+    border-collapse: collapse;
     border:solid 1px #C1DAD7;
     width:100%;
 }
@@ -128,17 +143,17 @@
     width:16px;
 }
 
-.otgs_wp_installer_table_compact .installer-status-downloading, 
-.otgs_wp_installer_table_compact .installer-status-downloaded, 
-.otgs_wp_installer_table_compact .installer-status-activating, 
+.otgs_wp_installer_table_compact .installer-status-downloading,
+.otgs_wp_installer_table_compact .installer-status-downloaded,
+.otgs_wp_installer_table_compact .installer-status-activating,
 .otgs_wp_installer_table_compact .installer-status-activated{
-    display: none; 
+    display: none;
     color:transparent; width: 12px; padding:2px;
 }
 
 .otgs_wp_installer_table_compact .installer-status-success,
 .otgs_wp_installer_table_compact .installer-status-fail{
-    display: none; 
+    display: none;
 }
 
 .installer-status-success{

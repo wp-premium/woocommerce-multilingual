@@ -1,3 +1,6 @@
+= 1.7.11 =
+* Fixed styling for 'must-register' warnings on the plugins page
+
 = 1.7.10 =
 * Fixed a notice that was appearing when the site key registration failed
 
