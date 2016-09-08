@@ -1,19 +1,19 @@
 <?php
-  
+
 // Our case:
 // Muli-currency can be enabled by an option in wp_options - wcml_multi_currency_enabled
 // User currency will be set in the woocommerce session as 'client_currency'
 //     
-  
+
 class WCML_Multi_Currency{
 
     public $currencies = array();
     public $currency_codes = array();
 
     private $client_currency;
-    
+
     private $exchange_rates = array();
-    
+
     public $currencies_without_cents = array('JPY', 'TWD', 'KRW', 'BIF', 'BYR', 'CLP', 'GNF', 'ISK', 'KMF', 'PYG', 'RWF', 'VUV', 'XAF', 'XOF', 'XPF');
 
     /**
@@ -56,7 +56,7 @@ class WCML_Multi_Currency{
      * @var woocommerce_wpml
      */
     public $woocommerce_wpml;
-    
+
     public function __construct(){
         global $woocommerce_wpml;
 
@@ -65,7 +65,7 @@ class WCML_Multi_Currency{
         WCML_Multi_Currency_Install::set_up( $this, $woocommerce_wpml );
 
         $this->init_currencies();
-        
+
         if( $this->_load_filters()) {
             $this->prices   = new WCML_Multi_Currency_Prices( $this );
             $this->coupons  = new WCML_Multi_Currency_Coupons();
@@ -251,13 +251,32 @@ class WCML_Multi_Currency{
         return false;
     }
 
+    public function delete_currency_by_code( $code, $settings = false, $update = true ){
+        $settings = $settings ? $settings : $this->woocommerce_wpml->get_settings();
+        unset( $settings[ 'currency_options' ][ $code ] );
+
+        if( isset( $settings[ 'currencies_order' ] ) ){
+            foreach( $settings[ 'currencies_order' ] as $key => $cur_code ){
+                if( $cur_code == $code ) {
+                    unset( $settings[ 'currencies_order' ][ $key ] );
+                }
+            }
+        }
+
+        if( $update ){
+            $this->woocommerce_wpml->update_settings( $settings );
+        }
+
+        return $settings;
+    }
+
     public function get_exchange_rates(){
 
         if(empty($this->exchange_rates)){
 
             $this->exchange_rates = array(get_option('woocommerce_currency') => 1);
-            $woo_currencies = get_woocommerce_currencies(); 
-            
+            $woo_currencies = get_woocommerce_currencies();
+
             $currencies = $this->get_currencies();
             foreach($currencies as $code => $currency){
                 if(!empty($woo_currencies[$code])){
@@ -410,7 +429,4 @@ class WCML_Multi_Currency{
 
     }
 
-
-
 }
-

@@ -10,7 +10,7 @@
                 <select name="currency_options[code]" id="wcml_currency_options_code_{{ args.currency_code }}">
                     {% for code, name in args.wc_currencies %}
                     {% if attribute(args.currencies, code) is null and code != args.default_currency %}
-                    <option value="{{ code }}" {% if code == args.currency_code %}selected="selected"{% endif %} data-symbol="{{ get_currency_symbol(code) }}" >{{ name|raw }}</option>
+                    <option value="{{ code }}" {% if code == args.currency_code %}selected="selected"{% endif %} data-symbol="{{ get_currency_symbol(code) }}" >{{ name|raw }} ({{ get_currency_symbol(code)|raw }} )</option>
                     {% endif %}
                     {% endfor %}
                 </select>
