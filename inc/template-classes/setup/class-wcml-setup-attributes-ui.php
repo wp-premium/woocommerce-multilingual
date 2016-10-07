@@ -33,7 +33,7 @@ class WCML_Setup_Attributes_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
-                'heading'       => __('Select translatable attributes', 'woocommerce-multilingual'),
+                'heading'       => __('Select Translatable Attributes', 'woocommerce-multilingual'),
                 'no_attributes' => __('There are no attributes defined', 'woocommerce-multilingual'),
                 'continue'      => __('Continue', 'woocommerce-multilingual'),
                 'later'         => __('Later', 'woocommerce-multilingual')

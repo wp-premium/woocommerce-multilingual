@@ -9,6 +9,10 @@ class WCML_Currencies{
 
         add_action('widgets_init', array($this, 'register_currency_switcher_widget'));
 
+	    if( is_admin() ){
+		    add_action( 'update_option_woocommerce_currency', array( $this, 'update_default_currency' ), 10, 2 );
+	    }
+
     }
 
     public function register_currency_switcher_widget(){
@@ -16,6 +20,14 @@ class WCML_Currencies{
         if( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
             register_widget( 'WCML_Currency_Switcher_Widget' );
         }
+
+    }
+
+    public function update_default_currency( $old_value, $new_value ){
+
+	    $this->woocommerce_wpml->multi_currency = new WCML_Multi_Currency();
+	    $WCML_Multi_Currency_Install = new WCML_Multi_Currency_Install( $this->woocommerce_wpml->multi_currency, $this->woocommerce_wpml );
+	    $WCML_Multi_Currency_Install->set_default_currencies_languages( $old_value, $new_value );
 
     }
 

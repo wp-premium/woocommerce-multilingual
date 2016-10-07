@@ -33,9 +33,7 @@ class WCML_Products{
 
             add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
 
-            if( defined( 'ICL_SITEPRESS_VERSION' ) && version_compare( ICL_SITEPRESS_VERSION, '3.2', '>=' ) ){
-                $this->tp_support = new WCML_TP_Support();
-            }
+            $this->tp_support = new WCML_TP_Support();
 
         }else{
             add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
@@ -432,6 +430,68 @@ class WCML_Products{
             return $ids;
 
         return false;
+    }
+
+    // count "in progress" and "waiting on translation" as untranslated too
+    public function get_untranslated_products_count( $language ){
+
+        $count = 0;
+
+        $products = $this->wpdb->get_results( "
+                      SELECT p.ID, t.trid, t.language_code
+                      FROM {$this->wpdb->posts} AS p
+                      LEFT JOIN {$this->wpdb->prefix}icl_translations AS t ON t.element_id = p.id
+                      WHERE p.post_type = 'product' AND t.element_type = 'post_product' AND t.source_language_code IS NULL
+                  " );
+
+        foreach( $products as $product ){
+            if( $product->language_code == $language ) continue;
+
+            $element_key        = array( 'trid' => $product->trid, 'language_code' => $language );
+            $translation_status = apply_filters( 'wpml_tm_translation_status', null, $element_key );
+
+            if( in_array( $translation_status, array( ICL_TM_NOT_TRANSLATED, ICL_TM_WAITING_FOR_TRANSLATOR, ICL_TM_IN_PROGRESS ) ) ){
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    public function is_hide_resign_button(){
+        global $iclTranslationManagement;
+
+        $hide_resign = false;
+
+        if( isset( $_GET[ 'source_language_code' ] ) && isset( $_GET[ 'language_code' ] ) ){
+
+            $from_lang = $_GET[ 'source_language_code' ];
+            $to_lang = $_GET[ 'language_code' ];
+
+        }elseif( isset( $_GET[ 'job_id' ] ) ){
+
+            $job = $iclTranslationManagement->get_translation_job( $_GET[ 'job_id' ] );
+            $from_lang = $job->source_language_code;
+            $to_lang = $job->language_code;
+
+        }
+
+        if( isset( $from_lang ) ){
+
+            $translators = $iclTranslationManagement->get_blog_translators(
+                array(
+                    'from' => $from_lang,
+                    'to'   => $to_lang
+                )
+            );
+
+            if( empty( $translators ) || ( sizeof( $translators ) == 1 && $translators[0]->ID == get_current_user_id() ) ){
+                $hide_resign = true;
+            }
+
+        }
+
+        return $hide_resign;
     }
 
 }

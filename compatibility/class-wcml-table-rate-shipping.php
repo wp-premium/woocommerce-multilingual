@@ -38,11 +38,25 @@ class WCML_Table_Rate_Shipping {
 	 */
 	public function init() {
 		// Register shipping label
-		if ( isset( $_GET['page'] ) && 'shipping_zones' === $_GET['page'] && isset( $_POST['shipping_label'] ) && isset( $_POST['woocommerce_table_rate_title'] ) ) {
-			do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST['woocommerce_table_rate_title'] ) . '_shipping_method_title', sanitize_text_field( $_POST['woocommerce_table_rate_title'] ) );
-			$shipping_labels = array_map( 'woocommerce_clean', $_POST['shipping_label'] );
-			foreach ( $shipping_labels as $shipping_label ) {
-				do_action( 'wpml_register_single_string', 'woocommerce', $shipping_label . '_shipping_method_title', $shipping_label );
+		if (
+			isset( $_GET[ 'page' ] ) &&
+			(
+				$_GET[ 'page' ] === 'shipping_zones' ||
+				(
+					$_GET['page'] == 'wc-settings' &&
+					isset( $_GET[ 'tab' ] ) &&
+					$_GET['tab'] == 'shipping'
+				)
+			) &&
+			isset( $_POST[ 'shipping_label' ] ) &&
+			isset( $_POST[ 'woocommerce_table_rate_title' ] )
+		) {
+
+			do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
+			$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
+			foreach ( $shipping_labels as $key => $shipping_label ) {
+				$rate_key = isset( $_GET[ 'instance_id' ] ) ? 'table_rate'.$_GET[ 'instance_id' ].$_POST[ 'rate_id' ][ $key ] : $shipping_label;
+				do_action( 'wpml_register_single_string', 'woocommerce', $rate_key. '_shipping_method_title', $shipping_label );
 			}
 		}
 	}

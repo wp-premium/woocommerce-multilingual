@@ -1,0 +1,19 @@
+{% if style == 'dropdown'  %}
+
+    <select class="wcml_currency_switcher">
+        {% for currency in currencies %}
+        <option value="{{ currency }}" {% if( currency == selected_currency) %}selected="selected"{% endif %}>{{ get_formatted_price( currency, format )|raw }}</option>
+        {% endfor %}
+    </select>
+
+{% else %}
+
+    <ul class="wcml_currency_switcher {{ orientation }}">
+        {% for currency in currencies %}
+        <li rel="{{ currency }}" {% if( currency == selected_currency) %}class="wcml-active-currency"{% endif %}>{{ get_formatted_price( currency, format )|raw }}</li>
+        {% endfor %}
+    </ul>
+
+{% endif %}
+
+

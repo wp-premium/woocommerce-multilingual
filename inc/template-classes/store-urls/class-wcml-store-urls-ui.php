@@ -49,6 +49,7 @@ class WCML_Store_URLs_UI extends WPML_Templates_Factory {
 				'statuses' => $this->get_base_translations_statuses( 'attribute', $this->active_languages, $this->woocommerce_wpml->url_translation->wc_permalinks['attribute_base'] ),
 			),
 			'endpoints_base' => $this->get_endpoint_info(),
+			'attribute_slugs'=> $this->get_attribute_slugs_info(),
 			'strings' => array(
 				'notice' => __( 'This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages.', 'woocommerce-multilingual' ),
 				'notice_defaults' => sprintf( __( 'You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page.',
@@ -66,6 +67,7 @@ class WCML_Store_URLs_UI extends WPML_Templates_Factory {
 				'tag' => __( 'Product tag base', 'woocommerce-multilingual' ),
 				'attr' => __( 'Product attribute base', 'woocommerce-multilingual' ),
 				'endpoint' => __( 'Endpoint: %s', 'woocommerce-multilingual' ),
+				'attribute_slug' => __( 'Attribute slug: %s', 'woocommerce-multilingual' ),
 			),
 			'nonces' => array(
 				'edit_base' => wp_nonce_field('wcml_edit_base', 'wcml_edit_base_nonce'),
@@ -87,8 +89,36 @@ class WCML_Store_URLs_UI extends WPML_Templates_Factory {
 			$endpoints_info[ $key ][ 'statuses' ] = $this->get_base_translations_statuses( $key, $this->active_languages, $endpoint );
 
 		}
+
 		return $endpoints_info;
 
+	}
+
+	private function get_attribute_slugs_info(){
+		$product_attributes = $this->woocommerce_wpml->attributes->get_translatable_attributes();
+
+		$attributes_info = array();
+		foreach( $product_attributes as $attribute ){
+
+			if( $attribute->attribute_public ) {
+				$language = $this->woocommerce_wpml->strings->get_string_language(
+					$attribute->attribute_name,
+					$this->woocommerce_wpml->url_translation->url_strings_context(),
+					$this->woocommerce_wpml->url_translation->url_string_name( 'attribute_slug', $attribute->attribute_name )
+				);
+
+				//$this->woocommerce_wpml->url_translation
+				$attributes_info[ $attribute->attribute_name ] = array(
+					'label'      => $attribute->attribute_label,
+					'orig_value' => $attribute->attribute_name,
+					'flag'       => $this->sitepress->get_flag_url( $language ),
+					'statuses'   => $this->get_base_translations_statuses( 'attribute_slug-' . $attribute->attribute_name, $this->active_languages, $attribute->attribute_name )
+				);
+
+			}
+		}
+
+		return $attributes_info;
 	}
 
 	public function get_base_translations_statuses( $base, $active_languages, $value = true ){

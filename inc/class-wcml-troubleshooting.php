@@ -212,14 +212,10 @@ class WCML_Troubleshooting{
                         }
                     }
 
-                    if( version_compare( ICL_SITEPRESS_VERSION, '3.1.8.2', '<=' ) ){
-                        $term_name = $term->name.' @'.$language['code'];
-                    }else{
-                        $term_name = $term->name;
-                        $slug = $term->name.'-'.$language['code'];
-                        $slug = WPML_Terms_Translations::term_unique_slug( $slug, $attr, $language['code'] );
-                        $term_args[ 'slug' ] = $slug;
-                    }
+                    $term_name = $term->name;
+                    $slug = $term->name.'-'.$language['code'];
+                    $slug = WPML_Terms_Translations::term_unique_slug( $slug, $attr, $language['code'] );
+                    $term_args[ 'slug' ] = $slug;
 
                     $new_term = wp_insert_term( $term_name , $attr, $term_args );
                     if ( $new_term && !is_wp_error( $new_term ) ) {

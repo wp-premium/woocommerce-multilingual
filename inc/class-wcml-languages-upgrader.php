@@ -12,7 +12,7 @@ class WCML_Languages_Upgrader{
         add_action( 'admin_notices', array( $this, 'translation_upgrade_notice' ) );
         add_action( 'wp_ajax_hide_wcml_translations_message', array($this, 'hide_wcml_translations_message') );
 
-
+        $this->load_js();
     }
 
     /**
@@ -258,9 +258,6 @@ class WCML_Languages_Upgrader{
 
         if ( 'update-core' !== $screen->id && !empty ( $notices ) && !get_option( 'hide_wcml_translations_message' ) ) {
 
-            wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
-            wp_enqueue_script( 'wcml-lang-notice');
-
             $lang_notices = new WCML_Languages_Upgrade_Notice( $notices );
             $lang_notices->show();
         }
@@ -279,6 +276,17 @@ class WCML_Languages_Upgrader{
         die();
     }
 
+    public function load_js(){
 
+        wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
+        wp_enqueue_script( 'wcml-lang-notice');
+
+        wp_localize_script( 'wcml-lang-notice', 'wcml_settings',
+            array(
+                'warn' => __( "Downloading translations... Please don't close this page.", 'woocommerce-multilingual' )
+            )
+        );
+
+    }
 
 }

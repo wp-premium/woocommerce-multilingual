@@ -118,7 +118,7 @@ class WCML_Url_Translation {
         return 'WordPress';
     }
 
-    public static function url_string_name( $type ) {
+    public function url_string_name( $type, $value = '' ) {
 
         $name = '';
 
@@ -131,6 +131,9 @@ class WCML_Url_Translation {
             case 'attribute':
                 $name = sprintf( 'URL %s tax slug', $type );
                 break;
+	        case 'attribute_slug':
+		        $name = sprintf( 'URL attribute slug: %s', $value );
+		        break;
         }
 
         return $name;
@@ -308,17 +311,26 @@ class WCML_Url_Translation {
             $taxonomies = array(
                 'product_cat' => array(
                     'base'              => 'category_base',
-                    'base_translated'   => _x( 'product-category', 'slug', 'woocommerce' ),
+                    'base_translated'   => apply_filters(
+					                        'wpml_translate_single_string',
+						                    'product-category',
+						                    $this->url_strings_context(),
+						                    $this->url_string_name( 'product_cat' )
+                                        ),
                     'default'           => $this->default_product_category_base
                 ),
                 'product_tag' => array(
                     'base'              => 'tag_base',
-                    'base_translated'   => _x( 'product-tag', 'slug', 'woocommerce' ),
+                    'base_translated'   => apply_filters(
+						                    'wpml_translate_single_string',
+						                    'product-tag',
+						                    $this->url_strings_context(),
+						                    $this->url_string_name( 'product_tag' )
+					                    ),
                     'default'           => $this->default_product_tag_base
                 ),
             );
             add_filter( 'gettext_with_context', array( $woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
-
             foreach ( $taxonomies as $taxonomy => $taxonomy_details ) {
 
                 if ( empty( $this->wc_permalinks[$taxonomy_details['base']] ) && $value ) {
@@ -343,7 +355,7 @@ class WCML_Url_Translation {
 
     function translate_bases_in_rewrite_rules( $value ) {
         global $sitepress, $sitepress_settings, $woocommerce_wpml;
-		
+
 		if ( ! empty( $value ) ) {
 
 			$taxonomies = array( 'product_cat', 'product_tag' );
@@ -389,6 +401,8 @@ class WCML_Url_Translation {
 				if ( isset( $taxonomy_obj->rewrite['slug'] ) ) {
 					$exp = explode( '/', trim( $taxonomy_obj->rewrite['slug'], '/' ) );
 					$slug = join( '/', array_slice( $exp, 0, count( $exp ) - 1 ) );
+
+					$attribute_slug = preg_replace( "#^$slug/#", '', $taxonomy_obj->rewrite['slug'] );
 				}
 	
 				if ( isset( $slug ) ) {
@@ -398,14 +412,16 @@ class WCML_Url_Translation {
 	
 						$slug_translation = apply_filters('wpml_translate_single_string', $slug, $this->url_strings_context(), $this->url_string_name( 'attribute' ) );
 						if ($slug_translation) {
-	
+
+							$attribute_slug_translation = apply_filters('wpml_translate_single_string', $attribute_slug, $this->url_strings_context(), $this->url_string_name( 'attribute_slug',  $attribute_slug) );
+
 							$slug_match = addslashes( ltrim($slug, '/') );
 							$slug_translation_match = ltrim($slug_translation, '/');
 	
 							$buff_value = array();
 							foreach ((array)$value as $k => $v) {
 								if ($slug != $slug_translation && preg_match('#^' . $slug_match . '/(.*)#', $k)) {
-									$k = preg_replace('#^' . $slug_match . '/(.*)#', $slug_translation_match . '/$1', $k);
+									$k = preg_replace('#^' . $slug_match . '/(' . $attribute_slug .')/(.*)#', $slug_translation_match . '/' . $attribute_slug_translation . '/$2', $k);
 								}
 								$buff_value[$k] = $v;
 							}
@@ -419,9 +435,9 @@ class WCML_Url_Translation {
 				}
 	
 			}
-	
-	
-	
+
+
+
 			//filter shop page rewrite slug
 			$current_shop_id = wc_get_page_id( 'shop' );
 			$default_shop_id = apply_filters( 'translate_object_id', $current_shop_id, 'page', true, $sitepress->get_default_language() );
@@ -450,7 +466,6 @@ class WCML_Url_Translation {
 				unset( $buff_value );
 			}
 		}
-
 
         return $value;
     }
@@ -492,7 +507,34 @@ class WCML_Url_Translation {
                     if ( !empty( $base_translated ) && $base_translated != $base && isset( $wp_rewrite->extra_permastructs[$taxonomy] ) ) {
 
                         $buff = $wp_rewrite->extra_permastructs[$taxonomy]['struct'];
-                        $wp_rewrite->extra_permastructs[$taxonomy]['struct'] = str_replace( $base, $base_translated, $wp_rewrite->extra_permastructs[$taxonomy]['struct'] );
+
+	                    // translate the attribute base
+                        $wp_rewrite->extra_permastructs[$taxonomy]['struct'] = preg_replace( '#^' . $base . '/(.*)#', $base_translated . '/$1', $wp_rewrite->extra_permastructs[$taxonomy]['struct'] );
+
+	                    // translate the attribute slug
+	                    if( isset($this->wc_permalinks['attribute_base']) && $this->wc_permalinks['attribute_base'] === $base ){
+
+		                    $attribute_slug = preg_replace('#^' . $base . '/([^/]+)/.+$#', '$1', $wp_rewrite->extra_permastructs[$taxonomy]['struct']);
+		                    $attribute_slug_default = preg_replace('#^pa_#', '', $taxonomy );
+		                    $attribute_slug_translation = apply_filters(
+			                    'wpml_translate_single_string',
+			                    $attribute_slug,
+			                    $this->url_strings_context(),
+			                    $this->url_string_name( 'attribute_slug',  $attribute_slug_default ),
+			                    $term_language
+		                    );
+
+		                    if( $attribute_slug_translation != $attribute_slug ){
+			                    $wp_rewrite->extra_permastructs[$taxonomy]['struct'] = preg_replace(
+				                    '#^' . $base_translated . '/([^/]+)/(.+)$#',
+				                    $base_translated . '/' . $attribute_slug_translation . '/$2',
+				                    $wp_rewrite->extra_permastructs[$taxonomy]['struct']
+			                    );
+		                    }
+
+	                    }
+
+
                         $no_recursion_flag = true;
                         $termlink = get_term_link( $term, $taxonomy );
 
@@ -571,11 +613,14 @@ class WCML_Url_Translation {
 
     }
 
-
-
-
     function get_base_translation ( $base, $language ){
         global $woocommerce_wpml;
+
+	    // case of attribute slugs
+	    if( strpos( $base, 'attribute_slug-' ) === 0  ){
+		    $slug = preg_replace( '#^attribute_slug-#', '', $base );
+		    $base = 'attribute_slug';
+	    }
 
         switch ( $base ) {
             case 'product':
@@ -597,6 +642,11 @@ class WCML_Url_Translation {
                 $slug = trim( $this->wc_permalinks['attribute_base'], '/' );
                 $return['name'] = __('Product Attribute Base', 'woocommerce-multilingual');
                 break;
+
+	        case 'attribute_slug':
+		        $return['name'] = __('Attribute Slug', 'woocommerce-multilingual');
+		        $string_id = icl_get_string_id( $slug, $this->url_strings_context(), $this->url_string_name( $base, $slug ) );
+		        break;
 
             default:
                 $endpoints = WC()->query->query_vars;
@@ -650,7 +700,6 @@ class WCML_Url_Translation {
 
         global $wpdb, $woocommerce_wpml, $sitepress;
 
-        $args = array();
         $original_base = $_POST['base'];
         $original_base_value = $_POST['base_value'];
         $base_translation = $_POST['base_translation'];
@@ -669,8 +718,12 @@ class WCML_Url_Translation {
             }
 
         }else{
-            if( in_array( $original_base, array( 'product','product_cat','product_tag','attribute') ) ){
-                $string_id = icl_get_string_id( $original_base_value, $this->url_strings_context(), $this->url_string_name( $original_base ) );
+            if( in_array( $original_base, array( 'product','product_cat','product_tag','attribute') ) ) {
+	            $string_id = icl_get_string_id( $original_base_value, $this->url_strings_context(), $this->url_string_name( $original_base ) );
+            }elseif( strpos( $original_base, 'attribute_slug-' ) === 0 ){
+	            $slug = preg_replace( '#^attribute_slug-#', '', $original_base );
+	            do_action( 'wpml_register_single_string', $this->url_strings_context(), $this->url_string_name( 'attribute_slug', $slug ), $slug );
+	            $string_id = icl_get_string_id( $original_base_value, $this->url_strings_context(), $this->url_string_name( 'attribute_slug', $slug ) );
             }else{
                 $string_id = icl_get_string_id( $original_base_value, 'WooCommerce Endpoints', $original_base );
                 if( !$string_id && function_exists( 'icl_register_string' ) ){
@@ -693,7 +746,7 @@ class WCML_Url_Translation {
 
     }
 
-    // return correct redirect URL for WC standard taxonomies when pretty permalink uses with lang as parametr in WPML
+    // return correct redirect URL for WC standard taxonomies when pretty permalink uses with lang as parameter in WPML
     function check_wc_tax_url_on_redirect( $redirect_url, $requested_url ){
         global $wp_query;
 

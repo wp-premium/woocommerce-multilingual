@@ -23,7 +23,11 @@
                             </small>
                         {% else %}
                             <i class="otgs-ico-warning"></i>
-                            {{ strings.miss_trnsl|format( taxonomy.untranslated, taxonomy.name ) }}
+                            {% if( taxonomy.untranslated == 1) %}
+                                {{ strings.miss_trnsl_one|format( taxonomy.untranslated, taxonomy.name_singular ) }}
+                            {% else %}
+                                {{ strings.miss_trnsl_more|format( taxonomy.untranslated, taxonomy.name ) }}
+                            {% endif %}
                             <a class="button-secondary" href="{{ taxonomy.url }}">
                                 {{ strings.trnsl|format( taxonomy.name ) }}
                             </a>

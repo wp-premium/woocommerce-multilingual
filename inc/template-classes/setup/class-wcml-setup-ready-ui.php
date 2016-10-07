@@ -27,35 +27,12 @@ class WCML_Setup_Ready_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
-                'heading'       => __('Ready!', 'woocommerce-multilingual'),
-                'description'   => __("Further actions that are necessary for making your existing content multilingual, are listed below.", 'woocommerce-multilingual'),
-                'continue'      => __('Start translating products', 'woocommerce-multilingual'),
+                'heading'       => __('Setup Complete', 'woocommerce-multilingual'),
+                'description1'  => __("Your multilingual shop is almost ready. Next, you should go to the different tabs in %sWooCommerce &raquo; WooCommerce Multilingual%s admin and do the final setup.", 'woocommerce-multilingual'),
+                'description2'  => __("For your convenience, we've marked items that require your attention with a notice icon. You can see a list of everything that you should complete in the %sStatus%s tab.", 'woocommerce-multilingual'),
+                'continue'      => __('Close setup', 'woocommerce-multilingual'),
             ),
-
-            'multi_currency_on'     => $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT,
-            'multi_currency_link'   => sprintf( __('Add secondary currencies on the %smulti-currency configuration%s page', 'woocommerce-multilingual'),
-                '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=multi-currency&src=setup') . '">', '</a>'),
-
-            'untranslated_attr_terms'=> $untranslated_attribute_terms ?
-                sprintf( __('Translate existing terms for these %sproduct attributes%s: %s', 'woocommerce-multilingual'),
-                '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=product-attributes&src=setup') . '">', '</a>', join(', ', $untranslated_attribute_terms )) : false,
-
-            'untranslated_categories'=> $untranslated_categories ?
-                sprintf( __('Translate existing %sproduct categories%s', 'woocommerce-multilingual'),
-                    '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=product_cat&src=setup') . '">', '</a>') : false,
-
-            'untranslated_tags'=> $untranslated_tags ?
-                sprintf( __('Translate existing %sproduct tags%s', 'woocommerce-multilingual'),
-                    '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=product_tag&src=setup') . '">', '</a>') : false,
-
-            'untranslated_shipping_classes'=> $untranslated_shipping_classes ?
-                sprintf( __('%sAdd missing translations%s for shipping classes', 'woocommerce-multilingual'),
-                    '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=product_shipping_class&src=setup') . '">', '</a>') : false,
-
-            'url_translation' => sprintf( __('Translate %sURL slugs%s to create multilingual store and product urls', 'woocommerce-multilingual'),
-                '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=slugs&src=setup') . '">', '</a>' ),
-
-            'continue_url'  => admin_url('admin.php?page=wpml-wcml&tab=products&src=setup')
+            'continue_url'  => admin_url('admin.php?page=wpml-wcml&tab=status&src=setup')
         );
 
         return $model;

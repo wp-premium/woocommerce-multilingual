@@ -124,7 +124,7 @@
 		display: none;
 	}
 	.wpml-form-row label {
-		width: 195px;
+		width: 215px;
 		text-align: left;
 	}
 	input, select {
@@ -133,15 +133,18 @@
 	.currency_code {
 		label {
 			width: 100px;
+			vertical-align: top;
 		}
 		select {
 			width: auto;
+			max-width: calc(100% - 165px);
 		}
 	}
 
 	.wcml-co-exchange-rate {
 		label {
 			width: 100px;
+			vertical-align: top;
 		}
 		input {
 			margin: 0 !important;
@@ -154,6 +157,9 @@
 		small {
 			display: block;
 		}
+	}
+	.wcml-co-help-link {
+		margin-top: 7px;
 	}
 
 	.wcml-co-preview {
@@ -298,6 +304,23 @@ table.widefat.currency_delete_table {
 table.widefat.currency_lang_table {
 	border-left: none;
 	border-right: none;
+	thead{
+		tr {
+			height: 28px;
+		}
+		td {
+			border-bottom: 0;
+			text-align: center;
+			padding-top: 3px;
+			padding-bottom: 1px;
+			font-size: 1em;
+		}
+		th {
+			padding-top: 0;
+			padding-bottom: 0;
+			text-align: center;
+		}
+	}
 }
 
 .currency_wrap {
@@ -315,6 +338,11 @@ table.widefat.currency_lang_table {
 .currency_lang_table,
 .currency_delete_table {
 	clear: none;
+	thead {
+		tr {
+			height: 56px;
+		}
+	}
 	tr {
 		height: 50px;
 	}
@@ -507,4 +535,24 @@ input[name="wcml_curr_template"] {
 .wcml_tt_spinner {
 	margin-right: 15px;
 	display: none;
+}
+.wcml-product-attributes-selector {
+  	text-align: center;
+	margin-bottom: 25px;
+	@media (max-width: 1280px) {
+		margin-left: .2em;
+	}
+	select {
+		min-width: 200px;
+	}
+}
+
+.wcml-product-custom-taxonomies-selector{
+  	text-align: center;
+  	margin-bottom: 25px;
+}
+
+.wcml_attributes_wrap #wpml_tt_taxonomy_translation_wrap>label,
+.wcml_custom_taxonomies_wrap #wpml_tt_taxonomy_translation_wrap>label{
+  	display: none;
 }

@@ -11,7 +11,7 @@ class WCML_Admin_Menus{
         self::$sitepress =& $sitepress;
         self::$wpdb =& $wpdb;
 
-        add_action( 'admin_menu', array(__CLASS__, 'register_menus' ) );
+        add_action( 'admin_menu', array(__CLASS__, 'register_menus' ), 80 );
 
         if( self::is_page_without_admin_language_switcher() ){
             self::remove_wpml_admin_language_switcher();
@@ -25,54 +25,49 @@ class WCML_Admin_Menus{
 
         add_filter( 'woocommerce_prevent_admin_access', array( __CLASS__, 'check_user_admin_access' ) );
 
+        add_action( 'admin_head', array( __CLASS__, 'add_menu_warning' ) );
     }
 
     public static function register_menus(){
         global $WPML_Translation_Management;
 
-        if( self::$woocommerce_wpml->check_dependencies && self::$woocommerce_wpml->check_design_update){
-            $top_page = apply_filters('icl_menu_main_page', basename(ICL_PLUGIN_PATH) .'/menu/languages.php');
+        if( self::$woocommerce_wpml->check_dependencies || class_exists( 'WooCommerce' ) ) {
 
-            if( current_user_can('wpml_manage_woocommerce_multilingual') ){
-                add_submenu_page($top_page, __('WooCommerce Multilingual', 'woocommerce-multilingual'),
-                    __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'wpml_manage_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'));
+            add_submenu_page(
+                'woocommerce',
+                __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
+                __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
+                'wpml_manage_woocommerce_multilingual',
+                'wpml-wcml',
+                array( __CLASS__, 'render_menus' )
+            );
 
-            }elseif( current_user_can('wpml_operate_woocommerce_multilingual') ){
-                add_menu_page( __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ), __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
-                    'wpml_operate_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'), WCML_PLUGIN_URL . '/res/images/icon16.png' );
-
+            if( !current_user_can('wpml_manage_woocommerce_multilingual') && current_user_can('wpml_operate_woocommerce_multilingual') ) {
                 //force add translations-queue page for shop manager
                 $wp_api = self::$sitepress->get_wp_api();
-                if ( !$wp_api->current_user_can( 'wpml_manage_translation_management' ) ) {
-                    $wp_api->add_submenu_page( null,
-                        __( 'Translations', 'wpml-translation-management' ), __( 'Translations', 'wpml-translation-management' ),
-                        'wpml_operate_woocommerce_multilingual', WPML_TM_FOLDER . '/menu/translations-queue.php', array( $WPML_Translation_Management, 'translation_queue_page' ) );
-                }
-            }else{
-                $user_lang_pairs = get_user_meta(get_current_user_id(), self::$wpdb->prefix.'language_pairs', true);
-                if( !empty( $user_lang_pairs ) ){
-                    add_menu_page(__('WooCommerce Multilingual', 'woocommerce-multilingual'),
-                        __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'translate',
-                        'wpml-wcml', array(__CLASS__, 'render_menus'), ICL_PLUGIN_URL . '/res/img/icon16.png');
+                if (!$wp_api->current_user_can('wpml_manage_translation_management')) {
+                    $wp_api->add_submenu_page(null,
+                        __('Translations', 'wpml-translation-management'), __('Translations', 'wpml-translation-management'),
+                        'wpml_operate_woocommerce_multilingual', WPML_TM_FOLDER . '/menu/translations-queue.php', array($WPML_Translation_Management, 'translation_queue_page'));
                 }
             }
+        } else {
 
-        }elseif( current_user_can('wpml_manage_woocommerce_multilingual') ){
-            if(!defined('ICL_SITEPRESS_VERSION')){
-                add_menu_page( __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ), __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
-                    'wpml_manage_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'), WCML_PLUGIN_URL . '/res/images/icon16.png' );
-            }else{
-                $top_page = apply_filters('icl_menu_main_page', basename(ICL_PLUGIN_PATH) .'/menu/languages.php');
-                add_submenu_page($top_page, __('WooCommerce Multilingual', 'woocommerce-multilingual'),
-                    __('WooCommerce Multilingual', 'woocommerce-multilingual'), 'wpml_manage_woocommerce_multilingual', 'wpml-wcml', array(__CLASS__, 'render_menus'));
-            }
+            add_menu_page(
+                __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
+                __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
+                'wpml_manage_woocommerce_multilingual',
+                'wpml-wcml',
+                array( __CLASS__, 'render_menus' ),
+                WCML_PLUGIN_URL . '/res/images/icon16.png'
+            );
 
         }
     }
 
     public static function render_menus(){
 
-        if( self::$woocommerce_wpml->check_dependencies && self::$woocommerce_wpml->check_design_update ){
+        if( self::$woocommerce_wpml->check_dependencies ){
             $menus_wrap = new WCML_Menus_Wrap( self::$woocommerce_wpml );
             $menus_wrap->show();
         }else{
@@ -125,8 +120,6 @@ class WCML_Admin_Menus{
         $get_post_type = get_post_type( $post->ID );
 
         if ( $get_post_type == 'product' && $pagenow == 'edit.php' ) {
-            $prot_link = '<span class="button"><img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon.png" width="16" height="16" style="margin-bottom:-4px" /> <a href="' . WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/', 'woocommerce-multilingual', 'documentation', '#4' ) . '" target="_blank">' .
-                __( 'How to translate products', 'sitepress' ) . '<\/a>' . '<\/span>';
             $quick_edit_notice = '<div id="quick_edit_notice" style="display:none;"><p>' .
                 sprintf( __( "Quick edit is disabled for product translations. It\'s recommended to use the %s for editing products translations. %s",
                     'woocommerce-multilingual' ), '<a href="' . admin_url( 'admin.php?page=wpml-wcml&tab=products' ) . '" >' .
@@ -136,20 +129,16 @@ class WCML_Admin_Menus{
             $quick_edit_notice_prod_link = '<input type="hidden" id="wcml_product_trnsl_link" value="' . admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' ) . '">';
             ?>
             <script type="text/javascript">
-                jQuery(".subsubsub").append('<?php echo $prot_link ?>');
                 jQuery(".subsubsub").append('<?php echo $quick_edit_notice ?>');
                 jQuery(".subsubsub").append('<?php echo $quick_edit_notice_prod_link ?>');
                 jQuery(".quick_hide a").on('click', function () {
                     jQuery(".quick_product_trnsl_link").attr('href', jQuery("#wcml_product_trnsl_link").val() + jQuery(this).closest('tr').attr('id').replace(/post-/, ''));
                 });
 
-                //lock feautured for translations
+                //lock feature for translations
                 jQuery(document).on('click', '.featured a', function () {
-
                     if (jQuery(this).closest('tr').find('.quick_hide').size() > 0) {
-
                         return false;
-
                     }
 
                 });
@@ -259,7 +248,7 @@ class WCML_Admin_Menus{
 
     public static function check_user_admin_access( $prevent_access ){
 
-        if( self::$woocommerce_wpml->check_dependencies && self::$woocommerce_wpml->check_design_update ){
+        if( self::$woocommerce_wpml->check_dependencies ){
             $user_lang_pairs = get_user_meta( get_current_user_id(), self::$wpdb->prefix.'language_pairs', true );
             if( current_user_can( 'wpml_manage_woocommerce_multilingual' ) || !empty( $user_lang_pairs ) ){
                 return false;
@@ -267,6 +256,37 @@ class WCML_Admin_Menus{
         }
 
         return $prevent_access;
+    }
+
+    public static function add_menu_warning(){
+        global $submenu, $menu;
+
+        if (
+            class_exists( 'woocommerce' ) &&
+            (
+                empty( self::$woocommerce_wpml->settings['set_up_wizard_run'] ) ||
+                (
+                    empty( self::$woocommerce_wpml->settings['set_up_wizard_run'] ) &&
+                    self::$woocommerce_wpml->settings['set_up_wizard_splash']
+                )
+            )
+        ) {
+            if( isset( $submenu[ 'woocommerce' ] ) ){
+                foreach( $submenu[ 'woocommerce' ] as $key => $menu_item ) {
+                    if ( $menu_item[ 0 ] == __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ) ) {
+                        $submenu[ 'woocommerce' ][ $key ][ 0 ] .= '<span class="wcml-menu-warn"><i class="otgs-ico-warning"></i></span>';
+                        break;
+                    }
+                }
+            }
+
+            foreach( $menu as $key => $menu_item ) {
+                if ( $menu_item[ 0 ] == __( 'WooCommerce', 'woocommerce' ) ) {
+                    $menu[ $key ][ 0 ] .= '<span class="wcml-menu-warn"><i class="otgs-ico-warning"></i></span>';
+                    break;
+                }
+            }
+        }
     }
 
 }

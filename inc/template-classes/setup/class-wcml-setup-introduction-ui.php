@@ -17,12 +17,19 @@ class WCML_Setup_Introduction_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
-                'heading'       => __('Welcome to WooCommerce Multilingual!', 'woocommerce-multilingual'),
-                'description1'   => __('Configure the multilingual support for your e-commerce site in just a couple of minutes.', 'woocommerce-multilingual'),
-                'description2'  => __('By default, the products are translatable just like product categories, product tags and attributes. So you can start translating these right away.', 'woocommerce-multilingual'),
-                'description3'  => __('You can configure, however, which attributes you want to translate, install the translated shop pages or enable the multi-currency mode.', 'woocommerce-multilingual'),
-                'continue'      => __('Start', 'woocommerce-multilingual'),
-                'later'         => __("No, thanks. I'll do it later.", 'woocommerce-multilingual')
+                'heading'       => __("Let's turn your WooCommerce shop multilingual", 'woocommerce-multilingual'),
+                'description1'   => __('Thank you for choosing WooCommerce Multilingual. We need to do a few upgrades to your site, so that it has everything needed to run multilingual.', 'woocommerce-multilingual'),
+                'description2'   => array(
+
+                	'title' => __("We'll help you:", 'woocommerce-multilingual'),
+	                'step1' => __("Translate the 'store' pages", 'woocommerce-multilingual'),
+	                'step2' => __("Choose which attributes to make translatable", 'woocommerce-multilingual'),
+	                'step3' => __("Choose if you need multiple currencies", 'woocommerce-multilingual'),
+
+                ),
+                'description3'  => sprintf( __("You can make these updates now, or later from the %sWooCommerce &raquo; WooCommerce Multilingual%s menu.", 'woocommerce-multilingual'), '<strong>', '</strong>' ),
+                'continue'      => __("Let's continue", 'woocommerce-multilingual'),
+                'later'         => __("I'll do the setup later", 'woocommerce-multilingual')
             ),
             'later_url'     => admin_url('admin.php?page=wpml-wcml&src=setup_later'),
             'continue_url'  => $this->next_step_url

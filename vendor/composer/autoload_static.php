@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
+class ComposerStaticInitea5526f224e4d65c1f284250e90538a6
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -52,11 +52,13 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
         'WCML_Coupons' => __DIR__ . '/../..' . '/inc/class-wcml-coupons.php',
         'WCML_Currencies' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-currencies.php',
         'WCML_Currency_Switcher' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-currency-switcher.php',
+        'WCML_Currency_Switcher_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-currency-switcher-ui.php',
         'WCML_Currency_Switcher_Widget' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-currency-switcher-widget.php',
-        'WCML_Custom_Currency_Options' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-custom-currency-options.php',
+        'WCML_Custom_Currency_Options' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-custom-currency-options.php',
         'WCML_Custom_Files_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-custom-files-ui.php',
         'WCML_Custom_Prices' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-custom-prices.php',
-        'WCML_Custom_Prices_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-custom-prices-ui.php',
+        'WCML_Custom_Prices_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-custom-prices-ui.php',
+        'WCML_Custom_Taxonomy_Translation_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-custom-taxonomy-translation-ui.php',
         'WCML_Dependencies' => __DIR__ . '/../..' . '/inc/class-wcml-dependencies.php',
         'WCML_Downloadable_Products' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-downloadable-products.php',
         'WCML_Dynamic_Pricing' => __DIR__ . '/../..' . '/compatibility/class-wcml-dynamic-pricing.php',
@@ -65,6 +67,7 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
         'WCML_Emails' => __DIR__ . '/../..' . '/inc/class-wcml-emails.php',
         'WCML_Endpoints' => __DIR__ . '/../..' . '/inc/class-wcml-endpoints.php',
         'WCML_Extra_Product_Options' => __DIR__ . '/../..' . '/compatibility/class-wcml-extra-product-options.php',
+        'WCML_Fix_Copied_Custom_Fields_WPML353' => __DIR__ . '/../..' . '/inc/class-wcml-fix-copied-custom-fields-wpml353.php',
         'WCML_Flatsome' => __DIR__ . '/../..' . '/compatibility/class-wcml-flatsome.php',
         'WCML_Install' => __DIR__ . '/../..' . '/inc/class-wcml-install.php',
         'WCML_JCK_WSSV' => __DIR__ . '/../..' . '/compatibility/class-wcml-jck-wssv.php',
@@ -85,11 +88,12 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
         'WCML_Multi_Currency_Resources' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-resources.php',
         'WCML_Multi_Currency_Shipping' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-shipping.php',
         'WCML_Multi_Currency_Table_Rate_Shipping' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-table-rate-shipping.php',
-        'WCML_Multi_Currency_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-multi-currency-ui.php',
+        'WCML_Multi_Currency_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-multi-currency-ui.php',
         'WCML_Not_Translatable_Attributes' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-not-translatable-attributes.php',
         'WCML_Orders' => __DIR__ . '/../..' . '/inc/class-wcml-orders.php',
         'WCML_Per_Product_Shipping' => __DIR__ . '/../..' . '/compatibility/class-wcml-per-product-shipping.php',
         'WCML_Plugins_Wrap' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-plugins-wrap.php',
+        'WCML_Pointers' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-pointers.php',
         'WCML_Product_Addons' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-addons.php',
         'WCML_Product_Bundles' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-bundles.php',
         'WCML_Products' => __DIR__ . '/../..' . '/inc/class-wcml-products.php',
@@ -105,8 +109,9 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
         'WCML_Setup_Multi_Currency_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-multi-currency-ui.php',
         'WCML_Setup_Ready_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-ready-ui.php',
         'WCML_Setup_Store_Pages_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-store-pages-ui.php',
-        'WCML_Setup_Translation_Interface_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-translation-interface-ui.php',
         'WCML_Status_Config_Warnings_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-config-warnings-ui.php',
+        'WCML_Status_Multi_Currencies_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-multi-currencies-ui.php',
+        'WCML_Status_Products_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-products-ui.php',
         'WCML_Status_Status_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-status-ui.php',
         'WCML_Status_Store_Pages_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-store-pages-ui.php',
         'WCML_Status_Taxonomies_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-taxonomies-ui.php',
@@ -149,10 +154,10 @@ class ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit00dcbeb0e1eb354a5d439568c0e22365::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitea5526f224e4d65c1f284250e90538a6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitea5526f224e4d65c1f284250e90538a6::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitea5526f224e4d65c1f284250e90538a6::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitea5526f224e4d65c1f284250e90538a6::$classMap;
 
         }, null, ClassLoader::class);
     }

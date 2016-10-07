@@ -51,6 +51,8 @@ class WCML_Resources {
             wp_enqueue_style( 'wcml_op' );
         }
 
+        wp_register_style( 'wcml_admin', WCML_PLUGIN_URL . '/res/css/admin.css', null, WCML_VERSION );
+        wp_enqueue_style( 'wcml_admin' );
     }
 
     public static function load_management_css() {
@@ -101,6 +103,11 @@ class WCML_Resources {
             wp_enqueue_script( 'product-attributes' );
         }
 
+	    if ( self::$page == 'wpml-wcml' && self::$tab == 'custom-taxonomies' ) {
+		    wp_register_script( 'custom-taxonomies', WCML_PLUGIN_URL . '/res/js/product-custom-taxonomies' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION, true );
+		    wp_enqueue_script( 'custom-taxonomies' );
+	    }
+
         if ( !is_admin() ) {
             $referer = isset( $_SERVER[ 'HTTP_REFERER' ] ) ? $_SERVER[ 'HTTP_REFERER' ] : '';
 
@@ -123,19 +130,22 @@ class WCML_Resources {
         }
 
         if( self::$page == WPML_TM_FOLDER . '/menu/translations-queue.php' ) {
+
             self::load_tooltip_resources();
             wp_enqueue_media();
             wp_register_script( 'wcml-editor', WCML_PLUGIN_URL . '/res/js/wcml-translation-editor' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-core'), WCML_VERSION);
             wp_enqueue_script( 'wcml-editor' );
-            wp_localize_script( 'wcml-editor', 'strings',
+            wp_localize_script( 'wcml-editor', 'wcml_settings',
                 array(
-                    'choose'        => __( 'Choose a file', 'woocommerce_multilingual' ),
-                    'save_tooltip'  => __( 'At least one of these fields is required: title, content or excerpt', 'woocommerce_multilingual' ),
-                    'resign_tooltip'=> __( 'This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation.', 'woocommerce-multilingual')
+                    'strings' => array(
+                        'choose'        => __( 'Choose a file', 'woocommerce_multilingual' ),
+                        'save_tooltip'  => __( 'At least one of these fields is required: title, content or excerpt', 'woocommerce_multilingual' ),
+                        'resign_tooltip'=> __( 'This translation job will no longer be assigned to you. Other translators will be able take it and continue the translation.', 'woocommerce-multilingual')
+                    ),
+                    'hide_resign' => self::$woocommerce_wpml->products->is_hide_resign_button()
                 )
             );
         }
-
 
         if ( isset( $_GET['post_type'] ) && 'product' === $_GET['post_type'] && 'edit.php' === self::$pagenow ) {
             self::load_tooltip_resources();

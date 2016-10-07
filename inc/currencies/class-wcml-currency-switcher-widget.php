@@ -11,7 +11,7 @@ class WCML_Currency_Switcher_Widget extends WP_Widget {
 
         echo $args['before_widget'];
 
-        do_action('currency_switcher');
+        do_action('wcml_currency_switcher');
 
         echo $args['after_widget'];
     }

@@ -23,15 +23,6 @@
                             <a href="{{ tracking_link }}"
                                target="_blank">{{ strings.update_wpml }}</a>
                         </li>
-                    {% elseif not check_design_update  %}
-                        <li>
-                            <i class="otgs-ico-warning"></i>
-                            {{ strings.new_design_wpml_link|raw }}
-                            <p>
-                                <a class="button-primary" href="{{ install_wpml_link }}"
-                                   target="_blank">{{ strings.upgrade_wpml }}</a>
-                            </p>
-                        </li>
                     {% elseif icl_version %}
                         <li>
                             <i class="otgs-ico-ok"></i>

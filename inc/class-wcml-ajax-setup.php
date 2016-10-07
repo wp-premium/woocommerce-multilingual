@@ -5,14 +5,17 @@ class WCML_Ajax_Setup{
     
     function __construct(){
         
-        add_action('init', array($this, 'init'));
-        add_action('localize_woocommerce_on_ajax', array($this, 'localize_woocommerce_on_ajax'));
-        
+        add_action( 'init', array( $this, 'init' ) );
+        add_action( 'wcml_localize_woocommerce_on_ajax', array( $this, 'wcml_localize_woocommerce_on_ajax' ) );
+
+        //@deprecated 3.9
+        add_action( 'localize_woocommerce_on_ajax', array( $this, 'localize_woocommerce_on_ajax' ) );
+
     }
     
     function init(){
         if (wpml_is_ajax()){
-           do_action('localize_woocommerce_on_ajax');
+           do_action('wcml_localize_woocommerce_on_ajax');
         }
         
         add_filter('woocommerce_params', array($this, 'filter_woocommerce_ajax_params'));
@@ -102,8 +105,9 @@ class WCML_Ajax_Setup{
 
         return $value; 
     }
-    
-    function localize_woocommerce_on_ajax(){
+
+
+    function wcml_localize_woocommerce_on_ajax(){
         if( isset($_POST['action']) && in_array( $_POST['action'], array( 'wcml_product_data', 'wpml_translation_dialog_save_job' ) ) ){
             return;
         }
@@ -113,6 +117,14 @@ class WCML_Ajax_Setup{
         $current_language = $sitepress->get_current_language();
         
         $sitepress->switch_lang($current_language, true);
+    }
+
+
+    /**
+     * @deprecated 3.9
+     */
+    function localize_woocommerce_on_ajax(){
+        $this->wcml_localize_woocommerce_on_ajax();
     }
     
     
