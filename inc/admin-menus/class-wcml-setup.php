@@ -13,6 +13,8 @@ class WCML_Setup {
         $this->woocommerce_wpml =& $woocommerce_wpml;
         $this->sitepress        =& $sitepress;
 
+        $this->setup_redirect();
+
         $this->steps = array(
             'introduction' => array(
                 'name'    =>  __( 'Introduction', 'woocommerce-multilingual' ),
@@ -34,11 +36,6 @@ class WCML_Setup {
                 'view'    => array( $this, 'setup_multi_currency' ),
                 'handler' => array( $this, 'save_multi_currency' )
             ),
-            'translation-interface' => array(
-                'name'    =>  __( 'Translation Interface', 'woocommerce-multilingual' ),
-                'view'    => array( $this, 'setup_translation_interface' ),
-                'handler' => array( $this, 'save_translation_interface' )
-            ),
             'ready' => array(
                 'name'    =>  __( 'Ready!', 'woocommerce-multilingual' ),
                 'view'    => array( $this, 'setup_ready' ),
@@ -56,11 +53,26 @@ class WCML_Setup {
             add_filter( 'wp_redirect', array($this, 'redirect_filters') );
         }
 
-        if( !$this->has_completed()){
+        if( !$this->has_completed() ){
             add_filter( 'admin_notices', array( $this, 'setup_wizard_notice') );
             add_action( 'admin_init', array( $this, 'skip_setup' ), 1 );
         }
 
+    }
+
+    private function setup_redirect(){
+        if ( get_transient( '_wcml_activation_redirect' ) ) {
+            delete_transient( '_wcml_activation_redirect' );
+
+            if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'wcml-setup' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' )  ) {
+                return;
+            }
+
+            if( !$this->has_completed()){
+                wp_safe_redirect( admin_url( 'index.php?page=wcml-setup' ) );
+                exit;
+            }
+        }
     }
 
     public function admin_menus() {
@@ -68,12 +80,21 @@ class WCML_Setup {
     }
 
     public function setup_wizard_notice(){
+        wp_enqueue_style( 'wcml-setup-wizard-notice', WCML_PLUGIN_URL . '/res/css/wcml-setup-wizard-notice.css' );
         ?>
-        <div id="wcml-setup-wizard" class="updated message fade otgs-is-dismissible">
-            <p><?php printf( __('Welcome to %sWooCommerce Multilingual!%s Please take a moment to configure the main settings and then you are ready to start translating your products.', 'woocommerce-multilingual'), '<strong>', '</strong>') ?></p>
+        <div id="wcml-setup-wizard" class="updated message wpml-message">
+            <p>
+                <strong><?php _e('Prepare your WooCommerce store to run multilingual!', 'woocommerce-multilingual'); ?></strong><br />
+                <?php _e('We need to help you with a few steps to turn your WooCommerce store multilingual. These steps include:', 'woocommerce-multilingual'); ?>
+                <ul class="wcml-notice-list">
+                    <li><?php _e("Translating the 'store' pages", 'woocommerce-multilingual'); ?></li>
+                    <li><?php _e("Choosing which attributes to make translatable", 'woocommerce-multilingual'); ?></li>
+                    <li><?php _e("Choosing if you need multiple currencies", 'woocommerce-multilingual'); ?></li>
+                </ul>
+            </p>
             <p class="submit">
-                <a href="<?php echo esc_url( admin_url('admin.php?page=wcml-setup') ); ?>" class="button-primary"><?php _e('Run the Setup Wizard', 'woocommerce-multilingual') ?></a>
-                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wcml-setup-skip', 1 ), 'wcml_setup_skip_nonce', '_wcml_setup_nonce' ) ); ?>" class="button-secondary skip"><?php _e('Skip Setup', 'woocommerce-multilingual') ?></a>
+                <a href="<?php echo esc_url( admin_url('admin.php?page=wcml-setup') ); ?>" class="button-primary"><?php _e('Start the Setup Wizard', 'woocommerce-multilingual') ?></a>
+                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wcml-setup-skip', 1 ), 'wcml_setup_skip_nonce', '_wcml_setup_nonce' ) ); ?>" class="button-secondary skip"><?php _e('Skip', 'woocommerce-multilingual') ?></a>
             </p>
         </div>
         <?php
@@ -92,6 +113,8 @@ class WCML_Setup {
 
             $this->complete_setup();
             remove_filter( 'admin_notices', array( $this, 'setup_wizard_notice') );
+
+	        delete_transient( '_wcml_activation_redirect' );
         }
 
     }
@@ -237,11 +260,6 @@ class WCML_Setup {
         echo $ui->get_view();
     }
 
-    public function setup_translation_interface(){
-        $ui = new WCML_Setup_Translation_Interface_UI( $this->woocommerce_wpml, $this->next_step_url() );
-        echo $ui->get_view();
-    }
-
     public function setup_ready(){
         $ui = new WCML_Setup_Ready_UI( $this->woocommerce_wpml );
         echo $ui->get_view();
@@ -303,16 +321,6 @@ class WCML_Setup {
         } else{
             $this->woocommerce_wpml->multi_currency->disable();
         }
-
-    }
-
-    /**
-     * handler
-     */
-    public function save_translation_interface( $data ){
-
-        $this->woocommerce_wpml->settings['trnsl_interface'] = intval( $data['translation_interface'] );
-        $this->woocommerce_wpml->update_settings();
 
     }
 

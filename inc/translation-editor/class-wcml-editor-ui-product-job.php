@@ -149,14 +149,10 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             if( !empty( $variations ) ){
                 $variations_data_section = new WPML_Editor_UI_Field_Section( __( 'Variations data', 'woocommerce-multilingual' ) );
                 foreach( $variations as $variation ){
-
                     $var_custom_fields = $this->get_product_custom_fields_to_translate( $variation[ 'variation_id' ] );
                     if( $var_custom_fields ){
                         $this->add_custom_fields_ui_section( $variations_data_section, $var_custom_fields, $variation[ 'variation_id' ] );
                     }
-
-                    $var_desc_field_input = new WPML_Editor_UI_Single_Line_Field( 'variation_desc'.$variation['variation_id'], 'Variation description #'.$variation['variation_id'], $this->data, true );
-                    $variations_data_section->add_field( $var_desc_field_input );
                 }
                 $this->add_field( $variations_data_section );
             }
@@ -453,7 +449,6 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 $this->sitepress->set_element_language_details( $tr_product_id, 'post_' . $this->product->post->post_type, $product_trid, $this->get_target_language() );
             }
 
-            $this->woocommerce_wpml->sync_product_data->duplicate_product_post_meta( $this->product->id, $tr_product_id, $translations, true );
         } else {
             //update post
             $args = array();
@@ -485,16 +480,19 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             }
 
             $this->sitepress->set_element_language_details( $tr_product_id, 'post_' . $this->product->post->post_type, $product_trid, $this->get_target_language() );
-            $this->woocommerce_wpml->sync_product_data->duplicate_product_post_meta( $this->product->id, $tr_product_id, $translations );
+
         }
 
         $product_translations = $this->sitepress->get_element_translations( $product_trid , 'post_product', false, false, true );
+
+        do_action( 'wcml_before_sync_product_data', $this->product->id, $tr_product_id, $this->get_target_language() );
+
+        $this->woocommerce_wpml->sync_product_data->duplicate_product_post_meta( $this->product->id, $tr_product_id, $translations );
+
         //sync taxonomies
         $this->woocommerce_wpml->sync_product_data->sync_product_taxonomies( $this->product->id, $tr_product_id, $this->get_target_language() );
 
         do_action( 'wcml_update_extra_fields', $this->product->id, $tr_product_id, $translations, $this->get_target_language() );
-
-        do_action( 'wcml_before_sync_product_data', $this->product->id, $tr_product_id, $this->get_target_language() );
 
         $this->woocommerce_wpml->attributes->sync_product_attr( $this->product->id, $tr_product_id, $this->get_target_language(), $translations );
 

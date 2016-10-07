@@ -21,6 +21,7 @@
 
             <div class="wpml-form-row wcml-co-exchange-rate">
                 <label for="wcml_currency_options_rate_{{ args.currency_code }}">{{ form.rate.label }}</label>
+                <small class="alignright wcml-co-help-link"><a href="{{ currency_converter_url|format(args.default_currency, args.currency_code) }}" title="{{ currency_converter_title }}" target="_blank">{{ currency_converter_label }}</a></small>
                 <div class="wcml-co-set-rate">
                     1 {{ args.default_currency }} = <input name="currency_options[rate]" size="5" type="number" class="ext_rate"
                                                            step="0.01" value="{{ args.currency.rate }}" data-message="{{ form.rate.only_numeric }}"
@@ -77,7 +78,7 @@
             <hr/>
 
             <div class="wpml-form-row">
-                <label for="wcml_currency_options_rounding_{{ args.currency_code }}">{{ form.rounding.label }}</label>
+                <label for="wcml_currency_options_rounding_{{ args.currency_code }}">{{ form.rounding.label }} <i class="wcml-tip otgs-ico-help" data-tip="{{ form.rounding.rounding_tooltip }}"></i></label>
                 <select name="currency_options[rounding]" id="wcml_currency_options_rounding_{{ args.currency_code }}">
                     <option value="disabled" {% if args.currency.rounding == 'disabled' %}selected="selected"{% endif %}>{{ form.rounding.disabled}}</option>
                     <option value="up" {% if args.currency.rounding == 'up' %}selected="selected"{% endif %}>{{ form.rounding.up}}</option>
@@ -87,7 +88,7 @@
             </div>
 
             <div class="wpml-form-row">
-                <label for="wcml_currency_options_increment_{{ args.currency_code }}">{{ form.rounding.increment}}</label>
+                <label for="wcml_currency_options_increment_{{ args.currency_code }}">{{ form.rounding.increment}} <i class="wcml-tip otgs-ico-help" data-tip="{{ form.rounding.increment_tooltip }}"></i></label>
                 <select name="currency_options[rounding_increment]" id="wcml_currency_options_increment_{{ args.currency_code }}">
                     <option value="1" {% if args.currency.rounding_increment == '1' %}selected="selected"{% endif %}>1</option>
                     <option value="10" {% if args.currency.rounding_increment == '10' %}selected="selected"{% endif %}>10</option>
@@ -97,7 +98,7 @@
             </div>
 
             <div class="wpml-form-row">
-                <label for="wcml_currency_options_subtract_{{ args.currency_code }}">{{ form.autosubtract.label }}</label>
+                <label for="wcml_currency_options_subtract_{{ args.currency_code }}">{{ form.autosubtract.label }} <i class="wcml-tip otgs-ico-help" data-tip="{{ form.rounding.autosubtract_tooltip }}"></i></label>
 
                 <input name="currency_options[auto_subtract]" class="abstract_amount"
                     value="{{ args.currency.auto_subtract }}" type="number" data-message="{{ form.autosbtract.only_numeric }}"

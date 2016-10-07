@@ -224,7 +224,7 @@ class WCML_Product_Addons {
 	 */
 	function addons_update( $original_product_id, $product_id, $data ) {
 
-		$product_addons = maybe_unserialize( get_post_meta( $product_id, '_product_addons', true ) );
+		$product_addons = maybe_unserialize( get_post_meta( $original_product_id, '_product_addons', true ) );
 
 		if ( ! empty( $product_addons ) ) {
 

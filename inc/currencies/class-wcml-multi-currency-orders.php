@@ -61,7 +61,7 @@ class WCML_Multi_Currency_Orders{
         ");
 
         foreach($results as $row){
-            $currencies[$row->currency] = $row->c;
+            $currencies[$row->currency] = intval($row->c);
         }
 
         return $currencies;
@@ -120,12 +120,14 @@ class WCML_Multi_Currency_Orders{
         if( !empty($current_screen) && $current_screen->id == 'shop_order' ){
 
             $the_order = new WC_Order( get_the_ID() );
-            if($the_order && method_exists($the_order, 'get_order_currency')){
-                if( !$the_order->get_order_currency() && isset( $_COOKIE[ '_wcml_order_currency' ] ) ){
-                    $currency =  get_woocommerce_currency_symbol($_COOKIE[ '_wcml_order_currency' ]);
-                }else{
-                    $currency = get_woocommerce_currency_symbol($the_order->get_order_currency());
+            if( $the_order ){
+                $order_currency = method_exists( $the_order, 'get_currency' ) ? $the_order->get_currency() : ( method_exists( $the_order, 'get_order_currency' ) ? $the_order->get_order_currency() : '' ) ;
+
+                if( !$order_currency && isset( $_COOKIE[ '_wcml_order_currency' ] ) ){
+                    $order_currency =  $_COOKIE[ '_wcml_order_currency' ];
                 }
+
+                $currency = get_woocommerce_currency_symbol( $order_currency );
             }
 
         }elseif( ( isset( $_POST['action'] ) &&  in_array( $_POST['action'], array( 'woocommerce_add_order_item', 'woocommerce_calc_line_taxes', 'woocommerce_save_order_items' ) ) ) || ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'woocommerce_json_search_products_and_variations' )){
@@ -312,10 +314,11 @@ class WCML_Multi_Currency_Orders{
     // handle currency in order emails before handled in woocommerce
     public function fix_currency_before_order_email($order){
 
-        // backwards comp
-        if(!method_exists($order, 'get_order_currency')) return;
+        $order_currency = method_exists( $order, 'get_currency' ) ? $order->get_currency() : ( method_exists( $order, 'get_order_currency' ) ? $order->get_order_currency() : '' ) ;
 
-        $this->order_currency = $order->get_order_currency();
+        if( !$order_currency ) return;
+
+        $this->order_currency = $order_currency;
         add_filter('woocommerce_currency', array($this, '_override_woocommerce_order_currency_temporarily'));
     }
 

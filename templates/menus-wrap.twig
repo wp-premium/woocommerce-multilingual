@@ -9,6 +9,12 @@
             {% if taxonomy.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
             </a>
             {% endfor %}
+            {%  if menu.custom_taxonomies.show  %}
+            <a class="nav-tab tax-custom-taxonomies {{ menu.custom_taxonomies.active }}" href="{{ menu.custom_taxonomies.url }}">
+                {{ menu.custom_taxonomies.name }}
+                {% if menu.custom_taxonomies.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
+            </a>
+            {% endif %}
             <a class="nav-tab tax-product-attributes {{ menu.attributes.active }}" href="{{ menu.attributes.url }}">
                 {{ menu.attributes.name }}
                 {% if menu.attributes.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}

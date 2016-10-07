@@ -19,7 +19,7 @@ jQuery( function($){
 			if ( view.field.field_type.substr( 0, 8 ) === 'file-url' ) {
 				view.$el.append(
 					'<div style="display: inline-block;width: 100%;">' +
-					'<button type="button" class="button-secondary wcml_file_paths_button" style="float: right;margin-right: 17px;">'+strings.choose+'</button>' +
+					'<button type="button" class="button-secondary wcml_file_paths_button" style="float: right;margin-right: 17px;">'+wcml_settings.strings.choose+'</button>' +
 					'</div>' );
 			}
 		},
@@ -141,14 +141,20 @@ jQuery( function($){
 
 			if ( WCML_WPML_Translation_Editor.is_wcml_product ) {
 
-				WCML_WPML_Translation_Editor.save_buttons_tip = WCML_Tooltip.add_before( '.js-save-and-close', strings.save_tooltip, 'margin-right: 3px;' );
+				WCML_WPML_Translation_Editor.save_buttons_tip = WCML_Tooltip.add_before( '.js-save-and-close', wcml_settings.strings.save_tooltip, 'margin-right: 3px;' );
 
 				WCML_WPML_Translation_Editor.field_views = field_views;
 				WCML_WPML_Translation_Editor.footer_view = footer_view;
 
 				WCML_WPML_Translation_Editor.update_save_button_state();
+				WCML_WPML_Translation_Editor.check_variations_fields();
 
-				WCML_Tooltip.add_after( '.js-resign', strings.resign_tooltip, 'margin-left:-12px;' );
+				if( wcml_settings.hide_resign ){
+					WCML_WPML_Translation_Editor.footer_view.hideResignButton( true );
+				}else{
+					WCML_Tooltip.add_after( '.js-resign', wcml_settings.strings.resign_tooltip, 'margin-left:-12px;' );
+				}
+
 			}
 		},
 
@@ -175,6 +181,23 @@ jQuery( function($){
 
 		field_update_ui: function( event, view ) {
 			WCML_WPML_Translation_Editor.update_save_button_state();
+		},
+
+		check_variations_fields: function(){
+
+			var elem = false;
+			jQuery('[id^="job_field_variation_desc"]').closest('.postbox').find('.original_value').each(function(){
+				if( jQuery(this).val() === '' ) {
+					elem = jQuery(this);
+				}else{
+					return false;
+				}
+			});
+
+			if( elem ){
+				elem.closest('.postbox').find('.button-link').click();
+			}
+
 		}
 
 	};

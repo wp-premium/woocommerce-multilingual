@@ -24,7 +24,7 @@ class WCML_Dependencies{
         if(!defined('ICL_SITEPRESS_VERSION') || ICL_PLUGIN_INACTIVE || is_null( $sitepress ) || !class_exists('SitePress')){
              $this->missing['WPML'] = WCML_Links::generate_tracking_link('https://wpml.org/');
              $this->allok = false;
-        } elseif(version_compare(ICL_SITEPRESS_VERSION, '3.1.5', '<')){
+        } elseif(version_compare(ICL_SITEPRESS_VERSION, '3.4', '<')){
             add_action('admin_notices', array($this, '_old_wpml_warning'));
             $this->allok = false;
         }
@@ -77,16 +77,6 @@ class WCML_Dependencies{
 
         return $this->allok;
     }
-
-    function check_design_update(){
-
-        if( defined('ICL_SITEPRESS_VERSION') && version_compare( ICL_SITEPRESS_VERSION, '3.4-dev', '<' ) ){
-            add_action( 'admin_notices', array( $this, '_old_backend_wpml_warning' ) );
-            return false;
-        }
-
-        return true;
-    }
       
     /**
     * Adds admin notice.
@@ -94,7 +84,7 @@ class WCML_Dependencies{
     public function _old_wpml_warning(){
         ?>
         <div class="message error"><p><?php printf(__('WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML</a> versions prior %s.',
-                    'woocommerce-multilingual'), WCML_Links::generate_tracking_link('https://wpml.org/'), '3.1.5'); ?></p></div>
+                    'woocommerce-multilingual'), WCML_Links::generate_tracking_link('https://wpml.org/'), '3.4'); ?></p></div>
     <?php }
 
     function _old_wc_warning(){
@@ -103,19 +93,6 @@ class WCML_Dependencies{
                     'woocommerce-multilingual'), 'http://www.woothemes.com/woocommerce/', '2.1' ); ?></p></div>
     <?php }
 
-    public function _old_backend_wpml_warning(){
-        ?>
-        <?php if( !isset($_GET['page']) || $_GET['page'] != 'wpml-wcml'): ?>
-        <div class="message error">
-            <p><?php printf(__( 'You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href="%s">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML.', 'woocommerce-multilingual' ), WCML_VERSION, WCML_Links::generate_tracking_link( 'https://wpml.org/' ), '3.4'); ?></p>
-            <p>
-                <a class="button-primary" href="<?php echo $this->required_plugin_install_link( 'wpml' ) ?>"
-                   target="_blank"><?php _e( 'Upgrade WPML', 'woocommerce-multilingual' ); ?></a>
-            </p>
-        </div>
-        <?php endif; ?>
-    <?php }
-    
     public function _old_wpml_tm_warning(){
         ?>
         <div class="message error"><p><?php printf(__('WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML Translation Management</a> versions prior %s.',

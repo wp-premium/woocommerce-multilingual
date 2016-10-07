@@ -23,6 +23,7 @@ class WCML_Endpoints{
 
         add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
 
+        add_filter( 'woocommerce_settings_saved', array( $this, 'update_original_endpoints_strings') );
     }
 
 
@@ -63,15 +64,8 @@ class WCML_Endpoints{
     }
 
     function get_endpoint_translation( $key, $endpoint, $language = null ){
-        global $wpdb;
 
-        $string = icl_get_string_id( $endpoint, 'WooCommerce Endpoints', $key );
-
-        if( !$string && function_exists( 'icl_register_string' ) ){
-            do_action('wpml_register_single_string', 'WooCommerce Endpoints', $key, $endpoint );
-        }else{
-            $this->endpoints_strings[] = $string;
-        }
+        $this->register_endpoint_string( $key, $endpoint );
 
         if( function_exists('icl_t') ){
             $trnsl = apply_filters( 'wpml_translate_single_string', $endpoint, 'WooCommerce Endpoints', $key, $language );
@@ -86,7 +80,20 @@ class WCML_Endpoints{
         }
     }
 
+    public function register_endpoint_string( $key, $endpoint ){
+
+        $string = icl_get_string_id( $endpoint, 'WooCommerce Endpoints', $key );
+
+        if( !$string && function_exists( 'icl_register_string' ) ){
+            do_action('wpml_register_single_string', 'WooCommerce Endpoints', $key, $endpoint );
+        }else{
+            $this->endpoints_strings[] = $string;
+        }
+
+    }
+
     function rewrite_rule_endpoints( $call, $data ){
+
         if( $call == 'icl_st_save_translation' && in_array( $data['icl_st_string_id'], $this->endpoints_strings ) ){
             $this->add_endpoints();
             $this->flush_rules_for_endpoints_translations();
@@ -260,6 +267,16 @@ class WCML_Endpoints{
         }
 
         return $url;
+    }
+
+    public function update_original_endpoints_strings(){
+
+        foreach( WC()->query->query_vars as $endpoint_key => $endpoint ){
+
+            $this->register_endpoint_string( $endpoint_key, $endpoint );
+
+        }
+
     }
 
 

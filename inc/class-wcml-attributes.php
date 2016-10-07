@@ -382,4 +382,23 @@ class WCML_Attributes{
 
     }
 
+    public function is_attributes_fully_translated(){
+
+        $product_attributes = $this->get_translatable_attributes();
+
+        $fully_translated = true;
+
+        if( $product_attributes ){
+            foreach( $product_attributes as $attribute ){
+                $is_fully_translated = $this->woocommerce_wpml->terms->is_fully_translated( 'pa_' . $attribute->attribute_name );
+                if( !$is_fully_translated ){
+                    $fully_translated = false;
+                    break;
+                }
+            }
+        }
+
+        return $fully_translated;
+    }
+
 }

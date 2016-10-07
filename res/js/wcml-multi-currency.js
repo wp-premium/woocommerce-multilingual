@@ -1,9 +1,10 @@
 jQuery(document).ready(function(){
 
-    jQuery('.wcml_currency_switcher').on('change', function(){
+    jQuery(document).on( 'change', '.wcml_currency_switcher', function(){
         wcml_load_currency( jQuery(this).val() );
     });
-    jQuery('.wcml_currency_switcher li').on('click', function(){
+
+    jQuery(document).on( 'click', '.wcml_currency_switcher li', function(){
         if(jQuery(this).hasClass('wcml-active-currency')){
             return;
         }

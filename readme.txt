@@ -4,30 +4,41 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.6
-Stable tag: 3.8.6
+Tested up to: 4.6.1
+Stable tag: 3.9
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
 == Description ==
 
-This 'glue' plugin makes it possible to run fully multilingual e-commerce sites using [WooCommerce](https://wordpress.org/plugins/woocommerce/) and [WPML](http://wpml.org). It makes products and store pages translatable, lets visitors switch languages and order products in their language.
+This 'glue' plugin makes it possible to run fully multilingual e-commerce sites using [WooCommerce](https://wordpress.org/plugins/woocommerce/) and [WPML](http://wpml.org).
 
-= Features =
+= Key Features =
 
-* Lets you translate different kinds of WooCommerce product types
-* Central management for translating product categories, tags and custom attributes
-* Automatically synchronizes product variations and images
+* Translate all WooCommerce products (simple, variable, grouped, external)
+* Easy translation management for products, categories and attributes
 * Keeps the same language through the checkout process
-* Sends emails to clients and admins in their selected language
+* Sends emails to clients and admins in their language
 * Allows inventory tracking without breaking products into languages
 * Enables running a single WooCommerce store with multiple currencies
+
+= Compatibility with WooCommerce Extensions =
+
+Almost every WooCommerce store uses some extensions. WooCommerce Multilingual is fully compatible with popular extensions, including:
+
+* WooCommerce Bookings
+* WooCommerce Table Rate Shipping
+* WooCommerce Subscriptions
+* WooCommerce Product Add-ons
+* WooCommerce Tab Manager
+
+Looking for other extensions that are tested and compatible with WPML? See the complete [list of WooCommerce extensions that are compatible with WPML](https://wpml.org/documentation/woocommerce-extensions-compatibility/).
 
 = Usage Instructions =
 
 For step by step instructions on setting up a multilingual shop, please go to [WooCommerce Multilingual Manual](http://wpml.org/documentation/related-projects/woocommerce-multilingual/) page.
 
-After installing, follow the steps of the setup wizard to translate the store pages, configure what attributes should be translated, enable the multi-currency mode and other settings.
+After installing, follow the steps of the *setup wizard* to translate the store pages, configure what attributes should be translated, enable the multi-currency mode and other settings.
 
 Then, continue to the 'Products' and any categories, tags and attributes that you use.
 
@@ -98,7 +109,7 @@ Make sure that your theme is not hard-coding any URL. Always use API calls to re
 
 In order for the checkout and store pages to appear translated, you need to create several WordPress pages and insert the WooCommerce shortcodes into them. You'll have to go over the [documentation](http://wpml.org/documentation/related-projects/woocommerce-multilingual/) and see that you performed all steps on the way.
 
-= Can I have different urls for the store in the different languages =
+= Can I have different urls for the store in the different languages? =
 
 Yes. You can translate the product permalink base, product category base, product tag base and the product attribute base on the Store URLs section.
 
@@ -130,6 +141,28 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 3.9 =
+* Added compatibility with WooCommerce 2.7 (orders, coupons etc...)
+* Included the custom taxonomies associated with products in the WooCommerce Multilingual menu
+* Added the possibility to translate the attribute slugs
+* Added possibility to include some HTML tags in the currency switcher
+* Added the option to show the cart total in the currency switcher
+* Import payment methods translations from mo files upon activation
+* Many usability improvements
+* Moved the WooCommerce Multilingual submenu under the WooCommerce menu
+* Added two new subsections to the Status section: products and multi-currency
+* Bug fix: table Rates labels were not showing up on the cart page when WCML was active
+* Bug fix: the currency order preview was not including the newly added currencies
+* Bug fix: number of untranslated terms was sometimes wrong in the Status area
+* Bug fix: in some cases a variation description field showed up twice in the Translation Editor
+* Bug fix: orders showed the attributes slugs instead of names
+* Bug fix: for products without prices (no purchase button), the translations were showing up as 'Free' (with purchase button)
+* Fixed a compatibility issue with WooCommerce Bookings: custom prices were not displayed correctly in the second currency
+* Added fixed to the compatibility class for WooCommerce Tab Manager
+* Fixed a compatibility problem with the recent version W3TC related to the currency switcher
+* Fixed compatibility issues with WooCommerce Product Add-ons
+
 
 = 3.8.6 =
 * Fix shipping cost conversion issue specific to PHP 5.6
@@ -168,7 +201,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * Bug fix: cart strings not displaying in the correct language in some conditions
 * Bug fix: prices in secondary currencies were not updated on the front end after changing the price (the cache was not invalidated)
 * Bug fix: shipping classes were not synchronized for translated products in some circumstances
-* Bug fix: translated endpoints were missing from teh rewrite rules after updating the permalinkst pull
+* Bug fix: translated endpoints were missing from teh rewrite rules after updating the permalinks
 * Bug fix: stock status was sometimes not synchronized correctly when changing the stock manually
 * Bug fix: when using the default category base the language switcher did not show translated urls on the front end
 * Updated the cart cache hashes logic according to new WooCommerce logic
@@ -677,7 +710,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 = 3.0 =
 * Brand new GUI and workflow
 * Support for easy taxonomy translation 
-* Bariations synchronization
+* Variations synchronization
 * Product images synchronization
 
 
