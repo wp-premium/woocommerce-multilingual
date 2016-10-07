@@ -112,7 +112,7 @@ class WCML_WC_Shipping{
     function translate_shipping_methods_in_package( $available_methods ){
 
         foreach($available_methods as $key => $method){
-            $method->label =  $this->translate_shipping_method_title( $method->label, $key );
+            $available_methods[$key]->label =  $this->translate_shipping_method_title( $method->label, $key );
         }
 
         return $available_methods;

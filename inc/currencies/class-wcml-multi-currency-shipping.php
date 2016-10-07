@@ -51,7 +51,16 @@ class WCML_Multi_Currency_Shipping{
         $has_free_shipping_coupon = false;
         if ( $coupons = WC()->cart->get_coupons() ) {
             foreach ( $coupons as $code => $coupon ) {
-                if ( $coupon->is_valid() && $coupon->enable_free_shipping() ) {
+
+                if (
+                    $coupon->is_valid() &&
+                    (
+                        //backward compatibility for WC < 2.7
+                        method_exists( $coupon, 'get_free_shipping' ) ?
+                            $coupon->get_free_shipping() :
+                            $coupon->enable_free_shipping()
+                    )
+                ) {
                     $has_free_shipping_coupon = true;
                 }
             }

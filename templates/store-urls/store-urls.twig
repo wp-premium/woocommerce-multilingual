@@ -121,6 +121,24 @@
                 </td>
             </tr>
         {% endfor %}
+        {% for slug in attribute_slugs %}
+            <tr>
+                <td>
+                    <strong>
+                        {{ strings.attribute_slug|format( slug.label ) }}
+                    </strong>
+                </td>
+
+                <td class="wpml-col-url">
+                    <img src="{{ slug.flag }}" />
+                    <strong>{{ slug.orig_value }}</strong>
+                </td>
+
+                <td class="wpml-col-languages">
+                    {{ slug.statuses|raw }}
+                </td>
+            </tr>
+        {% endfor %}
     </tbody>
 </table>
 

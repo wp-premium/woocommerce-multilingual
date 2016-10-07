@@ -1,0 +1,17 @@
+@import "mixins";
+@import "variables";
+
+div.wpml-message {
+	border-left-color: $wpml-blue;
+	.button-primary {
+		@extend %wpml-button;
+	}
+}
+.wcml-notice-list {
+	list-style-type: disc;
+	padding: 0 2em;
+	margin: .5em 0;
+	li {
+		margin: 0;
+	}
+}

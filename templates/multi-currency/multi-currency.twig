@@ -27,7 +27,7 @@
             {% if wc_currency is empty %}
             <p>
                 <i class="icon-warning-sign"></i>
-                {{ wc_currecny_empty_warn|raw }}
+                {{ wc_currency_empty_warn|raw }}
             </p>
             {% endif %}
 
@@ -65,10 +65,10 @@
                         <tbody>
                             <tr class="wcml-row-currency">
                                 <td class="wcml-col-currency">
-                                    <span class="truncate">{{ attribute(wc_currencies, wc_currency) }}</span>
+                                    <span class="truncate">{{ attribute(wc_currencies, wc_currency)|raw }}</span>
                                     <small>{{ positioned_price|raw }}</small>
                                 </td>
-                                <td class="wcml-col-rate"> <span class="truncate">{{ strings.currencies_table.default }}</span></td>
+                                <td class="wcml-col-rate"><span class="truncate">{{ strings.currencies_table.default }}</span></td>
                                 <td class="wcml-col-edit">
                                     <a href="#" title="{{ strings.currencies_table.edit }}" class="edit_currency js-wcml-dialog-trigger hidden" data-height="530" data-width="480">
                                         <i class="otgs-ico-edit" title="{{ strings.currencies_table.edit }}"></i>
@@ -110,6 +110,9 @@
                             <table class="widefat currency_lang_table" id="currency-lang-table">
                                 <thead>
                                     <tr>
+                                        <td colspan="{{ active_languages|length }}">{{ strings.currencies_table.help_title }}</td>
+                                    </tr>
+                                    <tr>
                                         {% for language in active_languages %}
                                         <th>
                                             <img src="{{ get_flag_url(language.code) }}" width="18" height="12"/>
@@ -122,9 +125,17 @@
                                         {% for language in active_languages %}
                                         <td class="currency_languages">
                                             <ul>
+                                                {% set title_yes = strings.currencies_table.disable_for|format( get_currency_name(wc_currency), language.display_name ) %}
+                                                {% set title_no  = strings.currencies_table.enable_for|format( get_currency_name(wc_currency), language.display_name ) %}
                                                 <li class="on" data-lang="{{ language.code }}">
                                                     <a class="{% if is_currency_on(wc_currency, language.code) %}otgs-ico-yes{% else %} otgs-ico-no{% endif %}"
-                                                       data-language="{{ language.code }}" data-currency="{{ wc_currency }}" href="#"></a>
+                                                       data-language="{{ language.code }}" data-currency="{{ wc_currency }}" href="#"
+                                                        {% if is_currency_on(wc_currency, language.code) %}
+                                                            title="{{ title_yes }}" data-title-alt="{{ title_no }}"
+                                                        {% else %}
+                                                            title="{{ title_no }}" data-title-alt="{{ title_yes }}"
+                                                        {% endif %}
+                                                    ></a>
                                                 </li>
                                             </ul>
                                         </td>
@@ -136,9 +147,17 @@
                                         {% for language in active_languages %}
                                         <td class="currency_languages">
                                             <ul>
+                                                {% set title_yes = strings.currencies_table.disable_for|format( get_currency_name(code), language.display_name ) %}
+                                                {% set title_no  = strings.currencies_table.enable_for|format( get_currency_name(code), language.display_name ) %}
                                                 <li class="on" data-lang="{{ language.code }}">
                                                     <a class="{% if is_currency_on(code, language.code) %}otgs-ico-yes{% else %} otgs-ico-no{% endif %}"
-                                                       data-language="{{ language.code }}" data-currency="{{ code }}" href="#"></a>
+                                                       data-language="{{ language.code }}" data-currency="{{ code }}" href="#"
+                                                       {% if is_currency_on(wc_currency, language.code) %}
+                                                           title="{{ title_yes }}" data-title-alt="{{ title_no }}"
+                                                       {% else %}
+                                                           title="{{ title_no }}" data-title-alt="{{ title_yes }}"
+                                                       {% endif %}
+                                                    ></a>
                                                 </li>
                                             </ul>
                                         </td>

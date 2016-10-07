@@ -16,9 +16,8 @@ class WCML_Plugins_Wrap extends WPML_Templates_Factory {
 
         $model = array(
             'link_url' => admin_url('admin.php?page=wpml-wcml'),
-            'old_wpml' => defined('ICL_SITEPRESS_VERSION') && version_compare( ICL_SITEPRESS_VERSION, '2.0.5', '<' ),
+            'old_wpml' => defined('ICL_SITEPRESS_VERSION') && version_compare( ICL_SITEPRESS_VERSION, '3.4', '<' ),
             'tracking_link' => WCML_Links::generate_tracking_link( 'https://wpml.org/shop/account/', false, 'account' ),
-            'check_design_update' => $this->woocommerce_wpml->check_design_update,
             'install_wpml_link' => $this->woocommerce_wpml->dependencies->required_plugin_install_link( 'wpml' ),
             'icl_version' => defined('ICL_SITEPRESS_VERSION'),
             'icl_setup' => $this->sitepress ? $this->sitepress->setup() : false,

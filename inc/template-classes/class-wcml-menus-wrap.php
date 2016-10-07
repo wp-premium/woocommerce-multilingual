@@ -4,32 +4,78 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
 
     private $woocommerce_wpml;
 
+    private $product_attribute_names        = array();
+    private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type' ); //'product_type' is used for tags (?)
+    private $product_extra_taxonomy_names   = array();
+
+    private $product_attributes             = array();
+    private $product_extra_taxonomies       = array();
+
+    private $selected_attribute;
+    private $selected_taxonomy;
+
     function __construct( &$woocommerce_wpml ){
         parent::__construct();
 
         $this->woocommerce_wpml = &$woocommerce_wpml;
-    }
 
-    public function get_model(){
+        $this->product_attributes = $this->woocommerce_wpml->attributes->get_translatable_attributes();
+        if( $this->product_attributes ){
+            foreach( $this->product_attributes as $product_attribute ){
+                $this->product_attribute_names[] = 'pa_' . $product_attribute->attribute_name;
+            }
+        }
 
-        $current_tab = $this->get_current_tab();
-        $product_attributes = $this->woocommerce_wpml->attributes->get_translatable_attributes();
+        $product_taxonomies = get_object_taxonomies( 'product', 'objects' );
+        foreach( $product_taxonomies as $product_taxonomy_name => $product_taxonomy_object ){
+            if(
+                !in_array( $product_taxonomy_name, $this->product_builtin_taxonomy_names ) &&
+                !in_array( $product_taxonomy_name, $this->product_attribute_names ) &&
+                is_taxonomy_translated( $product_taxonomy_name )
+            ){
+                $this->product_extra_taxonomies[$product_taxonomy_name] = $product_taxonomy_object;
+                $this->product_extra_taxonomy_names[] = $product_taxonomy_name;
+            }
+        }
 
         $taxonomy = isset( $_GET['taxonomy'] ) ? $_GET['taxonomy'] : false;
-        if( $product_attributes ){
+
+        if( $this->product_attributes ){
             if( !empty($taxonomy) ){
-                foreach( $product_attributes as $attribute ){
+                foreach( $this->product_attributes as $attribute ){
                     if( $attribute->attribute_name == $taxonomy ){
-                        $selected_attribute = $attribute;
+                        $this->selected_attribute = $attribute;
                         break;
                     }
                 }
             }
             if( empty( $selected_attribute ) ){
-                $selected_attribute = current( $product_attributes );
+                $this->selected_attribute = current( $this->product_attributes );
             }
+
         }
 
+        if( $this->product_extra_taxonomies ){
+            if( !empty($taxonomy) ){
+                foreach( $this->product_extra_taxonomies as $taxonomy ){
+                    if( $taxonomy->name == $taxonomy ){
+                        $this->selected_taxonomy = $taxonomy;
+                        break;
+                    }
+                }
+            }
+            if( empty( $this->selected_taxonomy ) ){
+                $this->selected_taxonomy = current( $this->product_extra_taxonomies );
+            }
+
+        }
+
+
+    }
+
+    public function get_model(){
+
+        $current_tab = $this->get_current_tab();
 
         $model = array(
 
@@ -59,11 +105,18 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                         'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_tag' )
                     )
                 ),
+                'custom_taxonomies' => array(
+                    'name'      => __('Custom Taxonomies', 'woocommerce-multilingual'),
+                    'active'    => $current_tab == 'custom-taxonomies' ? 'nav-tab-active':'',
+                    'url'       => admin_url('admin.php?page=wpml-wcml&tab=custom-taxonomies'),
+                    'translated'=> !$this->product_extra_taxonomies || ( isset( $this->selected_taxonomy ) && $this->woocommerce_wpml->terms->is_fully_translated( $this->selected_taxonomy->name) ),
+                    'show'      => !empty( $this->product_extra_taxonomies )
+                ),
                 'attributes' => array(
                     'name'      => __('Attributes', 'woocommerce-multilingual'),
                     'active'    => $current_tab == 'product-attributes' ? 'nav-tab-active':'',
                     'url'       => admin_url('admin.php?page=wpml-wcml&tab=product-attributes'),
-                    'translated'=> !$product_attributes || ( isset( $selected_attribute ) && $this->woocommerce_wpml->terms->is_fully_translated( 'pa_' . $selected_attribute->attribute_name) )
+                    'translated'=> $this->woocommerce_wpml->attributes->is_attributes_fully_translated()
                 ),
                 'shipping_classes' => array(
                     'name'      => __('Shipping Classes', 'woocommerce-multilingual'),
@@ -170,10 +223,16 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                 break;
 
             case 'product-attributes':
-
                 if( current_user_can('wpml_operate_woocommerce_multilingual') ) {
-                    $attribute_translation_ui = new WCML_Attribute_Translation_UI( $woocommerce_wpml );
+                    $attribute_translation_ui = new WCML_Attribute_Translation_UI( $woocommerce_wpml, $sitepress );
                     $content = $attribute_translation_ui->get_view();
+                }
+                break;
+
+            case 'custom-taxonomies':
+                if( current_user_can('wpml_operate_woocommerce_multilingual') ) {
+                    $custom_taxonomy_translation_ui = new WCML_Custom_Taxonomy_Translation_UI( $woocommerce_wpml, $sitepress );
+                    $content = $custom_taxonomy_translation_ui->get_view();
                 }
                 break;
 
@@ -206,7 +265,8 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                 break;
 
             default:
-                if( current_user_can('wpml_operate_woocommerce_multilingual') && in_array( $current_tab, array( 'product_cat', 'product_tag', 'product_shipping_class' ) ) ){
+                $taxonomy_names = array_merge( $this->product_builtin_taxonomy_names, $this->product_extra_taxonomy_names );
+                if( current_user_can('wpml_operate_woocommerce_multilingual') && in_array( $current_tab, $taxonomy_names ) ){
                     $WPML_Translate_Taxonomy = new WPML_Taxonomy_Translation($current_tab, array( 'taxonomy_selector'=> false, 'status'=> WPML_TT_TAXONOMIES_ALL ) );
                     ob_start();
 					?>

@@ -7,10 +7,14 @@ var WCML_Tooltip = {
         delay     : 200
     },
 
-    init: function(){
+    setup: function(){
         jQuery(document).ready(function () {
-            jQuery('.wcml-tip').tipTip( WCML_Tooltip.default_args );
+            WCML_Tooltip.init();
         });
+    },
+
+    init: function(){
+        jQuery('.wcml-tip:visible').tipTip( WCML_Tooltip.default_args ); //jquery hover won't work on hidden elements
     },
 
     create_tip: function( text, style, args ){
@@ -51,4 +55,4 @@ var WCML_Tooltip = {
 
 }
 
-WCML_Tooltip.init();
+WCML_Tooltip.setup();

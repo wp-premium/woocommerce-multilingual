@@ -31,10 +31,13 @@
                             <input type="radio" name="currency_switcher_style" value="list" {% if(currency_switcher.style == 'list') %}checked="checked"{% endif %} />
                             {{ currency_switcher.options.list }}
                         </label>
-                        <select id="wcml_curr_sel_orientation" name="wcml_curr_sel_orientation" {% if(currency_switcher.style != 'list') %}style="display: none;"{% endif %}>
-                            <option value="vertical">{{ currency_switcher.options.vertical }}</option>
-                            <option value="horizontal" {% if(currency_switcher.orientation == 'horizontal') %}selected="selected"{% endif %}>{{ currency_switcher.options.horizontal }}</option>
-                        </select>
+                        <span id="wcml_curr_sel_orientation_list_wrap" {% if(currency_switcher.style != 'list') %}style="display: none;"{% endif %}>
+                            <select id="wcml_curr_sel_orientation" name="wcml_curr_sel_orientation">
+                                <option value="vertical">{{ currency_switcher.options.vertical }}</option>
+                                <option value="horizontal" {% if(currency_switcher.orientation == 'horizontal') %}selected="selected"{% endif %}>{{ currency_switcher.options.horizontal }}</option>
+                            </select>
+                            <p class="explanation-text">{{ currency_switcher.options.allowed_tags }}</p>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -56,7 +59,7 @@
 
             <div class="wcml-section-content-inner">
                 <h4>{{ currency_switcher.headers.parameters }}</h4>
-                <span class="explanation-text">{{ currency_switcher.template_default }}</span>
+                <span class="explanation-text">{{  currency_switcher.headers.parameters_list }}</span>
 
                 <h4>{{ currency_switcher.headers.template }}</h4>
                 <input type="text" name="wcml_curr_template" value="{{ currency_switcher.template }}"/>

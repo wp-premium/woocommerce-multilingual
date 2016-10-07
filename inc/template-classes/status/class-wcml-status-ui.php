@@ -25,12 +25,16 @@ class WCML_Status_UI extends WPML_Templates_Factory {
 		$WCML_Status_Config_Warnings_UI	= new WCML_Status_Config_Warnings_UI( $this->sitepress, $this->woocommerce_wpml, $this->sitepress_settings  );
 		$WCML_Status_Store_Pages_UI		= new WCML_Status_Store_Pages_UI( $this->sitepress, $this->woocommerce_wpml  );
 		$WCML_Status_Taxonomies_UI		= new WCML_Status_Taxonomies_UI( $this->woocommerce_wpml  );
+		$WCML_Status_Products_UI		= new WCML_Status_Products_UI( $this->woocommerce_wpml, $this->sitepress );
+		$WCML_Status_Multi_Currencies_UI= new WCML_Status_Multi_Currencies_UI( $this->woocommerce_wpml  );
 
 		$model = array(
 			'plugins_status' 	=> $WCML_Status_Status_UI->get_view(),
 			'conf_warnings' 	=> $WCML_Status_Config_Warnings_UI->get_view(),
 			'store_pages' 		=> $WCML_Status_Store_Pages_UI->get_view(),
 			'taxonomies'  		=> $WCML_Status_Taxonomies_UI->get_view(),
+			'products'			=> $WCML_Status_Products_UI->get_view(),
+			'multi_currency'	=> $WCML_Status_Multi_Currencies_UI->get_view(),
 			'troubl_url' => admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ),
 			'strings' => array(
 				'troubl' => __( 'Troubleshooting page', 'woocommerce-multilingual' )
