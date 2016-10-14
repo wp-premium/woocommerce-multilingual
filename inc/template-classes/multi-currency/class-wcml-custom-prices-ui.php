@@ -27,8 +27,8 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 		$model = array(
 			'product_id' => $this->product_id,
 			'currencies' => $this->get_currencies_info(),
-			'checked_calc_auto' => !isset($this->custom_prices['_wcml_custom_prices_status']) || (isset($this->custom_prices['_wcml_custom_prices_status']) && $this->custom_prices['_wcml_custom_prices_status'][0] == 0)? 'checked="checked"' : ' ' ,
-			'checked_calc_manually' => isset($this->custom_prices['_wcml_custom_prices_status']) && $this->custom_prices['_wcml_custom_prices_status'][0] == 1?'checked="checked"':' ',
+			'checked_calc_auto' => !isset($this->custom_prices['_wcml_custom_prices_status']) || (isset($this->custom_prices['_wcml_custom_prices_status']) && $this->custom_prices['_wcml_custom_prices_status'][0] == 0)? 'checked="checked"' : '' ,
+			'checked_calc_manually' => isset($this->custom_prices['_wcml_custom_prices_status']) && $this->custom_prices['_wcml_custom_prices_status'][0] == 1?'checked="checked"':'',
 			'wc_currencies' => get_woocommerce_currencies(),
 			'is_variation' => $this->is_variation,
 			'html_id' => $this->is_variation ? '['.$this->product_id.']' : '',

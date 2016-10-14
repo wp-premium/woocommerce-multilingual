@@ -1,15 +1,5 @@
 jQuery(document).ready(function($){
 
-    $('.wcml_custom_prices_input').each(function(){
-        if($(this).is(':checked')){
-            if($(this).val() == 0){
-                $(this).parent().find('.block_actions').show();
-            }else{
-                $(this).parent().find('.wcml_custom_prices_manually_block_show').show();
-            }
-        }
-    });
-
     $('.wcml_schedule_input').each(function(){
         if($(this).is(':checked') && $(this).val() == 1){
             $(this).parent().find('.block_actions').show();

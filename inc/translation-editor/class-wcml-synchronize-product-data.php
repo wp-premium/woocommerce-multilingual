@@ -14,8 +14,21 @@ class WCML_Synchronize_Product_Data{
         $this->sitepress = $sitepress;
         $this->wpdb = $wpdb;
 
-        // filters to sync variable products
-        add_action( 'save_post', array( $this, 'sync_post_action' ), 110, 2 ); // After WPML
+        if( is_admin() ){
+            // filters to sync variable products
+            add_action( 'save_post', array( $this, 'sync_post_action' ), 110, 2 ); // After WPML
+
+            add_action( 'icl_pro_translation_completed', array( $this, 'icl_pro_translation_completed' ) );
+
+            add_filter( 'icl_make_duplicate', array( $this, 'icl_make_duplicate'), 110, 4 );
+            add_action( 'woocommerce_duplicate_product', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
+
+            //quick & bulk edit
+            add_action( 'woocommerce_product_quick_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
+            add_action( 'woocommerce_product_bulk_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
+
+            add_action( 'init', array( $this, 'init' ) );
+        }
 
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'sync_product_stocks_reduce' ) );
         add_action( 'woocommerce_restore_order_stock', array( $this, 'sync_product_stocks_restore' ) );
@@ -23,17 +36,6 @@ class WCML_Synchronize_Product_Data{
         add_action( 'woocommerce_variation_set_stock_status', array($this, 'sync_stock_status_for_translations' ), 10, 2);
 
         add_filter( 'future_product', array( $this, 'set_schedule_for_translations'), 10, 2 );
-
-        add_action( 'icl_pro_translation_completed', array( $this, 'icl_pro_translation_completed' ) );
-
-        add_filter( 'icl_make_duplicate', array( $this, 'icl_make_duplicate'), 110, 4 );
-        add_action( 'woocommerce_duplicate_product', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
-
-        //quick & bulk edit
-        add_action( 'woocommerce_product_quick_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
-        add_action( 'woocommerce_product_bulk_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
-
-        add_action( 'init', array( $this, 'init' ) );
     }
 
     public function init(){
@@ -267,14 +269,25 @@ class WCML_Synchronize_Product_Data{
         $order_id = method_exists( 'WC_Order', 'get_id' ) ? $order->get_id() : $order->id;
 
         foreach( $order->get_items() as $item ) {
-            if( isset( $item[ 'variation_id' ] ) && $item[ 'variation_id' ] > 0 ){
-                $trid = $this->sitepress->get_element_trid( $item[ 'variation_id' ], 'post_product_variation' );
+
+            if( $item instanceof WC_Order_Item_Product ){
+                $variation_id = $item->get_variation_id();
+                $product_id = $item->get_product_id();
+                $qty = $item->get_quantity();
+            }else{
+                $variation_id = isset( $item[ 'variation_id' ] ) ? $item[ 'variation_id' ] : 0;
+                $product_id = $item[ 'product_id' ];
+                $qty = $item[ 'qty' ];
+            }
+
+            if( $variation_id > 0 ){
+                $trid = $this->sitepress->get_element_trid( $variation_id, 'post_product_variation' );
                 $translations = $this->sitepress->get_element_translations( $trid, 'post_product_variation' );
-                $ld = $this->sitepress->get_element_language_details( $item[ 'variation_id' ], 'post_product_variation' );
+                $ld = $this->sitepress->get_element_language_details( $variation_id, 'post_product_variation' );
             } else {
-                $trid = $this->sitepress->get_element_trid( $item[ 'product_id' ], 'post_product' );
+                $trid = $this->sitepress->get_element_trid( $product_id, 'post_product' );
                 $translations = $this->sitepress->get_element_translations( $trid, 'post_product' );
-                $ld = $this->sitepress->get_element_language_details( $item[ 'product_id' ], 'post_product' );
+                $ld = $this->sitepress->get_element_language_details( $product_id, 'post_product' );
             }
 
             // Process for non-current languages
@@ -290,11 +303,11 @@ class WCML_Synchronize_Product_Data{
                         $total_sales    = get_post_meta($_product->id, 'total_sales', true);
 
                         if( $action == 'reduce'){
-                            $stock  = $_product->reduce_stock( $item[ 'qty' ] );
-                            $total_sales   += $item[ 'qty' ];
+                            $stock  = $_product->reduce_stock( $qty );
+                            $total_sales   += $qty;
                         }else{
-                            $stock  = $_product->increase_stock( $item[ 'qty' ] );
-                            $total_sales   -= $item[ 'qty' ];
+                            $stock  = $_product->increase_stock( $qty );
+                            $total_sales   -= $qty;
                         }
                         update_post_meta( $translation->element_id, 'total_sales', $total_sales );
                     }

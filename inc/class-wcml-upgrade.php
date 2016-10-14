@@ -15,7 +15,8 @@ class WCML_Upgrade{
         '3.7.3',
         '3.7.11',
         '3.8',
-        '3.9'
+        '3.9',
+        '3.9.1',
     );
     
     function __construct(){
@@ -480,6 +481,40 @@ class WCML_Upgrade{
 
         $wpdb->query( $sql );
 
+    }
+
+    function upgrade_3_9_1(){
+        global $wpdb, $sitepress;
+
+        $results = $wpdb->get_results("
+                        SELECT p.ID, t.trid, t.element_type
+                        FROM {$wpdb->posts} p
+                        JOIN {$wpdb->prefix}icl_translations t ON t.element_id = p.ID AND t.element_type IN ('post_product', 'post_product_variation')
+                        WHERE p.post_type in ('product', 'product_variation') AND t.source_language_code IS NULL
+                    ");
+
+        foreach( $results as $product ){
+
+            if( get_post_meta( $product->ID, '_manage_stock', true ) === 'yes' ){
+
+                $translations = $sitepress->get_element_translations( $product->trid, $product->element_type );
+
+                $min_stock = false;
+
+                //collect min stock
+                foreach( $translations as $translation ){
+                    $stock = get_post_meta( $translation->element_id, '_stock', true );
+                    if( !$min_stock || $stock < $min_stock ){
+                        $min_stock = $stock;
+                    }
+                }
+
+                //update stock value
+                foreach( $translations as $translation ){
+                    update_post_meta( $translation->element_id, '_stock', $min_stock );
+                }
+            }
+        }
     }
 
 
