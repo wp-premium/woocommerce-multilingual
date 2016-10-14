@@ -201,6 +201,18 @@ class WCML_Cart
 
     public function translate_cart_subtotal( $cart ) {
 
+        if( isset( $_SERVER['REQUEST_URI'] ) ){
+            //special case: check if attachment loading
+            $attachments = array( 'png', 'jpg', 'jpeg', 'gif', 'js', 'css' );
+
+            foreach( $attachments as $attachment ){
+                $match = preg_match( '/\.'.$attachment.'$/',  $_SERVER['REQUEST_URI'] );
+                if( !empty( $match ) ){
+                    return false;
+                }
+            }
+        }
+
         if( apply_filters( 'wcml_calculate_totals_exception', true, $cart ) ){
             $cart->calculate_totals();
         }

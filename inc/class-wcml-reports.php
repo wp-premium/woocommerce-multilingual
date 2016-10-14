@@ -25,11 +25,11 @@ class WCML_Reports{
                 add_filter( 'woocommerce_reports_get_order_report_data', array( $this, 'combine_report_by_languages' ) );
             }
 
-            add_filter( 'woocommerce_report_most_stocked_query_from', array( $this, 'filter_reports_stock_query' ) );
-            add_filter( 'woocommerce_report_out_of_stock_query_from', array( $this, 'filter_reports_stock_query' ) );
-            add_filter( 'woocommerce_report_low_in_stock_query_from', array( $this, 'filter_reports_stock_query' ) );
-
         }
+
+        add_filter( 'woocommerce_report_most_stocked_query_from', array( $this, 'filter_reports_stock_query' ) );
+        add_filter( 'woocommerce_report_out_of_stock_query_from', array( $this, 'filter_reports_stock_query' ) );
+        add_filter( 'woocommerce_report_low_in_stock_query_from', array( $this, 'filter_reports_stock_query' ) );
 
     }
 
