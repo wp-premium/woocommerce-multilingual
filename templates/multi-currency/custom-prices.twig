@@ -12,7 +12,7 @@
 
             <input type="radio" name="_wcml_custom_prices[{{ product_id }}]" id="wcml_custom_prices_auto[{{ product_id }}]" value="0" class="wcml_custom_prices_input" {{ checked_calc_auto|raw }} />
             <label for="wcml_custom_prices_auto[{{ product_id }}]">{{ strings.calc_auto }}&nbsp;
-                <span class="block_actions">(
+                <span class="block_actions" {% if checked_calc_auto is not empty %} style="display: inline;" {% endif %}>(
                     <a href="" class="wcml_custom_prices_auto_block_show" title="{{ strings.see_prices|e }}">{{ strings.show }}</a>
                     <a href="" class="wcml_custom_prices_auto_block_hide">{{ strings.hide }}</a>
                 )</span>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="wcml_custom_prices_manually_block">
+        <div class="wcml_custom_prices_manually_block" {% if checked_calc_manually is not empty %} style="display: block;" {% endif %}>
             {% for currency in currencies %}
                 <div class="currency_blck">
                     <label>

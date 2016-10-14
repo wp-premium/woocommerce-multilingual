@@ -137,17 +137,18 @@ class woocommerce_wpml {
             add_shortcode('currency_switcher', '__return_empty_string');
         }
 
-        if( is_admin() ){
-	        $this->troubleshooting      = new WCML_Troubleshooting();
-	        $this->links                = new WCML_Links( $this, $sitepress );
-	        $this->translation_editor   = new WCML_Translation_Editor( $this, $sitepress, $wpdb );
-	        $this->languages_upgrader   = new WCML_Languages_Upgrader;
-	        $this->sync_variations_data = new WCML_Synchronize_Variations_Data( $this, $sitepress, $wpdb );
-	        $this->sync_product_data    = new WCML_Synchronize_Product_Data( $this, $sitepress, $wpdb );
-	        $this->wcml_products_screen = new WCML_Products_Screen_Options( $sitepress );
-	        $this->wcml_products_screen->init();
-	        new WCML_Pointers();
+        if( is_admin() ) {
+            $this->troubleshooting = new WCML_Troubleshooting();
+            $this->links = new WCML_Links($this, $sitepress);
+            $this->translation_editor = new WCML_Translation_Editor($this, $sitepress, $wpdb);
+            $this->languages_upgrader = new WCML_Languages_Upgrader;
+            $this->sync_variations_data = new WCML_Synchronize_Variations_Data($this, $sitepress, $wpdb);
+            $this->wcml_products_screen = new WCML_Products_Screen_Options($sitepress);
+            $this->wcml_products_screen->init();
+            new WCML_Pointers();
         }
+
+        $this->sync_product_data    = new WCML_Synchronize_Product_Data( $this, $sitepress, $wpdb );
         $this->endpoints            = new WCML_Endpoints;
         $this->products             = new WCML_Products( $this, $sitepress, $wpdb );
         $this->store                = new WCML_Store_Pages ($this, $sitepress ) ;
