@@ -2,18 +2,26 @@
   
   
 class WCML_Ajax_Setup{
-    
-    function __construct(){
-        
+
+	/**
+	 * @var SitePress
+	 */
+	private $sitepress;
+
+    public function __construct( $sitepres ){
+
+    	$this->sitepress =& $sitepres;
+
         add_action( 'init', array( $this, 'init' ) );
         add_action( 'wcml_localize_woocommerce_on_ajax', array( $this, 'wcml_localize_woocommerce_on_ajax' ) );
 
         //@deprecated 3.9
         add_action( 'localize_woocommerce_on_ajax', array( $this, 'localize_woocommerce_on_ajax' ) );
 
+	    add_action( 'woocommerce_ajax_get_endpoint', array( $this, 'add_language_to_endpoint' ) );
     }
-    
-    function init(){
+
+    public function init(){
         if (wpml_is_ajax()){
            do_action('wcml_localize_woocommerce_on_ajax');
         }
@@ -119,8 +127,28 @@ class WCML_Ajax_Setup{
         $sitepress->switch_lang($current_language, true);
     }
 
+	/**
+	 * @param $endpoint string
+	 *
+	 * Adds a language parameter to the url when different domains for each language are used
+	 *
+	 * @return string
+	 */
+	public function add_language_to_endpoint( $endpoint ){
 
-    /**
+		$is_per_domain = WPML_LANGUAGE_NEGOTIATION_TYPE_DOMAIN === (int) $this->sitepress->get_setting( 'language_negotiation_type' );
+		if( $is_per_domain && $this->sitepress->get_current_language() != $this->sitepress->get_default_language() ){
+
+			$endpoint = add_query_arg('lang',  $this->sitepress->get_current_language(), remove_query_arg( 'lang', $endpoint ) );
+            $endpoint = urldecode($endpoint);
+
+		}
+
+		return $endpoint;
+	}
+
+
+	/**
      * @deprecated 3.9
      */
     function localize_woocommerce_on_ajax(){

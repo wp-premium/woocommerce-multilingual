@@ -37,7 +37,7 @@ class WCML_Admin_Menus{
                 'woocommerce',
                 __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
                 __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
-                'wpml_manage_woocommerce_multilingual',
+                'wpml_operate_woocommerce_multilingual',
                 'wpml-wcml',
                 array( __CLASS__, 'render_menus' )
             );
@@ -234,16 +234,21 @@ class WCML_Admin_Menus{
     }
 
     public static function inf_editing_product_in_non_default_lang(){
-        $message = '<div class="message error"><p>';
-        $message .= sprintf(
-                        __( 'The recommended way to translate WooCommerce products is using the
+        if( !self::$woocommerce_wpml->settings[ 'dismiss_tm_warning' ] ) {
+            $url = $_SERVER['REQUEST_URI'];
+
+            $message = '<div class="message error otgs-is-dismissible"><p>';
+            $message .= sprintf(
+                __('The recommended way to translate WooCommerce products is using the
                              %sWooCommerce Multilingual products translation%s page.
                              Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table.',
-                            'woocommerce-multilingual' ),
-                    '<strong><a href="' .admin_url( 'admin.php?page=wpml-wcml&tab=products' ) . '">', '</a></strong>' );
-        $message .= '</p></div>';
+                    'woocommerce-multilingual'),
+                '<strong><a href="' . admin_url('admin.php?page=wpml-wcml&tab=products') . '">', '</a></strong>');
+            $message .= '</p><a class="notice-dismiss" href="' . $url . '&wcml_action=dismiss_tm_warning"><span class="screen-reader-text">' . __('Dismiss', 'woocommerce-multilingual') . '</a>';
+            $message .= '</div>';
 
-        echo $message;
+            echo $message;
+        }
     }
 
     public static function check_user_admin_access( $prevent_access ){

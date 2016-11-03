@@ -215,7 +215,7 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                 break;
 
             case 'multi-currency':
-                if( current_user_can('wpml_manage_woocommerce_multilingual') ){
+                if( current_user_can('wpml_operate_woocommerce_multilingual') ){
                     $wcml_mc_ui = new WCML_Multi_Currency_UI( $woocommerce_wpml, $sitepress );
                     $content = $wcml_mc_ui->get_view();
                 }
