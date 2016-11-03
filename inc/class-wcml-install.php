@@ -61,6 +61,11 @@ class WCML_Install{
                 $woocommerce_wpml->update_settings();
             }
 
+            if ( empty( $woocommerce_wpml->settings[ 'rewrite_rules_flashed' ] ) ) {
+                flush_rewrite_rules();
+                $woocommerce_wpml->settings['rewrite_rules_flashed'] = 1;
+            }
+
             add_filter( 'wpml_tm_dashboard_translatable_types', array(
                 __CLASS__,
                 'hide_variation_type_on_tm_dashboard'

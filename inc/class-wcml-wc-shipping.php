@@ -219,7 +219,8 @@ class WCML_WC_Shipping{
         }
 
         $updated_costs_settings = $this->update_woocommerce_shipping_settings_for_class_costs( $settings );
-        $inst_settings = array_replace( $inst_settings, $updated_costs_settings );
+
+        $inst_settings = is_array( $inst_settings ) ? array_replace( $inst_settings, $updated_costs_settings ) : $updated_costs_settings;
 
         return $inst_settings;
     }

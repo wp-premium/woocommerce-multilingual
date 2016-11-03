@@ -61,9 +61,9 @@ class WCML_Multi_Currency_Prices{
 
         // formatting options
         add_filter('option_woocommerce_price_thousand_sep', array($this, 'filter_currency_thousand_sep_option'));
-        add_filter('option_woocommerce_price_decimal_sep', array($this, 'filter_currency_decimal_sep_option'));
+        add_filter('option_woocommerce_price_decimal_sep',  array($this, 'filter_currency_decimal_sep_option'));
         add_filter('option_woocommerce_price_num_decimals', array($this, 'filter_currency_num_decimals_option'));
-        add_filter('option_woocommerce_currency_pos', array($this, 'filter_currency_position_option'));
+        add_filter('option_woocommerce_currency_pos',       array($this, 'filter_currency_position_option'));
 
         //need for display correct price format for order on orders list page
         add_filter( 'get_post_metadata', array( $this, 'save_order_currency_for_filter' ), 10, 4);
@@ -576,9 +576,10 @@ class WCML_Multi_Currency_Prices{
 
     public function filter_currency_thousand_sep_option($value){
 
+        $default_currency = $this->multi_currency->get_default_currency();
         $currency_code = $this->check_admin_order_currency_code();
 
-        if(isset($this->multi_currency->currencies[$currency_code]['thousand_sep']) ){
+        if( $currency_code !== $default_currency && isset( $this->multi_currency->currencies[$currency_code]['thousand_sep'] ) ){
             $value = $this->multi_currency->currencies[$currency_code]['thousand_sep'];
         }
         return $value;
@@ -586,9 +587,10 @@ class WCML_Multi_Currency_Prices{
 
     public function filter_currency_decimal_sep_option($value){
 
+        $default_currency = $this->multi_currency->get_default_currency();
         $currency_code = $this->check_admin_order_currency_code();
 
-        if(isset($this->multi_currency->currencies[$currency_code]['decimal_sep']) ){
+        if( $currency_code !== $default_currency &&  isset( $this->multi_currency->currencies[$currency_code]['decimal_sep'] ) ){
             $value = $this->multi_currency->currencies[$currency_code]['decimal_sep'];
 
         }
@@ -597,18 +599,23 @@ class WCML_Multi_Currency_Prices{
     }
 
     public function filter_currency_num_decimals_option($value){
+		// no other way available (at the moment) to filter currency_num_decimals_option
+        $default_currency = $this->multi_currency->get_default_currency();
 
         $db = debug_backtrace();
         if(
-            $db['8']['function'] == 'calculate_shipping_for_package' && $db['5']['function'] == 'add_rate' ||
+            isset( $db['8']['function'] ) &&  isset( $db['5']['function'] ) &&
+            $db['8']['function'] == 'calculate_shipping_for_package' && $db['5']['function'] == 'add_rate'
+                ||
+            isset( $db['7']['function'] ) &&  isset( $db['4']['function'] ) &&
             $db['7']['function'] == 'calculate_shipping_for_package' && $db['4']['function'] == 'add_rate'
         ){
-            $currency_code = get_option( 'woocommerce_currency' );
+            $currency_code = $default_currency;
         }else{
             $currency_code = $this->check_admin_order_currency_code();
         }
 
-        if(isset($this->multi_currency->currencies[$currency_code]['num_decimals']) ){
+        if( $currency_code !== $default_currency && isset($this->multi_currency->currencies[$currency_code]['num_decimals']) ){
             $value = $this->multi_currency->currencies[$currency_code]['num_decimals'];
         }
 
@@ -617,9 +624,11 @@ class WCML_Multi_Currency_Prices{
 
     public function filter_currency_position_option($value){
 
+        $default_currency = $this->multi_currency->get_default_currency();
         $currency_code = $this->get_admin_order_currency_code();
 
-        if(isset($this->multi_currency->currencies[$currency_code]['position']) && get_option('woocommerce_currency') != $currency_code &&
+        if( $currency_code !== $default_currency &&
+            isset($this->multi_currency->currencies[$currency_code]['position']) && get_option('woocommerce_currency') != $currency_code &&
             in_array($this->multi_currency->currencies[$currency_code]['position'], array('left', 'right', 'left_space', 'right_space'))){
             $value = $this->multi_currency->currencies[$currency_code]['position'];
         }

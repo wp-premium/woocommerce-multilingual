@@ -83,7 +83,7 @@ class WCML_Bookings {
 			'wc_bookings_process_cost_rules_override_block_cost'
 		), 10, 3 );
 
-		add_filter( 'wcml_multi_currency_is_ajax', array( $this, 'wcml_multi_currency_is_ajax' ) );
+		add_filter( 'wcml_multi_currency_ajax_actions', array( $this, 'wcml_multi_currency_is_ajax' ) );
 
 		add_filter( 'wcml_cart_contents_not_changed', array(
 			$this,
@@ -172,8 +172,11 @@ class WCML_Bookings {
 			), 10, 4 );
 		}
 
+		add_filter( 'wpml_extra_conditions_snippet', array( $this, 'extra_conditions_to_filter_bookings' ) );
 
 		$this->clear_transient_fields();
+
+		add_filter( 'wpml_tm_dashboard_translatable_types', array(	$this, 'hide_bookings_type_on_tm_dashboard'	) );
 
 	}
 
@@ -2213,6 +2216,20 @@ class WCML_Bookings {
 
 		}
 
+	}
+
+	public function extra_conditions_to_filter_bookings( $extra_conditions ){
+
+		if( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'wc_booking' && !isset( $_GET[ 'post_status' ] ) ){
+			$extra_conditions = str_replace( "GROUP BY", " AND post_status = 'confirmed' GROUP BY", $extra_conditions );
+		}
+
+		return $extra_conditions;
+	}
+
+	public function hide_bookings_type_on_tm_dashboard( $types ){
+		unset( $types[ 'wc_booking' ] );
+		return $types;
 	}
 
 }

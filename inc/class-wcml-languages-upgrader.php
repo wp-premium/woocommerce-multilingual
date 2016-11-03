@@ -52,7 +52,16 @@ class WCML_Languages_Upgrader{
             $upgr_object[0]->package = $this->get_language_pack_uri( $locale, $wc_version );
             $upgr_object[0]->autoupdate = 1;
 
+            $ob_level_before = ob_get_level();
+
             $upgrader->bulk_upgrade( $upgr_object );
+
+            // Close a potential unclosed output buffer
+            $ob_level_after  = ob_get_level();
+            if( $ob_level_after > $ob_level_before ){
+                ob_end_clean();
+            }
+
 
             $this->save_translation_version( $locale, false, $wc_version );
         }

@@ -353,7 +353,7 @@ class WCML_Custom_Prices{
 
         if( isset( $_POST[ '_wcml_custom_prices' ] ) && isset( $nonce ) && wp_verify_nonce( $nonce, 'wcml_save_custom_prices' ) && !$this->woocommerce_wpml->products->is_variable_product( $post_id ) ){
             if( isset( $_POST[ '_wcml_custom_prices' ][ $post_id ] ) || isset( $_POST[ '_wcml_custom_prices' ][ 'new' ] ) ) {
-                $wcml_custom_prices_option = isset( $_POST[ '_wcml_custom_prices' ][ $post_id ] ) ? $_POST[ '_wcml_custom_prices' ][ $post_id ] : isset( $_POST[ '_wcml_custom_prices' ][ 'new' ] );
+                $wcml_custom_prices_option = isset( $_POST[ '_wcml_custom_prices' ][ $post_id ] ) ? $_POST[ '_wcml_custom_prices' ][ $post_id ] : $_POST[ '_wcml_custom_prices' ][ 'new' ];
             }else{
                 $current_option = get_post_meta( $post_id, '_wcml_custom_prices_status', true );
                 $wcml_custom_prices_option = $current_option ? $current_option : 0;

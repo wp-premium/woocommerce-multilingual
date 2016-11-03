@@ -32,11 +32,14 @@ class WCML_Requests{
             $sitepress->save_settings($sitepress_settings);
         }
 
-        if(isset($_GET['wcml_action']) && $_GET['wcml_action'] = 'dismiss'){
-            $woocommerce_wpml->settings['dismiss_doc_main'] = 1;
+        if( isset( $_GET[ 'wcml_action' ] ) ){
+            if( $_GET['wcml_action'] == 'dismiss' ){
+                $woocommerce_wpml->settings['dismiss_doc_main'] = 1;
+            }elseif( $_GET['wcml_action'] == 'dismiss_tm_warning' ){
+                $woocommerce_wpml->settings['dismiss_tm_warning'] = 1;
+            }
             $woocommerce_wpml->update_settings();
         }
-
 
         add_action('wp_ajax_wcml_ignore_warning', array( $this, 'update_settings_from_warning') );
 

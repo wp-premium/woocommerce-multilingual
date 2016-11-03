@@ -4,7 +4,7 @@ class WCML_Aurum{
 
     function __construct(){
 
-        add_filter( 'wcml_multi_currency_is_ajax', array( $this,'add_ajax_action' ) );
+        add_filter( 'wcml_multi_currency_ajax_actions', array( $this,'add_ajax_action' ) );
     }
 
     function add_ajax_action( $actions ){
