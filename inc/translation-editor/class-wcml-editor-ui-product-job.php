@@ -299,9 +299,9 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
             if( !empty( $variations ) ){
                 foreach( $variations as $variation ){
-                    $element_data[ 'variation_desc'.$variation[ 'variation_id' ] ] = array( 'original' => strip_tags( $variation[ 'variation_description' ] ) );
+                    $element_data[ '_variation_description'.$variation[ 'variation_id' ] ] = array( 'original' => strip_tags( $variation[ 'variation_description' ] ) );
                     $translated_variation_id = apply_filters( 'translate_object_id', $variation[ 'variation_id' ], 'product_variation', false, $this->get_target_language() );
-                    $element_data[ 'variation_desc'.$variation[ 'variation_id' ] ][ 'translation' ]  =   $translated_variation_id ? get_post_meta( $translated_variation_id, '_variation_description', true ) : '';
+                    $element_data[ '_variation_description'.$variation[ 'variation_id' ] ][ 'translation' ]  =   $translated_variation_id ? get_post_meta( $translated_variation_id, '_variation_description', true ) : '';
 
                     $element_data = $this->add_custom_field_to_element_data( $element_data, $variation[ 'variation_id' ], $translated_variation_id, true );
                 }

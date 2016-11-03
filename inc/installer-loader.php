@@ -1,5 +1,5 @@
 <?php
-$installer_path = 'embedded/otgs/installer';
+$installer_path = 'vendor/otgs/installer';
 if( file_exists( WCML_PLUGIN_PATH . '/' . $installer_path . '/loader.php' ) ){
 
     include WCML_PLUGIN_PATH . '/' . $installer_path . '/loader.php' ;

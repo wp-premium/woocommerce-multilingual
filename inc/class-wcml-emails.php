@@ -71,18 +71,17 @@ class WCML_Emails{
     }
 
     function email_refresh_in_ajax(){
-        if(isset($_GET['order_id'])){
-            $this->refresh_email_lang($_GET['order_id']);
-            $this->email_heading_completed($_GET['order_id'],true);
+        if( isset( $_GET[ 'order_id' ] ) ){
+            $this->refresh_email_lang( $_GET[ 'order_id' ] );
+            $this->email_heading_completed( $_GET[ 'order_id' ], true );
         }
     }
 
     function refresh_email_lang_complete( $order_id ){
 
         $this->order_id = $order_id;
-        $this->refresh_email_lang($order_id);
-        $this->email_heading_completed($order_id,true);
-
+        $this->refresh_email_lang( $order_id );
+        $this->email_heading_completed( $order_id, true );
     }
 
     /**
@@ -92,34 +91,31 @@ class WCML_Emails{
      * @global type $order_id
      * @return type
      */
-    function email_header($order) {
+    function email_header( $order ) {
 
-
-        if (is_array($order)) {
-            $order = $order['order_id'];
-        } elseif (is_object($order)) {
+        if( is_array( $order ) ) {
+            $order = $order[ 'order_id' ];
+        } elseif( is_object( $order ) ) {
             $order = $order->id;
         }
 
-        $this->refresh_email_lang($order);
-
+        $this->refresh_email_lang( $order );
     }
 
 
-    function refresh_email_lang($order_id){
+    function refresh_email_lang( $order_id ){
 
         if ( is_array( $order_id ) ) {
-            if ( isset($order_id['order_id']) ) {
-                $order_id = $order_id['order_id'];
+            if ( isset( $order_id[ 'order_id' ] ) ) {
+                $order_id = $order_id[ 'order_id' ];
             } else {
                 return;
             }
-
         }
 
-        $lang = get_post_meta($order_id, 'wpml_language', TRUE);
-        if(!empty($lang)){
-            $this->change_email_language($lang);
+        $lang = get_post_meta( $order_id, 'wpml_language', true );
+        if( !empty( $lang ) ){
+            $this->change_email_language( $lang );
         }
     }
 
@@ -127,7 +123,7 @@ class WCML_Emails{
      * After email translation switch language to default.
      */
     function email_footer() {
-        $this->sitepress->switch_lang($this->sitepress->get_default_language());
+        $this->sitepress->switch_lang( $this->sitepress->get_default_language() );
     }
 
     function comments_language(){
@@ -207,17 +203,17 @@ class WCML_Emails{
 
     function new_order_admin_email($order_id){
         global $woocommerce;
-        if( class_exists( 'WC_Email_New_Order' ) && isset( $woocommerce->mailer()->emails['WC_Email_New_Order'] ) ){
+        if( isset( $woocommerce->mailer()->emails[ 'WC_Email_New_Order' ] ) ){
             $recipients = explode(',',$woocommerce->mailer()->emails['WC_Email_New_Order']->get_recipient());
             foreach($recipients as $recipient){
                 $user = get_user_by('email',$recipient);
                 if($user){
-                    $user_lang = $this->sitepress->get_user_admin_language($user->ID, true);
+                    $user_lang = $this->sitepress->get_user_admin_language($user->ID, true );
                 }else{
-                    $user_lang = get_post_meta($order_id, 'wpml_language', TRUE);
+                    $user_lang = get_post_meta($order_id, 'wpml_language', true );
                 }
 
-                $this->change_email_language($user_lang);
+                $this->change_email_language( $user_lang );
 
                 $woocommerce->mailer()->emails['WC_Email_New_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]heading' );
 
@@ -285,7 +281,9 @@ class WCML_Emails{
 
                             $custom_attr_trnsl = $this->woocommerce_wpml->attributes->get_custom_attribute_translation( $object->product->id, $formatted_var[ 'key' ], array('is_taxonomy' => false), $this->sitepress->get_current_language() );
 
-                            $formatted_meta[ $key ][ 'label' ] = $custom_attr_trnsl['name'];
+                            if ( false !== $custom_attr_trnsl ) {
+                                $formatted_meta[ $key ][ 'label' ] = $custom_attr_trnsl['name'];
+                            }
                         }
                     }
                 }
@@ -301,11 +299,12 @@ class WCML_Emails{
         $this->sitepress->switch_lang($lang,true);
         $this->locale = $this->sitepress->get_locale( $lang );
         unload_textdomain('woocommerce');
-        unload_textdomain('default');
-        $woocommerce->load_plugin_textdomain();
-        load_default_textdomain();
+        unload_textdomain( 'default' );
         global $wp_locale;
         $wp_locale = new WP_Locale();
+
+        $woocommerce->load_plugin_textdomain();
+        load_default_textdomain( $this->locale );
     }
 
     function admin_string_return_cached( $value, $option ){

@@ -171,7 +171,7 @@ class woocommerce_wpml {
         $this->wcml_products_screen = new WCML_Products_Screen_Options();
         $this->wcml_products_screen->init();
 
-        new WCML_Ajax_Setup;
+        new WCML_Ajax_Setup( $sitepress );
         new WCML_Fix_Copied_Custom_Fields_WPML353();
 
         if ( 'yes' == get_option( 'woocommerce_api_enabled' ) ){
@@ -198,7 +198,8 @@ class woocommerce_wpml {
             'dismiss_doc_main'             => 0,
             'trnsl_interface'              => 1,
             'currency_options'             => array(),
-            'currency_switcher_product_visibility'             => 1
+            'currency_switcher_product_visibility' => 1,
+            'dismiss_tm_warning'             => 0
         );
 
         if(empty($this->settings)){

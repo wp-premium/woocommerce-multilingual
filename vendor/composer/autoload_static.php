@@ -87,6 +87,7 @@ class ComposerStaticInitea5526f224e4d65c1f284250e90538a6
         'WCML_Multi_Currency_Reports' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-reports.php',
         'WCML_Multi_Currency_Resources' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-resources.php',
         'WCML_Multi_Currency_Shipping' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-shipping.php',
+        'WCML_Multi_Currency_Shipping_Legacy' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-shipping-legacy.php',
         'WCML_Multi_Currency_Table_Rate_Shipping' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-multi-currency-table-rate-shipping.php',
         'WCML_Multi_Currency_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-multi-currency-ui.php',
         'WCML_Not_Translatable_Attributes' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-not-translatable-attributes.php',

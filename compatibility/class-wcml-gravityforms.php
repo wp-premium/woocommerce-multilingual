@@ -3,8 +3,8 @@
 class WCML_gravityforms{
 
     function __construct(){
-        add_filter('gform_formatted_money',array($this,'wcml_convert_price'),10,2);
-        add_filter('wcml_multi_currency_is_ajax',array($this,'add_ajax_action'));
+        add_filter( 'gform_formatted_money', array( $this, 'wcml_convert_price' ), 10, 2 );
+        add_filter( 'wcml_multi_currency_ajax_actions', array(  $this, 'add_ajax_action' ) );
 
         add_action( 'wcml_after_duplicate_product_post_meta', array( $this, 'sync_gf_data'), 10, 3 );
     }
