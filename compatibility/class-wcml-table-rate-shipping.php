@@ -25,10 +25,12 @@ class WCML_Table_Rate_Shipping {
 		$this->sitepress = $sitepress;
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		add_action( 'init', array( $this, 'init' ), 9 );
+
 		add_filter( 'get_the_terms',array( $this, 'shipping_class_id_in_default_language' ), 10, 3 );
 
 		if( wcml_is_multi_currency_on() ){
 			add_filter( 'woocommerce_table_rate_query_rates_args', array( $this, 'filter_query_rates_args' ) );
+			add_filter( 'woocommerce_table_rate_package_row_base_price', array( $this, 'filter_product_base_price' ), 10, 3 );
 		}
 
 	}
@@ -69,8 +71,9 @@ class WCML_Table_Rate_Shipping {
 	 * @return mixed
 	 */
 	public function shipping_class_id_in_default_language( $terms, $post_id, $taxonomy ) {
-		global $icl_adjust_id_url_filter_off;
-		if ( 'product_shipping_class' === $taxonomy ) {
+		global $icl_adjust_id_url_filter_off, $pagenow;
+
+		if( $pagenow != 'post.php' && ( get_post_type( $post_id ) == 'product' || get_post_type( $post_id ) == 'product_variation' ) && $taxonomy == 'product_shipping_class' ){
 
 			foreach ( $terms as $k => $term ) {
 				$shipping_class_id = apply_filters( 'translate_object_id', $term->term_id, 'product_shipping_class', false, $this->sitepress->get_default_language() );
@@ -99,5 +102,14 @@ class WCML_Table_Rate_Shipping {
 		return $args;
 	}
 
+
+	public function filter_product_base_price( $row_base_price, $_product, $qty ){
+
+		if( get_option( 'woocommerce_currency') != $this->woocommerce_wpml->multi_currency->get_client_currency() ){
+			$row_base_price = apply_filters( 'wcml_product_price_by_currency', $_product->id, get_option( 'woocommerce_currency') ) * $qty;
+		}
+
+		return $row_base_price;
+	}
 
 }

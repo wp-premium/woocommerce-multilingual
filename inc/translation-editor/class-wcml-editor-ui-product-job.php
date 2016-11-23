@@ -219,13 +219,21 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             if( key( $this->data[ $custom_field_id ] ) != 'original' ){
                 $group = new WPML_Editor_UI_Field_Group(  $this->get_product_custom_field_label( $custom_field, $variation_id ), true );
                 foreach( $this->data[ $custom_field_id ] as $custom_field_key => $custom_field_array ){
-                    $custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+                    if( $custom_field == '_variation_description' ){
+                        $custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+                    }else{
+                        $custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+                    }
 
                     $group->add_field( $custom_field_input );
                 }
                 $custom_fields_section->add_field( $group );
             }else{
-                $custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+                if( $custom_field == '_variation_description' ){
+                    $custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+                }else{
+                    $custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+                }
                 $custom_fields_section->add_field( $custom_field_input );
             }
         }

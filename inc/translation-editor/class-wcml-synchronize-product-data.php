@@ -28,6 +28,8 @@ class WCML_Synchronize_Product_Data{
             add_action( 'woocommerce_product_bulk_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
 
             add_action( 'init', array( $this, 'init' ) );
+
+            add_action( 'deleted_term_relationships', array( $this, 'delete_term_relationships_update_term_count' ), 10, 2 );
         }
 
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'sync_product_stocks_reduce' ) );
@@ -190,40 +192,79 @@ class WCML_Synchronize_Product_Data{
     }
 
     public function sync_product_taxonomies( $original_product_id, $tr_product_id, $lang ){
-        remove_filter( 'get_term', array( $this->sitepress,'get_term_adjust_id' ) ); // AVOID filtering to current language
         $taxonomies = get_object_taxonomies( 'product' );
+
         foreach( $taxonomies as $taxonomy ) {
-            $terms = get_the_terms( $original_product_id, $taxonomy );
-            $terms_array = array();
-            $terms_tax_id_array = array();
-            if ( $terms ) {
-                foreach ( $terms as $term ) {
-                    if( $term->taxonomy == "product_type" ){
-                        $terms_array[] = $term->name;
+
+            $terms = wp_get_object_terms( $original_product_id, $taxonomy );
+            $tt_ids = array();
+            $tt_names = array();
+            if ($terms) {
+                foreach ($terms as $term) {
+                    if( $term->taxonomy == 'product_type' ){
+                        $tt_names[] = $term->name;
                         continue;
                     }
-                    $tr_id = apply_filters( 'translate_object_id', $term->term_id, $taxonomy, false, $lang );
-                    if( !is_null( $tr_id ) ){
-                        // not using get_term - unfiltered get_term
-                        $translated_term = $this->wpdb->get_row( $this->wpdb->prepare( "
-                            SELECT * FROM {$this->wpdb->terms} t JOIN {$this->wpdb->term_taxonomy} x ON x.term_id = t.term_id WHERE t.term_id = %d AND x.taxonomy = %s", $tr_id, $taxonomy ) );
-                        $terms_array[] = $translated_term->term_id;
-                        $terms_tax_id_array[] = $translated_term->term_taxonomy_id;
-                    }
+                    $tt_ids[] = $term->term_id;
                 }
-                if( $taxonomy != 'product_type' && !is_taxonomy_hierarchical( $taxonomy ) ){
-                    $terms_array = array_unique( array_map( 'intval', $terms_array ) );
-                }
-                $this->sitepress->switch_lang( $lang );
-                wp_set_post_terms( $tr_product_id, $terms_array, $taxonomy );
-                $this->sitepress->switch_lang();
 
-                wp_update_term_count( $terms_tax_id_array, $taxonomy );
+                if( $taxonomy == 'product_type' ) {
+                    wp_set_post_terms( $tr_product_id, $tt_names, $taxonomy );
+                }else{
+                    $this->wcml_update_term_count_by_ids( $tt_ids, $lang, $taxonomy, $tr_product_id );
+                }
             }
         }
     }
 
+    public function delete_term_relationships_update_term_count( $object_id, $tt_ids ){
 
+        if( get_post_type( $object_id ) == 'product' ){
+
+            $language_details = $this->sitepress->get_element_language_details( $object_id, 'post_product' );
+            $translations = $this->sitepress->get_element_translations( $language_details->trid, 'post_product', false, true );
+
+            foreach( $translations as $translation ) {
+                if ( !$translation->original ) {
+                    $this->wcml_update_term_count_by_ids( $tt_ids, $translation->language_code );
+                }
+            }
+        }
+
+    }
+    public function wcml_update_term_count_by_ids( $tt_ids, $language, $taxonomy = '', $tr_product_id = false ){
+        $terms_array = array();
+        $terms_ids_array = array();
+
+        foreach( $tt_ids as $tt_id ){
+
+            $tr_id = apply_filters( 'translate_object_id', $tt_id, $taxonomy, false, $language );
+
+            if( !is_null( $tr_id ) ){
+                // not using get_term - unfiltered get_term
+                $translated_term = $this->wpdb->get_row( $this->wpdb->prepare( "
+                            SELECT * FROM {$this->wpdb->terms} t JOIN {$this->wpdb->term_taxonomy} x ON x.term_id = t.term_id WHERE t.term_id = %d", $tr_id ) );
+                $terms_ids_array[] = $translated_term->term_id;
+                $terms_array[] = $translated_term->term_taxonomy_id;
+                $taxonomy = $translated_term->taxonomy;
+            }
+
+        }
+
+        if( is_taxonomy_hierarchical( $taxonomy ) ){
+            $terms_array = array_unique( array_map( 'intval', $terms_array ) );
+        }
+
+
+        if( in_array( $taxonomy, array( 'product_cat', 'product_tag' ) ) ) {
+            $this->sitepress->switch_lang( $language );
+            wp_update_term_count( $terms_array, $taxonomy );
+            $this->sitepress->switch_lang( );
+        }elseif( $tr_product_id ){
+            wp_set_post_terms( $tr_product_id, $terms_ids_array, $taxonomy );
+        }
+
+    }
 
     public function sync_linked_products( $product_id, $translated_product_id, $lang ){
         //sync up-sells
@@ -390,18 +431,6 @@ class WCML_Synchronize_Product_Data{
             $master_post_id = apply_filters( 'translate_object_id', $master_post_id, 'product', false, $original_language );
 
             $this->sync_product_data( $master_post_id, $id, $lang );
-            // recount terms only first time
-            if( !get_post_meta( $id, '_wcml_terms_recount' ) ){
-                $product_cats = wp_get_post_terms( $id, 'product_cat' );
-
-                if( !empty( $product_cats ) ) {
-                    foreach ($product_cats as $product_cat) {
-                        $cats_to_recount[ $product_cat->term_id ] = $product_cat->parent;
-                    }
-                    _wc_term_recount( $cats_to_recount, get_taxonomy( 'product_cat' ), true, false );
-                    add_post_meta( $id, '_wcml_terms_recount', 'yes' );
-                }
-            }
         }
     }
 

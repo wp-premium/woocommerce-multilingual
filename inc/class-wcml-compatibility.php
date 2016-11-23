@@ -165,6 +165,11 @@ class WCML_Compatibility {
             new WCML_JCK_WSSV();
         }
 
+        // WooCommerce Print Invoices
+        if( class_exists( 'WC_PIP' ) ){
+            $this->pip = new WCML_Pip();
+        }
+
 
     }
 

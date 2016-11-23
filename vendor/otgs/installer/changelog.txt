@@ -1,3 +1,7 @@
+= 1.7.12 =
+* Allow to set the site keys in PHP (as constants)
+* Fixed an issue with unregistered sites gets wrong info (or error) when clicking "View version x.y.x details" link
+
 = 1.7.11 =
 * Fixed styling for 'must-register' warnings on the plugins page
 
