@@ -105,12 +105,14 @@ class WCML_Multi_Currency_Shipping{
     public function convert_shipping_taxes( $packages ){
 
         foreach( $packages as $package_id => $package ){
-            foreach( $package['rates'] as $rate_id => $rate  ){
-                foreach( $rate->taxes as $tax_id => $tax){
+            if( isset( $package['rates'] ) ){
+                foreach( $package['rates'] as $rate_id => $rate  ){
+                    foreach( $rate->taxes as $tax_id => $tax){
 
-                    $packages[$package_id]['rates'][$rate_id]->taxes[$tax_id] =
-                        $this->multi_currency->prices->raw_price_filter( $tax );
+                        $packages[$package_id]['rates'][$rate_id]->taxes[$tax_id] =
+                            $this->multi_currency->prices->raw_price_filter( $tax );
 
+                    }
                 }
             }
         }

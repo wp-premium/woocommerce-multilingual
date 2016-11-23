@@ -454,7 +454,16 @@ class WCML_WC_Strings{
         $current_language = $sitepress->get_current_language();
 
         if( $current_language != 'all' && in_array( 'product', $obj_type ) && substr( $taxonomy, 0, 3) == 'pa_' && isset( $wp_taxonomies[ $taxonomy ] )){
-            $wp_taxonomies[$taxonomy]->labels->name = apply_filters( 'wpml_translate_single_string', $args['labels']->name, 'WordPress', 'taxonomy singular name: '.$args['labels']->name, $current_language );
+
+            if( is_array( $args['labels'] ) ){
+                $name = $args['labels']['singular_name'];
+            }else{
+                $name = $args['labels']->name;
+            }
+
+            $wp_taxonomies[$taxonomy]->labels->name = apply_filters( 'wpml_translate_single_string', $name, 'WordPress', 'taxonomy singular name: '.$name, $current_language );
+
+
         }
 
     }

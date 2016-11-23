@@ -110,7 +110,7 @@ class WCML_Orders{
                         $tr_product_id = apply_filters( 'translate_object_id', $item_data, 'product', false, $language_to_filter );
                         if( !is_null( $tr_product_id ) ){
                             $items[ $index ][ $key ] = $tr_product_id;
-                            $items[ $index ][ 'name'] = get_the_title( $tr_product_id );
+                            $items[ $index ][ 'name'] = wc_get_product( $tr_product_id )->get_title();
                         }
                     }
                     if( $key == 'variation_id' ){
@@ -150,7 +150,7 @@ class WCML_Orders{
                         $tr_product_id = apply_filters( 'translate_object_id', $item_product_id, 'product', false, $language_to_filter );
                         if( !is_null( $tr_product_id ) ){
                             $item->set_product_id( $tr_product_id );
-                            $item->set_name( get_the_title( $tr_product_id ) );
+                            $item->set_name( wc_get_product( $tr_product_id )->get_title() );
                         }
                         $tr_variation_id = apply_filters( 'translate_object_id', $item->get_variation_id(), 'product_variation', false, $language_to_filter );
                         if( !is_null( $tr_variation_id ) ){
@@ -296,7 +296,7 @@ class WCML_Orders{
 
     function order_language_dropdown( $order_id ){
         if( !get_post_meta( $order_id, '_order_currency') ) {
-            $languages = icl_get_languages('skip_missing=0&orderby=code');
+            $languages = apply_filters( 'wpml_active_languages', array(), array( 'skip_missing' => 0, 'orderby' => 'code' ) );
             $selected_lang =  isset( $_COOKIE [ '_wcml_dashboard_order_language' ] ) ?  $_COOKIE [ '_wcml_dashboard_order_language' ] : $this->sitepress->get_default_language();
             ?>
             <li class="wide">

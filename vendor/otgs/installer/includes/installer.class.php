@@ -137,7 +137,7 @@ final class WP_Installer{
 
         if(defined('DOING_AJAX')){
             add_action('wp_ajax_save_site_key', array($this, 'save_site_key'));
-            add_action('wp_ajax_remove_site_key', array($this, 'remove_site_key'));
+            add_action('wp_ajax_remove_site_key', array($this, 'remove_site_key_ajax'));
             add_action('wp_ajax_update_site_key', array($this, 'update_site_key'));
             
             add_action('wp_ajax_installer_download_plugin', array($this, 'download_plugin_ajax_handler'));
@@ -475,6 +475,7 @@ final class WP_Installer{
                 }
             }
 
+            $this->load_hardcoded_site_keys();
 
             $this->settings = $this->_pre_1_6_backwards_compatibility($this->settings);
 
@@ -482,8 +483,65 @@ final class WP_Installer{
 
         }
 
-
         return $this->settings;
+    }
+
+    private function load_hardcoded_site_keys(){
+
+        if( !empty( $this->settings['repositories'] ) ) {
+            foreach ( $this->settings['repositories'] as $repository_id => $repository ) {
+
+                if ( $site_key = self::get_repository_hardcoded_site_key( $repository_id ) ) {
+
+                    $site_key_missing = empty($this->settings['repositories'][$repository_id]['subscription']['data']);
+                    $site_key_changed = !$site_key_missing &&
+                        $this->settings['repositories'][$repository_id]['subscription']['key'] != $site_key;
+
+                    if ( $site_key_missing || $site_key_changed ) {
+
+                        if ( !function_exists( 'get_plugins' ) ) {
+                            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                        }
+                        $this->load_repositories_list();
+                        $response = $this->save_site_key(
+                            array(
+                                'repository_id' => $repository_id,
+                                'site_key' => $site_key,
+                                'return' => true,
+                                'nonce' => wp_create_nonce( 'save_site_key_' . $repository_id )
+                            )
+                        );
+
+                        if ( !empty($response['error']) ) {
+                            $this->remove_site_key( $repository_id );
+
+                            $this->admin_messages[] = array(
+                                'type' => 'error',
+                                'text' => sprintf( __( 'You are using an invalid site key defined as the constant %s (most likely in wp-config.php). 
+                                                Please remove it or use the correct value in order to be able to register correctly.', 'installer' ), 'OTGS_INSTALLER_SITE_KEY_' . strtoupper( $repository_id ) )
+                            );
+
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
+    public static function get_repository_hardcoded_site_key( $repository_id ){
+
+        $site_key = false;
+
+        $site_key_constant = 'OTGS_INSTALLER_SITE_KEY_' . strtoupper( $repository_id );
+        if( defined( $site_key_constant ) ){
+            $site_key = constant( $site_key_constant );
+        }
+
+        return $site_key;
     }
 
     //backward compatibility, will remove 'basename' in version 1.8
@@ -1030,7 +1088,7 @@ final class WP_Installer{
         $site_key       = isset($args['site_key']) ? $args['site_key'] : $_POST['site_key_' . $repository_id];
         
         $site_key = preg_replace("/[^A-Za-z0-9]/", '', $site_key);
-        
+
         if($repository_id && $nonce && wp_create_nonce('save_site_key_' . $repository_id) == $nonce){
 
             try {
@@ -1082,12 +1140,17 @@ final class WP_Installer{
         return WP_Installer::get_repository_site_key( $repository_id );
     }
     
-    public function remove_site_key(){
-        if($_POST['nonce'] == wp_create_nonce('remove_site_key_' . $_POST['repository_id'])){
-            unset($this->settings['repositories'][$_POST['repository_id']]['subscription']);
+    public function remove_site_key( $repository_id ){
+        if( isset( $this->settings['repositories'][$repository_id] ) ){
+            unset($this->settings['repositories'][$repository_id]['subscription']);
             $this->save_settings();
-            
             $this->refresh_repositories_data();
+        }
+    }
+
+    public function remove_site_key_ajax(){
+        if($_POST['nonce'] == wp_create_nonce('remove_site_key_' . $_POST['repository_id'])){
+            $this->remove_site_key( $_POST['repository_id'] );
         }
         exit;
     }
@@ -1920,9 +1983,20 @@ final class WP_Installer{
     }
     
     public function custom_plugins_api_call($false, $action, $args){
-            
+
         if($action == 'plugin_information'){
-            
+
+            $plugins = get_plugins();
+            $plugin_names = array();
+            foreach( $plugins as $plugin_id => $plugin ) {
+                // plugins by WP slug which (plugin folder) which can be different
+                // will use this to compare by title
+                $plugin_names[ dirname( $plugin_id ) ] = array(
+                    'name'  => $plugin['Name'],
+                    'title' => $plugin['Title'],
+                );
+            }
+
             $slug = $args->slug;
             
             foreach($this->settings['repositories'] as $repository_id => $repository){
@@ -1941,7 +2015,11 @@ final class WP_Installer{
 
                             $download = $this->settings['repositories'][$repository_id]['data']['downloads']['plugins'][$plugin_slug];
 
-                            if($download['slug'] == $slug){
+                            if( $download['slug'] == $slug || $plugin_names[$slug]['name'] == $download['name']  || $plugin_names[$slug]['title'] == $download['name'] ){
+
+                                if( !empty( $download['free-on-wporg'] ) ){
+                                    return false; // use data from wordpress.org
+                                }
 
                                 $res = new stdClass();
                                 $res->external = true;
@@ -1952,13 +2030,9 @@ final class WP_Installer{
                                 $res->author = '';
                                 $res->author_profile = '';
                                 $res->last_updated = $download['date'];
-                                //$res->homepage = $download['url'];
 
                                 if($site_key){
                                     $res->download_link = $this->append_site_key_to_download_url($download['url'], $site_key, $repository_id);
-                                }else{
-                                    // if(!empty($download['free-on-wporg'])
-                                    return false; //try somewhere else. e.g. wordpress.org
                                 }
 
                                 $res->homepage = $repository['data']['url'];

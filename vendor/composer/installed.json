@@ -25,7 +25,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2016-08-13 20:53:52",
+        "time": "2016-08-13T20:53:52+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "Composer\\Installers\\Plugin",
@@ -115,7 +115,7 @@
         "source": {
             "type": "git",
             "url": "ssh://git@git.onthegosystems.com:10022/installer/installer.git",
-            "reference": "a44c885a44923f64dde00e24e257ff0384e5238a"
+            "reference": "b94fa43d64695a5b404a363d7f4dd7789df0859b"
         },
         "require": {
             "composer/installers": "~1.0",
@@ -124,7 +124,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.5"
         },
-        "time": "2016-08-05 08:23:27",
+        "time": "2016-11-14T13:48:55+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -172,7 +172,7 @@
             "reference": "bd41459d5e27df8d33057842b32377c39e97a5a8",
             "shasum": ""
         },
-        "time": "2016-04-16 21:52:24",
+        "time": "2016-04-16T21:52:24+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
