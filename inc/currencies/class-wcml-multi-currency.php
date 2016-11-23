@@ -458,4 +458,9 @@ class WCML_Multi_Currency{
 
     }
 
+    public function get_currencies_without_cents(){
+
+        return apply_filters( 'wcml_currencies_without_cents', $this->currencies_without_cents );
+    }
+
 }

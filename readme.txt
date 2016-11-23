@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.6.1
-Stable tag: 3.9.3
+Stable tag: 3.9.5
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,22 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 3.9.5 =
+* Fixed a bug introduced in 3.9.4 that prevented translating variable products
+
+= 3.9.4 =
+* Fixed an issue with custom prices (secondary currency) overriding the price in the default currency in some conditions
+* Fixed an issue with WooCommerce Authorize.Net AIM Gateway happening when using the credit cart checkout
+* Bug fix: the group products were excluded from the order notification emails
+* Fixed a compatibility issue with Revolution Slider
+* Changed the input field for variation descriptions to textarea in the tranlsation editor
+* Fixed an issue related to rates per shipping in secondary currencies when using WooCommerce Table Rate Shipping
+* Bug fix: the shipping class was not displayed in the backend when when using WooCommerce Table Rate Shipping and creating the product in a secondary language
+* Fixed a compatibility issue with WooCommerce Print Invoices
+* Fixed compatibility issues with Sensei
+* Added a filter for rounding rules logic
+* Added a currencies that do not use decimals
 
 = 3.9.3 =
 * Fixed a bug that was causing the currency switcher to not be displayed on the cart and checkout pages in certain conditions

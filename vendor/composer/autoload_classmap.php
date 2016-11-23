@@ -68,6 +68,7 @@ return array(
     'WCML_Not_Translatable_Attributes' => $baseDir . '/inc/template-classes/class-wcml-not-translatable-attributes.php',
     'WCML_Orders' => $baseDir . '/inc/class-wcml-orders.php',
     'WCML_Per_Product_Shipping' => $baseDir . '/compatibility/class-wcml-per-product-shipping.php',
+    'WCML_Pip' => $baseDir . '/compatibility/class-wcml-pip.php',
     'WCML_Plugins_Wrap' => $baseDir . '/inc/template-classes/class-wcml-plugins-wrap.php',
     'WCML_Pointers' => $baseDir . '/inc/admin-menus/class-wcml-pointers.php',
     'WCML_Product_Addons' => $baseDir . '/compatibility/class-wcml-product-addons.php',

@@ -172,7 +172,7 @@ jQuery( function($){
                 dataType: 'json',
                 data: parent.find('[name^="currency_options"]').serialize() + '&action=wcml_save_currency&wcml_nonce=' + jQuery('#wcml_save_currency_nonce').val(),
                 success: function(response){
-                    parent.dialog('close');
+                    parent.find('.wcml-dialog-close-button').trigger('click');
 
                     WCML_Multi_Currency.currency_switcher_preview();
 

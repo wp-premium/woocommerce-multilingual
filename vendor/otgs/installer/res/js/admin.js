@@ -50,6 +50,12 @@
     },
     
     show_site_key_form: function(){
+
+        if( jQuery(this).hasClass('disabled') ) {
+            alert( jQuery(this).attr('title') );
+            return false;
+        }
+
         otgs_wp_installer.reset_errors();
         
         var form = jQuery(this).parent().find('form.otgsi_site_key_form');
@@ -112,14 +118,23 @@
     },
     
     remove_site_key: function(){
-        
-        if(confirm(jQuery(this).data('confirmation'))){
-            
-            jQuery('<span class="spinner"></span>').css({visibility: 'visible', float: 'none'}).prependTo(jQuery(this).parent());
-            data = {action: 'remove_site_key', repository_id: jQuery(this).data('repository'), nonce: jQuery(this).data('nonce')}
-            jQuery.ajax({url: ajaxurl, type: 'POST', data: data, success: otgs_wp_installer.removed_site_key});
+
+        if( jQuery(this).attr('disabled') == 'disabled' ){
+
+            alert( jQuery(this).attr('title') );
+            return false;
+
+        } else {
+
+            if(confirm(jQuery(this).data('confirmation'))){
+
+                jQuery('<span class="spinner"></span>').css({visibility: 'visible', float: 'none'}).prependTo(jQuery(this).parent());
+                data = {action: 'remove_site_key', repository_id: jQuery(this).data('repository'), nonce: jQuery(this).data('nonce')}
+                jQuery.ajax({url: ajaxurl, type: 'POST', data: data, success: otgs_wp_installer.removed_site_key});
+            }
+
         }
-        
+
         return false;  
     },
 
