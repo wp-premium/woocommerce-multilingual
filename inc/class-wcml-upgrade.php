@@ -17,6 +17,7 @@ class WCML_Upgrade{
         '3.8',
         '3.9',
         '3.9.1',
+        '4.0'
     );
     
     function __construct(){
@@ -517,10 +518,15 @@ class WCML_Upgrade{
         }
     }
 
-    function upgrade_3_10(){
+    function upgrade_4_0(){
         $wcml_settings = get_option( '_wcml_settings' );
         $wcml_settings[ 'dismiss_tm_warning' ] = 0;
-        update_option( '_wcml_settings', $wcml_settings );
+        $wcml_settings['cart_sync']['lang_switch'] = WCML_CART_SYNC;
+        $wcml_settings['cart_sync']['currency_switch'] = WCML_CART_SYNC;
+
+        update_option('_wcml_settings', $wcml_settings);
+
     }
+
 
 }

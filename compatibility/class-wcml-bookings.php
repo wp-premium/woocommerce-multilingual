@@ -158,6 +158,8 @@ class WCML_Bookings {
 
 			//allow filtering resources by language
 			add_filter( 'get_booking_resources_args', array( $this, 'filter_get_booking_resources_args' ) );
+
+			add_action( 'woocommerce_product_data_panels',   array( $this, 'show_pointer_info' ) );
 		}
 
 		if ( ! is_admin() || isset( $_POST['action'] ) && $_POST['action'] == 'wc_bookings_calculate_costs' ) {
@@ -172,7 +174,7 @@ class WCML_Bookings {
 			), 10, 4 );
 		}
 
-		add_filter( 'wpml_extra_conditions_snippet', array( $this, 'extra_conditions_to_filter_bookings' ) );
+		add_filter( 'wpml_language_filter_extra_conditions_snippet', array( $this, 'extra_conditions_to_filter_bookings' ) );
 
 		$this->clear_transient_fields();
 
@@ -991,16 +993,20 @@ class WCML_Bookings {
 	function load_assets( $external_product_type = false ) {
 		global $pagenow;
 
-		$product = $pagenow == 'post.php' && isset( $_GET['post'] ) ? wc_get_product( $_GET['post'] ) : false;
+		$product_id = $pagenow == 'post.php' && isset( $_GET['post'] ) ? (int)$_GET['post'] : false;
 
-		if ( ( $product && ( $product->product_type == 'booking' || $product->product_type == $external_product_type ) ) || $pagenow == 'post-new.php' ) {
+		if( $product_id && get_post_type( $product_id ) === 'product' ){
+			$product_type = Deprecated_WC_Functions::get_product_type( $product_id );
 
-			wp_register_style( 'wcml-bookings-css', WCML_PLUGIN_URL . '/compatibility/res/css/wcml-bookings.css', array(), WCML_VERSION );
-			wp_enqueue_style( 'wcml-bookings-css' );
+			if ( ( $product_type === 'booking' || $product_type === $external_product_type ) || $pagenow == 'post-new.php' ) {
 
-			wp_register_script( 'wcml-bookings-js', WCML_PLUGIN_URL . '/compatibility/res/js/wcml-bookings.js', array( 'jquery' ), WCML_VERSION );
-			wp_enqueue_script( 'wcml-bookings-js' );
+				wp_register_style( 'wcml-bookings-css', WCML_PLUGIN_URL . '/compatibility/res/css/wcml-bookings.css', array(), WCML_VERSION );
+				wp_enqueue_style( 'wcml-bookings-css' );
 
+				wp_register_script( 'wcml-bookings-js', WCML_PLUGIN_URL . '/compatibility/res/js/wcml-bookings.js', array( 'jquery' ), WCML_VERSION );
+				wp_enqueue_script( 'wcml-bookings-js' );
+
+			}
 		}
 
 	}
@@ -1021,8 +1027,8 @@ class WCML_Bookings {
 		if ( $cart_item['data'] instanceof WC_Product_Booking && isset( $cart_item['booking'] ) ) {
 
 
-			$current_id      = apply_filters( 'translate_object_id', $cart_item['data']->id, 'product', true, $current_language );
-			$cart_product_id = $cart_item['data']->id;
+			$current_id      = apply_filters( 'translate_object_id', $cart_item['product_id'], 'product', true, $current_language );
+			$cart_product_id = $cart_item['product_id'];
 
 			if ( $current_id != $cart_product_id ) {
 
@@ -1221,7 +1227,7 @@ class WCML_Bookings {
 	}
 
 	function custom_box_html( $obj, $product_id, $data ) {
-		if ( wc_get_product( $product_id )->product_type != 'booking' ) {
+		if ( Deprecated_WC_Functions::get_product_type( $product_id ) !== 'booking' ) {
 			return;
 		}
 
@@ -1284,7 +1290,7 @@ class WCML_Bookings {
 
 	function custom_box_html_data( $data, $product_id, $translation, $lang ) {
 
-		if ( wc_get_product( $product_id )->product_type != 'booking' ) {
+		if ( Deprecated_WC_Functions::get_product_type( $product_id ) !== 'booking' ) {
 			return $data;
 		}
 
@@ -1762,12 +1768,9 @@ class WCML_Bookings {
 	function append_persons_to_translation_package( $package, $post ) {
 
 		if ( $post->post_type == 'product' ) {
-			$product = wc_get_product( $post->ID );
+			$product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
 
-			//WC_Product::get_type() available from WooCommerce 2.4.0
-			$product_type = method_exists( $product, 'get_type' ) ? $product->get_type() : $product->product_type;
-
-			if ( $product_type == 'booking' ) {
+			if ( $product_type === 'booking' ) {
 
 				$bookable_product = new WC_Product_Booking( $post->ID );
 
@@ -1800,10 +1803,7 @@ class WCML_Bookings {
 	function save_person_translation( $post_id, $data, $job ) {
 		$person_translations = array();
 
-		$product = wc_get_product( $post_id );
-
-		if ( $product && $product->product_type == 'booking' ) {
-
+		if ( Deprecated_WC_Functions::get_product_type( $post_id ) === 'booking' ) {
 
 			foreach ( $data as $value ) {
 
@@ -1870,10 +1870,9 @@ class WCML_Bookings {
 		if ( $post->post_type == 'product' ) {
 			$product = wc_get_product( $post->ID );
 
-			//WC_Product::get_type() available from WooCommerce 2.4.0
-			$product_type = method_exists( $product, 'get_type' ) ? $product->get_type() : $product->product_type;
+			$product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
 
-			if ( $product_type == 'booking' && $product->has_resources() ) {
+			if ( $product_type === 'booking' && $product->has_resources() ) {
 
 				$resources = $product->get_resources();
 
@@ -1898,9 +1897,7 @@ class WCML_Bookings {
 	function save_resource_translation( $post_id, $data, $job ) {
 		$resource_translations = array();
 
-		$product = wc_get_product( $post_id );
-
-		if ( $product && $product->product_type == 'booking' ) {
+		if ( Deprecated_WC_Functions::get_product_type( $post_id ) === 'booking' ) {
 
 			foreach ( $data as $value ) {
 
@@ -2230,6 +2227,26 @@ class WCML_Bookings {
 	public function hide_bookings_type_on_tm_dashboard( $types ){
 		unset( $types[ 'wc_booking' ] );
 		return $types;
+	}
+
+	public function show_pointer_info(){
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate the titles of your custom Resources on the %sWooCommerce product translation page%s', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page=wpml-wcml').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-bookings-woocommerce-multilingual/',
+			'bookings_resources .woocommerce_bookable_resources #message'
+		);
+
+		$pointer_ui->show();
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate the Person Type Name and Description on the  %sWooCommerce product translation page%s', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page=wpml-wcml').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-bookings-woocommerce-multilingual/',
+			'bookings_persons #persons-types>div.toolbar'
+		);
+
+		$pointer_ui->show();
+
 	}
 
 }

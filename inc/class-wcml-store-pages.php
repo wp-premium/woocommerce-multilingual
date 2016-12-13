@@ -324,19 +324,19 @@ class WCML_Store_Pages{
 
                         switch( $page ){
                             case 'woocommerce_shop_page_id':
-                                $page_title = __( 'Shop', 'woocommerce-multilingual');
+                                $page_title = $mis_lang !== 'en'  ?  __( 'Shop', 'woocommerce-multilingual') : 'Shop';
                                 break;
                             case 'woocommerce_cart_page_id':
-                                $page_title = __( 'Cart', 'woocommerce-multilingual');
+                                $page_title = $mis_lang !== 'en'  ?  __( 'Cart', 'woocommerce-multilingual') : 'Cart';
                                 break;
                             case 'woocommerce_checkout_page_id':
-                                $page_title = __( 'Checkout', 'woocommerce-multilingual');
+                                $page_title = $mis_lang !== 'en'  ?  __( 'Checkout', 'woocommerce-multilingual') : 'Checkout';
                                 break;
                             case 'woocommerce_myaccount_page_id':
-                                $page_title = __( 'My Account', 'woocommerce-multilingual');
+                                $page_title = $mis_lang !== 'en'  ?  __( 'My Account', 'woocommerce-multilingual') : 'My Account';
                                 break;
                             default:
-                                $page_title = __( $orig_page->post_title, 'woocommerce-multilingual');
+                                $page_title = $mis_lang !== 'en'  ?  translate( $orig_page->post_title, 'woocommerce-multilingual') : $orig_page->post_title;
                                 break;
                         }
 

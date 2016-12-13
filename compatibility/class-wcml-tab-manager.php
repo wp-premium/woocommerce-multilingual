@@ -63,6 +63,7 @@ class WCML_Tab_Manager {
 
 			add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_custom_tabs_to_translation_package' ), 10, 2 );
 			add_action( 'wpml_translation_job_saved',   array( $this, 'save_custom_tabs_translation' ), 10, 3 );
+			add_action( 'woocommerce_product_data_panels', array( $this, 'show_pointer_info' ) );
 
 		}else{
 			add_filter( 'option_wc_tab_manager_default_layout', array( $this, 'filter_default_layout' ) );
@@ -144,7 +145,7 @@ class WCML_Tab_Manager {
 						$title_key = md5( 'tab_' . $orig_prod_tab['position'] . '_title' );
 						$heading_key = md5( 'tab_' . $orig_prod_tab['position'] . '_heading' );
 						$title = isset( $data[ $title_key ] ) ? sanitize_text_field( $data[ $title_key ] ) : '';
-						$content = isset( $data[ $heading_key ] ) ? sanitize_text_field( $data[ $heading_key ] ) : '';
+						$content = isset( $data[ $heading_key ] ) ? wp_kses_post( $data[ $heading_key ] ) : '';
 
 						$trnsl_product_tabs = $this->set_product_tab( $orig_prod_tab, $trnsl_product_tabs, $lang, $trnsl_product_id, $tab_id, $title, $content );
 
@@ -703,5 +704,17 @@ class WCML_Tab_Manager {
 		}
 
 		return $default_tabs;
+	}
+
+	public function show_pointer_info(){
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate your custom product tabs on the %sWooCommerce product translation page%s', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page=wpml-wcml').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-tab-manager-woocommerce-multilingual/',
+			'woocommerce_product_tabs>p'
+		);
+
+		$pointer_ui->show();
+
 	}
 }

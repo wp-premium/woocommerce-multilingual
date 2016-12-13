@@ -50,7 +50,6 @@
 
                 $site_key = $this->settings['repositories'][$repository_id]['subscription']['key'];
                 $subscription_type = $this->get_subscription_type_for_repository($repository_id);
-
                 $upgrade_options = $this->get_upgrade_options($repository_id);
                 $expired = false;
 

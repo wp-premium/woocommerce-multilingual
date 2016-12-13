@@ -3,7 +3,7 @@ class WCML_Requests{
     
     function __construct(){
         
-        add_action('init', array($this, 'run'));
+        add_action('init', array($this, 'run') );
 
         
     }
@@ -24,12 +24,28 @@ class WCML_Requests{
             $wcml_file_path_sync = filter_input( INPUT_POST, 'wcml_file_path_sync', FILTER_SANITIZE_NUMBER_INT );
 
             $woocommerce_wpml->settings['file_path_sync'] = $wcml_file_path_sync;
+
+            $woocommerce_wpml->settings['cart_sync']['lang_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT ) );
+            $woocommerce_wpml->settings['cart_sync']['currency_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT ) );
+
             $woocommerce_wpml->update_settings();
 
-            $new_value =$wcml_file_path_sync == 0?2:$wcml_file_path_sync;
+            $new_value = $wcml_file_path_sync == 0 ? 2 :$wcml_file_path_sync;
             $sitepress_settings['translation-management']['custom_fields_translation']['_downloadable_files'] = $new_value;
             $sitepress_settings['translation-management']['custom_fields_translation']['_file_paths'] = $new_value;
+
             $sitepress->save_settings($sitepress_settings);
+
+            $message = array(
+                'id'            => 'wcml-settings-saved',
+                'text'          => __('Your settings have been saved.', 'woocommerce-multilingual' ),
+                'group'         => 'wcml-settings',
+                'admin_notice'  => true,
+                'limit_to_page' => true,
+                'classes'       => array('updated', 'notice', 'notice-success'),
+                'show_once'     => true
+            );
+            ICL_AdminNotifier::add_message( $message );
         }
 
         if( isset( $_GET[ 'wcml_action' ] ) ){

@@ -25,7 +25,7 @@ class WCML_Synchronize_Variations_Data{
         if( $this->woocommerce_wpml->products->is_original_product( $product_id ) ){
 
             if( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ) {
-                $this->woocommerce_wpml->multi_currency->custom_prices->sync_product_variations_custom_prices($product_id);
+                $this->woocommerce_wpml->multi_currency->custom_prices->sync_product_variations_custom_prices( $product_id );
             }
             $trid = $this->sitepress->get_element_trid( $product_id, 'post_product' );
 
@@ -41,7 +41,7 @@ class WCML_Synchronize_Variations_Data{
             foreach ( $translations as $translation ) {
                 if ( !$translation->original ) {
                     $this->sync_product_variations($product_id, $translation->element_id, $translation->language_code);
-                    $this->woocommerce_wpml->attributes->sync_default_product_attr($product_id, $translation->element_id, $translation->language_code);
+                    $this->woocommerce_wpml->attributes->sync_default_product_attr( $product_id, $translation->element_id, $translation->language_code );
                 }
             }
         }
@@ -55,71 +55,33 @@ class WCML_Synchronize_Variations_Data{
     * $data - array of values (when we save original product this array is empty, but when we update translation in this array we have price values and etc.)     *
     * */
     public function sync_product_variations( $product_id, $tr_product_id, $lang, $data = false, $trbl = false ){
-        global $sitepress_settings, $wpml_post_translations;
+        global $wpml_post_translations;
 
-        remove_action ( 'save_post', array( $wpml_post_translations, 'save_post_actions' ), 100, 2 );
         $is_variable_product = $this->woocommerce_wpml->products->is_variable_product( $product_id );
 
         if( $is_variable_product ){
-            $get_all_post_variations = $this->wpdb->get_results(
-                $this->wpdb->prepare(
-                    "SELECT * FROM {$this->wpdb->posts}
-                                                WHERE post_status IN ('publish','private')
-                                                  AND post_type = 'product_variation'
-                                                  AND post_parent = %d ORDER BY ID",
-                    $product_id )
-            );
-            $duplicated_post_variation_ids = array();
-            $min_max_prices = array();
 
-            foreach( $get_all_post_variations as $k => $post_data ){
-                $duplicated_post_variation_ids[] = $post_data->ID;
-            }
+            remove_action ( 'save_post', array( $wpml_post_translations, 'save_post_actions' ), 100, 2 );
 
-            foreach( $min_max_prices as $price_key => $min_max_price ){
-                update_post_meta( $product_id, $price_key, $min_max_price );
-            }
-            $all_taxs = get_object_taxonomies( 'product_variation' );
+            $all_variations = $this->get_product_variations( $product_id );
+            $current_variations = $this->get_product_variations( $tr_product_id );
 
-            foreach( $get_all_post_variations as $k => $post_data ) {
+            foreach( $all_variations as $key => $post_data ) {
                 $original_variation_id = $post_data->ID;
 
-                // Find if this has already been duplicated
-                $variation_id = $this->wpdb->get_var(
-                    $this->wpdb->prepare(
-                        "SELECT post_id FROM {$this->wpdb->postmeta} AS pm
-                                        JOIN {$this->wpdb->prefix}icl_translations AS tr ON tr.element_id = pm.post_id
-                                        WHERE tr.element_type = 'post_product_variation'
-                                          AND tr.language_code = %s
-                                          AND pm.meta_key = '_wcml_duplicate_of_variation'
-                                          AND pm.meta_value = %d",
-                        $lang, $original_variation_id )
-                );
-                $trid = $this->sitepress->get_element_trid( $original_variation_id, 'post_product_variation' );
+                $variation_id = $this->get_variation_id_by_lang( $lang, $original_variation_id );
+
                 if( !empty( $variation_id ) && !is_null( $variation_id ) ) {
+                    //unset variation from array to delete variations that no longer exist
+                    unset( $current_variations[ $key ] );
                     // Update variation
                     wp_update_post( array(
                         'ID' => $variation_id,
-                        'post_author' => $post_data->post_author,
-                        'post_date_gmt' => $post_data->post_date_gmt,
-                        'post_content' => $post_data->post_content,
-                        'post_title' => $post_data->post_title,
-                        'post_excerpt' => $post_data->post_excerpt,
                         'post_status' => $post_data->post_status,
-                        'comment_status' => $post_data->comment_status,
-                        'ping_status' => $post_data->ping_status,
-                        'post_password' => $post_data->post_password,
-                        'post_name' => $post_data->post_name,
-                        'to_ping' => $post_data->to_ping,
-                        'pinged' => $post_data->pinged,
                         'post_modified' => $post_data->post_modified,
                         'post_modified_gmt' => $post_data->post_modified_gmt,
-                        'post_content_filtered' => $post_data->post_content_filtered,
                         'post_parent' => $tr_product_id, // current post ID
                         'menu_order' => $post_data->menu_order,
-                        'post_type' => $post_data->post_type,
-                        'post_mime_type' => $post_data->post_mime_type,
-                        'comment_count' => $post_data->comment_count
                     ));
                 } else {
                     // Add new variation
@@ -151,115 +113,118 @@ class WCML_Synchronize_Variations_Data{
                         'comment_count' => $post_data->comment_count
                     ));
                     add_post_meta( $variation_id, '_wcml_duplicate_of_variation', $original_variation_id );
+                    $trid = $this->sitepress->get_element_trid( $original_variation_id, 'post_product_variation' );
                     $this->sitepress->set_element_language_details( $variation_id, 'post_product_variation', $trid, $lang );
                 }
-                //sync media
-                $this->woocommerce_wpml->media->sync_thumbnail_id( $original_variation_id, $variation_id, $lang );
-                //sync file_paths
-                $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_variation_id, $variation_id, $data );
+
                 //sync description
                 if( isset( $data[ md5( '_variation_description'.$original_variation_id ) ] ) ){
                     update_post_meta( $variation_id, '_variation_description', $data[ md5( '_variation_description'.$original_variation_id ) ] );
                 }
-                // sync taxonomies
-                if ( !empty( $all_taxs ) ) {
-                    foreach ( $all_taxs as $tt ) {
-                        $terms = get_the_terms( $original_variation_id, $tt );
-                        if ( !empty( $terms ) ) {
-                            $tax_sync = array();
-                            foreach ( $terms as $term ) {
-                                if ( $this->sitepress->is_translated_taxonomy( $tt ) ) {
-                                    $term_id = apply_filters( 'translate_object_id', $term->term_id, $tt, false, $lang );
-                                } else {
-                                    $term_id = $term->term_id;
-                                }
-                                if ( $term_id ) {
-                                    $tax_sync[] = intval( $term_id );
-                                }
-                            }
-                            //set the fourth parameter in 'true' because we need to add new terms, instead of replacing all
-                            wp_set_object_terms( $variation_id, $tax_sync, $tt, true );
-                        }
-                    }
-                }
+
+                //sync media
+                $this->woocommerce_wpml->media->sync_thumbnail_id( $original_variation_id, $variation_id, $lang );
+                //sync file_paths
+                $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_variation_id, $variation_id, $data );
+
+                //sync taxonomies
+                $this->sync_variations_taxonomies( $original_variation_id, $variation_id, $lang );
+
+                $this->duplicate_variation_data( $original_variation_id, $variation_id, $data, $lang, $trbl );
+
+                $this->delete_removed_variation_attributes( $product_id, $variation_id );
+
+                //refresh parent-children transients
+                delete_transient( 'wc_product_children_' . $tr_product_id );
+                delete_transient( '_transient_wc_product_children_ids_' . $tr_product_id );
+
             }
-            $get_current_post_variations = $this->wpdb->get_results(
-                $this->wpdb->prepare(
-                    "SELECT * FROM {$this->wpdb->posts}
-                                                    WHERE post_status IN ('publish','private')
-                                                    AND post_type = 'product_variation'
-                                                    AND post_parent = %d ORDER BY ID",
-                    $tr_product_id )
-            );
+
             // Delete variations that no longer exist
-            foreach( $get_current_post_variations as $key => $current_post_variation ){
-                $orig_variation_id = get_post_meta( $current_post_variation->ID, '_wcml_duplicate_of_variation', true );
-                if( !in_array( $orig_variation_id, $duplicated_post_variation_ids ) ){
-                    wp_delete_post( $current_post_variation->ID, true );
-                    unset( $get_current_post_variations[ $key ] );
-                }
+            foreach( $current_variations as $key => $current_post_variation ){
+                wp_delete_post( $current_post_variation->ID, true );
             }
-            // custom fields to copy
-            $cf = (array)$sitepress_settings[ 'translation-management' ][ 'custom_fields_translation' ];
-            // synchronize post variations post meta
-            $current_post_variation_ids = array();
-            foreach( $get_current_post_variations as $k => $current_post_variation ){
-                $current_post_variation_ids[] = $current_post_variation->ID;
-            }
-            // refresh parent-children transients
-            delete_transient( 'wc_product_children_' . $tr_product_id );
-            delete_transient( '_transient_wc_product_children_ids_' . $tr_product_id );
-            $original_product_attr = get_post_meta( $product_id, '_product_attributes', true );
-            $tr_product_attr = get_post_meta( $tr_product_id, '_product_attributes', true );
 
-            foreach( $duplicated_post_variation_ids as $dp_key => $duplicated_post_variation_id ){
-                $get_all_post_meta = $this->wpdb->get_results(
-                    $this->wpdb->prepare(
-                        "SELECT * FROM {$this->wpdb->postmeta} WHERE post_id = %d",
-                        $duplicated_post_variation_id )
-                );
-                //delete non exists attributes
-                $get_all_variation_attributes = $this->wpdb->get_results(
-                    $this->wpdb->prepare(
-                        "SELECT * FROM {$this->wpdb->postmeta}
-                                                        WHERE post_id = %d
-                                                          AND meta_key LIKE 'attribute_%%' ",
-                        $current_post_variation_ids[ $dp_key ] )
-                );
-                foreach( $get_all_variation_attributes as $variation_attribute ){
-                    $attribute_name = substr( $variation_attribute->meta_key, 10 );
-                    if( !isset( $original_product_attr[ $attribute_name ] ) ){
-                        delete_post_meta( $current_post_variation_ids[ $dp_key ], $variation_attribute->meta_key );
+            add_action ( 'save_post', array( $wpml_post_translations, 'save_post_actions' ), 100, 2 );
+        }
+    }
+
+    public function get_variation_id_by_lang( $lang, $original_variation_id ){
+        return $this->wpdb->get_var(
+            $this->wpdb->prepare(
+                "SELECT post_id FROM {$this->wpdb->postmeta} AS pm
+                                        JOIN {$this->wpdb->prefix}icl_translations AS tr ON tr.element_id = pm.post_id
+                                        WHERE tr.element_type = 'post_product_variation'
+                                          AND tr.language_code = %s
+                                          AND pm.meta_key = '_wcml_duplicate_of_variation'
+                                          AND pm.meta_value = %d",
+                $lang, $original_variation_id )
+        );
+    }
+
+    public function sync_variations_taxonomies( $original_variation_id, $tr_variation_id, $lang ){
+        if( $this->woocommerce_wpml->sync_product_data->check_if_product_fields_sync_needed( $original_variation_id, 'taxonomies' ) ){
+            $all_taxs = get_object_taxonomies( 'product_variation' );
+
+            $tr_product_attr = get_post_meta( $tr_variation_id, '_product_attributes', true );
+
+            if ( !empty( $all_taxs ) ) {
+                foreach ( $all_taxs as $tt ) {
+                    $terms = get_the_terms( $original_variation_id, $tt );
+                    if ( !empty( $terms ) ) {
+                        $tax_sync = array();
+                        foreach ( $terms as $term ) {
+                            if ( $this->sitepress->is_translated_taxonomy( $tt ) ) {
+                                $term_id = apply_filters( 'translate_object_id', $term->term_id, $tt, false, $lang );
+                            } else {
+                                $term_id = $term->term_id;
+                            }
+                            if ( $term_id ) {
+                                $tax_sync[] = intval( $term_id );
+                            }
+                        }
+                        //set the fourth parameter in 'true' because we need to add new terms, instead of replacing all
+                        wp_set_object_terms( $tr_variation_id, $tax_sync, $tt, true );
                     }
                 }
+            }
+        }
+    }
 
-                $post_fields = null;
-                foreach( $get_all_post_meta as $k => $post_meta ){
+    public function duplicate_variation_data( $original_variation_id, $variation_id, $data, $lang, $trbl ){
+        global $iclTranslationManagement;
 
-                    $meta_key = $post_meta->meta_key;
-                    $meta_value = maybe_unserialize( $post_meta->meta_value );
+        if( $this->woocommerce_wpml->sync_product_data->check_if_product_fields_sync_needed( $original_variation_id, 'postmeta_fields' ) ){
+            // custom fields
+            $settings = $iclTranslationManagement->settings[ 'custom_fields_translation' ];
+            $all_meta = get_post_custom( $original_variation_id );
+
+            $post_fields = null;
+            foreach( $all_meta as $meta_key => $meta ){
+
+                foreach ( $meta as $meta_value ) {
                     // update current post variations meta
-                    if( ( substr( $meta_key, 0, 10 ) == 'attribute_' || isset( $cf[ $meta_key ] ) && $cf[ $meta_key ] == 1 ) ) {
+
+                    if( ( substr( $meta_key, 0, 10 ) == 'attribute_' || isset( $settings[ $meta_key ] ) && $settings[ $meta_key ] == WPML_COPY_CUSTOM_FIELD ) ) {
+
                         // adjust the global attribute slug in the custom field
                         $attid = null;
                         if( substr( $meta_key, 0, 10 ) == 'attribute_' ) {
+
+                            $original_product_attr = get_post_meta( wp_get_post_parent_id( $original_variation_id ), '_product_attributes', true );
+                            $tr_product_attr = get_post_meta( wp_get_post_parent_id( $variation_id ), '_product_attributes', true );
+
                             $tax = wc_sanitize_taxonomy_name ( substr( $meta_key, 10 ) );
                             if( taxonomy_exists( $tax ) ){
                                 $attid = $this->woocommerce_wpml->terms->wcml_get_term_id_by_slug( $tax, $meta_value );
                                 if( $this->woocommerce_wpml->attributes->is_translatable_attribute( $tax ) && $attid ){
+
                                     $term_obj = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $attid, $tax );
-                                    $trid = $this->sitepress->get_element_trid( $term_obj->term_taxonomy_id, 'tax_' . $tax );
-                                    if( $trid ) {
-                                        $translations = $this->sitepress->get_element_translations( $trid, 'tax_' . $tax );
-                                        if( isset( $translations[ $lang ] ) ){
-                                            $meta_value = $this->wpdb->get_var(
-                                                $this->wpdb->prepare(
-                                                    "SELECT slug FROM {$this->wpdb->terms} WHERE term_id = %s",
-                                                    $translations[ $lang ]->term_id )
-                                            );
-                                        }else{
-                                            $meta_value = $meta_value.'_'.$lang;
-                                        }
+                                    $trnsl_term_id = apply_filters( 'translate_object_id', $term_obj->term_id, $tax, false, $lang );
+
+                                    if( $trnsl_term_id ) {
+                                        $trnsl_term_obj = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $trnsl_term_id, $tax );
+                                        $meta_value = $trnsl_term_obj->slug;
                                     }
                                 }
                             }else{
@@ -283,33 +248,71 @@ class WCML_Synchronize_Variations_Data{
                                                 $meta_value = $values_arrs_tr[ $key ];
                                             }
                                         }
-                                    }else{
-                                        $meta_value = $meta_value.'_'.$lang;
                                     }
                                 }
                                 $meta_key = 'attribute_'.$tax;
                             }
-
                         }
-                        update_post_meta( $current_post_variation_ids[ $dp_key ], $meta_key, $meta_value );
+                        update_post_meta( $variation_id, $meta_key, $meta_value );
+                    }elseif ( !isset( $settings[ $meta_key ] ) || $settings[ $meta_key ] == WPML_IGNORE_CUSTOM_FIELD ) {
+                        continue;
                     }
+
                     //sync variation prices
                     if(
                         ( $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT || $trbl ) &&
                         in_array( $meta_key, array( '_sale_price', '_regular_price', '_price' ) )
                     ){
-                        $meta_value = get_post_meta( $duplicated_post_variation_ids[ $dp_key ], $meta_key, true );
-                        update_post_meta( $current_post_variation_ids[ $dp_key ], $meta_key, $meta_value );
+                        $meta_value = get_post_meta( $original_variation_id, $meta_key, true );
+                        update_post_meta( $variation_id, $meta_key, $meta_value );
                     }
 
-                    if( isset( $cf[ $meta_key ] ) && $cf[ $meta_key ] == WPML_TRANSLATE_CUSTOM_FIELD ){
+                    if( isset( $settings[ $meta_key ] ) && $settings[ $meta_key ] == WPML_TRANSLATE_CUSTOM_FIELD ){
                         //sync custom fields
                         $post_fields = $this->woocommerce_wpml->sync_product_data->sync_custom_field_value( $meta_key, $data, $variation_id, $post_fields, $original_variation_id, true );
                     }
                 }
             }
         }
-        add_action ( 'save_post', array( $wpml_post_translations, 'save_post_actions' ), 100, 2 );
+    }
+
+    public function delete_removed_variation_attributes( $orig_product_id, $variation_id ){
+
+        $original_product_attr = get_post_meta( $orig_product_id, '_product_attributes', true );
+
+        $get_all_variation_attributes = $this->wpdb->get_results(
+            $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE 'attribute_%%' ",
+                $variation_id )
+        );
+
+        foreach( $get_all_variation_attributes as $variation_attribute ){
+            $attribute_name = substr( $variation_attribute->meta_key, 10 );
+            if( !isset( $original_product_attr[ $attribute_name ] ) ){
+                delete_post_meta( $variation_id, $variation_attribute->meta_key );
+            }
+        }
+
+    }
+
+    public function get_product_variations( $product_id ){
+
+        $cache_key = $product_id;
+        $cache_group = 'product_variations';
+        $temp_product_variations = wp_cache_get( $cache_key, $cache_group );
+        if( $temp_product_variations ) return $temp_product_variations;
+
+        $variations = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT * FROM {$this->wpdb->posts}
+                 WHERE post_status IN ('publish','private')
+                  AND post_type = 'product_variation'
+                  AND post_parent = %d ORDER BY ID",
+                $product_id )
+        );
+
+        wp_cache_set( $cache_key, $variations, $cache_group );
+
+        return $variations;
     }
 
     public function remove_translations_for_variations(){

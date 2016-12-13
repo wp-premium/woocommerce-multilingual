@@ -27,7 +27,7 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
                         'label' => __('WPML Translation Editor', 'woocommerce-multilingual'),
 
                     ),
-                    'native'      => array(
+                    'native'    => array(
                         'label' => __('Native WooCommerce product editing screen' , 'woocommerce-multilingual'),
 
                     ),
@@ -36,7 +36,7 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
                 ),
 
                 'synchronization' => array(
-                    'heading'   => __('Products synchronization', 'woocommerce-multilingual'),
+                    'heading'   => __('Products Synchronization', 'woocommerce-multilingual'),
                     'tip'       => __( 'Configure specific product properties that should be synced to translations.', 'woocommerce-multilingual' ),
                     'sync_date' => array(
                         'value' => $this->woocommerce_wpml->settings['products_sync_date'],
@@ -49,14 +49,34 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
                 ),
 
                 'file_sync' => array(
-                    'heading'   => __('Products Download Files', 'woocommerce-multilingual'),
-                    'tip'       => __( 'If you are using downloadable products, you can choose to have their paths
+                    'heading'       => __('Products Download Files', 'woocommerce-multilingual'),
+                    'tip'           => __( 'If you are using downloadable products, you can choose to have their paths
                                             synchronized, or seperate for each language.', 'woocommerce-multilingual' ),
                     'value'         => $this->woocommerce_wpml->settings['file_path_sync'],
                     'label_same'    => __('Use the same files for translations', 'woocommerce-multilingual'),
                     'label_diff'    => __('Add separate download files for translations', 'woocommerce-multilingual'),
                 ),
 
+                'cart_sync' => array(
+                    'tip'             => __('You can choose to clear the cart contents when you change language or currency in case you have problems in cart or checkout page', 'woocommerce-multilingual'),
+                    'heading'         => __('Cart', 'woocommerce-multilingual'),
+                    'lang_switch'     => array(
+                        'heading'     => __('Switching languages when there are items in the cart', 'woocommerce-multilingual'),
+                        'sync_label'  => __('Synchronize cart content when switching languages', 'woocommerce-multilingual'),
+                        'clear_label' => __('Prompt for a confirmation and reset the cart', 'woocommerce-multilingual'),
+                        'value' => $this->woocommerce_wpml->settings['cart_sync']['lang_switch']
+                    ),
+                    'currency_switch' => array(
+                        'heading'     => __('Switching currencies when there are items in the cart', 'woocommerce-multilingual'),
+                        'sync_label'  => __('Synchronize cart content when switching currencies', 'woocommerce-multilingual'),
+                        'clear_label' => __('Prompt for a confirmation and reset the cart', 'woocommerce-multilingual'),
+                        'value'       => $this->woocommerce_wpml->settings['cart_sync']['currency_switch']
+                    ),
+                    'doc_link' => sprintf( __( 'Not sure which option to choose? Read about %spotential issues when switching languages and currencies while the cart has items%s.',
+                        'woocommerce-multilingual' ),
+                        '<a href="https://wpml.org/documentation/related-projects/woocommerce-multilingual/clearing-cart-contents-when-language-or-currency-change/" target="_blank">', '</a>'
+                    ),
+                ),
 
                 'nonce'             => wp_nonce_field('wcml_save_settings_nonce', 'wcml_nonce', true, false),
                 'save_label'        => __( 'Save changes', 'woocommerce-multilingual' ),
@@ -65,6 +85,9 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
 
             'native_translation'  => WCML_TRANSLATION_METHOD_MANUAL,
             'wpml_translation'    => WCML_TRANSLATION_METHOD_EDITOR,
+
+            'wcml_cart_sync'     => WCML_CART_SYNC,
+            'wcml_cart_clear'    => WCML_CART_CLEAR,
 
             'troubleshooting' => array(
                 'url'   => admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ),

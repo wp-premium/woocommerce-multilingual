@@ -34,3 +34,21 @@ ul.wcml_currency_switcher {
 		margin: 0;
 	}
 }
+
+.exchange-rates-online-wrap,
+.service-details-wrap {
+	padding-left: 24px;
+	.rtl & {
+		padding-left: 0;
+		padding-right: 24px;
+	}
+}
+.exchange-rate-service-website {
+	text-decoration: none;
+	.dashicons-external {
+		font-size: 14px;
+		width: 14px;
+		height: 14px;
+		vertical-align: -4px;
+	}
+}

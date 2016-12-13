@@ -75,6 +75,8 @@ class woocommerce_wpml {
 
         $this->xdomain_data = new WCML_xDomain_Data;
 
+        new WCML_Widgets( $this );
+
         add_action('init', array($this, 'init'),2);
 
     }
@@ -97,7 +99,7 @@ class woocommerce_wpml {
         return self::$_instance;
     }
     public function init(){
-        global $sitepress, $wpdb;
+        global $sitepress, $wpdb, $woocommerce;
 
         new WCML_Upgrade;
 
@@ -107,6 +109,7 @@ class woocommerce_wpml {
         WCML_Admin_Menus::set_up_menus( $this, $sitepress, $wpdb, $this->check_dependencies );
 
         if( !$this->check_dependencies ){
+            WCML_Capabilities::set_up_capabilities();
 
             wp_register_style( 'otgs-ico', WCML_PLUGIN_URL . '/res/css/otgs-ico.css', null, WCML_VERSION );
             wp_enqueue_style( 'otgs-ico');
@@ -158,11 +161,11 @@ class woocommerce_wpml {
         $this->orders               = new WCML_Orders( $this, $sitepress );
         $this->strings              = new WCML_WC_Strings;
         $this->shipping             = new WCML_WC_Shipping( $sitepress );
-        $this->gateways             = new WCML_WC_Gateways( $sitepress );
+        $this->gateways             = new WCML_WC_Gateways( $this, $sitepress );
         $this->currencies           = new WCML_Currencies( $this );
         $this->url_translation      = new WCML_Url_Translation ( $this, $sitepress );
         $this->requests             = new WCML_Requests;
-        $this->cart                 = new WCML_Cart( $this, $sitepress );
+        $this->cart                 = new WCML_Cart( $this, $sitepress, $woocommerce );
         $this->coupons              = new WCML_Coupons( $this, $sitepress );
         $this->locale               = new WCML_Locale( $this, $sitepress );
         $this->media                = new WCML_Media( $this, $sitepress, $wpdb );
@@ -199,7 +202,11 @@ class woocommerce_wpml {
             'trnsl_interface'              => 1,
             'currency_options'             => array(),
             'currency_switcher_product_visibility' => 1,
-            'dismiss_tm_warning'             => 0
+            'dismiss_tm_warning'           => 0,
+            'cart_sync'                    => array(
+                'lang_switch' => WCML_CART_SYNC,
+                'currency_switch' => WCML_CART_SYNC
+            )
         );
 
         if(empty($this->settings)){

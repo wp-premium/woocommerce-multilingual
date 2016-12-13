@@ -1,0 +1,39 @@
+{
+  "name": "wpml/commons",
+  "description": "A set of libraries for WPML Plugins",
+  "keywords": ["auto-loader", "twig-extensions"],
+  "homepage": "https://git.onthegosystems.com/wpml/wpml-commons",
+  "type": "library",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Andrea Sciamanna",
+      "email": "andrea.s@icanlocalize.com",
+      "homepage": "http://wpml.org"
+    },
+    {
+      "name": "Bruce Pearsons",
+      "email": "bruce.p@icanlocalize.com",
+      "homepage": "http://wpml.org"
+    },
+    {
+      "name": "Armin Braun",
+      "email": "armin.b@icanlocalize.com",
+      "homepage": "http://wpml.org"
+    }
+  ],
+  "require": {
+    "php": ">=5.2.0",
+    "twig/twig": "~1.0",
+    "roave/security-advisories": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.5"
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "autoload": {
+    "classmap": ["src/"]
+  }
+}

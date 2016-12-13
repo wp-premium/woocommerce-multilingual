@@ -1,3 +1,10 @@
+= 1.7.14 =
+* Refactoring for compliance with Envato market
+
+= 1.7.13 =
+* Added sanitization for some inputs
+* Fixed PHP notice being logged when installing a plugin from the WP plugins directory
+
 = 1.7.12 =
 * Allow to set the site keys in PHP (as constants)
 * Fixed an issue with unregistered sites gets wrong info (or error) when clicking "View version x.y.x details" link

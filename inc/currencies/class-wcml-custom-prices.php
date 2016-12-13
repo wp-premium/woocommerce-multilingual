@@ -19,7 +19,12 @@ class WCML_Custom_Prices{
 
         }
 
-        add_action( 'woocommerce_get_children', array( $this, 'filter_product_variations_with_custom_prices' ), 10 );
+        if( version_compare( WC_VERSION , '2.7', '<' ) ){
+            add_action( 'woocommerce_get_children', array( $this, 'filter_product_variations_with_custom_prices' ), 10 );
+        }else{
+            add_action( 'woocommerce_product_get_children', array( $this, 'filter_product_variations_with_custom_prices' ), 10 );
+        }
+
         add_filter( 'loop_shop_post_in', array( $this, 'filter_products_with_custom_prices' ), 100 );
 
     }

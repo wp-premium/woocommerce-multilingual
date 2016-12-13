@@ -238,7 +238,7 @@ class Installer_Theme_Class {
         $commercial = false;
         if ( ('plugin-install' == $current_screen) || ('plugin-install-network' == $current_screen) ) {
             if ( isset($_GET['tab']) ) {
-                $tab = $_GET['tab'];
+                $tab = sanitize_text_field( $_GET['tab'] );
                 if ( 'commercial' == $tab ) {
                     $commercial = true;
                 }
@@ -711,14 +711,14 @@ class Installer_Theme_Class {
         if ( isset ($_SERVER ['REQUEST_URI']) ) {
             $request_uri = $_SERVER ['REQUEST_URI'];
             if ( isset ($_GET ['browse']) ) {
-                $active_tab = trim( $_GET ['browse'] );
+                $active_tab = sanitize_text_field( $_GET['browse'] );
                 $this->installer_theme_active_tab = $active_tab;
             } elseif ( isset ($_POST ['request'] ['browse']) ) {
-                $active_tab = trim( $_POST ['request'] ['browse'] );
+                $active_tab = sanitize_text_field ( $_POST['request']['browse'] );
                 $this->installer_theme_active_tab = $active_tab;
             } elseif ( (isset ($_GET ['theme_repo'])) && (isset ($_GET ['action'])) ) {
-                $theme_repo = trim( $_GET ['theme_repo'] );
-                $the_action = trim( $_GET ['action'] );
+                $theme_repo = sanitize_text_field( $_GET['theme_repo'] );
+                $the_action = sanitize_text_field( $_GET['action'] );
                 if ( ('install-theme' == $the_action) && (!(empty($theme_repo))) ) {
                     $this->installer_theme_active_tab = $theme_repo;
                 }
@@ -854,7 +854,7 @@ class Installer_Theme_Class {
             check_ajax_referer( 'installer_theme_frontend_selected_tab', 'installer_theme_frontend_selected_tab_nonce' );
 
             //Client_side_active_tab
-            $frontend_tab_selected = filter_input( INPUT_POST, 'frontend_tab_selected', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE );
+            $frontend_tab_selected = sanitize_text_field( $_POST['frontend_tab_selected'] );
             if ( !(empty($frontend_tab_selected)) ) {
                 //Front end tab selected
                 update_option( 'wp_installer_clientside_active_tab', $frontend_tab_selected, false );

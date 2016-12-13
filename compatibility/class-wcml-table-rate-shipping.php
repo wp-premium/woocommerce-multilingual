@@ -49,16 +49,19 @@ class WCML_Table_Rate_Shipping {
 					isset( $_GET[ 'tab' ] ) &&
 					$_GET['tab'] == 'shipping'
 				)
-			) &&
-			isset( $_POST[ 'shipping_label' ] ) &&
-			isset( $_POST[ 'woocommerce_table_rate_title' ] )
+			)
 		) {
 
-			do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
-			$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
-			foreach ( $shipping_labels as $key => $shipping_label ) {
-				$rate_key = isset( $_GET[ 'instance_id' ] ) ? 'table_rate'.$_GET[ 'instance_id' ].$_POST[ 'rate_id' ][ $key ] : $shipping_label;
-				do_action( 'wpml_register_single_string', 'woocommerce', $rate_key. '_shipping_method_title', $shipping_label );
+			$this->show_pointer_info();
+
+			if( isset( $_POST[ 'shipping_label' ] ) &&
+				isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
+				do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
+				$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
+				foreach ( $shipping_labels as $key => $shipping_label ) {
+					$rate_key = isset( $_GET[ 'instance_id' ] ) ? 'table_rate'.$_GET[ 'instance_id' ].$_POST[ 'rate_id' ][ $key ] : $shipping_label;
+					do_action( 'wpml_register_single_string', 'woocommerce', $rate_key. '_shipping_method_title', $shipping_label );
+				}
 			}
 		}
 	}
@@ -100,6 +103,26 @@ class WCML_Table_Rate_Shipping {
 		}
 
 		return $args;
+	}
+
+	public function show_pointer_info(){
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate this method title on the %sWPML String Translation page%s. Use the search on the top of that page to find the method title string.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-table-rate-shipping-woocommerce-multilingual/',
+			'woocommerce_table_rate_title'
+		);
+
+		$pointer_ui->show();
+
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate the labels of your table rates on the %sWPML String Translation page%s. Use the search on the top of that page to find the labels strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-table-rate-shipping-woocommerce-multilingual/',
+			'shipping_rates .shipping_label a'
+		);
+
+		$pointer_ui->show();
 	}
 
 

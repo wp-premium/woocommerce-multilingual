@@ -24,6 +24,17 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
             array_keys( $this->args['currencies'] ), array( $this->args['default_currency'] ) );
         $current_currency = empty($this->args['currency_code']) ? current( $currencies_not_used ) : $this->args['currency_code'];
 
+        $exchange_rate_services =& $this->woocommerce_wpml->multi_currency->exchange_rate_services;
+        $exchange_rates_automatic = $exchange_rate_services->get_setting('automatic');
+
+        if( !$exchange_rates_automatic ){
+            $service_id = $exchange_rate_services->get_setting('service');
+            $services   = $exchange_rate_services->get_services();
+            $exchange_rates_service = $services[$service_id]->get_name();
+        } else {
+            $exchange_rates_service = '';
+        }
+
         $model = array(
 
             'args' => $this->args,
@@ -34,7 +45,9 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
                     'only_numeric'  => __( 'Only numeric', 'woocommerce-multilingual' ),
                     'set_on'        => empty($this->args['currency']['updated'] ) ? '' :
                                         sprintf( __( 'Set on %s', 'woocommerce-multilingual' ),
-                                            date( 'F j, Y, H:i', strtotime( $this->args['currency']['updated'] ) ) )
+                                            date( 'F j, Y g:i a', strtotime( $this->args['currency']['updated'] ) ) ),
+                    'previous'      => empty($this->args['currency']['previous_rate'] ) ? '' :
+                                        ' ' . sprintf( __( '(previous value: %s)', 'woocommerce-multilingual' ), $this->args['currency']['previous_rate'] )
                 ),
                 'preview' => array(
                     'label' => __( 'Currency Preview', 'woocommerce-multilingual' ),
@@ -84,11 +97,9 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
 
             ),
 
-	        'currency_converter_url'    => 'https://www.google.com/finance/converter?a=1&from=%s&to=%s',
-            'currency_converter_label'  => __('Get exchange rates', 'woocommerce-multilingual'),
-            'currency_converter_title'  => __('Check real-time exchange rates, online, from Google Finance Currency Converter', 'woocommerce-multilingual'),
-
-            'current_currency' => $current_currency
+            'automatic_rates'       => $exchange_rates_automatic,
+            'automatic_rates_tip'   => sprintf( __('Exchange rate updated automatically from %s', 'woocommerce-multilingual' ), $exchange_rates_service ),
+            'current_currency'      => $current_currency
 
 
         );
