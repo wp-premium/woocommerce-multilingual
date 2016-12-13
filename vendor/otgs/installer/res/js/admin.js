@@ -24,7 +24,6 @@
                 var data = otgs_wp_installer.getQueryParameters(settings.data);
                 if(typeof data.action != 'undefined' && data.action == 'update-plugin'){
                     response = xhr.responseJSON.data;
-                    console.log(typeof response.error);
                     if(typeof response.error != 'undefined'){
                         var default_error = jQuery('#' + response.slug + '-update .update-message').html();
                         jQuery('#' + response.slug + '-update .update-message').html(default_error + ' &raquo;<span class="installer-red-text"> ' + response.error + '</span>');
@@ -33,6 +32,10 @@
                 return false;
             });
 
+        }
+
+        if( pagenow == 'plugin-install' ){
+            jQuery( '.plugin-install-tab-commercial .search-plugins' ).remove();
         }
 
     },

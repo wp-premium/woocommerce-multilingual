@@ -56,6 +56,7 @@ class WCML_Currency_Switcher_UI extends WPML_Templates_Factory {
         }
         $wcml_settings  =  $this->woocommerce_wpml->get_settings();
         $multi_currency =& $this->woocommerce_wpml->multi_currency;
+        $client_currency = $multi_currency->get_client_currency();
 
         if( preg_match( '#%subtotal%#', $format ) ) { // include cart total
             if( !is_admin() ){
@@ -103,7 +104,7 @@ class WCML_Currency_Switcher_UI extends WPML_Templates_Factory {
             ), $format );
 
         if( preg_match( '#%subtotal%#', $format )  && !is_admin() ) { // include cart total
-            $multi_currency->set_client_currency( $multi_currency->get_client_currency() );
+            $multi_currency->set_client_currency( $client_currency );
         }
 
         return $currency_format;

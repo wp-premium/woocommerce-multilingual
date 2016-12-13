@@ -61,10 +61,20 @@ class WCML_Setup {
     }
 
     private function setup_redirect(){
+
         if ( get_transient( '_wcml_activation_redirect' ) ) {
             delete_transient( '_wcml_activation_redirect' );
 
-            if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'wcml-setup' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' )  ) {
+            $woocommerce_notices = get_option( 'woocommerce_admin_notices', array() );
+            $woocommerce_setup_not_run = in_array( 'install', $woocommerce_notices );
+            
+            if (
+                ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'wcml-setup' ) ) ) ||
+                is_network_admin() ||
+                isset( $_GET['activate-multi'] ) ||
+                ! current_user_can( 'manage_options' ) ||
+                $woocommerce_setup_not_run
+            ) {
                 return;
             }
 

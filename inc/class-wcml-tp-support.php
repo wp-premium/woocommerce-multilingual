@@ -29,10 +29,9 @@ class WCML_TP_Support {
 
             $product = wc_get_product( $post->ID );
 
-            //WC_Product::get_type() available from WooCommerce 2.4.0
-            $product_type = method_exists( $product, 'get_type' ) ? $product->get_type() : $product->product_type;
+            $product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
 
-            if ( ! empty( $product ) && $product_type == 'variable' ) {
+            if ( ! empty( $product ) && $product_type === 'variable' ) {
 
                 $attributes = $product->get_attributes();
 
@@ -133,10 +132,9 @@ class WCML_TP_Support {
             /** @var WC_Product_Variable $product */
             $product = wc_get_product( $post->ID );
 
-            //WC_Product::get_type() available from WooCommerce 2.4.0
-            $product_type = method_exists( $product, 'get_type' ) ? $product->get_type() : $product->product_type;
+            $product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
 
-            if ( ! empty( $product ) && $product_type == 'variable' ) {
+            if ( ! empty( $product ) && $product_type === 'variable' ) {
 
                 $variations = $product->get_available_variations();
 
@@ -199,9 +197,7 @@ class WCML_TP_Support {
     public function append_slug_to_translation_package( $package, $post ) {
         if ( $post->post_type == 'product' ) {
 
-            $product = wc_get_product( $post->ID );
-
-            $this->add_to_package( $package, 'slug', urldecode( $product->post->post_name ) );
+            $this->add_to_package( $package, 'slug', urldecode( $post->post_name ) );
         }
 
         return $package;
@@ -212,9 +208,9 @@ class WCML_TP_Support {
 
         foreach ( $data as $data_key => $value ) {
             if ( $value['finished'] && isset( $value['field_type'] ) && 'slug' === $value['field_type'] ) {
-                $product = wc_get_product( $post_id );
-                if ( $product->post->post_type == 'product' ) {
-                    $new_slug = wp_unique_post_slug( $value['data'], $post_id, $product->post->post_status, $product->post->post_type,  $product->post->post_parent );
+                $product = get_post( $post_id );
+                if ( $product->post_type == 'product' ) {
+                    $new_slug = wp_unique_post_slug( sanitize_title( $value['data'] ), $post_id, $product->post_status, $product->post_type,  $product->post_parent );
                     $wpdb->update( $wpdb->posts, array( 'post_name' => $new_slug ), array( 'ID' => $post_id ) );
                     break;
                 }
@@ -227,10 +223,9 @@ class WCML_TP_Support {
 
         if ( $post->post_type == 'product' ) {
 
-            $product          = wc_get_product( $post->ID );
             $woocommerce_wpml = woocommerce_wpml::instance();
-            $product_images   = $woocommerce_wpml->media->product_images_ids( $product->id );
-            $product_images   = $woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $product->id );
+            $product_images   = $woocommerce_wpml->media->product_images_ids( $post->ID );
+            $product_images   = $woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $post->ID );
             foreach ( $product_images as $image_id ) {
                 $attachment_data = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_excerpt,post_content FROM {$wpdb->posts} WHERE ID = %d", $image_id ) );
                 if ( ! $attachment_data ) {

@@ -2,6 +2,8 @@
 
 class WCML_WPSEO{
 
+    private $updated_post_id;
+
     function __construct(){
 
         add_filter( 'wcml_product_content_label', array( $this, 'wpseo_custom_field_label' ), 10, 2 );
@@ -14,6 +16,8 @@ class WCML_WPSEO{
             }
         }
 
+        add_action( 'post_updated', array( $this, 'set_updated_post_id' ) );
+        add_action( 'wpseo_premium_post_redirect_slug_change', array( $this, 'wpseo_premium_post_redirect_slug_change' ) );
     }
 
     function wpseo_custom_field_label( $field, $product_id ){
@@ -36,6 +40,18 @@ class WCML_WPSEO{
         return $field;
     }
 
+    function set_updated_post_id( $post_id ){
+        $this->updated_post_id = $post_id;
+    }
+
+    function wpseo_premium_post_redirect_slug_change( $slug_changed_flag ){
+
+        if( null !== $this->updated_post_id && get_post_type( $this->updated_post_id ) === 'product_variation' ){
+            return true;
+        }
+
+        return $slug_changed_flag;
+    }
 
 }
 

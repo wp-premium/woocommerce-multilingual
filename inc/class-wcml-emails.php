@@ -65,7 +65,16 @@ class WCML_Emails{
 
         add_filter( 'get_post_metadata', array( $this, 'filter_payment_method_string' ), 10, 4 );
 
-        if( !isset( $_GET['post_type'] ) || $_GET['post_type'] != 'shop_order' ){
+        if(
+            (
+                !isset( $_GET['post_type'] ) ||
+                $_GET['post_type'] != 'shop_order'
+            ) &&
+            (
+                !isset( $_GET[ 'action' ] ) ||
+                !in_array( $_GET['action'] , array( 'woocommerce_mark_order_complete', 'woocommerce_mark_order_status', 'mark_processing' ) )
+            )
+        ){
             add_filter( 'woocommerce_order_items_meta_get_formatted', array( $this, 'filter_formatted_items' ), 10, 2 );
         }
     }

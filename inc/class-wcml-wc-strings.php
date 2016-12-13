@@ -106,7 +106,7 @@ class WCML_WC_Strings{
 
         if($values){
 
-            $parent = $values['data']->post->post_parent;
+            $parent = wp_get_post_parent_id( $values['product_id'] );
             $tr_product_id = apply_filters( 'translate_object_id', $values['product_id'], 'product', true );
             $trnsl_title = get_the_title($tr_product_id);
             

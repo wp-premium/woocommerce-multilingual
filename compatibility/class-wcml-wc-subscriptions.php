@@ -22,6 +22,9 @@ class WCML_WC_Subscriptions{
 
         // reenable coupons for subscriptions when multicurrency is on
         add_action('woocommerce_subscription_cart_after_grouping', array($this, 'woocommerce_subscription_cart_after_grouping'));
+
+        add_action( 'woocommerce_subscriptions_product_options_pricing',   array( $this, 'show_pointer_info' ) );
+        add_action( 'woocommerce_variable_subscription_pricing',   array( $this, 'show_pointer_info' ) );
     }
 
     function init(){
@@ -181,5 +184,17 @@ class WCML_WC_Subscriptions{
         }
 
         return $endpoint;
+    }
+
+    public function show_pointer_info(){
+
+        $pointer_ui = new WCML_Pointer_UI(
+            sprintf( __( 'You can translate strings related to subscription products on the %sWPML String Translation page%s. Use the search on the top of that page to find the strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php&context=woocommerce_subscriptions').'">', '</a>' ),
+            'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-subscriptions-woocommerce-multilingual/',
+            'general_product_data .subscription_pricing',
+            'prepend'
+        );
+
+        $pointer_ui->show();
     }
 }
