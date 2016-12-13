@@ -1,5 +1,5 @@
-<div class="wcml-section">
-    <div id="currency-switcher" {% if multi_currency_on is empty %}style="display:none"{% endif %}>
+<div class="wcml-section" id="currency-switcher" {% if multi_currency_on is empty %}style="display:none"{% endif %}>
+
 
         <div class="wcml-section-header">
             <h3>{{ currency_switcher.headers.main }}</h3>
@@ -7,7 +7,7 @@
 
         <div class="wcml-section-content">
 
-            <div id="wcml_curr_sel_preview_wrap" class="wcml-section-content-inner aligncenter">
+            <div id="wcml_curr_sel_preview_wrap" class="wcml-section-content-inner text-center">
                 <p><strong>{{ currency_switcher.preview_text}}</strong></p>
                 <input type="hidden" id="wcml_currencies_switcher_preview_nonce" value="{{ currency_switcher.preview_nonce }}"/>
                 <div id="wcml_curr_sel_preview" class="wcml-currency-preview">
@@ -80,5 +80,5 @@
             </div>
 
         </div>
-    </div>
+
 </div>

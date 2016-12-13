@@ -27,12 +27,12 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
 
         $functions = array(
             new Twig_SimpleFunction( 'get_flag_url', array( $this, 'get_flag_url' ) ),
-            new Twig_SimpleFunction( 'get_rate', array( $this, 'get_rate' ) ),
             new Twig_SimpleFunction( 'is_currency_on', array( $this, 'is_currency_on' ) ),
             new Twig_SimpleFunction( 'get_language_currency', array( $this, 'get_language_currency' ) ),
             new Twig_SimpleFunction( 'get_currency_symbol', array( $this, 'get_currency_symbol' ) ),
             new Twig_SimpleFunction( 'get_currency_name', array( $this, 'get_currency_name' ) ),
-            new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) )
+            new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) ),
+            new Twig_SimpleFunction( 'get_weekday', array( $this, 'get_weekday' ) )
         );
 
         parent::__construct( $functions );
@@ -54,6 +54,7 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
             $currencies_positions[$code] = $this->price_position_format( $currency['position'], $code );
         }
 
+        $exchange_rates_ui = new WCML_Exchange_Rates_UI( $this->woocommerce_wpml );
 
         $model = array(
             'strings' => array(
@@ -149,7 +150,8 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
                 'visibility_label'  => __('Show a currency selector on the product page template', 'woocommerce-multilingual'),
                 'visibility_on'     => isset($this->woocommerce_wpml->settings['currency_switcher_product_visibility']) ?
                                         $this->woocommerce_wpml->settings['currency_switcher_product_visibility']:1
-            )
+            ),
+            'exchange_rates'        => $exchange_rates_ui->get_model()
         );
 
         return $model;
@@ -216,10 +218,6 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
         return $this->sitepress->get_flag_url( $code );
     }
 
-    public function get_rate($wc_currency, $rate, $code){
-        return sprintf( '1 %s = %s %s', $wc_currency, $rate, $code );
-    }
-
     public function is_currency_on($currency, $language) {
         return $this->woocommerce_wpml->settings['currency_options'][ $currency ]['languages'][ $language ];
     }
@@ -281,5 +279,11 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
     public function wp_do_action( $hook ){
         do_action( $hook );
     }
+
+    public function get_weekday( $day_index ){
+        global $wp_locale;
+        return $wp_locale->get_weekday( $day_index );
+    }
+
 
 }

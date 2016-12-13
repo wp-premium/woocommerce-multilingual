@@ -85,7 +85,7 @@ class WCML_Endpoints{
         $string = icl_get_string_id( $endpoint, 'WooCommerce Endpoints', $key );
 
         if( !$string && function_exists( 'icl_register_string' ) ){
-            do_action('wpml_register_single_string', 'WooCommerce Endpoints', $key, $endpoint );
+            do_action( 'wpml_register_single_string', 'WooCommerce Endpoints', $key, $endpoint );
         }else{
             $this->endpoints_strings[] = $string;
         }
@@ -151,8 +151,11 @@ class WCML_Endpoints{
 
                 foreach( $endpoints as $key => $endpoint ){
                     if( isset($wp->query_vars[$key]) ){
-                        if( in_array( $key, array( 'pay', 'order-received' ) ) ){
-                            $endpoint = get_option( 'woocommerce_checkout_'.str_replace( '-','_',$key).'_endpoint' );
+                        if( $key === 'order-pay' ){
+                            $endpoint = get_option( 'woocommerce_checkout_pay_endpoint' );
+                            $p .= isset( $_SERVER[ 'QUERY_STRING' ] ) ? '?'.$_SERVER[ 'QUERY_STRING' ] : '';
+                        }elseif( $key === 'order-received' ){
+                            $endpoint = get_option( 'woocommerce_checkout_order_received_endpoint' );
                         }else{
                             $endpoint = get_option( 'woocommerce_myaccount_'.str_replace( '-','_',$key).'_endpoint' );
                         }

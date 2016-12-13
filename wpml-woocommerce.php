@@ -6,12 +6,12 @@
   Author: OnTheGoSystems
   Author URI: http://www.onthegosystems.com/
   Text Domain: woocommerce-multilingual
-  Version: 3.9.5
+  Version: 4.0.1
 */
 
 if( defined( 'WCML_VERSION' ) ) return;
 
-define( 'WCML_VERSION', '3.9.5' );
+define( 'WCML_VERSION', '4.0.1' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -20,8 +20,13 @@ define( 'WCML_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 include WCML_PLUGIN_PATH . '/inc/constants.php';
 require WCML_PLUGIN_PATH . '/inc/missing-php-functions.php';
+require WCML_PLUGIN_PATH . '/inc/deprecated-WC-functions.php';
 include WCML_PLUGIN_PATH . '/inc/installer-loader.php';
 include WCML_PLUGIN_PATH . '/inc/wcml-core-functions.php';
+include WCML_PLUGIN_PATH . '/inc/wcml-cart-switch-lang-functions.php';
+
+//for language switching need call as soon as possible
+$wcml_cart_switch_lang_functions = new WCML_Cart_Switch_Lang_Functions();
 
 if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ) {
     require WCML_PLUGIN_PATH . '/vendor/autoload.php';
@@ -40,5 +45,3 @@ function wpml_wcml_startup(){
         $woocommerce_wpml = new woocommerce_wpml();
     }
 }
-
-

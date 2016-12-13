@@ -59,6 +59,8 @@
 		<custom-field action="copy">_sale_price_dates_to</custom-field>
 		<custom-field action="copy">_wcml_schedule</custom-field>
 		<custom-field action="translate">_variation_description</custom-field>
+		<custom-field action="ignore">wcml_sync_hash</custom-field>
+		<custom-field action="ignore">wpml_language</custom-field>
 	</custom-fields>
 	<custom-types>
 		<custom-type translate="1">product</custom-type>

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
+class ComposerStaticInite5007b49b17f54d030d4ee062726b9f2
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -28,9 +28,17 @@ class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
                 0 => __DIR__ . '/..' . '/xrstf/composer-php52/lib',
             ),
         ),
+        'T' => 
+        array (
+            'Twig_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/twig/lib',
+            ),
+        ),
     );
 
     public static $classMap = array (
+        'Deprecated_WC_Functions' => __DIR__ . '/../..' . '/inc/deprecated-WC-functions.php',
         'WCML_Accommodation_Bookings' => __DIR__ . '/../..' . '/compatibility/class-wcml-accommodation-bookings.php',
         'WCML_Admin_Currency_Selector' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-admin-currency-selector.php',
         'WCML_Admin_Menus' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-admin-menus.php',
@@ -44,6 +52,8 @@ class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
         'WCML_Bulk_Stock_Management' => __DIR__ . '/../..' . '/compatibility/class-wcml-bulk-stock-management.php',
         'WCML_Capabilities' => __DIR__ . '/../..' . '/inc/class-wcml-capabilities.php',
         'WCML_Cart' => __DIR__ . '/../..' . '/inc/class-wcml-cart.php',
+        'WCML_Cart_Removed_Items_Widget' => __DIR__ . '/../..' . '/inc/class-wcml-cart-removed-items-widget.php',
+        'WCML_Cart_Switch_Lang_Functions' => __DIR__ . '/../..' . '/inc/wcml-cart-switch-lang-functions.php',
         'WCML_Checkout_Addons' => __DIR__ . '/../..' . '/compatibility/class-wcml-checkout-addons.php',
         'WCML_Checkout_Field_Editor' => __DIR__ . '/../..' . '/compatibility/class-wcml-checkout-field-editor.php',
         'WCML_Compatibility' => __DIR__ . '/../..' . '/inc/class-wcml-compatibility.php',
@@ -66,6 +76,12 @@ class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
         'WCML_Editor_UI_Product_Job' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-editor-ui-product-job.php',
         'WCML_Emails' => __DIR__ . '/../..' . '/inc/class-wcml-emails.php',
         'WCML_Endpoints' => __DIR__ . '/../..' . '/inc/class-wcml-endpoints.php',
+        'WCML_Exchange_Rate_Service' => __DIR__ . '/../..' . '/inc/abstracts/class-wcml-exchange-rate-service.php',
+        'WCML_Exchange_Rates' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-exchange-rates.php',
+        'WCML_Exchange_Rates_Currencylayer' => __DIR__ . '/../..' . '/inc/currencies/exchange-rate-services/class-wcml-exchange-rates-currencylayer.php',
+        'WCML_Exchange_Rates_Fixierio' => __DIR__ . '/../..' . '/inc/currencies/exchange-rate-services/class-wcml-exchange-rates-fixierio.php',
+        'WCML_Exchange_Rates_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-exchange-rates-ui.php',
+        'WCML_Exchange_Rates_YahooFinance' => __DIR__ . '/../..' . '/inc/currencies/exchange-rate-services/class-wcml-exchange-rates-yahoo-finance.php',
         'WCML_Extra_Product_Options' => __DIR__ . '/../..' . '/compatibility/class-wcml-extra-product-options.php',
         'WCML_Fix_Copied_Custom_Fields_WPML353' => __DIR__ . '/../..' . '/inc/class-wcml-fix-copied-custom-fields-wpml353.php',
         'WCML_Flatsome' => __DIR__ . '/../..' . '/compatibility/class-wcml-flatsome.php',
@@ -95,12 +111,14 @@ class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
         'WCML_Per_Product_Shipping' => __DIR__ . '/../..' . '/compatibility/class-wcml-per-product-shipping.php',
         'WCML_Pip' => __DIR__ . '/../..' . '/compatibility/class-wcml-pip.php',
         'WCML_Plugins_Wrap' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-plugins-wrap.php',
+        'WCML_Pointer_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-pointer-ui.php',
         'WCML_Pointers' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-pointers.php',
         'WCML_Product_Addons' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-addons.php',
         'WCML_Product_Bundles' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-bundles.php',
         'WCML_Products' => __DIR__ . '/../..' . '/inc/class-wcml-products.php',
         'WCML_Products_Screen_Options' => __DIR__ . '/../..' . '/inc/class-wcml-products-screen-options.php',
         'WCML_Products_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-products-ui.php',
+        'WCML_Removed_Cart_Items_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-removed-cart-items-ui.php',
         'WCML_Reports' => __DIR__ . '/../..' . '/inc/class-wcml-reports.php',
         'WCML_Requests' => __DIR__ . '/../..' . '/inc/class-wcml-requests.php',
         'WCML_Resources' => __DIR__ . '/../..' . '/inc/class-wcml-resources.php',
@@ -144,22 +162,32 @@ class ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361
         'WCML_WC_Strings' => __DIR__ . '/../..' . '/inc/class-wcml-wc-strings.php',
         'WCML_WC_Subscriptions' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-subscriptions.php',
         'WCML_WPSEO' => __DIR__ . '/../..' . '/compatibility/class-wcml-wpseo.php',
+        'WCML_Widgets' => __DIR__ . '/../..' . '/inc/class-wcml-widgets.php',
         'WCML_WooCommerce_Rest_API_Support' => __DIR__ . '/../..' . '/inc/class-wcml-woocommerce-rest-api-support.php',
         'WCML_gravityforms' => __DIR__ . '/../..' . '/compatibility/class-wcml-gravityforms.php',
         'WCML_sensei' => __DIR__ . '/../..' . '/compatibility/class-wcml-sensei.php',
         'WCML_wcExporter' => __DIR__ . '/../..' . '/compatibility/class-wcml-wcexporter.php',
         'WCML_xDomain_Data' => __DIR__ . '/../..' . '/inc/class-wcml-xdomain-data.php',
-        'WPML_Templates_Factory' => __DIR__ . '/../..' . '/inc/template-classes/class-wpml-templates-factory.php',
+        'WPML_Auto_Loader' => __DIR__ . '/..' . '/wpml/commons/src/wpml-auto-loader.php',
+        'WPML_Cache_Directory' => __DIR__ . '/..' . '/wpml/commons/src/cache/class-wpml-cache-directory.php',
+        'WPML_Dependencies' => __DIR__ . '/..' . '/wpml/commons/src/dependencies/class-wpml-dependencies.php',
+        'WPML_Notice' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice.php',
+        'WPML_Notice_Action' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-action.php',
+        'WPML_Notice_Render' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-render.php',
+        'WPML_Notices' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notices.php',
+        'WPML_Templates_Factory' => __DIR__ . '/..' . '/wpml/commons/src/templating/class-wpml-templates-factory.php',
+        'WPML_Twig_WP_Plugin_Extension' => __DIR__ . '/..' . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
+        'WPML_WP_API' => __DIR__ . '/..' . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
         'woocommerce_wpml' => __DIR__ . '/../..' . '/inc/class-woocommerce-wpml.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita047ff959ab47e6831cb2bbccf3ea361::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -13,7 +13,7 @@ class WCML_Orders{
     public function __construct( &$woocommerce_wpml, &$sitepress ){
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress = $sitepress;
-        
+
         add_action('init', array($this, 'init'));
 
         //checkout page
@@ -33,7 +33,7 @@ class WCML_Orders{
         add_filter('the_comments', array($this, 'get_filtered_comments'));
         add_filter('gettext',array($this, 'filtered_woocommerce_new_order_note_data'),10,3);
 
-        add_filter( 'woocommerce_order_get_items', array( $this, 'woocommerce_order_get_items' ), 10 );
+        add_filter( 'woocommerce_order_get_items', array( $this, 'woocommerce_order_get_items' ), 10, 2 );
 
         add_action( 'woocommerce_process_shop_order_meta', array( $this, 'set_order_language_backend'), 10, 2 );
         add_action( 'woocommerce_order_actions_start', array( $this, 'order_language_dropdown' ), 11 ); //after order currency drop-down
@@ -93,11 +93,16 @@ class WCML_Orders{
 
     }
     
-    function woocommerce_order_get_items( $items ){
+    function woocommerce_order_get_items( $items, $order ){
 
         if( isset( $_GET[ 'post' ] ) && get_post_type( $_GET[ 'post' ] ) == 'shop_order' ) {
             // on order edit page use admin default language
             $language_to_filter = $this->sitepress->get_user_admin_language( get_current_user_id(), true );
+        }elseif( isset( $_GET[ 'action' ] ) && ( $_GET['action'] == 'woocommerce_mark_order_complete' || $_GET['action'] == 'woocommerce_mark_order_status' || $_GET['action'] == 'mark_processing') ){
+            //backward compatibility for WC < 2.7
+            $order_id = method_exists( 'WC_Order', 'get_id' ) ? $order->get_id() : $order->id;
+            $order_language = get_post_meta( $order_id, 'wpml_language', true );
+            $language_to_filter = $order_language ? $order_language : $this->sitepress->get_default_language();
         }else{
             $language_to_filter = $this->sitepress->get_current_language();
         }
@@ -110,7 +115,7 @@ class WCML_Orders{
                         $tr_product_id = apply_filters( 'translate_object_id', $item_data, 'product', false, $language_to_filter );
                         if( !is_null( $tr_product_id ) ){
                             $items[ $index ][ $key ] = $tr_product_id;
-                            $items[ $index ][ 'name'] = wc_get_product( $tr_product_id )->get_title();
+                            $items[ $index ][ 'name'] = get_post( $tr_product_id )->post_title;
                         }
                     }
                     if( $key == 'variation_id' ){
@@ -150,7 +155,7 @@ class WCML_Orders{
                         $tr_product_id = apply_filters( 'translate_object_id', $item_product_id, 'product', false, $language_to_filter );
                         if( !is_null( $tr_product_id ) ){
                             $item->set_product_id( $tr_product_id );
-                            $item->set_name( wc_get_product( $tr_product_id )->get_title() );
+                            $item->set_name( get_post( $tr_product_id )->post_title );
                         }
                         $tr_variation_id = apply_filters( 'translate_object_id', $item->get_variation_id(), 'product_variation', false, $language_to_filter );
                         if( !is_null( $tr_variation_id ) ){
@@ -181,7 +186,6 @@ class WCML_Orders{
                 }
             }
         }
-
 
         return $items;
 
@@ -251,9 +255,9 @@ class WCML_Orders{
     
     // Fix for shipping update on the checkout page.
     function fix_shipping_update($amount){
-        global $post;
+        global $sitepress, $post;
         
-        if($this->sitepress->get_current_language() !== $this->sitepress->get_default_language() && $post->ID == $this->checkout_page_id()){
+        if($sitepress->get_current_language() !== $sitepress->get_default_language() && $post->ID == $this->checkout_page_id()){
         
             $_SESSION['icl_checkout_shipping_amount'] = $amount;
             

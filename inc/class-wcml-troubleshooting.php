@@ -128,7 +128,7 @@ class WCML_Troubleshooting{
             die('Invalid nonce');
         }
 
-        $page = isset($_POST['page'])?$_POST['page']:0;
+        $page = isset($_POST['page'])? intval( $_POST['page'] ) :0;
 
         global $woocommerce_wpml,$wpdb;
 
@@ -153,7 +153,7 @@ class WCML_Troubleshooting{
             die('Invalid nonce');
         }
 
-        $page = isset($_POST['page'])?$_POST['page']:0;
+        $page = isset($_POST['page'])? intval( $_POST['page'] ):0;
 
         global $wpdb,$sitepress;
 

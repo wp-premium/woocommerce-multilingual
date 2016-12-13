@@ -336,8 +336,7 @@ class WCML_Dependencies{
      */
     private function load_twig_support(){
 
-        if (!class_exists( 'Twig_Autoloader' )){
-            require_once WCML_PLUGIN_PATH . '/lib/Twig/Autoloader.php';
+        if ( !class_exists( 'Twig_Autoloader' ) ){
             Twig_Autoloader::register();
         }
 

@@ -77,7 +77,7 @@ class WCML_Pip{
 
             $the_order = new WC_Order( $pip_order_id );
             if( $the_order ){
-                $currency = method_exists( $the_order, 'get_currency' ) ? $the_order->get_currency() : ( method_exists( $the_order, 'get_order_currency' ) ? $the_order->get_order_currency() : '' ) ;
+                $currency = Deprecated_WC_Functions::get_order_currency( $the_order );
 
                 if( !$currency && isset( $_COOKIE[ '_wcml_order_currency' ] ) ){
                     $currency =  $_COOKIE[ '_wcml_order_currency' ];

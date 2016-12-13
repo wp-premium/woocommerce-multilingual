@@ -327,7 +327,7 @@ class WCML_Product_Bundles{
 
     function resync_bundle_clean( $cart ) {
     	foreach ( $cart->cart_contents as $cart_item_key => $cart_item ) {
-	    	if ( isset( $cart_item[ 'bundled_items' ] ) && $cart_item[ 'data' ]->product_type === 'bundle' ) {
+	    	if ( isset( $cart_item[ 'bundled_items' ] ) && Deprecated_WC_Functions::get_product_type( $cart_item[ 'product_id' ] ) === 'bundle' ) {
 	    		if ( isset( $cart_item[ 'remapped_bundled_item_ids' ] ) ) {
 	    			unset( WC()->cart->cart_contents[ $cart_item_key ][ 'remapped_bundled_item_ids' ] );
 	    		}

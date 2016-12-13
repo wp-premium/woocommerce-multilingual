@@ -249,8 +249,17 @@ class WCML_Reports{
     public function filter_reports_stock_query( $query_from ){
         global $wpdb, $sitepress;
 
-        $query_from = preg_replace("/WHERE/", "LEFT JOIN {$wpdb->prefix}icl_translations AS t ON posts.ID = t.element_id WHERE", $query_from);
-        $query_from .= " AND t.element_type IN ( 'post_product', 'post_product_variation' ) AND t.language_code = '".$sitepress->get_current_language()."'";
+        $current_language = $sitepress->get_current_language();
+
+        if( $current_language !== 'all' ){
+            $query_from = preg_replace("/WHERE/",
+                "LEFT JOIN {$wpdb->prefix}icl_translations AS t
+                ON posts.ID = t.element_id
+                WHERE", $query_from);
+
+            $query_from .= " AND t.element_type IN ( 'post_product', 'post_product_variation' ) AND t.language_code = '".$current_language."'";
+        }
+
 
         return $query_from;
     }

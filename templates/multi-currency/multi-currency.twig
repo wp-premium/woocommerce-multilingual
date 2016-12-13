@@ -83,7 +83,9 @@
                                     <span class="truncate">{{ attribute(wc_currencies, code)|raw }}</span>
                                     <small>{{ attribute( currencies_positions, code )|raw }}</small>
                                 </td>
-                                <td class="wcml-col-rate">{{ get_rate(wc_currency, currency.rate, code) }}</td>
+                                <td class="wcml-col-rate">
+                                    1 {{ wc_currency }} = <span class="rate">{{ currency.rate }}</span> {{ code }}
+                                </td>
 
                                 <td class="wcml-col-edit">
                                     <a href="#" title="{{ strings.currencies_table.edit }}" class="edit_currency js-wcml-dialog-trigger"
@@ -240,6 +242,8 @@
         </div>
 
     </div>
+
+    {% include 'exchange-rates.twig' with exchange_rates %}
 
     {% include 'currency-switcher-options.twig' %}
 

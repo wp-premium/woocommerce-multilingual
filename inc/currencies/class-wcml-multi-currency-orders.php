@@ -121,7 +121,7 @@ class WCML_Multi_Currency_Orders{
 
             $the_order = new WC_Order( get_the_ID() );
             if( $the_order ){
-                $order_currency = method_exists( $the_order, 'get_currency' ) ? $the_order->get_currency() : ( method_exists( $the_order, 'get_order_currency' ) ? $the_order->get_order_currency() : '' ) ;
+                $order_currency = Deprecated_WC_Functions::get_order_currency( $the_order );
 
                 if( !$order_currency && isset( $_COOKIE[ '_wcml_order_currency' ] ) ){
                     $order_currency =  $_COOKIE[ '_wcml_order_currency' ];
@@ -314,7 +314,7 @@ class WCML_Multi_Currency_Orders{
     // handle currency in order emails before handled in woocommerce
     public function fix_currency_before_order_email($order){
 
-        $order_currency = method_exists( $order, 'get_currency' ) ? $order->get_currency() : ( method_exists( $order, 'get_order_currency' ) ? $order->get_order_currency() : '' ) ;
+        $order_currency = Deprecated_WC_Functions::get_order_currency( $order );
 
         if( !$order_currency ) return;
 

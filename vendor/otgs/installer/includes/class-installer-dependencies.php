@@ -172,7 +172,7 @@ class Installer_Dependencies{
 
         if ( isset($_REQUEST['action']) ) {
 
-            $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+            $action = isset($_REQUEST['action']) ? sanitize_text_field ( $_REQUEST['action'] ) : '';
 
             $installer_settings = WP_Installer()->settings;
 
@@ -229,7 +229,7 @@ class Installer_Dependencies{
 
             if( 'upgrade-plugin' == $action || 'update-plugin' == $action ) {
 
-                $plugin = isset($_REQUEST['plugin']) ? trim($_REQUEST['plugin']) : '';
+                $plugin = isset($_REQUEST['plugin']) ? trim( sanitize_text_field ( $_REQUEST['plugin'] ) ) : '';
 
                 $wp_plugin_slug = dirname($plugin);
 

@@ -33,13 +33,15 @@ class WCML_Product_Addons {
 			add_action( 'admin_notices', array( $this, 'inf_translate_strings' ) );
 		}
 
-		add_action( 'addons_panel_start', array( $this, 'inf_translate_strings' ) );
+		add_action( 'woocommerce-product-addons_panel_start', array( $this, 'show_pointer_info' ) );
 
 		if ( is_admin() ) {
 
 			add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
 			add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 3 );
 			add_action( 'wcml_update_extra_fields', array( $this, 'addons_update' ), 10, 3 );
+
+			add_action( 'woocommerce_product_data_panels',   array( $this, 'show_pointer_info' ) );
 		}
 	}
 
@@ -132,11 +134,14 @@ class WCML_Product_Addons {
 	}
 
 	function inf_translate_strings() {
-		$message = '<div><p class="icl_cyan_box">';
-		$message .= sprintf( __( 'To translate Add-ons strings please save Add-ons and go to the <b><a href="%s">String Translation interface</a></b>', 'woocommerce-multilingual' ), admin_url( 'admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php&context=wc_product_addons_strings' ) );
-		$message .= '</p></div>';
 
-		echo $message;
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate strings related to global add-ons on the %sWPML String Translation page%s. Use the search on the top of that page to find the strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php&context=wc_product_addons_strings').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-product-add-ons-woocommerce-multilingual/',
+			'wpbody-content .woocommerce h2'
+		);
+
+		$pointer_ui->show();
 	}
 
 	/**
@@ -243,5 +248,16 @@ class WCML_Product_Addons {
 		}
 
 		update_post_meta( $product_id, '_product_addons', $product_addons );
+	}
+
+	public function show_pointer_info(){
+
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate the Group Name, Group Description and every Option Label of your product add-on on the %sWooCommerce product translation page%s', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page=wpml-wcml').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-product-add-ons-woocommerce-multilingual/',
+			'product_addons_data>p'
+		);
+
+		$pointer_ui->show();
 	}
 }
