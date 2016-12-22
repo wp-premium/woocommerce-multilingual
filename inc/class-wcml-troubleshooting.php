@@ -14,6 +14,7 @@ class WCML_Troubleshooting{
         add_action('wp_ajax_trbl_update_count', array($this,'trbl_update_count'));
         add_action('wp_ajax_trbl_sync_categories', array($this,'trbl_sync_categories'));
         add_action('wp_ajax_trbl_duplicate_terms', array($this,'trbl_duplicate_terms'));
+        add_action('wp_ajax_trbl_fix_product_type_terms', array($this,'trbl_fix_product_type_terms'));
 
     }
 
@@ -226,6 +227,19 @@ class WCML_Troubleshooting{
             }
 
         }
+
+        echo 1;
+
+        die();
+    }
+
+    function trbl_fix_product_type_terms(){
+        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        if(!$nonce || !wp_verify_nonce($nonce, 'trbl_product_type_terms')){
+            die('Invalid nonce');
+        }
+
+        WCML_Install::check_product_type_terms();
 
         echo 1;
 

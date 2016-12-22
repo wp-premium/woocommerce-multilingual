@@ -76,6 +76,13 @@ class WCML_Install{
                 add_action( 'admin_notices', array( __CLASS__, 'admin_notice_after_install' ) );
             }
 
+            $translated_product_type_terms = WCML_Install::translated_product_type_terms();
+            if ( !empty( $translated_product_type_terms ) ) {
+                add_action( 'admin_notices', array( __CLASS__, 'admin_translated_product_type_terms_notice' ) );
+            }elseif( $sitepress->is_translated_taxonomy( 'product_type' ) ){
+                add_action( 'admin_notices', array( __CLASS__, 'admin_translated_product_type_notice' ) );
+            }
+
         }
 
     }
@@ -119,10 +126,10 @@ class WCML_Install{
     }
 
     //handle situation when product_type terms translated before activating WCML
-    private static function check_product_type_terms(){
+    public static function check_product_type_terms(){
         global $wpdb;
         //check if terms were translated
-        $translations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations WHERE element_type = 'tax_product_type'" );
+        $translations = self::translated_product_type_terms();
 
         if( $translations ){
             foreach( $translations as $translation ){
@@ -177,6 +184,14 @@ class WCML_Install{
         }
     }
 
+    public static function translated_product_type_terms(){
+        global $wpdb;
+        //check if terms were translated
+        $translations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}icl_translations WHERE element_type = 'tax_product_type'" );
+
+        return $translations;
+    }
+
     private static function handle_admin_texts(){
         if(class_exists('woocommerce')){
             //emails texts
@@ -217,6 +232,28 @@ class WCML_Install{
             </div>
             <?php
         }
+    }
+
+    public static function admin_translated_product_type_notice(){ ?>
+
+        <div id="message" class="updated error">
+            <p>
+                <?php printf(__("We detected a problem in your WPML configuration: the %sproduct_type%s taxonomy is set as translatable and this would cause problems with translated products. You can fix this in the %sMultilingual Content Setup page%s.", 'woocommerce-multilingual'), '<i>', '</i>','<a href="' . admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/main.php&sm=mcsetup#ml-content-setup-sec-8' ) . '">','</a>'); ?>
+            </p>
+        </div>
+
+        <?php
+    }
+
+    public static function admin_translated_product_type_terms_notice(){ ?>
+
+        <div id="message" class="updated error">
+            <p>
+                <?php printf(__("We detected that the %sproduct_type%s field was set incorrectly for some product translations. This happened because the product_type taxonomy was translated. You can fix this in the WooCommerce Multilingual %stroubleshooting page%s.", 'woocommerce-multilingual'), '<i>', '</i>','<a href="' . admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ) . '">','</a>'); ?>
+            </p>
+        </div>
+
+        <?php
     }
 
     public static function hide_variation_type_on_tm_dashboard( $types ){

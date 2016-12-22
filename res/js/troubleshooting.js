@@ -23,6 +23,13 @@ jQuery(document).ready(function(){
         jQuery('#count_terms').val(jQuery(this).find('option:selected').attr('rel'))
     });
 
+    jQuery('#wcml_product_type_trbl').on('click',function(){
+        var field = jQuery(this);
+        field.attr('disabled', 'disabled');
+        jQuery('.product_type_spinner').css('display','inline-block').css('visibility','visible');
+
+        fix_product_type_terms();
+    });
 
 });
 
@@ -191,6 +198,26 @@ function duplicate_terms(){
 
                 duplicate_terms();
             }
+        }
+    });
+}
+
+function fix_product_type_terms(){
+    jQuery.ajax({
+        type : "post",
+        url : ajaxurl,
+        data : {
+            action: "trbl_fix_product_type_terms",
+            wcml_nonce: jQuery('#trbl_product_type_terms_nonce').val()
+        },
+        success: function(response) {
+            jQuery('#wcml_product_type_trbl').removeAttr('disabled');
+            jQuery('.product_type_spinner').hide();
+            jQuery('.product_type_fix_done').show();
+            setTimeout(function() {
+                jQuery('.product_type_fix_done').fadeOut( 300 );
+            }, 2000);
+
         }
     });
 }

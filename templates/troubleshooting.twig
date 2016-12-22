@@ -82,5 +82,14 @@
                 {{ nonces.trbl_duplicate_terms|raw }}
             </li>
         </ul>
+        {% if product_type_sync_needed %}
+            <h3>{{ strings.delete_terms }}</h3>
+            <div>
+                <button type="button" class="button-secondary" id="wcml_product_type_trbl">{{ strings.start }}</button>
+                <span class="product_type_spinner"></span>
+                <span class="product_type_fix_done" style="display: none">{{ strings.product_type_fix_done }}</span>
+                {{ nonces.trbl_product_type_terms|raw }}
+            </div>
+        {% endif %}
     </div>
 </div>

@@ -599,7 +599,7 @@ class WCML_Synchronize_Product_Data{
         $cache_key = $original_id.$fields_group;
         $temp_is_sync_needed = wp_cache_get( $cache_key, $cache_group );
 
-        if( $temp_is_sync_needed !== false ) return boolval( $temp_is_sync_needed );
+        if( $temp_is_sync_needed !== false ) return (bool) $temp_is_sync_needed;
 
         $is_sync_needed = true;
         $hash = '';
