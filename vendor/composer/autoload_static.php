@@ -175,7 +175,7 @@ class ComposerStaticInite5007b49b17f54d030d4ee062726b9f2
         'WPML_Notice_Action' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-action.php',
         'WPML_Notice_Render' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-render.php',
         'WPML_Notices' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notices.php',
-        'WPML_Templates_Factory' => __DIR__ . '/..' . '/wpml/commons/src/templating/class-wpml-templates-factory.php',
+        'WPML_Templates_Factory' => __DIR__ . '/../..' . '/inc/template-classes/class-wpml-templates-factory.php',
         'WPML_Twig_WP_Plugin_Extension' => __DIR__ . '/..' . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
         'WPML_WP_API' => __DIR__ . '/..' . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
         'woocommerce_wpml' => __DIR__ . '/../..' . '/inc/class-woocommerce-wpml.php',

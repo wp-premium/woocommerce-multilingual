@@ -158,18 +158,51 @@
         ]
     },
     {
-        "name": "twig/twig",
-        "version": "v1.28.2",
-        "version_normalized": "1.28.2.0",
+        "name": "xrstf/composer-php52",
+        "version": "v1.0.20",
+        "version_normalized": "1.0.20.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c"
+            "url": "https://github.com/composer-php52/composer-php52.git",
+            "reference": "bd41459d5e27df8d33057842b32377c39e97a5a8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/b22ce0eb070e41f7cba65d78fe216de29726459c",
-            "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c",
+            "url": "https://api.github.com/repos/composer-php52/composer-php52/zipball/bd41459d5e27df8d33057842b32377c39e97a5a8",
+            "reference": "bd41459d5e27df8d33057842b32377c39e97a5a8",
+            "shasum": ""
+        },
+        "time": "2016-04-16 21:52:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-default": "1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "xrstf\\Composer52": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "v1.29.0",
+        "version_normalized": "1.29.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "74f723e542368ca2080b252740be5f1113ebb898"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/74f723e542368ca2080b252740be5f1113ebb898",
+            "reference": "74f723e542368ca2080b252740be5f1113ebb898",
             "shasum": ""
         },
         "require": {
@@ -179,11 +212,11 @@
             "symfony/debug": "~2.7",
             "symfony/phpunit-bridge": "~3.2@dev"
         },
-        "time": "2016-11-23 18:41:40",
+        "time": "2016-12-13 17:28:18",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.28-dev"
+                "dev-master": "1.29-dev"
             }
         },
         "installation-source": "dist",
@@ -221,18 +254,75 @@
         ]
     },
     {
+        "name": "wpml/commons",
+        "version": "1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "ssh://git@git.onthegosystems.com:10022/wpml/wpml-commons.git",
+            "reference": "3451f31222d196c1320daf14b35a06bb46702fe9"
+        },
+        "require": {
+            "php": ">=5.2.0",
+            "roave/security-advisories": "dev-master",
+            "twig/twig": "~1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.5"
+        },
+        "time": "2016-12-08 16:57:33",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "scripts": {
+            "test": [
+                "phpunit"
+            ]
+        },
+        "license": [
+            "GPL-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Andrea Sciamanna",
+                "email": "andrea.s@icanlocalize.com",
+                "homepage": "http://wpml.org"
+            },
+            {
+                "name": "Bruce Pearsons",
+                "email": "bruce.p@icanlocalize.com",
+                "homepage": "http://wpml.org"
+            },
+            {
+                "name": "Armin Braun",
+                "email": "armin.b@icanlocalize.com",
+                "homepage": "http://wpml.org"
+            }
+        ],
+        "description": "A set of libraries for WPML Plugins",
+        "homepage": "https://git.onthegosystems.com/wpml/wpml-commons",
+        "keywords": [
+            "auto-loader",
+            "twig-extensions"
+        ]
+    },
+    {
         "name": "roave/security-advisories",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "5560bd95c22a4ccf9404d8f176fceb4812a7398e"
+            "reference": "4c6b8ff984571203431e6116d2bdfaccc764d942"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5560bd95c22a4ccf9404d8f176fceb4812a7398e",
-            "reference": "5560bd95c22a4ccf9404d8f176fceb4812a7398e",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4c6b8ff984571203431e6116d2bdfaccc764d942",
+            "reference": "4c6b8ff984571203431e6116d2bdfaccc764d942",
             "shasum": ""
         },
         "conflict": {
@@ -282,7 +372,8 @@
             "silverstripe/framework": ">=3,<3.3",
             "silverstripe/userforms": "<3",
             "simplesamlphp/saml2": ">=1.9,<1.9.1|>=1.10,<1.10.3|>=2.3,<2.3.3",
-            "simplesamlphp/simplesamlphp": "<1.14.10",
+            "simplesamlphp/simplesamlphp": "<1.14.4",
+            "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
             "socalnick/scn-social-auth": "<1.15.2",
             "swiftmailer/swiftmailer": ">=4,<4.99.99|>=5,<5.2.1",
             "symfony/dependency-injection": ">=2,<2.0.17",
@@ -336,7 +427,7 @@
             "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
             "zfr/zfr-oauth2-server-module": "<0.1.2"
         },
-        "time": "2016-12-06 13:29:26",
+        "time": "2016-12-13 08:08:47",
         "type": "metapackage",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -350,95 +441,5 @@
             }
         ],
         "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
-    },
-    {
-        "name": "wpml/commons",
-        "version": "1.0.3",
-        "version_normalized": "1.0.3.0",
-        "source": {
-            "type": "git",
-            "url": "ssh://git@git.onthegosystems.com:10022/wpml/wpml-commons.git",
-            "reference": "c24b57e249762d505fc70e4716af2132605ab034"
-        },
-        "require": {
-            "php": ">=5.2.0",
-            "roave/security-advisories": "dev-master",
-            "twig/twig": "~1.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.5"
-        },
-        "time": "2016-12-08 07:26:19",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "scripts": {
-            "test": [
-                "phpunit"
-            ]
-        },
-        "license": [
-            "GPL-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Andrea Sciamanna",
-                "email": "andrea.s@icanlocalize.com",
-                "homepage": "http://wpml.org"
-            },
-            {
-                "name": "Bruce Pearsons",
-                "email": "bruce.p@icanlocalize.com",
-                "homepage": "http://wpml.org"
-            },
-            {
-                "name": "Armin Braun",
-                "email": "armin.b@icanlocalize.com",
-                "homepage": "http://wpml.org"
-            }
-        ],
-        "description": "A set of libraries for WPML Plugins",
-        "homepage": "https://git.onthegosystems.com/wpml/wpml-commons",
-        "keywords": [
-            "auto-loader",
-            "twig-extensions"
-        ]
-    },
-    {
-        "name": "xrstf/composer-php52",
-        "version": "v1.0.20",
-        "version_normalized": "1.0.20.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/composer-php52/composer-php52.git",
-            "reference": "bd41459d5e27df8d33057842b32377c39e97a5a8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/composer-php52/composer-php52/zipball/bd41459d5e27df8d33057842b32377c39e97a5a8",
-            "reference": "bd41459d5e27df8d33057842b32377c39e97a5a8",
-            "shasum": ""
-        },
-        "time": "2016-04-16 21:52:24",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-default": "1.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "xrstf\\Composer52": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ]
     }
 ]
