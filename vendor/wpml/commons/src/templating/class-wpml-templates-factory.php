@@ -7,6 +7,7 @@ abstract class WPML_Templates_Factory {
 	private   $custom_functions;
 	protected $template_paths;
 	private   $cache_directory;
+	const OTGS_TWIG_CACHE_DISABLED_KEY = '_otgs_twig_cache_disabled';
 
 	/* @var WPML_WP_API $wp_api */
 	private $wp_api;
@@ -20,17 +21,12 @@ abstract class WPML_Templates_Factory {
 	 *
 	 * @param array $custom_functions
 	 * @param array $custom_filters
-	 * @param Twig_Environment $twig
-	 * @param WPML_WP_API      $wp_api
+	 * @param WPML_WP_API $wp_api
 	 */
-	public function __construct( array $custom_functions = array(), array $custom_filters = array(), $twig = null, $wp_api = null ) {
+	public function __construct( array $custom_functions = array(), array $custom_filters = array(), $wp_api = null ) {
 		$this->init_template_base_dir();
 		$this->custom_functions = $custom_functions;
 		$this->custom_filters   = $custom_filters;
-
-		if ( $twig ) {
-			$this->twig = $twig;
-		}
 
 		if ( $wp_api ) {
 			$this->wp_api = $wp_api;
@@ -56,17 +52,24 @@ abstract class WPML_Templates_Factory {
 		$output = '';
 		$this->maybe_init_twig();
 
-		if ( $model === null ) {
+		if ( null === $model ) {
 			$model = $this->get_model();
 		}
-		if ( $template === null ) {
+		if ( null === $template ) {
 			$template = $this->get_template();
 		}
 
 		try {
 			$output = $this->twig->render( $template, $model );
-		} catch( RuntimeException $e ) {
-			$this->add_exception_notice( $e );
+		} catch ( RuntimeException $e ) {
+			if ( $this->is_caching_enabled() ) {
+				$this->disable_twig_cache();
+				$this->twig = null;
+				$this->maybe_init_twig();
+				$output = $this->get_view( $template, $model );
+			} else {
+				$this->add_exception_notice( $e );
+			}
 		}
 
 		return $output;
@@ -74,23 +77,27 @@ abstract class WPML_Templates_Factory {
 
 	private function maybe_init_twig() {
 		if ( ! $this->twig ) {
-			$loader = new Twig_Loader_Filesystem( $this->template_paths );
+			$loader = $this->get_wp_api()->get_twig_loader_filesystem( $this->template_paths );
 
 			$environment_args = array();
 
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				$environment_args[ 'debug' ] = true;
+				$environment_args['debug'] = true;
 			}
 
-			$wpml_cache_directory  = new WPML_Cache_Directory( new WPML_WP_API() );
-			$this->cache_directory = $wpml_cache_directory->get( 'twig' );
+			if ( $this->is_caching_enabled() ) {
+				$wpml_cache_directory  = new WPML_Cache_Directory( $this->get_wp_api() );
+				$this->cache_directory = $wpml_cache_directory->get( 'twig' );
 
-			if ( $this->cache_directory ) {
-				$environment_args[ 'cache' ]       = $this->cache_directory;
-				$environment_args[ 'auto_reload' ] = true;
+				if ( $this->cache_directory ) {
+					$environment_args['cache']       = $this->cache_directory;
+					$environment_args['auto_reload'] = true;
+				} else {
+					$this->disable_twig_cache();
+				}
 			}
 
-			$this->twig = new Twig_Environment( $loader, $environment_args );
+			$this->twig = $this->get_wp_api()->get_twig_environment( $loader, $environment_args );
 			if ( $this->custom_functions && count( $this->custom_functions ) > 0 ) {
 				foreach ( $this->custom_functions as $custom_function ) {
 					$this->twig->addFunction( $custom_function );
@@ -116,12 +123,11 @@ abstract class WPML_Templates_Factory {
 	 * @param RuntimeException $e
 	 */
 	private function add_exception_notice( RuntimeException $e ) {
-		if ( preg_match( '/create/', $e->getMessage() ) ) {
+		if ( false !== strpos( $e->getMessage(), 'create' ) ) {
 			$text = sprintf( __( 'WPML could not create a cache directory in %s', 'sitepress' ), $this->cache_directory );
 		} else {
 			$text = sprintf( __( 'WPML could not write in the cache directory: %s', 'sitepress' ), $this->cache_directory );
 		}
-
 		$notice = new WPML_Notice( 'exception', $text, self::NOTICE_GROUP );
 		$notice->set_dismissible( true );
 		$notice->set_css_class_types( 'notice-error' );
@@ -138,5 +144,13 @@ abstract class WPML_Templates_Factory {
 		}
 
 		return $this->wp_api;
+	}
+
+	private function disable_twig_cache() {
+		update_option( self::OTGS_TWIG_CACHE_DISABLED_KEY, true, 'no' );
+	}
+
+	private function is_caching_enabled() {
+		return ! (bool) get_option( self::OTGS_TWIG_CACHE_DISABLED_KEY, false );
 	}
 }

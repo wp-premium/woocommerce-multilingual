@@ -143,7 +143,7 @@ return array(
     'WPML_Notice_Action' => $vendorDir . '/wpml/commons/src/notices/class-wpml-notice-action.php',
     'WPML_Notice_Render' => $vendorDir . '/wpml/commons/src/notices/class-wpml-notice-render.php',
     'WPML_Notices' => $vendorDir . '/wpml/commons/src/notices/class-wpml-notices.php',
-    'WPML_Templates_Factory' => $vendorDir . '/wpml/commons/src/templating/class-wpml-templates-factory.php',
+    'WPML_Templates_Factory' => $baseDir . '/inc/template-classes/class-wpml-templates-factory.php',
     'WPML_Twig_WP_Plugin_Extension' => $vendorDir . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
     'WPML_WP_API' => $vendorDir . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
     'woocommerce_wpml' => $baseDir . '/inc/class-woocommerce-wpml.php',

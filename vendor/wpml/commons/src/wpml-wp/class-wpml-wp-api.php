@@ -1297,4 +1297,22 @@ class WPML_WP_API {
 		return $wpml_admin_notices;
 	}
 
+	/**
+	 * @param Twig_LoaderInterface $loader
+	 * @param array                $environment_args
+	 *
+	 * @return Twig_Environment
+	 */
+	public function get_twig_environment( $loader, $environment_args ) {
+		return new Twig_Environment( $loader, $environment_args );
+	}
+
+	/**
+	 * @param array $template_paths
+	 *
+	 * @return Twig_Loader_Filesystem
+	 */
+	public function get_twig_loader_filesystem( $template_paths ) {
+		return new Twig_Loader_Filesystem( $template_paths );
+	}
 }
