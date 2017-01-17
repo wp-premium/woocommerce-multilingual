@@ -34,7 +34,7 @@
 
         }
 
-        if( pagenow == 'plugin-install' ){
+        if( typeof pagenow != 'undefined' && pagenow == 'plugin-install' ){
             jQuery( '.plugin-install-tab-commercial .search-plugins' ).remove();
         }
 

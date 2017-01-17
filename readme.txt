@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.7
-Stable tag: 4.0.3
+Tested up to: 4.7.1
+Stable tag: 4.0.4
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,17 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.0.4 =
+* Bug fix: empty shipping class was shown on the Quick Editor when using WooCommerce Table Rate Shipping
+* Bug fix: the Translation Editor could not save the same slug for translations of the same product
+* Bug fix: sales by product reports were inorect when filterign by languages including a dash character in their code
+* Bug fix: as of version 4.0.2 the option to use custom settings for translations download files was not always working
+* Bug fix: a PHP fatal error was shown when WooCommerce Multilingual was active but WooCommerce was not active
+* Bug fix: global attributes of variations were not copied to transltions when using the native interface to edit product translations
+* Bug fix: it was not possible to add multiple bookings in the cart at one time (when using WooCommerce Bookings)
+* Bug fix: custom URL parameters were not preserved when switching the language on the shop page
+* Fixed various incompatibilities with PHP 7.1
 
 = 4.0.3 =
 * Fixed fatal error caused by syntax incompatible with PHP versions prior 5.5

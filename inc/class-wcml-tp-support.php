@@ -29,7 +29,7 @@ class WCML_TP_Support {
 
             $product = wc_get_product( $post->ID );
 
-            $product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
+            $product_type = WooCommerce_Functions_Wrapper::get_product_type( $post->ID );
 
             if ( ! empty( $product ) && $product_type === 'variable' ) {
 
@@ -132,7 +132,7 @@ class WCML_TP_Support {
             /** @var WC_Product_Variable $product */
             $product = wc_get_product( $post->ID );
 
-            $product_type = Deprecated_WC_Functions::get_product_type( $post->ID );
+            $product_type = WooCommerce_Functions_Wrapper::get_product_type( $post->ID );
 
             if ( ! empty( $product ) && $product_type === 'variable' ) {
 

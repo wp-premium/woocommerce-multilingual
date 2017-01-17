@@ -77,6 +77,10 @@ class WCML_Currency_Switcher {
             return '';
         }
 
+        if( $args === '' ){
+        	$args = array();
+        }
+
         $wcml_settings = $this->woocommerce_wpml->get_settings();
         $multi_currency_object =& $this->woocommerce_wpml->multi_currency;
 

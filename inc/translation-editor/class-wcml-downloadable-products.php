@@ -92,8 +92,6 @@ class WCML_Downloadable_Products{
                     delete_post_meta( $post_id, 'wcml_sync_files' );
                 }
             }
-        }else{
-            delete_post_meta( $post_id, 'wcml_sync_files' );
         }
     }
 
