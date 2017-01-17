@@ -35,6 +35,8 @@ class WCML_Products{
 
             $this->tp_support = new WCML_TP_Support();
 
+            add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
+
         }else{
             add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
             add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
@@ -501,6 +503,39 @@ class WCML_Products{
         }
 
         return $hide_resign;
+    }
+
+    public function switch_product_variations_language(){
+
+        $lang_to = false;
+        $post_id = false;
+
+        if ( isset( $_POST[ 'wpml_to' ] ) ) {
+            $lang_to = $_POST[ 'wpml_to' ];
+        }
+        if ( isset( $_POST[ 'wpml_post_id' ] ) ) {
+            $post_id = $_POST[ 'wpml_post_id' ];
+        }
+
+        if ( $post_id && $lang_to && get_post_type( $post_id ) == 'product' ) {
+            $product_variations = $this->woocommerce_wpml->sync_variations_data->get_product_variations( $post_id );
+            foreach( $product_variations as $product_variation ){
+                $trid = $this->sitepress->get_element_trid( $product_variation->ID, 'post_product_variation' );
+                $current_prod_variation_id = apply_filters( 'translate_object_id', $product_variation->ID, 'product_variation', false, $lang_to );
+                if( is_null( $current_prod_variation_id ) ){
+                    $this->sitepress->set_element_language_details( $product_variation->ID, 'post_product_variation', $trid, $lang_to );
+
+                    foreach( get_post_custom( $product_variation->ID ) as $meta_key => $meta ) {
+                        foreach ( $meta as $meta_value ) {
+                            if ( substr( $meta_key, 0, 10 ) == 'attribute_' ) {
+                                $trn_post_meta = $this->woocommerce_wpml->attributes->get_translated_variation_attribute_post_meta( $meta_value, $meta_key, $product_variation->ID, $product_variation->ID, $lang_to );
+                                update_post_meta( $product_variation->ID, $trn_post_meta['meta_key'], $trn_post_meta['meta_value']);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

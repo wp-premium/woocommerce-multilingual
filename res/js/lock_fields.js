@@ -14,7 +14,8 @@ jQuery(document).ready(function($){
         '_tax_class',
         'parent_id',
         'crosssell_ids',
-        'upsell_ids'
+        'upsell_ids',
+        'product_shipping_class'
     ];
 
     if( unlock_fields.file_paths == 1 ){

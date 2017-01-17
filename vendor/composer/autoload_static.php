@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite5007b49b17f54d030d4ee062726b9f2
+class ComposerStaticInitb173854862956f3a90ab8075e30fc2fd
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -140,6 +140,7 @@ class ComposerStaticInite5007b49b17f54d030d4ee062726b9f2
         'WCML_Store_URLs_Edit_Base_UI' => __DIR__ . '/../..' . '/inc/template-classes/store-urls/class-wcml-store-urls-edit-base-ui.php',
         'WCML_Store_URLs_Translation_Statuses_UI' => __DIR__ . '/../..' . '/inc/template-classes/store-urls/class-wcml-store-urls-translation-statuses-ui.php',
         'WCML_Store_URLs_UI' => __DIR__ . '/../..' . '/inc/template-classes/store-urls/class-wcml-store-urls-ui.php',
+        'WCML_Switch_Lang_Request' => __DIR__ . '/../..' . '/inc/wcml-switch-lang-request.php',
         'WCML_Sync_Taxonomy' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-sync-taxonomy.php',
         'WCML_Synchronize_Product_Data' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-synchronize-product-data.php',
         'WCML_Synchronize_Variations_Data' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-synchronize-variations-data.php',
@@ -178,16 +179,17 @@ class ComposerStaticInite5007b49b17f54d030d4ee062726b9f2
         'WPML_Templates_Factory' => __DIR__ . '/../..' . '/inc/template-classes/class-wpml-templates-factory.php',
         'WPML_Twig_WP_Plugin_Extension' => __DIR__ . '/..' . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
         'WPML_WP_API' => __DIR__ . '/..' . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
+        'WooCommerce_Functions_Wrapper' => __DIR__ . '/../..' . '/inc/woocommerce-functions-wrapper.php',
         'woocommerce_wpml' => __DIR__ . '/../..' . '/inc/class-woocommerce-wpml.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInite5007b49b17f54d030d4ee062726b9f2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb173854862956f3a90ab8075e30fc2fd::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb173854862956f3a90ab8075e30fc2fd::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb173854862956f3a90ab8075e30fc2fd::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb173854862956f3a90ab8075e30fc2fd::$classMap;
 
         }, null, ClassLoader::class);
     }

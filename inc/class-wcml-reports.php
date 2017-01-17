@@ -80,7 +80,7 @@ class WCML_Reports{
                     
                 }
 
-                $query[ 'select' ] .= ', translations.language_code AS language_code_' . esc_sql( $current_language ); // user for per-language caching
+                $query[ 'select' ] .= ', translations.language_code AS language_code_' . esc_sql( str_replace('-', '_', $current_language)  ); // user for per-language caching
                 
             }elseif(
                 $query[ 'select' ] == 'SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount' || //sales for the selected items

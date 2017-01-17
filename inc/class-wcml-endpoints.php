@@ -27,7 +27,7 @@ class WCML_Endpoints{
     }
 
 
-    function register_endpoints_translations(){
+    function register_endpoints_translations( $language = null ){
 
         if( !class_exists( 'woocommerce' ) || !defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE || version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) return false;
 
@@ -36,23 +36,23 @@ class WCML_Endpoints{
         if ( !empty( $wc_vars ) ){
             $query_vars = array(
                 // Checkout actions
-                'order-pay'          => $this->get_endpoint_translation( 'order-pay', $wc_vars['order-pay'] ),
-                'order-received'     => $this->get_endpoint_translation( 'order-received', $wc_vars['order-received'] ),
+                'order-pay'          => $this->get_endpoint_translation( 'order-pay', $wc_vars['order-pay'], $language ),
+                'order-received'     => $this->get_endpoint_translation( 'order-received', $wc_vars['order-received'], $language ),
 
                 // My account actions
-                'view-order'                 => $this->get_endpoint_translation( 'view-order', $wc_vars['view-order'] ),
-                'edit-account'               => $this->get_endpoint_translation( 'edit-account', $wc_vars['edit-account'] ),
-                'edit-address'               => $this->get_endpoint_translation( 'edit-address', $wc_vars['edit-address'] ),
-                'lost-password'              => $this->get_endpoint_translation( 'lost-password', $wc_vars['lost-password'] ),
-                'customer-logout'            => $this->get_endpoint_translation( 'customer-logout', $wc_vars['customer-logout'] ),
-                'add-payment-method'         => $this->get_endpoint_translation( 'add-payment-method', $wc_vars['add-payment-method'] )
+                'view-order'                 => $this->get_endpoint_translation( 'view-order', $wc_vars['view-order'], $language ),
+                'edit-account'               => $this->get_endpoint_translation( 'edit-account', $wc_vars['edit-account'], $language ),
+                'edit-address'               => $this->get_endpoint_translation( 'edit-address', $wc_vars['edit-address'], $language ),
+                'lost-password'              => $this->get_endpoint_translation( 'lost-password', $wc_vars['lost-password'], $language ),
+                'customer-logout'            => $this->get_endpoint_translation( 'customer-logout', $wc_vars['customer-logout'], $language ),
+                'add-payment-method'         => $this->get_endpoint_translation( 'add-payment-method', $wc_vars['add-payment-method'], $language )
             );
 
-            if( isset( $wc_vars['orders'] ) ) $query_vars[ 'orders' ] = $this->get_endpoint_translation( 'orders', $wc_vars['orders'] );
-            if( isset( $wc_vars['downloads'] ) ) $query_vars[ 'downloads' ] = $this->get_endpoint_translation( 'downloads', $wc_vars['downloads'] );
-            if( isset( $wc_vars['payment-methods'] ) ) $query_vars[ 'payment-methods' ] = $this->get_endpoint_translation( 'payment-methods', $wc_vars['payment-methods'] );
-            if( isset( $wc_vars['delete-payment-method'] ) ) $query_vars[ 'delete-payment-method' ] = $this->get_endpoint_translation( 'delete-payment-method', $wc_vars['delete-payment-method'] );
-            if( isset( $wc_vars['set-default-payment-method'] ) ) $query_vars[ 'set-default-payment-method' ] = $this->get_endpoint_translation( 'set-default-payment-method', $wc_vars['set-default-payment-method'] );
+            if( isset( $wc_vars['orders'] ) ) $query_vars[ 'orders' ] = $this->get_endpoint_translation( 'orders', $wc_vars['orders'], $language );
+            if( isset( $wc_vars['downloads'] ) ) $query_vars[ 'downloads' ] = $this->get_endpoint_translation( 'downloads', $wc_vars['downloads'], $language );
+            if( isset( $wc_vars['payment-methods'] ) ) $query_vars[ 'payment-methods' ] = $this->get_endpoint_translation( 'payment-methods', $wc_vars['payment-methods'], $language );
+            if( isset( $wc_vars['delete-payment-method'] ) ) $query_vars[ 'delete-payment-method' ] = $this->get_endpoint_translation( 'delete-payment-method', $wc_vars['delete-payment-method'], $language );
+            if( isset( $wc_vars['set-default-payment-method'] ) ) $query_vars[ 'set-default-payment-method' ] = $this->get_endpoint_translation( 'set-default-payment-method', $wc_vars['set-default-payment-method'], $language );
 
             $query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $wc_vars, $this );
 
@@ -61,6 +61,7 @@ class WCML_Endpoints{
 
         }
 
+        return  WC()->query->query_vars;
     }
 
     function get_endpoint_translation( $key, $endpoint, $language = null ){
@@ -261,12 +262,10 @@ class WCML_Endpoints{
     function filter_get_endpoint_url( $url, $endpoint, $value, $permalink ){
 
         // return translated edit account slugs
-        if( isset( WC()->query->query_vars[ 'edit-address' ] ) && isset( WC()->query->query_vars[ 'edit-address' ] )  == $endpoint && in_array( $value, array('shipping','billing'))){
+        if( isset( WC()->query->query_vars[ 'edit-address' ] ) && WC()->query->query_vars[ 'edit-address' ] == $endpoint && in_array( $value, array('shipping','billing'))){
             remove_filter('woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url'),10,4);
             $url = wc_get_endpoint_url( 'edit-address', $this->get_translated_edit_address_slug( $value ) );
             add_filter('woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url'),10,4);
-
-
         }
 
         return $url;
