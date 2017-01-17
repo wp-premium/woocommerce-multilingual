@@ -71,7 +71,7 @@ class WCML_Adventure_tours{
 
                     $trnsl_tour_tabs_meta['tour_badge'] = $tour_tabs_meta['tour_badge'];
 
-                    update_post_meta( $product_translation->element_id, '_bto_data', $trnsl_tour_tabs_meta);
+                    update_post_meta( $product_translation->element_id, 'tour_tabs_meta', $trnsl_tour_tabs_meta);
 
                 }
 

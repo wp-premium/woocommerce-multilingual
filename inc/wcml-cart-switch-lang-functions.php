@@ -10,7 +10,7 @@ class WCML_Cart_Switch_Lang_Functions{
 
         add_action( 'wp_footer', array( $this, 'wcml_language_switch_dialog' ) );
         add_action( 'wp_loaded', array( $this, 'wcml_language_force_switch' ) );
-        add_action( 'wpml_user_switch_language', array( $this, 'language_has_switched' ), 10 , 2 );
+        add_action( 'wcml_user_switch_language', array( $this, 'language_has_switched' ), 10 , 2 );
 
     }
 
@@ -39,28 +39,36 @@ class WCML_Cart_Switch_Lang_Functions{
     }
 
     function wcml_language_switch_dialog( ){
-        global $woocommerce_wpml, $sitepress;
+        global $woocommerce_wpml, $sitepress, $wp;
 
-        $request_url = add_query_arg( 'force_switch', 0, $sitepress->convert_url( get_permalink(), $this->lang_from ) );
+        $dependencies = new WCML_Dependencies;
 
-        $cart_for_session = false;
-        if( isset( WC()->cart ) ){
-            $cart_for_session = WC()->cart->get_cart_for_session();
+        if( $dependencies->check() ){
+
+            $current_url = home_url( add_query_arg( array(), $wp->request ) );
+            $request_url = add_query_arg( 'force_switch', 0, $sitepress->convert_url( $current_url, $this->lang_from ) );
+
+            $cart_for_session = false;
+            if( isset( WC()->cart ) ){
+                $cart_for_session = WC()->cart->get_cart_for_session();
+            }
+
+            if( $this->lang_from && $this->lang_to && $request_url && !empty( $cart_for_session ) ) {
+
+                $force_cart_url = add_query_arg( 'force_switch', 1, $current_url );
+
+                $new_language_details = $sitepress->get_language_details( $this->lang_to );
+                $current_language_details = $sitepress->get_language_details( $this->lang_from );
+                $dialog_title = __( 'Switching language?', 'woocommerce-multilingual' );
+                $confirmation_message = sprintf( __( "You've switched language and there are items in the cart. If you keep the %s language, the cart will be emptied and you will have to add the items again to the cart.", 'woocommerce-multilingual' ), $new_language_details[ 'display_name' ] );
+                $stay_in = sprintf( __( 'Stay in %s', 'woocommerce-multilingual' ), $new_language_details[ 'display_name' ] );
+                $switch_to = sprintf( __( 'Switch back to %s', 'woocommerce-multilingual' ), $current_language_details[ 'display_name' ] );
+
+                $woocommerce_wpml->cart->cart_alert( $dialog_title, $confirmation_message, $stay_in, $switch_to, $force_cart_url, $request_url, true );
+            }
+
         }
 
-        if( $this->lang_from && $this->lang_to && $request_url && !empty( $cart_for_session ) ) {
-
-            $force_cart_url = add_query_arg( 'force_switch', 1, get_permalink() );
-
-            $new_language_details = $sitepress->get_language_details( $this->lang_to );
-            $current_language_details = $sitepress->get_language_details( $this->lang_from );
-            $dialog_title = __( 'Switching language?', 'woocommerce-multilingual' );
-            $confirmation_message = sprintf( __( "You've switched language and there are items in the cart. If you keep the %s language, the cart will be emptied and you will have to add the items again to the cart.", 'woocommerce-multilingual' ), $new_language_details[ 'display_name' ] );
-            $stay_in = sprintf( __( 'Stay in %s', 'woocommerce-multilingual' ), $new_language_details[ 'display_name' ] );
-            $switch_to = sprintf( __( 'Switch back to %s', 'woocommerce-multilingual' ), $current_language_details[ 'display_name' ] );
-
-            $woocommerce_wpml->cart->cart_alert( $dialog_title, $confirmation_message, $stay_in, $switch_to, $force_cart_url, $request_url, true );
-        }
     }
 
 }

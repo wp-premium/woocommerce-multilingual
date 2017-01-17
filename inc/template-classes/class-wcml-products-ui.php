@@ -187,7 +187,7 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 			$products[ $key ]->categories_list = $this->get_categories_list( $product->ID, $this->get_cat_url() );
 
 			$prod = wc_get_product( $product->ID );
-			$products[ $key ]->icon_class = Deprecated_WC_Functions::get_product_type( $product->ID );
+			$products[ $key ]->icon_class = WooCommerce_Functions_Wrapper::get_product_type( $product->ID );
 
 			if ( $prod->is_virtual() ) {
 				$products[ $key ]->icon_class = 'virtual';

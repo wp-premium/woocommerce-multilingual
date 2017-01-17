@@ -108,6 +108,7 @@ return array(
     'WCML_Store_URLs_Edit_Base_UI' => $baseDir . '/inc/template-classes/store-urls/class-wcml-store-urls-edit-base-ui.php',
     'WCML_Store_URLs_Translation_Statuses_UI' => $baseDir . '/inc/template-classes/store-urls/class-wcml-store-urls-translation-statuses-ui.php',
     'WCML_Store_URLs_UI' => $baseDir . '/inc/template-classes/store-urls/class-wcml-store-urls-ui.php',
+    'WCML_Switch_Lang_Request' => $baseDir . '/inc/wcml-switch-lang-request.php',
     'WCML_Sync_Taxonomy' => $baseDir . '/inc/template-classes/class-wcml-sync-taxonomy.php',
     'WCML_Synchronize_Product_Data' => $baseDir . '/inc/translation-editor/class-wcml-synchronize-product-data.php',
     'WCML_Synchronize_Variations_Data' => $baseDir . '/inc/translation-editor/class-wcml-synchronize-variations-data.php',
@@ -146,5 +147,6 @@ return array(
     'WPML_Templates_Factory' => $baseDir . '/inc/template-classes/class-wpml-templates-factory.php',
     'WPML_Twig_WP_Plugin_Extension' => $vendorDir . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
     'WPML_WP_API' => $vendorDir . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
+    'WooCommerce_Functions_Wrapper' => $baseDir . '/inc/woocommerce-functions-wrapper.php',
     'woocommerce_wpml' => $baseDir . '/inc/class-woocommerce-wpml.php',
 );

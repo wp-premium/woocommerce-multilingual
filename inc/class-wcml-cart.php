@@ -36,7 +36,7 @@ class WCML_Cart
             add_action( 'woocommerce_before_checkout_process', array( $this, 'wcml_refresh_cart_total' ) );
 
             add_filter('woocommerce_paypal_args', array($this, 'filter_paypal_args'));
-            add_filter( 'woocommerce_add_to_cart_sold_individually_quantity', array( $this, 'woocommerce_add_to_cart_sold_individually_quantity' ), 10, 3 );
+            add_filter( 'woocommerce_add_to_cart_sold_individually_quantity', array( $this, 'woocommerce_add_to_cart_sold_individually_quantity' ), 10, 5 );
 
             $this->localize_flat_rates_shipping_classes();
         }
@@ -320,11 +320,7 @@ class WCML_Cart
             $cart_contents[ $key ][ 'product_id' ],
             $cart_contents[ $key ][ 'variation_id' ],
             $cart_contents[ $key ][ 'variation' ],
-            (array) apply_filters( 'woocommerce_add_cart_item_data',
-                $cart_item_data,
-                $cart_contents[ $key ][ 'product_id' ],
-                $cart_contents[ $key ][ 'variation_id' ]
-            )
+            $cart_item_data
         );
     }
 
@@ -428,14 +424,14 @@ class WCML_Cart
         return $args;
     }
 
-    public function woocommerce_add_to_cart_sold_individually_quantity( $qt, $quantity, $product_id ){
+    public function woocommerce_add_to_cart_sold_individually_quantity( $qt, $quantity, $product_id, $variation_id, $cart_item_data ){
 
         //check if product already added to cart in another language
         $current_product_trid = $this->sitepress->get_element_trid( $product_id, 'post_product' );
 
         foreach( WC()->cart->cart_contents as $cart_item ){
             $cart_element_trid = $this->sitepress->get_element_trid( $cart_item[ 'product_id' ], 'post_product' );
-            if( $current_product_trid == $cart_element_trid && $cart_item[ 'quantity' ] > 0 ){
+            if( apply_filters( 'wcml_add_to_cart_sold_individually', true, $cart_item_data, $product_id, $quantity ) && $current_product_trid == $cart_element_trid && $cart_item[ 'quantity' ] > 0 ){
                 throw new Exception( sprintf( '<a href="%s" class="button wc-forward">%s</a> %s', wc_get_cart_url(), __( 'View cart', 'woocommerce' ), sprintf( __( 'You cannot add another "%s" to your cart.', 'woocommerce' ), get_the_title( $product_id ) ) ) );
             }
         }

@@ -1,3 +1,8 @@
+= 1.7.15 =
+* Bug fix: New search, results not visible with WordPress 4.6 when searching from installer page
+* Bug fix: A js error was showing on the admin pages: `pagenow` is undefined
+* Added support for equivalent subscriptions
+
 = 1.7.14 =
 * Refactoring for compliance with Envato market
 

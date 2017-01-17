@@ -345,7 +345,7 @@ class WCML_Multi_Currency{
             $original_product_language = $this->woocommerce_wpml->products->get_original_product_language( $current_product_id );
             $default = false;
 
-            if( Deprecated_WC_Functions::get_product_type ($current_product_id ) === 'variable' ){
+            if( WooCommerce_Functions_Wrapper::get_product_type ($current_product_id ) === 'variable' ){
                 foreach( $product_obj->get_children() as $child ){
                     if( !get_post_meta( apply_filters( 'translate_object_id', $child , get_post_type( $child ), true, $original_product_language ), '_wcml_custom_prices_status', true ) ){
                         $default = true;

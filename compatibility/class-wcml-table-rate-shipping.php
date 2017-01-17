@@ -76,10 +76,25 @@ class WCML_Table_Rate_Shipping {
 	public function shipping_class_id_in_default_language( $terms, $post_id, $taxonomy ) {
 		global $icl_adjust_id_url_filter_off, $pagenow;
 
-		if( $pagenow != 'post.php' && ( get_post_type( $post_id ) == 'product' || get_post_type( $post_id ) == 'product_variation' ) && $taxonomy == 'product_shipping_class' ){
+		if( $terms && $pagenow != 'post.php' && ( get_post_type( $post_id ) == 'product' || get_post_type( $post_id ) == 'product_variation' ) && $taxonomy == 'product_shipping_class' ){
+
+			if( is_admin() ){
+				$shipp_class_language = $this->woocommerce_wpml->products->get_original_product_language( $post_id );
+			}else {
+				$shipp_class_language = $this->sitepress->get_default_language();
+			}
+
+			$cache_key = md5( json_encode ( $terms ) );
+			$cache_key .= ":".$post_id.$shipp_class_language;
+
+			$cache_group = 'trnsl_shipping_class';
+			$cache_terms = wp_cache_get( $cache_key, $cache_group );
+
+			if( $cache_terms ) return $cache_terms;
 
 			foreach ( $terms as $k => $term ) {
-				$shipping_class_id = apply_filters( 'translate_object_id', $term->term_id, 'product_shipping_class', false, $this->sitepress->get_default_language() );
+
+				$shipping_class_id = apply_filters( 'translate_object_id', $term->term_id, 'product_shipping_class', false, $shipp_class_language );
 
 				$icl_adjust_id_url_filter = $icl_adjust_id_url_filter_off;
 				$icl_adjust_id_url_filter_off = true;
@@ -88,6 +103,8 @@ class WCML_Table_Rate_Shipping {
 
 				$icl_adjust_id_url_filter_off = $icl_adjust_id_url_filter;
 			}
+
+			wp_cache_set ( $cache_key, $terms, $cache_group );
 		}
 
 		return $terms;

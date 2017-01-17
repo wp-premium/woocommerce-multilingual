@@ -31,8 +31,8 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         $this->job_details = $job_details;
         $this->product = wc_get_product( $job_details[ 'job_id' ] );
         $this->original_post = get_post( $job_details[ 'job_id' ] );
-        $this->product_id = Deprecated_WC_Functions::get_product_id( $this->product );
-        $this->product_type = Deprecated_WC_Functions::get_product_type( $this->product_id );
+        $this->product_id = WooCommerce_Functions_Wrapper::get_product_id( $this->product );
+        $this->product_type = WooCommerce_Functions_Wrapper::get_product_type( $this->product_id );
 
         $source_lang = $this->sitepress->get_language_for_element( $job_details[ 'job_id' ], 'post_product' );
         $target_lang = $job_details[ 'target'];
@@ -43,7 +43,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             $job_details[ 'job_id' ],
             'wc_product', __( 'Product', 'woocommerce-multilingual' ),
             $this->original_post->post_title,
-            get_post_permalink( Deprecated_WC_Functions::get_product_id( $this->product ) ),
+            get_post_permalink( WooCommerce_Functions_Wrapper::get_product_id( $this->product ) ),
             $source_lang,
             $target_lang,
             $translation_complete,
@@ -250,6 +250,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $trn_product_id = apply_filters( 'translate_object_id', $this->product_id, 'product', false, $this->get_target_language() );
         $translation = false;
+        $is_variable_product = $this->woocommerce_wpml->products->is_variable_product( $this->product_id );
 	    if ( null !== $trn_product_id ) {
             $translation = get_post( $trn_product_id );
         }
@@ -307,7 +308,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $element_data = $this->add_custom_field_to_element_data( $element_data, $this->product_id, isset( $translation->ID ) ? $translation->ID : false, false );
 
-        if( $this->woocommerce_wpml->products->is_variable_product( $this->product_id ) ){
+        if( $is_variable_product ){
             $variations = $this->product->get_available_variations();
 
             if( !empty( $variations ) ){
@@ -323,7 +324,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
 
 	    $files_data = array( $this->product_id => $this->woocommerce_wpml->downloadable->get_files_data( $this->product_id ) );
-        if( $this->woocommerce_wpml->products->is_variable_product( $this->product_id ) ){
+        if( $is_variable_product ){
             $files_data = $this->get_files_for_variations();
         }
 
@@ -331,10 +332,14 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
             $custom_product_sync = get_post_meta( $post_id, 'wcml_sync_files', true);
 	        if ( ( $custom_product_sync && $custom_product_sync === 'self' ) || ( ! $custom_product_sync && ! $this->woocommerce_wpml->settings['file_path_sync'] ) ) {
-
                 $orig_product_files = $file_data;
                 $trnsl_product_files = array();
-                if (isset($translation->ID) && $translation->ID) {
+                if( $is_variable_product ){
+                    $trnsl_variation_id = apply_filters( 'translate_object_id', $post_id, 'product_variation', false, $this->get_target_language() );
+                    if( $trnsl_variation_id ){
+                        $trnsl_product_files = $this->woocommerce_wpml->downloadable->get_files_data( $trnsl_variation_id );
+                    }
+                }elseif ( isset( $translation->ID ) && $translation->ID ) {
                     $trnsl_product_files = $this->woocommerce_wpml->downloadable->get_files_data( $translation->ID );
                 }
 
@@ -419,6 +424,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             //insert new post
             $args = array();
             $args[ 'post_title' ] = $translations[ md5( 'title' ) ];
+		    $args[ 'post_name' ] = $translations[ md5( 'slug' ) ];
             $args[ 'post_type' ] = $this->original_post->post_type;
             $args[ 'post_content' ] = $translations[ md5( 'product_content' ) ];
             $args[ 'post_excerpt' ] = $translations[ md5( 'product_excerpt' ) ];
@@ -443,11 +449,17 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 $args[ 'post_date' ] = $this->original_post->post_date;
             }
 
-            $tr_product_id = wp_insert_post( $args );
+            $this->sitepress->switch_lang( $this->get_target_language() );
 
-            $translation_id = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT translation_id
-                                                  FROM {$this->wpdb->prefix}icl_translations
-                                                  WHERE element_type=%s AND trid=%d AND language_code=%s AND element_id IS NULL ", 'post_product', $product_trid, $this->get_target_language() ) );
+		    $tr_product_id = wp_insert_post( $args );
+
+		    $this->sitepress->switch_lang(); // switch back
+
+            $translation_id = $this->wpdb->get_var( $this->wpdb->prepare(
+            	"SELECT translation_id
+                 FROM {$this->wpdb->prefix}icl_translations
+                 WHERE element_type=%s AND trid=%d AND language_code=%s AND element_id IS NULL ",
+            'post_product', $product_trid, $this->get_target_language() ) );
 
             if ( $translation_id ) {
                 $this->wpdb->query(
