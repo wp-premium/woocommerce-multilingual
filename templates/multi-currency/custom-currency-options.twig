@@ -23,12 +23,12 @@
                 <label for="wcml_currency_options_rate_{{ args.currency_code }}">{{ form.rate.label }}</label>
                 <div class="wcml-co-set-rate">
                     1 {{ args.default_currency }} = <input name="currency_options[rate]" size="5" type="number"
-                                                           class="ext_rate{% if automatic_rates %} wcml-tip{% endif %}"
-                                                           step="0.01" value="{{ args.currency.rate }}" data-message="{{ form.rate.only_numeric }}"
+                                                           class="wcml-exchange-rate{% if automatic_rates %} wcml-tip{% endif %}"
+                                                           min="{{ form.rate.min }}" step="{{ form.rate.step }}"  value="{{ args.currency.rate }}" data-message="{{ form.rate.only_numeric }}"
                                                            id="wcml_currency_options_rate_{{ args.currency_code }}"
                                                             {% if automatic_rates %}readonly="readonly" data-tip="{{ automatic_rates_tip }}"{% endif %}/>
                     <span class="this-currency">{{ current_currency }}</span>
-
+                    <span class="wcml-error" style="display: none">{{ form.number_error }}</span>
                     {% if args.currency.updated %}
                     <small>
                         {{ form.rate.set_on }} <i>{{ form.rate.previous }}</i>

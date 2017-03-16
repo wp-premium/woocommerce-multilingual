@@ -292,7 +292,7 @@ class WCML_Languages_Upgrader{
 
         wp_localize_script( 'wcml-lang-notice', 'wcml_settings',
             array(
-                'warn' => __( "Downloading translations... Please don't close this page.", 'woocommerce-multilingual' )
+                'warn' => esc_html__( "Downloading translations... Please don't close this page.", 'woocommerce-multilingual' )
             )
         );
 

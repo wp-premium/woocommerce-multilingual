@@ -27,7 +27,7 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
         $exchange_rate_services =& $this->woocommerce_wpml->multi_currency->exchange_rate_services;
         $exchange_rates_automatic = $exchange_rate_services->get_setting('automatic');
 
-        if( !$exchange_rates_automatic ){
+        if( $exchange_rates_automatic ){
             $service_id = $exchange_rate_services->get_setting('service');
             $services   = $exchange_rate_services->get_services();
             $exchange_rates_service = $services[$service_id]->get_name();
@@ -43,6 +43,8 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
                 'rate'   => array(
                     'label'         => __( 'Exchange Rate', 'woocommerce-multilingual' ),
                     'only_numeric'  => __( 'Only numeric', 'woocommerce-multilingual' ),
+                    'min'  => '0.01',
+                    'step'  => '0.01',
                     'set_on'        => empty($this->args['currency']['updated'] ) ? '' :
                                         sprintf( __( 'Set on %s', 'woocommerce-multilingual' ),
                                             date( 'F j, Y g:i a', strtotime( $this->args['currency']['updated'] ) ) ),
@@ -91,6 +93,7 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
                     'only_numeric'  => __( 'Only numeric', 'woocommerce-multilingual' )
                 ),
 
+                'number_error' => __( 'Please enter a valid number', 'woocommerce-multilingual' ),
                 'cancel' => __( 'Cancel', 'woocommerce-multilingual' ),
                 'save'   => __( 'Save', 'woocommerce-multilingual' )
 

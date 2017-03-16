@@ -138,7 +138,7 @@ jQuery(document).ready(function($){
 
 });
 
-var wcml_lock_variation_fields = function(){
+var wcml_lock_variation_fields = function( file_path_sync ){
 
     var check_attr = jQuery('.woocommerce_variation>h3 select').attr('disabled');
 
@@ -184,6 +184,7 @@ var wcml_lock_variation_fields = function(){
     for (i = 0; i < var_checkboxes.length; i++) {
         jQuery('input[name^="variable'+var_checkboxes[i]+'"]').each(function(){
             jQuery(this).attr('disabled','disabled');
+            jQuery(this).parent().append('<input type="hidden" name="'+jQuery(this).attr('name')+'" value="'+jQuery(this).val()+'" />');
             jQuery(this).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
         });
     }
@@ -197,19 +198,30 @@ var wcml_lock_variation_fields = function(){
         });
     }
 
-    if( unlock_fields.file_paths == 1 ){
-        var file_path_inputs = ['_wc_variation_file_names','_wc_variation_file_urls'];
-        for (i = 0; i < file_path_inputs.length; i++) {
-            jQuery('input[name^="'+file_path_inputs[i]+'"]').each(function(){
-                jQuery(this).attr('readonly','readonly');
-                jQuery(this).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
-            });
+    if( file_path_sync ){
+
+        for (var key in file_path_sync) {
+
+            if( file_path_sync[ key ] == 1){
+
+                jQuery('input[name^="_wc_variation_file_names['+key+']"]').each(function(){
+                    jQuery(this).attr('readonly','readonly');
+                });
+
+                jQuery('input[name^="_wc_variation_file_urls['+key+']"]').each(function(){
+                    jQuery(this).attr('readonly','readonly');
+                    jQuery(this).closest('tr').find('.upload_file_button').attr('disabled','disabled');
+                    jQuery(this).closest('tr').find('.delete').attr('disabled','disabled');
+                    jQuery(this).closest('tr').find('.delete').after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','right'));
+                });
+
+                jQuery('input[name^="_wc_variation_file_urls['+key+']"]').closest('table').find('.insert').attr('disabled','disabled');
+                jQuery('input[name^="_wc_variation_file_urls['+key+']"]').closest('table').find('.insert').after( jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','left') );
+
+            }
+
         }
-        var file_path_buttons = ['upload_file_button','insert','delete'];
-        for (i = 0; i < file_path_buttons.length; i++) {
-            jQuery('.'+file_path_buttons[i]).attr('disabled','disabled');
-            jQuery('.'+file_path_buttons[i]).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','right'));
-        }
+
     }
 
 }

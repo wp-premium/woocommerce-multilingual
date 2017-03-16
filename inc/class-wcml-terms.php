@@ -45,6 +45,8 @@ class WCML_Terms{
 
         add_filter( 'woocommerce_get_product_terms', array( $this, 'get_product_terms_filter' ), 10, 4 );
         add_action( 'created_term_translation', array( $this, 'set_flag_to_sync'), 10, 3 );
+
+        add_action( 'updated_term_meta', array( $this, 'update_product_count_term'), 10, 4 );
     }
     
     function admin_menu_setup(){
@@ -963,6 +965,26 @@ class WCML_Terms{
         }
 
         return $this->wcml_get_term_by_id( $term_id, $taxonomy );
+    }
+
+    public function update_product_count_term( $meta_id, $object_id, $meta_key, $meta_value ){
+
+        remove_action( 'updated_term_meta', array( $this, 'update_product_count_term'), 10, 4 );
+
+        if( $meta_key === 'product_count_product_cat' ){
+
+            $trid = $this->sitepress->get_element_trid( $object_id, 'tax_product_cat' );
+            $translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat' );
+
+            if ($translations) foreach ( $translations as $translation ) {
+                if ( $translation->element_id != $object_id ) {
+                    update_term_meta( $translation->element_id, $meta_key, $meta_value );
+                }
+            }
+
+        }
+
+        add_action( 'updated_term_meta', array( $this, 'update_product_count_term'), 10, 4 );
     }
 
 }

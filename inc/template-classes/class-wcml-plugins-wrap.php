@@ -1,15 +1,19 @@
 <?php
 
-class WCML_Plugins_Wrap extends WPML_Templates_Factory {
+class WCML_Plugins_Wrap {
 
     private $woocommerce_wpml;
     private $sitepress;
 
+	private $twig;
+
     function __construct( &$woocommerce_wpml, &$sitepress ){
-        parent::__construct();
 
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress = $sitepress;
+
+	    $loader = new Twig_Loader_Filesystem( WCML_PLUGIN_PATH . '/templates' );
+	    $this->twig = new Twig_Environment( $loader );
     }
 
     public function get_model(){
@@ -59,14 +63,9 @@ class WCML_Plugins_Wrap extends WPML_Templates_Factory {
 
     }
 
-    protected function init_template_base_dir() {
-        $this->template_paths = array(
-            WCML_PLUGIN_PATH . '/templates/',
-        );
-    }
-
-    public function get_template() {
-        return 'plugins-wrap.twig';
+    public function show(){
+	    $template = $this->twig->load( 'plugins-wrap.twig' );
+	    echo $template->render( $this->get_model() );
     }
 
 }

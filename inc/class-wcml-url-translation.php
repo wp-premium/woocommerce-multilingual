@@ -752,12 +752,13 @@ class WCML_Url_Translation {
 
         if( is_tax() ){
             $original = @parse_url( $requested_url );
-            parse_str( $original['query'], $query_args ) ;
-            if( ( isset( $query_args[ 'product_cat' ] ) || isset( $query_args[ 'product_tag' ] ) ) && isset ( $query_args[ 'lang' ] ) ){
-                $obj = $wp_query->get_queried_object();
-                $tax_url = get_term_link( (int)$obj->term_id, $obj->taxonomy ) ;
-
-                return $tax_url;
+            if( isset($original['query']) ) {
+	            parse_str( $original['query'], $query_args );
+	            if ( ( isset( $query_args['product_cat'] ) || isset( $query_args['product_tag'] ) ) && isset ( $query_args['lang'] ) ) {
+		            $obj     = $wp_query->get_queried_object();
+		            $tax_url = get_term_link( (int) $obj->term_id, $obj->taxonomy );
+		            return $tax_url;
+	            }
             }
         }
 

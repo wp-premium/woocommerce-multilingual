@@ -9,6 +9,10 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 	 */
 	private $sitepress;
 	/**
+	 * @var TranslationManagement
+	 */
+	private $tm_instance;
+	/**
 	 * @var WPDB
 	 */
 	private $wpdb;
@@ -19,9 +23,11 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
     private $not_display_fields_for_variables_product;
 
 	function __construct( $job_details, &$woocommerce_wpml, &$sitepress, &$wpdb  ) {
+		global $iclTranslationManagement;
 
         $this->woocommerce_wpml =& $woocommerce_wpml;
         $this->sitepress        =& $sitepress;
+        $this->tm_instance      =& $iclTranslationManagement;
         $this->wpdb             =& $wpdb;
         $this->not_display_fields_for_variables_product = array( '_purchase_note', '_regular_price', '_sale_price',
                                                                  '_price', '_min_variation_price', '_max_variation_price',
@@ -94,10 +100,10 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $this->add_field( new WPML_Editor_UI_Single_Line_Field( 'title', __( 'Title', 'woocommerce-multilingual' ), $this->data, true ) );
         $this->add_field( new WPML_Editor_UI_Single_Line_Field( 'slug', __( 'Slug', 'woocommerce-multilingual' ), $this->data, true ) );
-        $this->add_field( new WPML_Editor_UI_WYSIWYG_Field( 'product_content', __( 'Content / Description', 'woocommerce-multilingual' ), $this->data, true ) );
+        $this->add_field( new WCML_Editor_UI_WYSIWYG_Field( 'product_content', __( 'Content / Description', 'woocommerce-multilingual' ), $this->data, true ) );
 
         $excerpt_section = new WPML_Editor_UI_Field_Section( __( 'Excerpt', 'woocommerce-multilingual' ) );
-        $excerpt_section->add_field( new WPML_Editor_UI_WYSIWYG_Field( 'product_excerpt', null, $this->data, true ) );
+        $excerpt_section->add_field( new WCML_Editor_UI_WYSIWYG_Field( 'product_excerpt', null, $this->data, true ) );
         $this->add_field( $excerpt_section );
 
         $purchase_note_section = new WPML_Editor_UI_Field_Section( __( 'Purchase note', 'woocommerce-multilingual' ) );
@@ -136,16 +142,35 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         }
 
         $custom_fields = $this->get_product_custom_fields_to_translate( $this->product_id );
+
+
         if( $this->product_type === 'external' ){
             $custom_fields = array_diff( $custom_fields, array( '_product_url', '_button_text' ) );
         }
 
         if( $custom_fields ) {
+
             $custom_fields_section = new WPML_Editor_UI_Field_Section( __( 'Custom Fields', 'woocommerce-multilingual' ) );
 
-            $this->add_custom_fields_ui_section( $custom_fields_section, $custom_fields, false );
+            foreach( $custom_fields as $custom_field ){
 
-            $this->add_field( $custom_fields_section );
+	            $cf_settings = new WPML_Post_Custom_Field_Setting( $this->tm_instance, $custom_field );
+	            switch( $cf_settings->get_editor_style() ){
+	            	case 'visual':
+			            $cf_field = new WPML_Editor_UI_WYSIWYG_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+                        break;
+		            case 'textarea':
+			            $cf_field = new WPML_Editor_UI_TextArea_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+		            	break;
+		            default: //line
+			            $cf_field = new WPML_Editor_UI_Single_Line_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+	            }
+
+	            $custom_fields_section->add_field( $cf_field );
+
+            }
+
+	        $this->add_field( $custom_fields_section );
         }
 
         if( $this->woocommerce_wpml->products->is_variable_product( $this->product_id ) ){
@@ -204,6 +229,29 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             }
         }
 
+        $taxonomies = get_object_taxonomies( 'product', 'objects' );
+        foreach( $taxonomies as $taxonomy => $taxonomy_obj ){
+            if( $taxonomy != 'product_type' && is_taxonomy_translated( $taxonomy ) ){
+                $product_terms = wp_get_post_terms( $this->product_id, $taxonomy );
+                if( $product_terms ){
+                    $tax_section = new WPML_Editor_UI_Field_Section( $taxonomy_obj->label, __( 'Changes in these translations will affect terms in general! ( Not only for this product )', 'woocommerce-multilingual' ));
+                    foreach( $product_terms as $term ){
+                        if(
+                            $this->sitepress->get_setting( 'tm_block_retranslating_terms' ) &&
+                            !is_null( apply_filters( 'translate_object_id', $term->term_id, $taxonomy, false, $this->get_target_language() ) )
+                        ){
+                            continue;
+                        }
+                        $term_field = new WPML_Editor_UI_Single_Line_Field( 't_'. $term->term_id, '', $this->data, false );
+                        $tax_section->add_field( $term_field );
+                    }
+                    if( isset( $term_field ) ){
+                        $this->add_field( $tax_section );
+                    }
+                }
+            }
+        }
+
         if( $this->product_type === 'external' ){
             $external_product_section = new WPML_Editor_UI_Field_Section( __( 'External Product', 'woocommerce-multilingual' ) );
             $external_product_section->add_field( new WPML_Editor_UI_Single_Line_Field( '_product_url', __( 'Product url', 'woocommerce-multilingual' ), $this->data, true ) );
@@ -245,7 +293,9 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
     }
 
-
+    /**
+     * @return array
+     */
     function get_data() {
 
         $trn_product_id = apply_filters( 'translate_object_id', $this->product_id, 'product', false, $this->get_target_language() );
@@ -303,6 +353,27 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
                 $element_data[ $attr_key.'_name' ][ 'translation' ]       = $trn_attribute['name'] ? $trn_attribute['name'] : '';
                 $element_data[ $attr_key ][ 'translation' ]       = $trn_attribute['value'] ? $trn_attribute['value'] : '';
+            }
+        }
+
+        $taxonomies = get_object_taxonomies( 'product', 'objects' );
+        foreach( $taxonomies as $taxonomy => $taxonomy_obj ){
+            if( $taxonomy != 'product_type' && is_taxonomy_translated( $taxonomy ) ){
+                $product_terms = wp_get_post_terms( $this->product_id, $taxonomy );
+                if( $product_terms ){
+                    foreach( $product_terms as $term ){
+                        $translated_term = $this->woocommerce_wpml->terms->wcml_get_translated_term( $term->term_id, $taxonomy, $this->get_target_language() );
+                        if(
+                            $this->sitepress->get_setting( 'tm_block_retranslating_terms' ) &&
+                            $translated_term->term_id != $term->term_id
+                        ){
+                            continue;
+                        }
+
+                        $element_data[ 't_'.$term->term_id ] = array( 'original' => $term->name );
+                        $element_data[ 't_'.$term->term_id ][ 'translation' ] = $translated_term->term_id != $term->term_id ? $translated_term->name : '';
+                    }
+                }
             }
         }
 
@@ -514,6 +585,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $this->woocommerce_wpml->sync_product_data->duplicate_product_post_meta( $this->product_id, $tr_product_id, $translations );
 
+        $this->save_translated_terms( );
         //sync taxonomies
         $this->woocommerce_wpml->sync_product_data->sync_product_taxonomies( $this->product_id, $tr_product_id, $this->get_target_language() );
 
@@ -535,7 +607,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         }
 
         // synchronize post variations
-        $this->woocommerce_wpml->sync_variations_data->sync_product_variations( $this->product_id, $tr_product_id, $this->get_target_language(), $translations );
+        $this->woocommerce_wpml->sync_variations_data->sync_product_variations( $this->product_id, $tr_product_id, $this->get_target_language(), $translations, true );
 
         $this->woocommerce_wpml->sync_product_data->sync_linked_products( $this->product_id, $tr_product_id, $this->get_target_language() );
         //save images texts
@@ -585,6 +657,31 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         return $return;
 
+    }
+
+    private function save_translated_terms() {
+        $job_data    = array();
+        parse_str( $_POST['data'], $job_data );
+
+        foreach( $job_data['fields'] as $field_key => $field ){
+           if( substr( $field_key, 0, 2 ) === 't_' ){
+               $update = array();
+               if ( isset( $field[ 'data' ] ) ) {
+                   $update[ 'field_data_translated' ] = base64_encode( $field[ 'data' ] );
+
+                   $update[ 'field_finished' ] = 1;
+
+                   $this->wpdb->update(
+                       $this->wpdb->prefix . 'icl_translate',
+                       $update,
+                       array( 'field_type' => $field_key )
+                   );
+               }
+           }
+        }
+
+        $job = new WPML_Post_Translation_Job( $job_data[ 'job_id' ] );
+        $job->save_terms_to_post();
     }
 
     public function get_custom_product_atributes( )

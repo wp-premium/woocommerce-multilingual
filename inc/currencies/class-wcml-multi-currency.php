@@ -54,6 +54,10 @@ class WCML_Multi_Currency{
      * @var WCML_Currency_Switcher
      */
     public $currency_switcher;
+    /**
+     * @var WCML_Currency_Switcher_Ajax
+     */
+    public $currency_switcher_ajax;
 	/**
 	 * @var WCML_Multi_Currency_Install
 	 */
@@ -76,7 +80,7 @@ class WCML_Multi_Currency{
      * WCML_Multi_Currency constructor.
      */
     public function __construct(){
-        global $woocommerce_wpml;
+        global $woocommerce_wpml, $sitepress;
 
         $this->woocommerce_wpml =& $woocommerce_wpml;
 
@@ -94,7 +98,8 @@ class WCML_Multi_Currency{
         $this->orders                   = new WCML_Multi_Currency_Orders( $this );
         $this->admin_currency_selector  = new WCML_Admin_Currency_Selector();
         $this->custom_prices            = new WCML_Custom_Prices( $woocommerce_wpml );
-        $this->currency_switcher        = new WCML_Currency_Switcher;
+        $this->currency_switcher        = new WCML_Currency_Switcher( $woocommerce_wpml, $sitepress );
+        $this->currency_switcher_ajax   = new WCML_Currency_Switcher_Ajax( $woocommerce_wpml );
 
         $this->exchange_rate_services   = new WCML_Exchange_Rates( $this->woocommerce_wpml );
 
@@ -102,7 +107,7 @@ class WCML_Multi_Currency{
             $this->W3TC = new WCML_W3TC_Multi_Currency();
         }
 
-        WCML_Multi_Currency_Resources::set_up( $this );
+        WCML_Multi_Currency_Resources::set_up( $this, $this->woocommerce_wpml );
         WCML_Multi_Currency_Configuration::set_up( $this, $woocommerce_wpml );
 
         add_filter('init', array($this, 'init'), 5);
@@ -336,7 +341,7 @@ class WCML_Multi_Currency{
         $current_language     = $sitepress->get_current_language();
         $current_language     = ( $current_language != 'all' && !is_null( $current_language ) ) ? $current_language : $sitepress->get_default_language();
 
-        if( is_product() &&
+        if( is_product() && empty( $this->client_currency ) &&
             isset($this->woocommerce_wpml->settings['display_custom_prices']) &&
             $this->woocommerce_wpml->settings['display_custom_prices'] ){
 

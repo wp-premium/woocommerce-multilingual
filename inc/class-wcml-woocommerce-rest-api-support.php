@@ -1,5 +1,5 @@
 <?php
-
+// Should only be used for WooCommerce versions prior 2.6
 class WCML_WooCommerce_Rest_API_Support{
 
     private $woocommerce_wpml;
@@ -48,7 +48,8 @@ class WCML_WooCommerce_Rest_API_Support{
 
         if(!empty($wp->query_vars['wc-api-version'])) {
             global $wpml_url_filters;
-            remove_filter('home_url', array($wpml_url_filters, 'home_url_filter'), -10, 2);
+	        $wpml_url_filters->remove_global_hooks();
+            remove_filter('home_url', array($wpml_url_filters, 'home_url_filter'), -10, 4);
 
         }
 

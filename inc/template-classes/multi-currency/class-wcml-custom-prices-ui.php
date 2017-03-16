@@ -20,7 +20,6 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 		$this->custom_prices = get_post_custom( $product_id );
 		$this->custom_prices_fields = apply_filters( 'wcml_custom_prices_fields', array( '_regular_price', '_sale_price' ), $product_id );
 		$this->custom_prices_fields_labels = apply_filters( 'wcml_custom_prices_fields_labels', array( '_regular_price' => __( 'Regular Price', 'woocommerce-multilingual' ), '_sale_price' => __( 'Sale Price', 'woocommerce-multilingual' ) ), $product_id );
-
 	}
 
 	public function get_model() {
@@ -80,6 +79,7 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 					$currencies[ $key ][ 'readonly_price' ][ $price_field ] = get_post_meta( $this->product_id, $price_field, true );
 					if( $currencies[ $key ][ 'readonly_price' ][ $price_field ] ){
 						$currencies[ $key ][ 'readonly_price' ][ $price_field ] = $currencies[ $key ][ 'readonly_price' ][ $price_field ]*$currency['rate'];
+						$currencies[ $key ][ 'readonly_price' ][ $price_field ] = wc_format_localized_price(  $currencies[ $key ][ 'readonly_price' ][ $price_field ] );
 					}
 				}
 
@@ -89,7 +89,7 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 
 				foreach( $this->custom_prices_fields as $price_field ){
 					if( isset( $this->custom_prices[ $price_field.'_'.$key ][ 0 ] ) ){
-						$currencies[ $key ][ 'custom_price' ][ $price_field ] = $this->custom_prices[ $price_field.'_'.$key ][ 0 ];
+						$currencies[ $key ][ 'custom_price' ][ $price_field ] = wc_format_localized_price( $this->custom_prices[ $price_field.'_'.$key ][ 0 ] );
 					}
 				}
 
@@ -100,8 +100,6 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 
 			if( $this->is_variation ){
 				$currencies[ $key ][ 'custom_id' ] = '['.$key.']['.$this->product_id.']';
-				$currencies[ $key ][ 'wc_input_type' ] = 'text';
-
 			}else{
 				$currencies[ $key ][ 'custom_id' ] = '['.$key.']';
 
@@ -116,7 +114,7 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 					woocommerce_wp_text_input(
 						array(
 							'id' => '_custom'.$price_field.'['.$key.']',
-							'value'=> $currencies[ $key ][ 'custom_price' ][ $price_field ] ,
+							'value'=> wc_format_localized_price( $currencies[ $key ][ 'custom_price' ][ $price_field ] ),
 							'class' => 'wc_input_price wcml_input_price short wcml'.$price_field,
 							'label' => $this->custom_prices_fields_labels[ $price_field ] . ' ('. $currencies[ $key ][ 'currency_symbol' ].')',
 							$wc_input['type_name'] => $wc_input['type_val'],
@@ -134,7 +132,7 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 					woocommerce_wp_text_input(
 						array(
 							'id' => '_readonly'.$price_field,
-							'value'=> $currencies[ $key ][ 'readonly_price' ][ $price_field ],
+							'value'=> wc_format_localized_price( $currencies[ $key ][ 'readonly_price' ][ $price_field ] ),
 							'class' => 'wc_input_price short',
 							'label' => $this->custom_prices_fields_labels[ $price_field ] . ' ('. $currencies[ $key ][ 'currency_symbol' ] .')',
 							$wc_input['type_name'] => $wc_input['type_val'],

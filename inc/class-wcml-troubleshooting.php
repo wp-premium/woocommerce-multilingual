@@ -19,7 +19,7 @@ class WCML_Troubleshooting{
     }
 
     function wcml_count_products_with_variations(){
-       return count(get_option('wcml_products_to_sync'));
+        return count(get_option('wcml_products_to_sync'));
     }
 
     function trbl_update_count(){
@@ -53,24 +53,15 @@ class WCML_Troubleshooting{
     }
 
     function wcml_count_products_for_gallery_sync(){
-        global $wpdb;
-        $all_products = $wpdb->get_results("SELECT p.ID FROM $wpdb->posts AS p LEFT JOIN {$wpdb->prefix}icl_translations AS tr ON tr.element_id = p.ID WHERE p.post_status = 'publish' AND p.post_type =  'product' AND tr.source_language_code is NULL");
-        foreach($all_products as $key=>$product){
-            if(get_post_meta($product->ID,'gallery_sync',true)){
-                unset($all_products[$key]);
-            }
-        }
+        $all_products = $this->get_products_needs_gallery_sync( false );
+
         return count($all_products);
     }
 
     function wcml_count_product_categories(){
-        global $wpdb;
-        $get_product_categories = $wpdb->get_results("SELECT t.term_taxonomy_id FROM $wpdb->term_taxonomy AS t LEFT JOIN {$wpdb->prefix}icl_translations AS tr ON tr.element_id = t.term_taxonomy_id WHERE t.taxonomy = 'product_cat' AND tr.element_type = 'tax_product_cat' AND tr.source_language_code is NULL");
-        foreach($get_product_categories as $key=>$get_product_category){
-            if(get_option('wcml_sync_category_'.$get_product_category->term_taxonomy_id)){
-                unset($get_product_categories[$key]);
-            }
-        }
+
+        $get_product_categories =  $this->get_product_categories_needs_sync( );
+
         return count($get_product_categories);
     }
 
@@ -129,16 +120,60 @@ class WCML_Troubleshooting{
             die('Invalid nonce');
         }
 
-        $page = isset($_POST['page'])? intval( $_POST['page'] ) :0;
+        global $woocommerce_wpml;
 
-        global $woocommerce_wpml,$wpdb;
+        $all_products = $this->get_products_needs_gallery_sync( true );
 
-        $all_products = $wpdb->get_results($wpdb->prepare("SELECT p.* FROM $wpdb->posts AS p LEFT JOIN {$wpdb->prefix}icl_translations AS tr ON tr.element_id = p.ID WHERE p.post_status = 'publish' AND p.post_type =  'product' AND tr.source_language_code is NULL ORDER BY p.ID LIMIT %d,5",$page*5));
+        foreach( $all_products as $product ){
+            $woocommerce_wpml->media->sync_product_gallery($product->ID);
+            add_post_meta($product->ID,'gallery_sync',true);
+        }
 
-        foreach($all_products as $product){
-            if(!get_post_meta($product->ID,'gallery_sync',true)){
-                $woocommerce_wpml->media->sync_product_gallery($product->ID);
-                add_post_meta($product->ID,'gallery_sync',true);
+        echo 1;
+
+        die();
+
+    }
+
+    function get_products_needs_gallery_sync( $limit = false ){
+        global $wpdb;
+
+        $sql = "SELECT p.ID FROM $wpdb->posts AS p
+                 LEFT JOIN {$wpdb->prefix}icl_translations AS tr
+                 ON tr.element_id = p.ID
+                 WHERE p.post_status = 'publish' AND p.post_type = 'product' AND tr.source_language_code is NULL
+                 AND ( SELECT COUNT( pm.meta_key ) FROM $wpdb->postmeta AS pm WHERE pm.post_id = p.ID AND pm.meta_key = 'gallery_sync' ) = 0 ";
+
+        if( $limit ){
+            $sql .= "ORDER BY p.ID LIMIT 5";
+        }
+
+        $all_products = $wpdb->get_results( $sql );
+
+        return $all_products;
+    }
+
+    function trbl_sync_categories(){
+        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        if(!$nonce || !wp_verify_nonce($nonce, 'trbl_sync_categories')){
+            die('Invalid nonce');
+        }
+
+        global $sitepress;
+
+        $all_categories = $this->get_product_categories_needs_sync( true );
+
+        foreach($all_categories as $category){
+            add_option('wcml_sync_category_'.$category->term_taxonomy_id,true);
+            $trid = $sitepress->get_element_trid($category->term_taxonomy_id,'tax_product_cat');
+            $translations = $sitepress->get_element_translations($trid,'tax_product_cat');
+            $type = get_woocommerce_term_meta( $category->term_id, 'display_type',true);
+            $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id',true);
+            foreach($translations as $translation){
+                if($translation->language_code != $category->language_code ){
+                    update_woocommerce_term_meta( $translation->term_id, 'display_type', $type );
+                    update_woocommerce_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id',$thumbnail_id,'attachment',true,$translation->language_code) );
+                }
             }
         }
 
@@ -148,39 +183,23 @@ class WCML_Troubleshooting{
 
     }
 
-    function trbl_sync_categories(){
-        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        if(!$nonce || !wp_verify_nonce($nonce, 'trbl_sync_categories')){
-            die('Invalid nonce');
+
+    function get_product_categories_needs_sync( $limit = false ){
+        global $wpdb;
+
+        $sql = "SELECT t.term_taxonomy_id,t.term_id,tr.language_code FROM $wpdb->term_taxonomy AS t
+                 LEFT JOIN {$wpdb->prefix}icl_translations AS tr
+                 ON tr.element_id = t.term_taxonomy_id
+                 WHERE t.taxonomy = 'product_cat' AND tr.element_type = 'tax_product_cat' AND tr.source_language_code is NULL
+                 AND ( SELECT COUNT( option_id ) FROM $wpdb->options WHERE option_name = CONCAT( 'wcml_sync_category_',t.term_taxonomy_id ) ) = 0 ";
+
+        if( $limit ){
+            $sql .= "ORDER BY t.term_taxonomy_id LIMIT 5";
         }
 
-        $page = isset($_POST['page'])? intval( $_POST['page'] ):0;
+        $all_categories = $wpdb->get_results( $sql );
 
-        global $wpdb,$sitepress;
-
-        $all_categories = $wpdb->get_results($wpdb->prepare("SELECT t.term_taxonomy_id,t.term_id,tr.language_code FROM $wpdb->term_taxonomy AS t LEFT JOIN {$wpdb->prefix}icl_translations AS tr ON tr.element_id = t.term_taxonomy_id WHERE t.taxonomy = 'product_cat' AND tr.element_type = 'tax_product_cat' AND tr.source_language_code is NULL ORDER BY t.term_taxonomy_id LIMIT %d,5",$page*5));
-
-        foreach($all_categories as $category){
-            if(!get_option('wcml_sync_category_'.$category->term_taxonomy_id)){
-                add_option('wcml_sync_category_'.$category->term_taxonomy_id,true);
-                $trid = $sitepress->get_element_trid($category->term_taxonomy_id,'tax_product_cat');
-                $translations = $sitepress->get_element_translations($trid,'tax_product_cat');
-                $type = get_woocommerce_term_meta( $category->term_id, 'display_type',true);
-                $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id',true);
-                foreach($translations as $translation){
-                    if($translation->language_code != $category->language_code ){
-                        update_woocommerce_term_meta( $translation->term_id, 'display_type', $type );
-                        update_woocommerce_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id',$thumbnail_id,'attachment',true,$translation->language_code) );
-                    }
-                }
-            }
-
-        }
-
-        echo 1;
-
-        die();
-
+        return $all_categories;
     }
 
 

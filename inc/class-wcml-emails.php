@@ -43,7 +43,6 @@ class WCML_Emails{
         add_action('woocommerce_order_partially_refunded_notification', array($this,'email_heading_refund'), 9);
         add_action('woocommerce_order_partially_refunded_notification', array($this,'refresh_email_lang'), 9);
 
-
         //new order admins email
         add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'new_order_admin_email' ), 9 );
         add_action( 'woocommerce_order_status_pending_to_completed_notification', array( $this, 'new_order_admin_email' ), 9 );
@@ -56,7 +55,7 @@ class WCML_Emails{
         add_filter( 'icl_st_admin_string_return_cached', array( $this, 'admin_string_return_cached' ), 10, 2 );
 
         add_filter( 'plugin_locale', array( $this, 'set_locale_for_emails' ), 10, 2 );
-
+        add_filter( 'woocommerce_countries', array( $this, 'translate_woocommerce_countries' ) );
 
         if( is_admin() && $pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == 'wc-settings' && isset($_GET['tab']) && $_GET['tab'] == 'email' ){
             add_action('admin_footer', array($this, 'show_language_links_for_wc_emails'));
@@ -105,7 +104,7 @@ class WCML_Emails{
         if( is_array( $order ) ) {
             $order = $order[ 'order_id' ];
         } elseif( is_object( $order ) ) {
-            $order = $order->id;
+	        $order = method_exists( 'WC_Order', 'get_id' ) ? $order->get_id() : $order->id;
         }
 
         $this->refresh_email_lang( $order );
@@ -484,6 +483,16 @@ class WCML_Emails{
                 }
             }
         }
+    }
+
+    function translate_woocommerce_countries( $countries ){
+
+        if( isset( $_POST[ 'wc_order_action' ] ) && $_POST[ 'wc_order_action' ] !== 'send_email_new_order' && isset( $_POST[ 'post_ID' ] ) ){
+            $this->refresh_email_lang( $_POST[ 'post_ID' ] );
+            $countries = include( WC()->plugin_path() . '/i18n/countries.php' );
+        }
+
+        return $countries;
     }
 
 }

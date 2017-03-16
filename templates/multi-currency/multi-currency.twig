@@ -245,6 +245,8 @@
 
     {% include 'exchange-rates.twig' with exchange_rates %}
 
+    {{ wp_do_action( 'wcml_before_currency_switcher_options' ) }}
+
     {% include 'currency-switcher-options.twig' %}
 
     <input type="hidden" id="wcml_warn_message" value="{{ form.navigate_warn }}" />
@@ -255,6 +257,5 @@
     </p>
 
     {% endif %}
-
 
 </form>

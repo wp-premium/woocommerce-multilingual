@@ -133,7 +133,13 @@ class WCML_Switch_Lang_Request{
 
     public function get_requested_lang() {
 
-        return $this->wp_api->is_comments_post_page() ? $this->get_cookie_lang() : $this->get_request_uri_lang();
+        return $this->is_comments_post_page() ? $this->get_cookie_lang() : $this->get_request_uri_lang();
+    }
+
+    public function is_comments_post_page() {
+        global $pagenow;
+
+        return 'wp-comments-post.php' === $pagenow;
     }
 
     /**

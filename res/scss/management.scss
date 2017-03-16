@@ -5,6 +5,10 @@
 	opacity: 0.5;
 }
 
+.display-block {
+	display:block;
+}
+
 .wcml-wrap {
 	@extend %wpml-wrap;
 	margin-bottom: 20px;
@@ -65,10 +69,21 @@
 	margin: 0 0 $margin-sm 0;
 	border-bottom: 1px solid #ededed;
 	min-width: 900px;
-	overflow: hidden;
+	&:after {
+		content: '';
+		display: table;
+		clear: both;
+	}
 	&:last-of-type {
 		border: none;
 		margin: 0;
+	}
+}
+.explanation-text {
+	color: #999;
+	h4+& {
+		margin-top: -1.1em;
+		margin-bottom: 1.33em;
 	}
 }
 
@@ -230,6 +245,8 @@ table.widefat.currency_delete_table {
 		}
 }
 
+
+
 .currency_value .wcml-error,
 .wcml-error {
 	font-size: 10px;
@@ -379,7 +396,9 @@ table.widefat.currency_lang_table {
 	}
 }
 
-/* Currency switcher*/
+/* ==================================================
+		Currency switcher
+=====================================================*/
 
 #wcml_currencies_order {
 	display: block;
@@ -397,26 +416,164 @@ table.widefat.currency_lang_table {
 }
 
 .wcml_currencies_order_ajx_resp {
-	padding-top: 5px;
-	color: #E68A00;
+font-weight: 500;
+margin: 0 5px;
+padding: 1px 4px 2px;
+border-radius: 3px;
+white-space: nowrap;
+
+	//success
+		color: #46b450;
+		background-color: rgba(92, 255, 102, 0.15);
+
 }
 
-.explanation-text {
-	color: #999;
-}
-
-input[name="wcml_curr_template"] {
+.wcml-cs-list {
+	font-size: inherit;
 	width: 100%;
+	border-collapse: collapse;
+	border: lightgrey 1px solid;
+	vertical-align: middle;
+	thead tr {
+		border: lightgrey 1px solid;
+	}
+	th, td {
+		text-align: center;
+		padding: 5px;
+	}
+
+	.wcml-cs-cell-preview {
+		text-align: start;
+	}
+
+	.wcml-cs-actions {
+		width: 60px;
+		a {
+			display: inline-block;
+			width: 20px;
+			cursor: pointer;
+		}
+	}
 }
 
-.wcml_curr_style label {
-	line-height: 30px;
+
+.wcml-currency-preview-wrapper {
+	background-color: #fff;
+	padding: 15px 10px 10px;
+	border: 1px solid #ccc;
+	width: 100%;
+	min-width: 150px;
+	min-height: 120px;
+	box-sizing: border-box;
+	position: relative;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+
+	.wcml-currency-preview-label {
+		position: absolute;
+		top: 5px;
+		left: 10px;
+		z-index: 101;
+		display: inline-block;
+		padding: 2px;
+		background: rgba(255, 255, 255, .9);
+	}
+	.spinner {
+		position: absolute;
+		bottom: 5px;
+		right: 0;
+		z-index: 101;
+	}
 }
 
-.wcml-currency-preview {
-	margin: $margin-sm 0 $margin-base;
-	display: inline-block;
+/**************************
+Currency switcher dialog
+ **************************/
+
+.wcml-cs-dialog .wcml-currency-switcher-options-form {
+	input {
+		max-width: 100%;
+	}
+	@media (min-width: 1000px) {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		.wcml-currency-switcher-options {
+			width: 60%;
+			order: 1;
+			box-sizing: border-box;
+			& > h4:first-child {
+				margin-top: 0;
+			}
+		}
+		.wcml-currency-preview-wrapper {
+			width: 40%;
+			box-sizing: border-box;
+			order: 2;
+			& > div {
+				display: block;
+			}
+		}
+	}
+	@media (max-width: 999px) {
+		.wcml-currency-preview-wrapper {
+			margin: -17px -15px 30px -15px;
+			width: calc(100% + 2 * 15px);
+			border-left: 0;
+			border-right: 0;
+			z-index: 10;
+		}
+	}
 }
+
+.wcml-cs-panel-colors {
+	table {
+		width: 100%;
+		max-width: 600px;
+		font-size: inherit;
+		th {
+			text-align: start;
+		}
+		td {
+			vertical-align: top;
+		}
+	}
+
+	.wp-color-result {
+		padding-left: 50px;
+		position: relative;
+		@media screen and (max-width: 782px) {
+			height: 22px;
+		}
+		&:after {
+			background: transparent;
+			border-radius: 0;
+			border-left: 0;
+			padding: 0;
+			right: 0;
+			left: 0;
+			position: absolute;
+			content: '';
+		}
+		&.wp-picker-open:after {
+			content: '';
+		}
+		&:not(.wp-picker-open):after {
+			font-family: otgs-icons;
+			// otgs-ico-edit
+			content: 'h';
+			color: #333;
+			text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
+			font-size: 16px;
+			min-width: 0;
+		}
+	}
+}
+
+/*==========================================================
+	End of Currency
+ ====================================================*/
 
 .wcml_product_name {
 	line-height: 20px;

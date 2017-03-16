@@ -22,6 +22,7 @@ class WPML_Notice {
 	private $hideable           = false;
 	private $collapsable = false;
 	private $restrict_to_pages  = array();
+	private $dismissible_for_different_text = true;
 
 	private $default_group_name = 'default';
 
@@ -44,6 +45,9 @@ class WPML_Notice {
 		if ( $action->can_dismiss() ) {
 			$this->dismissible = true;
 		}
+		if ( method_exists( $action, 'can_dismiss_different_text' ) && ! $action->can_dismiss_different_text() ) {
+			$this->dismissible_for_different_text = false;
+		}
 		if ( $action->can_hide() ) {
 			$this->hideable = true;
 		}
@@ -59,6 +63,10 @@ class WPML_Notice {
 
 	public function can_be_dismissed() {
 		return $this->dismissible;
+	}
+
+	public function can_be_dismissed_for_different_text() {
+		return $this->dismissible_for_different_text;
 	}
 
 	public function can_be_hidden() {

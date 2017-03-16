@@ -57,7 +57,11 @@ class WCML_Table_Rate_Shipping {
 			if( isset( $_POST[ 'shipping_label' ] ) &&
 				isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
 				do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
-				$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
+				if( version_compare( WC()->version, '2.7', '<' ) ){
+					$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
+				} else{
+					$shipping_labels = array_map( 'wc_clean', $_POST[ 'shipping_label' ] );
+				}
 				foreach ( $shipping_labels as $key => $shipping_label ) {
 					$rate_key = isset( $_GET[ 'instance_id' ] ) ? 'table_rate'.$_GET[ 'instance_id' ].$_POST[ 'rate_id' ][ $key ] : $shipping_label;
 					do_action( 'wpml_register_single_string', 'woocommerce', $rate_key. '_shipping_method_title', $shipping_label );
@@ -146,7 +150,7 @@ class WCML_Table_Rate_Shipping {
 	public function filter_product_base_price( $row_base_price, $_product, $qty ){
 
 		if( get_option( 'woocommerce_currency') != $this->woocommerce_wpml->multi_currency->get_client_currency() ){
-			$row_base_price = apply_filters( 'wcml_product_price_by_currency', $_product->id, get_option( 'woocommerce_currency') ) * $qty;
+			$row_base_price = apply_filters( 'wcml_product_price_by_currency', WooCommerce_Functions_Wrapper::get_product_id( $_product ), get_option( 'woocommerce_currency') ) * $qty;
 		}
 
 		return $row_base_price;

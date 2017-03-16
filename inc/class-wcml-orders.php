@@ -245,7 +245,6 @@ class WCML_Orders{
         $taxonomy = substr( $key, 0, 3 ) != 'pa_' ? wc_attribute_taxonomy_name( $key ) : $key;
         $term_id = $woocommerce_wpml->terms->wcml_get_term_id_by_slug( $taxonomy, $value );
         $translated_term = $woocommerce_wpml->terms->wcml_get_translated_term( $term_id, $taxonomy, $languge );
-        $translated_term = $woocommerce_wpml->terms->wcml_get_translated_term( $term_id, $taxonomy, $languge );
 
         if( $translated_term ){
             $value = $translated_term->slug;
