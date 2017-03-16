@@ -18,10 +18,8 @@ jQuery(document).ready(function(){
 
         jQuery('#icl_avail_languages_picker li input').each( function(){
             if( jQuery(this).is(':checked') ){
-                if( jQuery('#default_language_'+jQuery(this).val()).length === 0 ){
-                    jQuery('<p class="icl_ajx_response" style="display: block">'+wcml_settings.warn+'</p>').insertBefore('#icl_ajx_response');
-                    return false;
-                }
+                jQuery('<p class="icl_ajx_response" style="display: block">'+wcml_settings.warn+'</p>').insertBefore('#icl_ajx_response');
+                return false;
             }
         });
     });

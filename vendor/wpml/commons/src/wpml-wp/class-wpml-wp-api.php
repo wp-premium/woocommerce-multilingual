@@ -884,6 +884,16 @@ class WPML_WP_API {
 	}
 
 	/**
+	 * Wrapper for \wp_get_theme->parent_theme
+	 *
+	 * @return string
+	 */
+	public function get_theme_parent_name() {
+
+		return wp_get_theme()->parent_theme;
+	}
+
+	/**
 	 * Wrapper for \wp_get_theme->get('URI')
 	 *
 	 * @return string
@@ -1314,5 +1324,24 @@ class WPML_WP_API {
 	 */
 	public function get_twig_loader_filesystem( $template_paths ) {
 		return new Twig_Loader_Filesystem( $template_paths );
+	}
+
+	/**
+	 * @return Twig_Loader_String
+	 */
+	public function get_twig_loader_string() {
+		return new Twig_Loader_String();
+	}
+
+	/**
+	 * @param string $message
+	 * @param int    $message_type
+	 * @param string $destination
+	 * @param string $extra_headers
+	 *
+	 * @return bool
+	 */
+	public function error_log( $message, $message_type = null, $destination = null, $extra_headers = null ) {
+		return error_log( $message, $message_type, $destination, $extra_headers );
 	}
 }

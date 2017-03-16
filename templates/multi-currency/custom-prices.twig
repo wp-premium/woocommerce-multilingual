@@ -42,7 +42,7 @@
                         {% for key, custom_price in currency.custom_price %}
                             <p>
                                 <label>{{ strings[key] }} ( {{ currency.currency_symbol|raw }} )</label>
-                                <input type="{{ currency.wc_input_type|e }}" size="5"
+                                <input type="text"
                                        name="_custom_variation{{ key }}{{ currency.custom_id }}"
                                        class="wc_input_price wcml_input_price short wcml{{ key }}"
                                        value="{{ custom_price }}" step="any" min="0" />
@@ -107,7 +107,7 @@
                     {% for key, readonly_price in currency.readonly_price %}
                         <p>
                             <label>{{ strings[key] }} ( {{ currency.currency_symbol|raw }} )</label>
-                            <input type="number" size="5"
+                            <input type="text"
                                    name="_readonly{{ key }}"
                                    class="wc_input_price short"
                                    value="{{ readonly_price|e }}"

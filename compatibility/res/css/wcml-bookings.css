@@ -59,3 +59,7 @@ input.wcml_bookings_custom_price,
 #bookings_pricing .table_grid table td input.wcml_bookings_custom_price{
     background-color: #F5F2E1;
 }
+#bookings_pricing #wcml_custom_costs_manually{
+    clear: both;
+    margin-bottom: 20px;
+}

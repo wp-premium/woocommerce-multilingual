@@ -41,7 +41,7 @@ class WCML_Status_Taxonomies_UI extends WPML_Templates_Factory {
         $taxonomies_data = array();
 
         foreach ( $taxonomies as $key => $taxonomy ) {
-            if( $taxonomy == 'product_type' ) continue;
+            if( !is_taxonomy_translated( $taxonomy ) ) continue;
             $taxonomies_data[$key]['tax'] = $taxonomy;
             $taxonomies_data[$key]['untranslated'] = $this->woocommerce_wpml->terms->get_untranslated_terms_number($taxonomy);
             $taxonomies_data[$key]['fully_trans'] = $this->woocommerce_wpml->terms->is_fully_translated($taxonomy);

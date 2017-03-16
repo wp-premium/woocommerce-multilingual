@@ -2,12 +2,13 @@
 
 abstract class WPML_Templates_Factory {
 	const NOTICE_GROUP = 'template_factory';
+	const OTGS_TWIG_CACHE_DISABLED_KEY = '_otgs_twig_cache_disabled';
 
 	private   $custom_filters;
 	private   $custom_functions;
 	protected $template_paths;
 	private   $cache_directory;
-	const OTGS_TWIG_CACHE_DISABLED_KEY = '_otgs_twig_cache_disabled';
+	protected $template_string;
 
 	/* @var WPML_WP_API $wp_api */
 	private $wp_api;
@@ -70,6 +71,9 @@ abstract class WPML_Templates_Factory {
 			} else {
 				$this->add_exception_notice( $e );
 			}
+		} catch ( Twig_Error_Syntax $e ) {
+			$message = 'Invalid Twig template string: ' . $e->getRawMessage() . "\n" . $template;
+			$this->get_wp_api()->error_log( $message );
 		}
 
 		return $output;
@@ -77,7 +81,7 @@ abstract class WPML_Templates_Factory {
 
 	private function maybe_init_twig() {
 		if ( ! $this->twig ) {
-			$loader = $this->get_wp_api()->get_twig_loader_filesystem( $this->template_paths );
+			$loader = $this->get_twig_loader();
 
 			$environment_args = array();
 
@@ -152,5 +156,25 @@ abstract class WPML_Templates_Factory {
 
 	private function is_caching_enabled() {
 		return ! (bool) get_option( self::OTGS_TWIG_CACHE_DISABLED_KEY, false );
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function is_string_template() {
+		return isset( $this->template_string );
+	}
+
+	/**
+	 * @return Twig_LoaderInterface
+	 */
+	private function get_twig_loader() {
+		if ( $this->is_string_template() ) {
+			$loader = $this->get_wp_api()->get_twig_loader_string();
+		} else {
+			$loader = $this->get_wp_api()->get_twig_loader_filesystem( $this->template_paths );
+		}
+
+		return $loader;
 	}
 }

@@ -66,7 +66,7 @@ class WCML_Dynamic_Pricing {
 	function woocommerce_dynamic_pricing_is_applied_to( $process_discounts, $_product, $module_id, $obj, $cat_id ) {
 		if ( $cat_id && isset( $obj->available_rulesets ) && count( $obj->available_rulesets ) > 0 ) {
 			$cat_id = apply_filters( 'translate_object_id', $cat_id, 'product_cat', true, $this->sitepress->get_current_language() );
-			$process_discounts = is_object_in_term( $_product->id, 'product_cat', $cat_id );
+			$process_discounts = is_object_in_term( WooCommerce_Functions_Wrapper::get_product_id( $_product ), 'product_cat', $cat_id );
 		}
 
 		return $process_discounts;

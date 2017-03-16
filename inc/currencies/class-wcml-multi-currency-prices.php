@@ -24,9 +24,9 @@ class WCML_Multi_Currency_Prices{
             // Currency and Amount filters
             add_filter('woocommerce_currency', array($this, 'currency_filter'));
 
-        add_filter( 'wcml_price_currency', array($this, 'price_currency_filter') );      // WCML filters
-        add_filter( 'wcml_raw_price_amount', array($this, 'raw_price_filter'), 10, 2 );  // WCML filters
-        add_filter( 'wcml_product_price_by_currency', array($this, 'get_product_price_in_currency'), 10, 2 );  // WCML filters
+            add_filter( 'wcml_price_currency', array($this, 'price_currency_filter') );      // WCML filters
+            add_filter( 'wcml_raw_price_amount', array($this, 'raw_price_filter'), 10, 2 );  // WCML filters
+            add_filter( 'wcml_product_price_by_currency', array($this, 'get_product_price_in_currency'), 10, 2 );  // WCML filters
 
             add_filter('get_post_metadata', array($this, 'product_price_filter'), 10, 4);
             add_filter('get_post_metadata', array($this, 'variation_prices_filter'), 12, 4); // second
@@ -184,7 +184,6 @@ class WCML_Multi_Currency_Prices{
             }
 
         }
-
 
         return !empty($price) ? $price : $null;
     }

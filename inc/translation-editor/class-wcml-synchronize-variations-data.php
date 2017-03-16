@@ -232,7 +232,7 @@ class WCML_Synchronize_Variations_Data{
     public function duplicate_variation_data( $original_variation_id, $variation_id, $data, $lang, $trbl ){
         global $iclTranslationManagement;
 
-        if( $this->woocommerce_wpml->sync_product_data->check_if_product_fields_sync_needed( $original_variation_id, $variation_id, 'postmeta_fields' ) ){
+        if( $this->woocommerce_wpml->sync_product_data->check_if_product_fields_sync_needed( $original_variation_id, $variation_id, 'postmeta_fields' ) || $trbl ){
             // custom fields
             $settings = $iclTranslationManagement->settings[ 'custom_fields_translation' ];
             $all_meta = get_post_custom( $original_variation_id );
@@ -252,7 +252,12 @@ class WCML_Synchronize_Variations_Data{
                             $meta_value = $trn_post_meta['meta_value'];
                             $meta_key = $trn_post_meta['meta_key'];
                         }
-                        update_post_meta( $variation_id, $meta_key, $meta_value );
+
+                        if( $meta_key == '_stock'){
+                            $this->update_stock_quantity( $variation_id, $meta_value );
+                        }else{
+                            update_post_meta( $variation_id, $meta_key, $meta_value );
+                        }
                     }elseif ( !isset( $settings[ $meta_key ] ) || $settings[ $meta_key ] == WPML_IGNORE_CUSTOM_FIELD ) {
                         continue;
                     }
@@ -273,6 +278,31 @@ class WCML_Synchronize_Variations_Data{
                 }
             }
         }
+    }
+
+    //use direct query to update '_stock' to not trigger additional filters
+    public function update_stock_quantity( $variation_id, $meta_value ){
+
+        if( !get_post_meta( $variation_id, '_stock' ) ){
+            $this->wpdb->insert( $this->wpdb->postmeta,
+                array(
+                    'meta_value' => $meta_value,
+                    'meta_key'   => '_stock',
+                    'post_id'    => $variation_id
+                )
+            );
+        }else{
+            $this->wpdb->update( $this->wpdb->postmeta,
+                array(
+                    'meta_value' => $meta_value
+                ),
+                array(
+                    'meta_key'   => '_stock',
+                    'post_id'    => $variation_id
+                )
+            );
+        }
+
     }
 
     public function delete_removed_variation_attributes( $orig_product_id, $variation_id ){

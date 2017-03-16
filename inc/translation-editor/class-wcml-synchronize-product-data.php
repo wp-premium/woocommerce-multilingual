@@ -21,7 +21,12 @@ class WCML_Synchronize_Product_Data{
             add_action( 'icl_pro_translation_completed', array( $this, 'icl_pro_translation_completed' ) );
 
             add_filter( 'icl_make_duplicate', array( $this, 'icl_make_duplicate'), 110, 4 );
-            add_action( 'woocommerce_duplicate_product', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
+
+            if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '2.7', '<' ) ) ) {
+                add_action('woocommerce_duplicate_product', array($this, 'woocommerce_duplicate_product'), 10, 2);
+            }else{
+                add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
+            }
 
             //quick & bulk edit
             add_action( 'woocommerce_product_quick_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
@@ -112,6 +117,9 @@ class WCML_Synchronize_Product_Data{
             //save custom prices
             $this->woocommerce_wpml->multi_currency->custom_prices->save_custom_prices( $original_product_id );
         }
+
+        //save files option
+        $this->woocommerce_wpml->downloadable->save_files_option( $original_product_id );
 
     }
 
@@ -314,15 +322,18 @@ class WCML_Synchronize_Product_Data{
 
     public function sync_stock_status_for_translations( $id, $status ){
 
-        $type = get_post_type( $id );
-        $trid = $this->sitepress->get_element_trid( $id, 'post_'.$type );
-        $translations = $this->sitepress->get_element_translations( $trid, 'post_'.$type, true);
+        if( $this->woocommerce_wpml->products->is_original_product( $id ) ){
+            $type = get_post_type( $id );
+            $trid = $this->sitepress->get_element_trid( $id, 'post_'.$type );
+            $translations = $this->sitepress->get_element_translations( $trid, 'post_'.$type, true);
 
-        foreach ( $translations as $translation ) {
-            if ( !$translation->original ) {
-                update_post_meta( $translation->element_id, '_stock_status', $status );
+            foreach ( $translations as $translation ) {
+                if ( !$translation->original ) {
+                    update_post_meta( $translation->element_id, '_stock_status', $status );
+                }
             }
         }
+
     }
 
     //sync product parent & post_status
@@ -357,24 +368,28 @@ class WCML_Synchronize_Product_Data{
         }
     }
 
-
-
     public function icl_pro_translation_completed( $tr_product_id ){
-        $trid = $this->sitepress->get_element_trid( $tr_product_id, 'post_product' );
-        $translations = $this->sitepress->get_element_translations( $trid, 'post_product' );
 
-        foreach( $translations as $translation ){
-            if( $translation->original ){
-                $original_product_id = $translation->element_id;
+        if( get_post_type( $tr_product_id ) == 'product' ){
+
+            $trid = $this->sitepress->get_element_trid( $tr_product_id, 'post_product' );
+            $translations = $this->sitepress->get_element_translations( $trid, 'post_product' );
+
+            foreach( $translations as $translation ){
+                if( $translation->original ){
+                    $original_product_id = $translation->element_id;
+                }
             }
+
+            if( !isset( $original_product_id ) ){
+                return;
+            }
+
+            $lang = $this->sitepress->get_language_for_element( $tr_product_id, 'post_product' );
+            $this->sync_product_data( $original_product_id, $tr_product_id, $lang );
+
         }
 
-        if( !isset( $original_product_id ) ){
-            return;
-        }
-
-        $lang = $this->sitepress->get_language_for_element( $tr_product_id, 'post_product' );
-        $this->sync_product_data( $original_product_id, $tr_product_id, $lang );
     }
 
     public function icl_make_duplicate( $master_post_id, $lang, $postarr, $id ){
@@ -388,8 +403,10 @@ class WCML_Synchronize_Product_Data{
     }
 
     public function woocommerce_product_quick_edit_save( $product ){
-        $is_original = $this->woocommerce_wpml->products->is_original_product( $product->id );
-        $trid = $this->sitepress->get_element_trid( $product->id, 'post_product' );
+
+        $product_id =  WooCommerce_Functions_Wrapper::get_product_id( $product );
+        $is_original = $this->woocommerce_wpml->products->is_original_product( $product_id );
+        $trid = $this->sitepress->get_element_trid( $product_id, 'post_product' );
 
         if( $trid ){
             $translations = $this->sitepress->get_element_translations( $trid, 'post_product' );
@@ -397,12 +414,12 @@ class WCML_Synchronize_Product_Data{
                 foreach( $translations as $translation ){
                     if( $is_original ){
                         if( !$translation->original ){
-                            $this->sync_product_data( $product->id, $translation->element_id, $translation->language_code );
-                            $this->sync_date_and_parent( $product->id, $translation->element_id, $translation->language_code );
+                            $this->sync_product_data( $product_id, $translation->element_id, $translation->language_code );
+                            $this->sync_date_and_parent( $product_id, $translation->element_id, $translation->language_code );
                         }
                     }elseif( $translation->original ){
-                        $this->sync_product_data( $translation->element_id, $product->id, $this->sitepress->get_language_for_element( $product->id, 'post_product' ) );
-                        $this->sync_date_and_parent( $translation->element_id, $product->id, $this->sitepress->get_language_for_element( $product->id, 'post_product' ) );
+                        $this->sync_product_data( $translation->element_id, $product_id, $this->sitepress->get_language_for_element( $product_id, 'post_product' ) );
+                        $this->sync_date_and_parent( $translation->element_id, $product_id, $this->sitepress->get_language_for_element( $product_id, 'post_product' ) );
                     }
                 }
             }

@@ -44,6 +44,7 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
         $this->wc_currency      = get_option( 'woocommerce_currency' );
 
         $this->load_custom_currency_option_boxes();
+        $this->load_curency_switcher_option_boxes();
 
     }
 
@@ -117,39 +118,34 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
             'currency_switcher' => array(
                 'headers' => array(
                     'main'            => __('Currency switcher options', 'woocommerce-multilingual'),
-                    'style'           => __('Currency switcher style', 'woocommerce-multilingual'),
-                    'order'           => __( 'Currency order', 'woocommerce-multilingual' ),
-                    'parameters'      => __( 'Available parameters', 'woocommerce-multilingual' ),
-                    'parameters_list' => '%code%, %symbol%, %name%, %subtotal%',
-                    'template'        => __( 'Template for currency switcher', 'woocommerce-multilingual' ),
-                    'visibility'      => __('Visibility', 'woocommerce-multilingual')
+                    'main_desc'       => __('All currency switchers in your site are affected by the settings in this section.', 'woocommerce-multilingual'),
+                    'order'           => __( 'Order of currencies', 'woocommerce-multilingual' ),
+                    'additional_css'  => __('Additional CSS', 'woocommerce-multilingual'),
+                    'widget'          => __('Widget Currency Switcher', 'woocommerce-multilingual'),
+                    'product_page'    => __('Product page Currency Switcher', 'woocommerce-multilingual'),
+                    'preview'         => __('Preview', 'woocommerce-multilingual'),
+                    'position'        => __('Position', 'woocommerce-multilingual'),
+                    'actions'         => __('Actions', 'woocommerce-multilingual'),
+                    'action'          => __('Action', 'woocommerce-multilingual'),
+                    'delete'          => __('Delete', 'woocommerce-multilingual'),
+                    'edit'            => __('Edit currency switcher', 'woocommerce-multilingual'),
+                    'add_widget'      => __('Add a new currency switcher to a widget area', 'woocommerce-multilingual'),
                 ),
-                'preview_nonce' => wp_create_nonce( 'wcml_currencies_switcher_preview' ),
-                    'preview'       => $this->woocommerce_wpml->multi_currency->currency_switcher->wcml_currency_switcher( array('echo' => false) ),
+                'preview'       => $this->get_currency_switchers_preview(),
+                'widget_currency_switchers' => $this->widget_currency_switchers(),
+                'available_sidebars'    => $this->woocommerce_wpml->multi_currency->currency_switcher->get_available_sidebars(),
                 'preview_text'  => __( 'Currency switcher preview', 'woocommerce-multilingual' ),
-                'style'         => isset($this->woocommerce_wpml->settings['currency_switcher_style']) ? $this->woocommerce_wpml->settings['currency_switcher_style'] : false,
-                'options' => array(
-                    'dropdown'      => __('Drop-down menu', 'woocommerce-multilingual'),
-                    'list'          => __('List of currencies', 'woocommerce-multilingual'),
-                    'vertical'      => __('Vertical', 'woocommerce-multilingual'),
-                    'horizontal'    => __('Horizontal', 'woocommerce-multilingual'),
-                    'allowed_tags'  => __('Allowed HTML tags: <img> <span> <u> <strong> <em>', 'woocommerce-multilingual')
-                ),
-                'orientation'       => isset($this->woocommerce_wpml->settings['wcml_curr_sel_orientation']) ?
-                                        $this->woocommerce_wpml->settings['wcml_curr_sel_orientation'] : 'vertical',
                 'order'             => !isset( $this->woocommerce_wpml->settings['currencies_order'] ) ?
                                         $this->woocommerce_wpml->multi_currency->get_currency_codes() :
                                         $this->woocommerce_wpml->settings['currencies_order'],
                 'order_nonce'       => wp_create_nonce( 'set_currencies_order_nonce' ),
-                'order_tip'         => __( 'Drag the currencies to change their order', 'woocommerce-multilingual' ),
-                'parameters_tip'    => __( '%name%, %symbol%, %code%', 'woocommerce-multilingual' ),
-                'template'          => isset($this->woocommerce_wpml->settings['wcml_curr_template']) ?
-                                        $this->woocommerce_wpml->settings['wcml_curr_template'] : '',
-                'template_tip'      => __( 'Default: %name% (%symbol%) - %code%', 'woocommerce-multilingual' ),
-                'template_default'  => '%name% (%symbol%) - %code%',
+                'delete_nonce'      => wp_create_nonce( 'delete_currency_switcher' ),
+                'order_tip'         => __( 'Drag and drop the currencies to change their order', 'woocommerce-multilingual' ),
                 'visibility_label'  => __('Show a currency selector on the product page template', 'woocommerce-multilingual'),
                 'visibility_on'     => isset($this->woocommerce_wpml->settings['currency_switcher_product_visibility']) ?
-                                        $this->woocommerce_wpml->settings['currency_switcher_product_visibility']:1
+                                        $this->woocommerce_wpml->settings['currency_switcher_product_visibility']:1,
+                'additional_css'     => isset($this->woocommerce_wpml->settings['currency_switcher_additional_css']) ?
+                                        $this->woocommerce_wpml->settings['currency_switcher_additional_css']:''
             ),
             'exchange_rates'        => $exchange_rates_ui->get_model()
         );
@@ -276,6 +272,74 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
 
     }
 
+
+    public function load_curency_switcher_option_boxes(){
+
+        $wcml_settings = $this->woocommerce_wpml->get_settings();
+        $currency_switchers = isset( $wcml_settings[ 'currency_switchers' ] ) ? $wcml_settings[ 'currency_switchers' ] : array();
+
+        //add empty dialog for new sidebar currency switcher
+        $currency_switchers[ 'new_widget' ] = array(
+            'switcher_style' => 'wcml-dropdown',
+            'widget_title'  =>  '',
+            'switcher_templates' => $this->woocommerce_wpml->cs_templates->get_templates(),
+            'template' => '%name% (%symbol%) - %code%',
+            'color_scheme' => array(
+                'font_current_normal'       => '',
+                'font_current_hover'        => '',
+                'background_current_normal' => '',
+                'background_current_hover'  => '',
+                'font_other_normal'         => '',
+                'font_other_hover'          => '',
+                'background_other_normal'   => '',
+                'background_other_hover'    => '',
+                'border_normal'             => ''
+            )
+        );
+
+        if( !isset( $currency_switchers[ 'product' ] ) ){
+            $currency_switchers[ 'product' ] = $currency_switchers[ 'new_widget' ];
+        }
+
+        $widget_currency_switchers = $this->widget_currency_switchers();
+
+        foreach( $currency_switchers as $switcher_id => $currency_switcher ){
+
+            if( $switcher_id == 'product'){
+                $dialog_title = __('Edit Product Currency Switcher', 'woocommerce-multilingual');
+            }elseif( $switcher_id == 'new_widget' ){
+                $dialog_title = __('New Widget Area Currency Switcher', 'woocommerce-multilingual');
+            }else{
+                $dialog_title = sprintf( __('Edit %s Currency Switcher', 'woocommerce-multilingual'), $widget_currency_switchers[ $switcher_id ]['name'] );
+            }
+
+            $args = array(
+                'title'             => $dialog_title,
+                'currency_switcher'  => $switcher_id,
+                'switcher_style'  =>  $currency_switcher[ 'switcher_style' ],
+                'widget_title'  =>  $currency_switcher[ 'widget_title' ],
+                'switcher_templates' => $this->woocommerce_wpml->cs_templates->get_templates(),
+                'template'  => $currency_switcher[ 'template' ],
+                'template_default'  => '%name% (%symbol%) - %code%',
+                'options'  => $currency_switcher[ 'color_scheme' ]
+            );
+
+            new WCML_Currency_Switcher_Options_Dialog( $args, $this->woocommerce_wpml );
+        }
+    }
+
+    public function get_currency_switchers_preview(){
+        $preview = array(
+            'product' => $this->woocommerce_wpml->multi_currency->currency_switcher->wcml_currency_switcher( array( 'switcher_id' => 'product', 'echo' => false ) )
+        );
+
+        foreach( $this->widget_currency_switchers() as $switcher ){
+            $preview[ $switcher['id'] ] = $this->woocommerce_wpml->multi_currency->currency_switcher->wcml_currency_switcher( array( 'switcher_id' => $switcher['id'], 'echo' => false ) );
+        }
+
+        return $preview;
+    }
+
     public function wp_do_action( $hook ){
         do_action( $hook );
     }
@@ -285,5 +349,17 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
         return $wp_locale->get_weekday( $day_index );
     }
 
+    public function widget_currency_switchers(){
+        $wcml_settings = $this->woocommerce_wpml->get_settings();
+        $currency_switchers = isset( $wcml_settings[ 'currency_switchers' ] ) ? $wcml_settings[ 'currency_switchers' ] : array();
+        $sidebars = $this->woocommerce_wpml->multi_currency->currency_switcher->get_registered_sidebars();
+        foreach( $sidebars as $key => $sidebar ){
+            if( !isset( $currency_switchers[ $key ] ) ){
+                unset( $sidebars[ $key ] );
+            }
+        }
+
+        return $sidebars;
+    }
 
 }

@@ -15,9 +15,18 @@ class WCML_Attributes{
 
         add_action( 'woocommerce_attribute_added', array( $this, 'set_attribute_readonly_config' ), 100, 2 );
         add_filter( 'wpml_translation_job_post_meta_value_translated', array($this, 'filter_product_attributes_for_translation'), 10, 2 );
+        add_filter( 'woocommerce_dropdown_variation_attribute_options_args', array($this, 'filter_dropdown_variation_attribute_options_args') );
 
         if( isset( $_POST['icl_ajx_action'] ) && $_POST['icl_ajx_action'] == 'icl_custom_tax_sync_options' ){
             $this->icl_custom_tax_sync_options();
+        }
+
+        add_action( 'woocommerce_before_attribute_delete', array( $this, 'refresh_taxonomy_translations_cache' ), 10, 3 );
+
+        if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '2.7', '<' ) ) ){
+            add_filter( 'woocommerce_get_product_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );
+        }else{
+            add_filter( 'woocommerce_product_get_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );
         }
 
     }
@@ -34,6 +43,19 @@ class WCML_Attributes{
                 $this->set_attribute_readonly_config( $_GET[ 'edit' ], $_POST );
             }
         }
+
+    }
+
+    /*
+     * This creates the terms translation cache so the translations can be deleted via the 'delete_term' hook
+     * after the original term was deleted and getting the translations directly from the db is not possible
+     */
+    public function refresh_taxonomy_translations_cache( $attribute_id, $attribute_name, $taxonomy ){
+
+	    $terms = get_terms( $taxonomy, 'orderby=name&hide_empty=0' );
+	    foreach ( $terms as $term ) {
+		    $trid = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_' . $taxonomy );
+	    }
 
     }
 
@@ -244,10 +266,15 @@ class WCML_Attributes{
         return $attributes;
     }
 
-    public function get_attr_label_translations( $product_id ){
+    public function get_attr_label_translations( $product_id, $lang = false ){
         $trnsl_labels = get_post_meta( $product_id, 'attr_label_translations', true );
+
         if( !is_array( $trnsl_labels ) ){
             $trnsl_labels = array();
+        }
+
+        if( isset( $trnsl_labels[ $lang ] ) ){
+            return $trnsl_labels[ $lang ];
         }
 
         return $trnsl_labels;
@@ -458,6 +485,51 @@ class WCML_Attributes{
             'meta_value' => $meta_value,
             'meta_key' => $meta_key
         );
+    }
+
+    function filter_dropdown_variation_attribute_options_args( $args ){
+
+        if( isset( $args['attribute'] ) && isset( $args['product'] ) ){
+            $args['attribute'] = $this->filter_attribute_name( $args['attribute'],  WooCommerce_Functions_Wrapper::get_product_id( $args['product'] ) );
+        }
+
+        return $args;
+    }
+
+    /*
+     * special case when original attribute language is German or Danish,
+     * needs handle special chars accordingly
+     * https://onthegosystems.myjetbrains.com/youtrack/issue/wcml-1785
+     */
+    function filter_attribute_name( $attribute_name, $product_id, $return_sanitized = false ){
+
+        if( !is_admin() && $product_id ) {
+            $orig_lang = $this->woocommerce_wpml->products->get_original_product_language( $product_id );
+            if ( in_array( $orig_lang, array('de', 'da' ) ) ) {
+                $attribute_name = $this->sitepress->locale_utils->filter_sanitize_title( remove_accents( $attribute_name ), $attribute_name );
+                remove_filter( 'sanitize_title', array( $this->sitepress->locale_utils, 'filter_sanitize_title' ), 10 );
+                return $attribute_name;
+            }
+        }
+
+        if( $return_sanitized ){
+            $attribute_name = sanitize_title( $attribute_name );
+        }
+
+        return $attribute_name;
+    }
+
+    function filter_adding_to_cart_product_attributes_names( $attributes ){
+
+        if( !is_admin() && isset( $_REQUEST['add-to-cart'] ) ){
+
+            foreach( $attributes as $key => $attribute ){
+                $attributes[ $key ]['name'] = $this->filter_attribute_name( $attributes[ $key ]['name'], $_REQUEST['add-to-cart'] );
+            }
+
+        }
+
+        return $attributes;
     }
 
 }
