@@ -1,10 +1,6 @@
 @import "mixins";
 @import "variables";
 
-.wcml-active-currency {
-	background-color: #E5E5E5;
-}
-
 ul.wcml_currency_switcher {
 	padding: 0 !important;
 	margin: 0 !important;
@@ -33,6 +29,41 @@ ul.wcml_currency_switcher {
 		padding: 3px 10px;
 		margin: 0;
 	}
+}
+ul.dropdown.wcml_currency_switcher{
+  position: relative;
+  padding: 0;
+  margin: 0 !important;
+  list-style-type: none;
+  li span{
+	position: relative;
+	padding-right: calc(10px + .7em + .7em);
+	display: block;
+	padding: 5px 10px;
+	line-height: 1;
+  }
+  li span:after {
+	content: '';
+	vertical-align: middle;
+	display: inline-block;
+	border: .35em solid transparent;
+	border-top: .5em solid;
+	position: absolute;
+	right: 10px;
+	top: calc(50% - .175em);
+  }
+  ul.wcml-cs-submenu{
+	visibility: hidden;
+	position: absolute;
+	top: 100%;
+	right: 0;
+	left: 0;
+	border-top: 1px solid #cdcdcd;
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	z-index: 101;
+  }
 }
 
 .exchange-rates-online-wrap,

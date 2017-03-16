@@ -11,6 +11,7 @@ class WPML_Notice_Action {
 	private $url;
 	private $group_to_dismiss;
 	private $js_callback;
+	private $dismiss_different_text;
 
 	/**
 	 * WPML_Admin_Notice_Action constructor.
@@ -20,13 +21,15 @@ class WPML_Notice_Action {
 	 * @param bool        $dismiss
 	 * @param bool        $hide
 	 * @param bool|string $display_as_button
+	 * @param bool        $dismiss_different_text
 	 */
-	public function __construct( $text, $url = '#', $dismiss = false, $hide = false, $display_as_button = false ) {
-		$this->text              = $text;
-		$this->url               = $url;
-		$this->dismiss           = $dismiss;
-		$this->hide              = $hide;
-		$this->display_as_button = $display_as_button;
+	public function __construct( $text, $url = '#', $dismiss = false, $hide = false, $display_as_button = false, $dismiss_different_text = true ) {
+		$this->text                   = $text;
+		$this->url                    = $url;
+		$this->dismiss                = $dismiss;
+		$this->hide                   = $hide;
+		$this->display_as_button      = $display_as_button;
+		$this->dismiss_different_text = $dismiss_different_text;
 	}
 
 	public function get_text() {
@@ -39,6 +42,10 @@ class WPML_Notice_Action {
 
 	public function can_dismiss() {
 		return $this->dismiss;
+	}
+
+	public function can_dismiss_different_text() {
+		return $this->dismiss_different_text;
 	}
 
 	public function can_hide() {

@@ -204,10 +204,38 @@ class WCML_Translation_Editor{
 
         if( !$product_id ){
             return;
-        }elseif( ! $this->woocommerce_wpml->products->is_original_product( $product_id ) && get_post_status( $product_id ) != 'auto-draft' ){ ?>
+        }elseif( ! $this->woocommerce_wpml->products->is_original_product( $product_id ) && get_post_status( $product_id ) != 'auto-draft' ){
+
+            $args = array(
+                'post_type'      => 'product_variation',
+                'post_status'    => array( 'private', 'publish' ),
+                'posts_per_page' => ! empty( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 10,
+                'paged'          => ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1,
+                'orderby'        => array( 'menu_order' => 'ASC', 'ID' => 'DESC' ),
+                'post_parent'    => $product_id,
+            );
+
+            $variations = get_posts( $args );
+            $original_language = $this->woocommerce_wpml->products->get_original_product_language( $product_id );
+            $file_path_sync = array();
+
+            if ( $variations ) {
+                foreach ($variations as $variation) {
+                    $variation_id = absint( $variation->ID );
+                    $original_id = apply_filters( 'translate_object_id', $variation_id, 'product_variation', true, $original_language );
+                    $custom_product_sync = get_post_meta( $original_id, 'wcml_sync_files', true );
+                    if( $custom_product_sync && $custom_product_sync == 'self' ) {
+                        $file_path_sync[ $variation_id ] = false;
+                    }elseif( $custom_product_sync && $custom_product_sync == 'auto' ){
+                        $file_path_sync[ $variation_id ] = true;
+                    }
+                }
+            }
+
+            ?>
             <script type="text/javascript">
                 jQuery(document).ready(function() {
-                    wcml_lock_variation_fields();
+                    wcml_lock_variation_fields( <?php echo json_encode( $file_path_sync ) ?> );
                 });
             </script>
             <?php

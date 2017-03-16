@@ -336,7 +336,7 @@ class WCML_Tab_Manager {
 					$group = new WPML_Editor_UI_Field_Group( ucfirst( str_replace( '-', ' ', $prod_tab['name'] ) ), $divider );
 					$tab_field = new WPML_Editor_UI_Single_Line_Field( 'tab_'.$prod_tab['position'].'_title', __( 'Title', 'woocommerce-multilingual' ), $data, false );
 					$group->add_field( $tab_field );
-					$tab_field = new WPML_Editor_UI_WYSIWYG_Field( 'tab_'.$prod_tab['position'].'_heading' , null, $data, false );
+					$tab_field = new WCML_Editor_UI_WYSIWYG_Field( 'tab_'.$prod_tab['position'].'_heading' , null, $data, false );
 					$group->add_field( $tab_field );
 					$tabs_section->add_field( $group );
 				}

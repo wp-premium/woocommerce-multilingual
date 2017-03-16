@@ -44,15 +44,17 @@ class WCML_Resources {
                 wp_register_style( 'wcml-dialogs', WCML_PLUGIN_URL . '/res/css/dialogs.css', array('wpml-dialog'), WCML_VERSION );
                 wp_enqueue_style( 'wcml-dialogs' );
             }
+
+            wp_register_style( 'wcml_admin', WCML_PLUGIN_URL . '/res/css/admin.css', array( 'wp-pointer' ), WCML_VERSION );
+            wp_enqueue_style( 'wcml_admin' );
+
+            wp_enqueue_style( 'wp-color-picker' );
         }
 
         if ( self::$pagenow == 'options-permalink.php' ) {
             wp_register_style( 'wcml_op', WCML_PLUGIN_URL . '/res/css/options-permalink.css', null, WCML_VERSION );
             wp_enqueue_style( 'wcml_op' );
         }
-
-        wp_register_style( 'wcml_admin', WCML_PLUGIN_URL . '/res/css/admin.css', array( 'wp-pointer' ), WCML_VERSION );
-        wp_enqueue_style( 'wcml_admin' );
     }
 
     public static function load_management_css() {
@@ -62,31 +64,27 @@ class WCML_Resources {
 
     private static function load_js() {
 
-        wp_register_script( 'wcml-scripts', WCML_PLUGIN_URL . '/res/js/scripts' . WCML_JS_MIN . '.js', array(
-            'jquery',
-            'jquery-ui-core',
-            'jquery-ui-resizable'
-        ), WCML_VERSION );
-
-        wp_enqueue_script(
-            'wcml-pointer',
-            WCML_PLUGIN_URL . '/res/js/pointer' . WCML_JS_MIN . '.js',
-            array( 'wp-pointer' ),
-            WCML_VERSION,
-            true
-        );
-
-        wp_register_script( 'wcml-front-scripts', WCML_PLUGIN_URL . '/res/js/front-scripts' . WCML_JS_MIN . '.js', array(
-            'jquery'
-        ), WCML_VERSION );
-        wp_enqueue_script( 'wcml-front-scripts' );
-
         if ( self::$is_wpml_wcml_page ) {
+
+            wp_register_script( 'wcml-scripts', WCML_PLUGIN_URL . '/res/js/scripts' . WCML_JS_MIN . '.js', array(
+                'jquery',
+                'jquery-ui-core',
+                'jquery-ui-resizable'
+            ), WCML_VERSION );
+
+            wp_enqueue_script(
+                'wcml-pointer',
+                WCML_PLUGIN_URL . '/res/js/pointer' . WCML_JS_MIN . '.js',
+                array( 'wp-pointer' ),
+                WCML_VERSION,
+                true
+            );
 
             wp_register_script( 'jquery-cookie', WCML_PLUGIN_URL . '/res/js/jquery.cookie' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
             wp_register_script( 'wcml-dialogs', WCML_PLUGIN_URL . '/res/js/dialogs' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-core', 'jquery-ui-dialog'), WCML_VERSION );
             wp_register_script( 'wcml-troubleshooting', WCML_PLUGIN_URL . '/res/js/troubleshooting' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
 
+            wp_enqueue_script( 'wp-color-picker');
             wp_enqueue_script( 'wcml-dialogs' );
             wp_enqueue_script( 'wcml-scripts' );
             wp_enqueue_script( 'jquery-cookie' );
@@ -106,9 +104,21 @@ class WCML_Resources {
             wp_enqueue_script( 'wpml_tm' );
         }
 
+        if ( self::$pagenow == 'widgets.php' ) {
+            wp_register_script( 'wcml_widgets', WCML_PLUGIN_URL . '/res/js/widgets' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
+            wp_enqueue_script( 'wcml_widgets' );
+        }
+
         if ( self::$page == 'wpml-wcml' && self::$tab == 'multi-currency' ) {
             wp_register_script( 'multi-currency', WCML_PLUGIN_URL . '/res/js/multi-currency' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-sortable'), WCML_VERSION, true );
             wp_enqueue_script( 'multi-currency' );
+
+            wp_register_script( 'currency-switcher-settings', WCML_PLUGIN_URL . '/res/js/currency-switcher-settings' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-sortable'), WCML_VERSION, true );
+            wp_enqueue_script( 'currency-switcher-settings' );
+            wp_localize_script( 'currency-switcher-settings', 'settings', array(
+                'pre_selected_colors' => WCML_Currency_Switcher_Options_Dialog::currency_switcher_pre_selected_colors()
+            ) );
+
             wp_register_script( 'exchange-rates', WCML_PLUGIN_URL . '/res/js/exchange-rates' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION, true );
             wp_enqueue_script( 'exchange-rates' );
         }
@@ -123,7 +133,13 @@ class WCML_Resources {
 		    wp_enqueue_script( 'custom-taxonomies' );
 	    }
 
-        if ( !is_admin() ) {
+        if ( !is_admin() && self::$pagenow != 'wp-login.php' ) {
+
+            wp_register_script( 'wcml-front-scripts', WCML_PLUGIN_URL . '/res/js/front-scripts' . WCML_JS_MIN . '.js', array(
+                'jquery'
+            ), WCML_VERSION );
+            wp_enqueue_script( 'wcml-front-scripts' );
+
             $referer = isset( $_SERVER[ 'HTTP_REFERER' ] ) ? $_SERVER[ 'HTTP_REFERER' ] : '';
 
             wp_register_script( 'cart-widget', WCML_PLUGIN_URL . '/res/js/cart_widget' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
@@ -132,7 +148,7 @@ class WCML_Resources {
                 'is_lang_switched' => self::$sitepress->get_language_from_url( $referer ) !=  self::$sitepress->get_current_language() ? 1 : 0,
                 'is_currency_switched' => isset( $_GET[ 'wcmlc' ] ) ? 1 : 0
             ) );
-        } else {
+        } elseif( is_admin() ) {
             wp_register_script( 'wcml-messages', WCML_PLUGIN_URL . '/res/js/wcml-messages' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
             wp_enqueue_script( 'wcml-messages' );
         }
@@ -182,14 +198,23 @@ class WCML_Resources {
     }
 
     public static function load_lock_fields_js() {
+        global $pagenow;
 
         wp_register_script( 'wcml-lock-script', WCML_PLUGIN_URL . '/res/js/lock_fields' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION );
         wp_enqueue_script( 'wcml-lock-script' );
 
         $file_path_sync = self::$woocommerce_wpml->settings['file_path_sync'];
-        if( isset( $_GET[ 'post' ] ) ){
-            $original_language = self::$woocommerce_wpml->products->get_original_product_language( $_GET[ 'post' ] );
-            $original_id = apply_filters( 'translate_object_id', $_GET[ 'post' ], 'product', true, $original_language );
+
+        $product_id = false;
+        if( $pagenow === 'post.php' && isset( $_GET['post'] ) ){
+            $product_id =  $_GET['post'];
+        }elseif( isset( $_POST['product_id'] ) ){
+            $product_id = $_POST['product_id'];
+        }
+
+        if( $product_id ){
+            $original_language = self::$woocommerce_wpml->products->get_original_product_language( $product_id );
+            $original_id = apply_filters( 'translate_object_id', $product_id, 'product', true, $original_language );
             $custom_product_sync = get_post_meta( $original_id, 'wcml_sync_files', true );
             if( $custom_product_sync && $custom_product_sync == 'self' ) {
                 $file_path_sync = false;

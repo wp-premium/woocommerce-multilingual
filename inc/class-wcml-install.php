@@ -221,10 +221,12 @@ class WCML_Install{
             ?>
             <div id="message" class="updated message fade otgs-is-dismissible">
                 <p>
-                    <?php printf(__("You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?", 'woocommerce-multilingual'), '<strong>', '</strong>'); ?>
+                    <?php printf( esc_html__( "You've successfully installed %sWooCommerce Multilingual%s. Would you like to see a quick overview?", 'woocommerce-multilingual' ),
+                        '<strong>', '</strong>' ); ?>
                 </p>
                 <p>
-                    <a class="button-primary align-right" href="<?php echo WCML_Links::generate_tracking_link('https://wpml.org/documentation/related-projects/woocommerce-multilingual/','woocommerce-multilingual','documentation'); ?>" target="_blank">
+                    <a class="button-primary align-right" href="<?php echo esc_url( WCML_Links::generate_tracking_link(
+                            'https://wpml.org/documentation/related-projects/woocommerce-multilingual/','woocommerce-multilingual','documentation') ); ?>" target="_blank">
                         <?php _e('Learn how to turn your e-commerce site multilingual', 'woocommerce-multilingual') ?>
                     </a>
                 </p>

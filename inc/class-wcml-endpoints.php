@@ -2,10 +2,13 @@
 
 class WCML_Endpoints{
 
+	/** @var woocommerce_wpml */
+	private $woocommerce_wpml;
     var $endpoints_strings = array();
 
-    function __construct(){
+    function __construct( $woocommerce_wpml ){
 
+    	$this->woocommerce_wpml =& $woocommerce_wpml;
         add_action( 'icl_ajx_custom_call', array( $this, 'rewrite_rule_endpoints' ), 11, 2 );
         add_action( 'woocommerce_update_options', array( $this, 'add_endpoints' ) );
         add_filter( 'pre_update_option_rewrite_rules', array( $this, 'update_rewrite_rules' ), 100, 2 );
@@ -16,8 +19,6 @@ class WCML_Endpoints{
             //endpoints hooks
             $this->maybe_flush_rules();
             $this->register_endpoints_translations();
-
-
             add_filter('pre_get_posts', array($this, 'check_if_endpoint_exists'));
         }
 
@@ -107,9 +108,12 @@ class WCML_Endpoints{
 
     function maybe_flush_rules(){
         if( get_option( 'flush_rules_for_endpoints_translations' ) ){
+            delete_option( 'flush_rules_for_endpoints_translations' );
             WC()->query->init_query_vars();
             WC()->query->add_endpoints();
-            flush_rewrite_rules();
+	        remove_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
+            flush_rewrite_rules( false );
+	        add_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
             delete_option( 'flush_rules_for_endpoints_translations' );
         }
     }

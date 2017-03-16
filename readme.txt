@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.7.1
-Stable tag: 4.0.4
+Tested up to: 4.7.3
+Stable tag: 4.1.0
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,30 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.1.0 =
+* Enhanced language switchers
+* Improved REST API support
+* Updated WooCommerce 2.7 compatibiilty
+* Added the ability to translate product terms in the products translation editor
+* Enhanced the translation of rich text custom fields in the products translation editor.
+* Compatibility with WooCommerce Product Bundles (updated, not for WooCommerce 2.7)
+* Compatibility with ACF Pro (fixes)
+* Compatibility with WooCommerce Bookings (fixes)
+* Compatibility with WP Simple Survey (fixes)
+* Fix: Translations for custom attributes containing the umlaut character were not showing on the frontend.
+* Fix: Some gallery images were not synchronized when using the corresponding option on the troubleshooting page.
+* Fix: Incorrect country name translations were used in the order confirmation email is some situations.
+* Fix: Some endpoints were not accessible when using the ‘Different languages in directories’ configuration.
+* Fix: Order screen displayed ‘Variation # of Product name’ instead of just the product name.
+* Fix: The custom prices were not displayed correctly on the front end when using ‘,’ as a decimal separator.
+* Fix: In specific circumstances, the product category URLs were returning a 404 error.
+* Fix: New lines were not copied correctly when using the products translation editor.
+* Fix: In some circumstances, accessing product categories without a trailing slash generated PHP notices.
+* Fix: The stock status was not synchronized correctly for variable products.
+* Fix: By removing an attribute, only the terms in the default language were removed from the database.
+* Fix: When using the option to display only products with custom prices in the secondary currencies and the price was 0, the products variations were not visible on the front end.
+* Fix: The option to set separate download files for each translation was not working correctly for variable products
 
 = 4.0.4 =
 * Bug fix: empty shipping class was shown on the Quick Editor when using WooCommerce Table Rate Shipping

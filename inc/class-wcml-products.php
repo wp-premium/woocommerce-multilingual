@@ -63,8 +63,8 @@ class WCML_Products{
             $this->wpdb->prepare(
                 "SELECT source_language_code IS NULL
                                 FROM {$this->wpdb->prefix}icl_translations
-                                WHERE element_id=%d AND element_type='post_product'",
-                $product_id )
+                                WHERE element_id=%d AND element_type=%s",
+                $product_id, 'post_'.get_post_type( $product_id ) )
         );
 
         wp_cache_set( $cache_key, $is_original, $cache_group );

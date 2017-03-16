@@ -28,20 +28,21 @@ class WCML_Downloadable_Products{
 	public function product_options_downloads_custom_option( $loop = false, $variation_data = false, $variation = false ){
         global $pagenow;
 
+        $product_id = false;
+        $is_variation = false;
+        if( $pagenow === 'post.php' && isset( $_GET['post'] ) ){
+            $product_id =  $_GET['post'];
+        }elseif( isset( $_POST['product_id'] ) ){
+            $product_id = $_POST['product_id'];
+        }
+
 		if ( ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'product' && isset( $_GET['source_lang'] ) )
-		     || ( isset( $_GET['post'] ) && ( get_post_type( $_GET['post'] ) !== 'product' || ! $this->woocommerce_wpml->products->is_original_product( $_GET['post'] ) ) )
+		     || ( get_post_type( $product_id ) !== 'product' || ! $this->woocommerce_wpml->products->is_original_product( $product_id ) )
 		){
             return;
         }
 
         $this->load_custom_files_js_css();
-
-        $product_id = false;
-        $is_variation = false;
-
-		if ( $pagenow === 'post.php' && isset( $_GET['post'] ) ){
-            $product_id = $_GET['post'];
-        }
 
         if( $variation ) {
             $product_id = $variation->ID;
@@ -64,6 +65,7 @@ class WCML_Downloadable_Products{
     public function sync_files_to_translations( $original_id, $trnsl_id, $data ){
 
         $custom_product_sync = get_post_meta( $original_id, 'wcml_sync_files', true );
+
 	    if ( ( $custom_product_sync && $custom_product_sync === 'self' ) || ( ! $custom_product_sync && ! $this->woocommerce_wpml->settings['file_path_sync'] ) ){
             if( $data ){
                 $orig_var_files = $this->get_files_data( $original_id );

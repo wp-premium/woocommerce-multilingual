@@ -1,13 +1,13 @@
 jQuery(document).ready(function(){
 
-    jQuery(document).on( 'change', '.wcml_currency_switcher', function(){
-        wcml_load_currency( jQuery(this).val() );
-    });
-
-    jQuery(document).on( 'click', '.wcml_currency_switcher li', function(){
-        if(jQuery(this).hasClass('wcml-active-currency')){
-            return;
+    jQuery(document).on( 'click', '.wcml_currency_switcher a', function( event ){
+        event.preventDefault();
+        if( jQuery(this).is(':disabled') || jQuery(this).parent().hasClass('wcml-cs-active-currency') || jQuery(this).hasClass('wcml-cs-active-currency')){
+            return false;
+        }else{
+            jQuery( this ).off( event );
         }
+
         wcml_load_currency( jQuery(this).attr('rel') );
     });
 
@@ -16,10 +16,8 @@ jQuery(document).ready(function(){
     }
 });
 
-
 function wcml_load_currency( currency, force_switch ){
     var ajax_loader = jQuery('<img style=\"margin-left:10px;\" width=\"16\" heigth=\"16\" src=\"' + wcml_mc_settings.wcml_spinner +'\" />')
-    jQuery('.wcml_currency_switcher').attr('disabled', 'disabled');
     jQuery('.wcml_currency_switcher').after();
     ajax_loader.insertAfter(jQuery('.wcml_currency_switcher'));
 
@@ -41,7 +39,6 @@ function wcml_load_currency( currency, force_switch ){
             }else if( typeof response.prevent_switching !== 'undefined' ){
                 jQuery('body').append( response.prevent_switching );
             }else{
-                jQuery('.wcml_currency_switcher').removeAttr('disabled');
                 if(typeof wcml_mc_settings.w3tc !== 'undefined'){
                     var original_url = window.location.href;
                     original_url = original_url.replace(/&wcmlc(\=[^&]*)?(?=&|$)|wcmlc(\=[^&]*)?(&|$)/, '');

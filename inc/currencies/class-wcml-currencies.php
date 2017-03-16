@@ -7,7 +7,7 @@ class WCML_Currencies{
     public function __construct( &$woocommerce_wpml ) {
         $this->woocommerce_wpml =& $woocommerce_wpml;
 
-	    if( is_admin() ){
+	    if( is_admin() && wcml_is_multi_currency_on() ){
 		    add_action( 'update_option_woocommerce_currency', array( $this, 'update_default_currency' ), 10, 2 );
 	    }
 

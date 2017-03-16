@@ -118,7 +118,7 @@ class WCML_Setup {
             }
 
             if ( ! current_user_can( 'manage_options' ) ) {
-                wp_die( __( 'Cheatin&#8217; huh?', 'woocommerce' ) );
+                wp_die( esc_html__( "Cheatin' huh?", 'woocommerce' ) );
             }
 
             $this->complete_setup();

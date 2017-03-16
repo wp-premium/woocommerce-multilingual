@@ -51,7 +51,12 @@ class WCML_Compatibility {
 
         //Product Bundle
         if(class_exists('WC_Product_Bundle')){
-            $this->product_bundles = new WCML_Product_Bundles( $this->sitepress, $this->woocommerce_wpml );
+	        if( version_compare( WC_PB()->version, '5.0.0', '<' ) ){
+		        $this->product_bundles = new WCML_Product_Bundles_Legacy( $this->sitepress, $this->woocommerce_wpml );
+	        }else{
+		        $product_bundle_items = new WCML_WC_Product_Bundles_Items();
+		        $this->product_bundles = new WCML_Product_Bundles( $this->sitepress, $this->woocommerce_wpml, $product_bundle_items );
+	        }
         }
         
          // WooCommerce Variation Swatches and Photos
@@ -169,6 +174,11 @@ class WCML_Compatibility {
         if( class_exists( 'WC_PIP' ) ){
             $this->pip = new WCML_Pip();
         }
+
+	    // The Events Calendar
+	    if( class_exists( 'Tribe__Events__Main' ) ){
+		    new WCML_The_Events_Calendar( $this->sitepress, $this->woocommerce_wpml );
+	    }
 
 
     }

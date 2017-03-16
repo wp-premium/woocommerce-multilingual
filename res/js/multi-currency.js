@@ -26,18 +26,13 @@ jQuery( function($){
 
                 WCML_Multi_Currency.setup_currencies_sorting();
 
-                $(document).on('click','input[name="currency_switcher_style"]', WCML_Multi_Currency.update_currency_switcher_style);
-
-                $(document).on('change','#wcml_curr_sel_orientation', WCML_Multi_Currency.set_currency_switcher_orientation);
-
-                $(document).on('keyup','input[name="wcml_curr_template"]', WCML_Multi_Currency.setup_currency_switcher_template_keyup);
-                $(document).on('change','input[name="wcml_curr_template"]', WCML_Multi_Currency.setup_currency_switcher_template_change);
-
                 $(document).on('change','.currency_option_position', WCML_Multi_Currency.price_preview);
                 $(document).on('change','.currency_option_thousand_sep', WCML_Multi_Currency.price_preview);
                 $(document).on('change','.currency_option_decimal_sep', WCML_Multi_Currency.price_preview);
                 $(document).on('change','.currency_option_decimals', WCML_Multi_Currency.price_preview);
                 $(document).on('change','.currency_code select', WCML_Multi_Currency.price_preview);
+
+                $(document).on('keyup','.wcml-exchange-rate', WCML_Multi_Currency.exchange_rate_check);
 
                 if($('#wcml_mc_options').length){
                     WCML_Multi_Currency.wcml_mc_form_submitted = false;
@@ -57,7 +52,6 @@ jQuery( function($){
                     })
                 }
 
-
             } );
 
         },
@@ -67,9 +61,9 @@ jQuery( function($){
             $('#multi_currency_independent').change(function(){
 
                 if($(this).attr('checked') == 'checked'){
-                    $('#currency-switcher, #multi-currency-per-language-details, #online-exchange-rates').fadeIn();
+                    $('#currency-switcher, #currency-switcher-widget, #currency-switcher-product, #multi-currency-per-language-details, #online-exchange-rates').fadeIn();
                 }else{
-                    $('#currency-switcher, #multi-currency-per-language-details, #online-exchange-rates').fadeOut();
+                    $('#currency-switcher, #currency-switcher-widget, #currency-switcher-product, #multi-currency-per-language-details, #online-exchange-rates').fadeOut();
                 }
 
             })
@@ -132,8 +126,10 @@ jQuery( function($){
                     $('#currency-lang-table').find('tr.default_currency select').each( function(){
                         $(this).find("option[value='"+currency+"']").remove();
                     });
+                    $('.wcml-ui-dialog').each(function(){
+                        WCML_Currency_Switcher_Settings.currency_switcher_preview( $(this) );
+                    });
 
-                    WCML_Multi_Currency.currency_switcher_preview();
 
                     if( $('.wcml-row-currency').length == 1 ){
                         $('#online-exchange-rates-no-currencies').next().hide();
@@ -153,11 +149,10 @@ jQuery( function($){
 
             var parent = $(this).closest('.wcml-dialog-container');
 
-            var chk_rate = WCML_Multi_Currency.check_on_numeric(parent,'.ext_rate');
             var chk_deci = WCML_Multi_Currency.check_on_numeric(parent,'.currency_option_decimals');
             var chk_autosub = WCML_Multi_Currency.check_on_numeric(parent,'.abstract_amount');
 
-            if(chk_rate || chk_deci || chk_autosub){
+            if( chk_deci || chk_autosub ){
                 return false;
             }
 
@@ -177,7 +172,9 @@ jQuery( function($){
                 success: function(response){
                     parent.find('.wcml-dialog-close-button').trigger('click');
 
-                    WCML_Multi_Currency.currency_switcher_preview();
+                    $('.wcml-ui-dialog').each(function(){
+                        WCML_Currency_Switcher_Settings.currency_switcher_preview( $(this) );
+                    });
 
                     if( $('#currency_row_' + currency).length == 0 ) {
 
@@ -438,7 +435,6 @@ jQuery( function($){
 
             $('#wcml_currencies_order').sortable({
                 update: function(){
-                    $('.wcml_currencies_order_ajx_resp').fadeIn();
                     var currencies_order = [];
                     $('#wcml_currencies_order').find('li').each(function(){
                         currencies_order.push($(this).attr('cur'));
@@ -453,64 +449,17 @@ jQuery( function($){
                             order: currencies_order.join(';')
                         },
                         success: function(resp){
-                            fadeInAjxResp('.wcml_currencies_order_ajx_resp', resp.message);
-                            WCML_Multi_Currency.currency_switcher_preview();
+                            if ( resp.success ) {
+                                fadeInAjxResp('.wcml_currencies_order_ajx_resp', resp.data.message);
+                                $('.wcml-ui-dialog').each(function(){
+                                    WCML_Currency_Switcher_Settings.currency_switcher_preview( $(this) );
+                                });
+                            }
                         }
                     });
                 }
             });
 
-        },
-
-        currency_switcher_preview: function (){
-            var template = $('input[name="wcml_curr_template"]').val();
-            if(!template){
-                template = $('#currency_switcher_default').val();
-            }
-
-            var ajaxLoader = $('<span class="spinner" style="visibility: visible;">');
-            $('#wcml_curr_sel_preview').html(ajaxLoader);
-
-            $.ajax({
-                type: "POST",
-                url: ajaxurl,
-                data: {
-                    action: 'wcml_currencies_switcher_preview',
-                    wcml_nonce: $('#wcml_currencies_switcher_preview_nonce').val(),
-                    switcher_type: $('input[name="currency_switcher_style"]:checked').val(),
-                    orientation: $('#wcml_curr_sel_orientation').val(),
-                    template: template
-                },
-                success: function(resp){
-                    $('#wcml_curr_sel_preview').html(resp);
-                }
-            });
-        },
-
-        update_currency_switcher_style: function(e){
-
-            if( $(this).val() == 'list' ){
-                $('#wcml_curr_sel_orientation_list_wrap').show();
-            }else{
-                $('#wcml_curr_sel_orientation_list_wrap').hide();
-            }
-            WCML_Multi_Currency.currency_switcher_preview();
-        },
-
-        set_currency_switcher_orientation: function(e){
-            WCML_Multi_Currency.currency_switcher_preview();
-        },
-
-        setup_currency_switcher_template_keyup: function(e){
-            discard = true;
-            $(this).closest('.wcml-section').find('.button-wrap input').css("border-color","#1e8cbe");
-            WCML_Multi_Currency.currency_switcher_preview();
-        },
-
-        setup_currency_switcher_template_change: function(e){
-            if(!$(this).val()){
-                $('input[name="wcml_curr_template"]').val($('#currency_switcher_default').val())
-            }
         },
 
         price_preview: function(){
@@ -560,8 +509,32 @@ jQuery( function($){
 
         form_fields_changed: function(){
             return this.mc_form_status != $('#wcml_mc_options').serialize();
-        }
+        },
 
+        exchange_rate_check: function( e ){
+
+            if (typeof KeyEvent == "undefined") {
+                var KeyEvent = {
+                    DOM_SUBTRACT: 109,
+                    DOM_DASH: 189,
+                    DOM_E: 69
+                };
+            }
+
+            if(
+                $( this ).val() <= 0 ||
+                !WCML_Multi_Currency.is_number( $( this ).val() ) ||
+                e.keyCode == KeyEvent.DOM_SUBTRACT ||
+                e.keyCode == KeyEvent.DOM_DASH ||
+                e.keyCode == KeyEvent.DOM_E
+            ){
+                $('.wcml-co-set-rate .wcml-error').fadeIn();
+                $('.currency_options_save').attr( 'disabled', 'disabled' );
+            }else{
+                $('.wcml-co-set-rate .wcml-error').fadeOut();
+                $('.currency_options_save').removeAttr('disabled');
+            }
+        }
     }
 
 

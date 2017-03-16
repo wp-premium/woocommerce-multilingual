@@ -35,7 +35,7 @@ class WCML_Custom_Files_UI extends WPML_Templates_Factory {
 			'strings' => array(
 				'use_custom' => __( 'Use custom settings for translations download files', 'woocommerce-multilingual' ),
 				'use_same' => __( 'Use the same files for translations', 'woocommerce-multilingual' ),
-				'separate' => __( 'Add separate download files for translations', 'woocommerce-multilingual' )
+				'separate' => __( 'Add separate download files for translations when you translate this product', 'woocommerce-multilingual' )
 			)
 		);
 

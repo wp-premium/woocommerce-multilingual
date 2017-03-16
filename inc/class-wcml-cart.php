@@ -341,13 +341,18 @@ class WCML_Cart
     }
 
     public function translate_cart_contents( $item ) {
+
         // translate the product id and product data
         $item[ 'product_id' ] = apply_filters( 'translate_object_id', $item[ 'product_id' ], 'product', true );
         if ($item[ 'variation_id' ]) {
             $item[ 'variation_id' ] = apply_filters( 'translate_object_id',$item[ 'variation_id' ], 'product_variation', true );
         }
-        $product_id = $item[ 'variation_id' ] ? $item[ 'variation_id' ] : $item[ 'product_id' ];
-        $item[ 'data' ]->post->post_title = get_the_title( $product_id );
+
+        if( version_compare( WC()->version, '2.7', '>=' ) ){
+        $item[ 'data' ]->set_name( get_the_title( $item[ 'product_id' ] ) );
+        } else {
+	        $item[ 'data' ]->post->post_title = get_the_title( $item[ 'product_id' ] );
+        }
 
         return $item;
     }
@@ -432,7 +437,7 @@ class WCML_Cart
         foreach( WC()->cart->cart_contents as $cart_item ){
             $cart_element_trid = $this->sitepress->get_element_trid( $cart_item[ 'product_id' ], 'post_product' );
             if( apply_filters( 'wcml_add_to_cart_sold_individually', true, $cart_item_data, $product_id, $quantity ) && $current_product_trid == $cart_element_trid && $cart_item[ 'quantity' ] > 0 ){
-                throw new Exception( sprintf( '<a href="%s" class="button wc-forward">%s</a> %s', wc_get_cart_url(), __( 'View cart', 'woocommerce' ), sprintf( __( 'You cannot add another "%s" to your cart.', 'woocommerce' ), get_the_title( $product_id ) ) ) );
+                throw new Exception( sprintf( '<a href="%s" class="button wc-forward">%s</a> %s', esc_url( wc_get_cart_url() ), __( 'View Cart', 'woocommerce' ), sprintf( __( 'You cannot add another &quot;%s&quot; to your cart.', 'woocommerce' ), get_the_title( $product_id ) ) ) );
             }
         }
 

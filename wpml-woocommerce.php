@@ -6,12 +6,12 @@
   Author: OnTheGoSystems
   Author URI: http://www.onthegosystems.com/
   Text Domain: woocommerce-multilingual
-  Version: 4.0.4
+  Version: 4.1.0
 */
 
 if( defined( 'WCML_VERSION' ) ) return;
 
-define( 'WCML_VERSION', '4.0.4' );
+define( 'WCML_VERSION', '4.1.0' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -42,6 +42,9 @@ if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ) {
 
 // Load WooCommerce Multilingual when WPML is active
 add_action( 'wpml_loaded', array( 'woocommerce_wpml', 'instance' ) );
+
+add_action( 'wpml_before_init', array( 'WCML_REST_API_Support', 'remove_wpml_global_url_filters' ), 0 );
+
 
 // Load WooCommerce Multilingual when WPML is NOT active
 add_action('plugins_loaded', 'wpml_wcml_startup', 10000);

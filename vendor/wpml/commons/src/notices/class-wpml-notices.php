@@ -7,8 +7,8 @@ class WPML_Notices {
 
 	const NOTICES_OPTION_KEY   = 'wpml_notices';
 	const DISMISSED_OPTION_KEY = '_wpml_dismissed_notices';
-
-	private $default_group_name = 'default';
+	const NONCE_NAME           = 'wpml-notices';
+	const DEFAULT_GROUP        = 'default';
 
 	/**
 	 * @var array
@@ -69,13 +69,9 @@ class WPML_Notices {
 
 		$new_notice_is_different = $existing_notice && serialize( $existing_notice ) !== serialize( $notice );
 
-		if ( ! $new_notice_is_different || $force_update ) {
-			$notices = $this->get_notices_for_group( $notice->get_group() );
-
-			if ( ( $force_update && $new_notice_is_different ) || ! array_key_exists( $notice->get_id(), $notices ) ) {
-				$this->notices[ $notice->get_group() ][ $notice->get_id() ] = $notice;
-				$this->save_notices();
-			}
+		if ( ! $existing_notice || ( $new_notice_is_different || $force_update ) ) {
+			$this->notices[ $notice->get_group() ][ $notice->get_id() ] = $notice;
+			$this->save_notices();
 		}
 	}
 
@@ -189,7 +185,7 @@ class WPML_Notices {
 				 * @var WPML_Notice $notice
 				 */
 				foreach ( $notices as $notice ) {
-					if ( $notice instanceof WPML_Notice && ! $this->is_notice_dismissed( $group, $notice->get_id() ) ) {
+					if ( $notice instanceof WPML_Notice && ! $this->is_notice_dismissed( $notice ) ) {
 						$this->notice_render->render( $notice );
 					}
 				}
@@ -201,14 +197,53 @@ class WPML_Notices {
 		list( $notice_group, $notice_id ) = $this->parse_group_and_id();
 
 		if ( ! $notice_group ) {
-			$notice_group = $this->default_group_name;
+			$notice_group = self::DEFAULT_GROUP;
 		}
 
-		if ( $this->group_and_id_exist( $notice_group, $notice_id ) ) {
+		if ( $this->has_valid_nonce() && $this->group_and_id_exist( $notice_group, $notice_id ) ) {
 			$this->remove_notice( $notice_group, $notice_id );
 			wp_send_json_success( true );
 		}
+
 		wp_send_json_error( __( 'Notice does not exists.', 'sitepress' ) );
+	}
+
+	function wp_ajax_dismiss_notice() {
+		list( $notice_group, $notice_id ) = $this->parse_group_and_id();
+
+		if ( ! $notice_group ) {
+			$notice_group = self::DEFAULT_GROUP;
+		}
+
+		if ( $this->has_valid_nonce() && $this->group_and_id_exist( $notice_group, $notice_id ) ) {
+			$notice_text = $this->get_notice_text( $notice_group, $notice_id );
+			$this->dismiss_notice( $notice_group, $notice_id, $notice_text, false );
+			$this->remove_notice( $notice_group, $notice_id );
+			$this->save_dismissed();
+
+			wp_send_json_success( true );
+		}
+
+		wp_send_json_error( __( 'Notice does not exist.', 'sitepress' ) );
+	}
+
+	/**
+	 * @param string $notice_group
+	 * @param string $notice_id
+	 *
+	 * @return bool|string
+	 */
+	private function get_notice_text( $notice_group, $notice_id ) {
+		$notices = $this->get_all_notices();
+		$message = true;
+
+		if ( array_key_exists( $notice_group, $notices ) && array_key_exists( $notice_id, $notices[ $notice_group ] ) ) {
+			/**	@var WPML_Notice $notice */
+			$notice  = $notices[ $notice_group ][ $notice_id ];
+			$message = $notice->get_text();
+		}
+
+		return $message;
 	}
 
 	function wp_ajax_dismiss_group() {
@@ -221,7 +256,7 @@ class WPML_Notices {
 
 				/** @var WPML_Notice $notice */
 				foreach ( $notices as $notice ) {
-					$this->dismiss_notice( $notice_group, $notice->get_id(), false );
+					$this->dismiss_notice( $notice_group, $notice->get_id(), $notice->get_text(), false );
 					$this->remove_notice( $notice_group, $notice->get_id() );
 				}
 
@@ -248,7 +283,7 @@ class WPML_Notices {
 	 */
 	private function has_valid_nonce() {
 		$nonce          = isset( $_POST['nonce'] ) ? $_POST['nonce'] : null;
-		return wp_verify_nonce( $nonce, $_POST['action'] );
+		return wp_verify_nonce( $nonce, self::NONCE_NAME );
 	}
 
 	private function group_and_id_exist( $group, $id ) {
@@ -273,10 +308,11 @@ class WPML_Notices {
 	/**
 	 * @param string $group
 	 * @param string $id
+	 * @param string $message
 	 * @param bool   $persist
 	 */
-	private function dismiss_notice( $group, $id, $persist = true ) {
-		$this->dismissed[ $group ][ $id ] = true;
+	private function dismiss_notice( $group, $id, $message, $persist = true ) {
+		$this->dismissed[ $group ][ $id ] = md5( $message );
 
 		if ( $persist ) {
 			$this->save_dismissed();
@@ -284,19 +320,29 @@ class WPML_Notices {
 	}
 
 	/**
-	 * @param string $group
-	 * @param string $id
+	 * @param WPML_Notice $notice
 	 *
 	 * @return bool
 	 */
-	public function is_notice_dismissed( $group, $id ) {
-		return (bool) isset( $this->dismissed[ $group ][ $id ] ) && $this->dismissed[ $group ][ $id ];
+	public function is_notice_dismissed( WPML_Notice $notice ) {
+		$group = $notice->get_group();
+		$id    = $notice->get_id();
+
+		$is_dismissed = (bool) isset( $this->dismissed[ $group ][ $id ] ) && $this->dismissed[ $group ][ $id ];
+
+		if ( $is_dismissed && method_exists( $notice, 'can_be_dismissed_for_different_text' )
+			 && ! $notice->can_be_dismissed_for_different_text() ) {
+			$is_dismissed = md5( $notice->get_text() ) === $this->dismissed[ $group ][ $id ];
+		}
+
+		return $is_dismissed;
 	}
 
 	public function init_hooks() {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_otgs-hide-notice', array( $this, 'wp_ajax_hide_notice' ) );
+		add_action( 'wp_ajax_otgs-dismiss-notice', array( $this, 'wp_ajax_dismiss_notice' ) );
 		add_action( 'wp_ajax_otgs-dismiss-group', array( $this, 'wp_ajax_dismiss_group' ) );
 	}
 }

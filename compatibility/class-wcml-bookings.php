@@ -158,8 +158,12 @@ class WCML_Bookings {
 
 			//allow filtering resources by language
 			add_filter( 'get_booking_resources_args', array( $this, 'filter_get_booking_resources_args' ) );
+			add_filter( 'get_translatable_documents', array( $this, 'filter_translatable_documents' ) );
+			add_filter( 'pre_wpml_is_translated_post_type', array( $this, 'filter_is_translated_post_type' ) );
 
 			add_action( 'woocommerce_product_data_panels',   array( $this, 'show_pointer_info' ) );
+
+			add_action( 'save_post', array( $this, 'sync_booking_status' ), 10, 3 );
 		}
 
 		if ( ! is_admin() || isset( $_POST['action'] ) && $_POST['action'] == 'wc_bookings_calculate_costs' ) {
@@ -1497,9 +1501,13 @@ class WCML_Bookings {
 			'post_type'   => 'wc_booking',
 			'post_title'  => $booking_object->post_title,
 			'post_status' => $booking_object->post_status,
-			'ping_status' => 'closed',
-			'post_parent' => $booking_object->post_parent,
+			'ping_status' => 'closed'
 		);
+
+		if( $booking_object->post_parent && $lang ){
+			$translated_parent = apply_filters( 'translate_object_id', $booking_object->post_parent, get_post_type( $booking_object->post_parent ), false, $lang );
+			if( $translated_parent ) $booking_data[ 'post_parent' ] = $translated_parent;
+		}
 
 		$active_languages = $this->sitepress->get_active_languages();
 
@@ -1538,7 +1546,7 @@ class WCML_Bookings {
 			$this->sitepress->set_element_language_details( $trnsl_booking_id, 'post_wc_booking', $trid, $language['code'] );
 
 			$meta_args = array(
-				'_booking_order_item_id' => get_post_meta( $booking_id, '_booking_order_item_id', true ),
+				'_booking_order_item_id' => 0,
 				'_booking_product_id'    => $this->get_translated_booking_product_id( $booking_id, $language['code'] ),
 				'_booking_resource_id'   => $this->get_translated_booking_resource_id( $booking_id, $language['code'] ),
 				'_booking_persons'       => $this->get_translated_booking_persons_ids( $booking_id, $language['code'] ),
@@ -1782,13 +1790,13 @@ class WCML_Bookings {
 
 					$package['contents'][ 'wc_bookings:person:' . $person_type->ID . ':name' ] = array(
 						'translate' => 1,
-						'data'      => $this->tp->encode_field_data( $person_type->post_title, 'base64' ),
+						'data'      => $this->tp->encode_field_data( $person_type->get_name(), 'base64' ),
 						'format'    => 'base64'
 					);
 
 					$package['contents'][ 'wc_bookings:person:' . $person_type->ID . ':description' ] = array(
 						'translate' => 1,
-						'data'      => $this->tp->encode_field_data( $person_type->post_excerpt, 'base64' ),
+						'data'      => $this->tp->encode_field_data( $person_type->get_description(), 'base64' ),
 						'format'    => 'base64'
 					);
 
@@ -2257,9 +2265,10 @@ class WCML_Bookings {
 			$sold_indiv = false;
 			foreach( WC()->cart->cart_contents as $cart_item ){
 				if(
-					isset( $cart_item[ 'booking' ] ) &&
+					isset( $cart_item[ 'booking' ] ) && isset( $cart_item[ 'booking' ][ '_booking_id' ] ) &&
 					$cart_item[ 'booking' ][ '_start_date' ] == $cart_item_data[ 'booking' ][ '_start_date' ] &&
-					$cart_item[ 'booking' ][ '_end_date' ] == $cart_item_data[ 'booking' ][ '_end_date' ]
+					$cart_item[ 'booking' ][ '_end_date' ] == $cart_item_data[ 'booking' ][ '_end_date' ] &&
+					$cart_item[ 'booking' ][ '_booking_id' ] == $cart_item_data[ 'booking' ][ '_booking_id' ]
 				){
 					$sold_indiv = true;
 				}
@@ -2268,5 +2277,57 @@ class WCML_Bookings {
 
 		return $sold_indiv;
 	}
+
+	// unset "bookings" from translatable documents to hide WPML languages section from booking edit page
+	public function filter_translatable_documents( $icl_post_types ){
+
+		if(
+			( isset( $_GET[ 'post' ] ) && get_post_type( $_GET[ 'post' ] ) == 'wc_booking' ) ||
+			( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'wc_booking' )
+		){
+			unset( $icl_post_types[ 'wc_booking' ] );
+		}
+
+		return $icl_post_types;
+	}
+
+	// hide WPML languages links section from bookings list page
+	public function filter_is_translated_post_type( $type ){
+
+		if( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'wc_booking' ){
+			return false;
+		}
+
+		return $type;
+	}
+
+	/**
+	 * @param int $post_id
+	 * @param WP_Post $post
+	 * @param bool $update
+	 *
+	 */
+	public function sync_booking_status( $post_id, $post, $update ){
+
+		if( $post->post_type === 'wc_booking' && $update ){
+
+			$trid = $this->sitepress->get_element_trid( $post_id, 'post_wc_booking' );
+			$translations = $this->sitepress->get_element_translations( $trid, 'post_wc_booking' );
+
+			foreach( $translations as $translation ){
+				if( $translation->element_id != $post_id ){
+					$this->wpdb->update(
+						$this->wpdb->posts,
+						array( 'post_status' => $post->post_status ),
+						array( 'ID' => $translation->element_id )
+					);
+				}
+			}
+
+		}
+
+	}
+
+
 
 }
