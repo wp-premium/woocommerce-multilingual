@@ -69,18 +69,16 @@ class woocommerce_wpml {
     public function __construct(){
 
         $this->settings = $this->get_settings();
-
         $this->currencies = new WCML_Currencies( $this );
-
         $this->xdomain_data = new WCML_xDomain_Data;
 
-        new WCML_Widgets( $this );
+	    new WCML_Widgets( $this );
 
-	    if ( 'yes' == get_option( 'woocommerce_api_enabled' ) ){
-	    	global $sitepress;
-	    	if( version_compare( WC()->version, '2.6') ){
+	    if ( class_exists( 'woocommerce' ) && 'yes' == get_option( 'woocommerce_api_enabled' ) ) {
+		    global $sitepress;
+		    if ( version_compare( WC()->version, '2.6', '>=' ) ) {
 			    new WCML_REST_API_Support( $this, $sitepress );
-		    }else{
+		    } else {
 			    new WCML_WooCommerce_Rest_API_Support( $this, $sitepress );
 		    }
 	    }
