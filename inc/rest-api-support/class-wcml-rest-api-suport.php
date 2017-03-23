@@ -141,7 +141,7 @@ class WCML_REST_API_Support{
 		$lang = $wp_query->get('lang');
 		$include = $wp_query->get('post__in');
 		if( empty( $lang ) && !empty( $include ) ){
-			$filtered_include = [];
+			$filtered_include = array();
 			foreach( $include as $id ){
 				$filtered_include[] = apply_filters( 'translate_object_id', $id, get_post_type($id), true );
 			}

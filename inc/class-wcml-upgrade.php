@@ -117,6 +117,11 @@ class WCML_Upgrade{
         if($migration_ran || empty($version_in_db)){
             update_option('_wcml_version', WCML_VERSION);            
         }
+
+        if( get_option( '_wcml_4_1_0_migration_required' ) && class_exists( 'woocommerce' ) ){
+            $this->upgrade_4_1_0();
+            delete_option('_wcml_4_1_0_migration_required' );
+        }
     }
     
     function upgrade_2_9_9_1(){
@@ -532,55 +537,60 @@ class WCML_Upgrade{
     function upgrade_4_1_0(){
         global $wpdb;
 
-        $results = $wpdb->get_results("
+        if( !class_exists( 'woocommerce' ) ){
+            update_option( '_wcml_4_1_0_migration_required', true );
+        }else{
+            $results = $wpdb->get_results("
                         SELECT *
                         FROM {$wpdb->postmeta}
                         WHERE meta_key LIKE '_price_%' OR meta_key LIKE '_regular_price_%' OR ( meta_key LIKE '_sale_price_%' AND meta_key NOT LIKE '_sale_price_dates%' )
                     ");
 
-        foreach( $results as $price ){
-            $formatted_price = wc_format_decimal( $price->meta_value );
-            update_post_meta( $price->post_id, $price->meta_key, $formatted_price );
+            foreach( $results as $price ){
+                $formatted_price = wc_format_decimal( $price->meta_value );
+                update_post_meta( $price->post_id, $price->meta_key, $formatted_price );
 
-            if( get_post_type( $price->post_id ) == 'product_variation' ){
-                delete_transient( 'wc_var_prices_'.wp_get_post_parent_id( $price->post_id ) );
+                if( get_post_type( $price->post_id ) == 'product_variation' ){
+                    delete_transient( 'wc_var_prices_'.wp_get_post_parent_id( $price->post_id ) );
+                }
+
             }
 
-        }
-        
-        $wcml_settings = get_option( '_wcml_settings' );
+            $wcml_settings = get_option( '_wcml_settings' );
 
-        if( $wcml_settings[ 'currency_switcher_style' ] == 'list' ){
-            if(  $wcml_settings[ 'wcml_curr_sel_orientation' ] == 'horizontal' ){
-                $switcher_style = 'wcml-horizontal-list';
+            if(
+                isset( $wcml_settings[ 'currency_switcher_style' ] ) &&
+                $wcml_settings[ 'currency_switcher_style' ] == 'list'
+            ){
+                if(  $wcml_settings[ 'wcml_curr_sel_orientation' ] == 'horizontal' ){
+                    $switcher_style = 'wcml-horizontal-list';
+                }else{
+                    $switcher_style = 'wcml-vertical-list';
+                }
             }else{
-                $switcher_style = 'wcml-vertical-list';
+                $switcher_style = 'wcml-dropdown';
             }
-        }else{
-            $switcher_style = 'wcml-dropdown';
+
+            $wcml_settings[ 'currency_switchers' ][ 'product' ] = array(
+                'switcher_style' => $switcher_style,
+                'template' => isset( $wcml_settings[ 'wcml_curr_template' ] ) ? $wcml_settings[ 'wcml_curr_template' ] : '',
+                'widget_title' => '',
+                'color_scheme' => array(
+                    'font_current_normal'       => '',
+                    'font_current_hover'        => '',
+                    'background_current_normal' => '',
+                    'background_current_hover'  => '',
+                    'font_other_normal'         => '',
+                    'font_other_hover'          => '',
+                    'background_other_normal'   => '',
+                    'background_other_hover'    => '',
+                    'border_normal'             => ''
+                )
+            );
+
+            $wcml_settings[ 'currency_switcher_additional_css' ] = '';
+            update_option('_wcml_settings', $wcml_settings );
         }
-
-        $wcml_settings[ 'currency_switchers' ][ 'product' ] = array(
-            'switcher_style' => $switcher_style,
-            'template' => $wcml_settings[ 'wcml_curr_template' ],
-            'widget_title' => '',
-            'color_scheme' => array(
-                'font_current_normal'       => '',
-                'font_current_hover'        => '',
-                'background_current_normal' => '',
-                'background_current_hover'  => '',
-                'font_other_normal'         => '',
-                'font_other_hover'          => '',
-                'background_other_normal'   => '',
-                'background_other_hover'    => '',
-                'border_normal'             => ''
-            )
-        );
-
-
-        $wcml_settings[ 'currency_switcher_additional_css' ] = '';
-        update_option('_wcml_settings', $wcml_settings );
     }
-
-
+    
 }

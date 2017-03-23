@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.7.3
-Stable tag: 4.1.0
+Stable tag: 4.1.2
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,17 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.1.2 =
+* Fixed the currency switcher not being displayed correctly when using the Storefront theme
+* Fixed an incompatibility with an older WPML version leading to a fatal error
+* Fixed the currency switcher css being loaded when no currency switcher was displayed
+* Fixed a bug causing an error when upgrading WooCommerce Multilingual to version 4.1 with WooCommerce inactive.
+
+= 4.1.1 =
+* Fixed fatal error that was occurring when using an older version of WPML (introduced in version 4.1.0)
+* Fixed a bug causing a 'Invalid or duplicated SKU when saving or updating product' warning when editing a product
+* Fixed a bug causing a fatal error when deactivating WooCommerce while WooCommerce Multilingual was active
 
 = 4.1.0 =
 * Enhanced language switchers

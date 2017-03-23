@@ -201,7 +201,11 @@ final class WP_Installer{
     }
 
     public function load_locale(){
-        $locale = get_locale();
+        if( function_exists('get_user_locale') ){
+	        $locale = get_user_locale();
+        }else{
+	        $locale = get_locale();
+        }
         $locale = apply_filters( 'plugin_locale', $locale, 'installer' );
         $mo_file = $this->plugin_path() . '/locale/installer-' . $locale . '.mo';
         if(file_exists($mo_file)){
@@ -466,6 +470,10 @@ final class WP_Installer{
                 }
                 $this->settings = unserialize($_settings);
             }
+
+	        if ( ! array_key_exists( 'repositories', $this->settings ) ) {
+		        $this->settings['repositories'] = array();
+	        }
 
             if (is_multisite() && isset($this->settings['repositories'])) {
                 $network_settings = maybe_unserialize(get_site_option('wp_installer_network'));
@@ -979,11 +987,8 @@ final class WP_Installer{
                 // downloads
                 if(isset($subscription_type) && !$expired && ($product['subscription_type'] == $subscription_type || $product['subscription_type_equivalent'] == $subscription_type)){
                     foreach($product['plugins'] as $plugin_slug){
-
-                        $row['downloads'][] = $this->settings['repositories'][$repository_id]['data']['downloads']['plugins'][$plugin_slug];
-
+                        $row['downloads'][ $plugin_slug ] = $this->settings['repositories'][$repository_id]['data']['downloads']['plugins'][$plugin_slug];
                     }
-
                 }
 
                 //subpackages
@@ -1120,7 +1125,11 @@ final class WP_Installer{
                 $subscription_data = $this->fetch_subscription_data( $repository_id, $site_key, self::SITE_KEY_VALIDATION_SOURCE_REGISTRATION );
 
                 if ( $subscription_data ) {
-                    $this->settings['repositories'][$repository_id]['subscription'] = array('key' => $site_key, 'data' => $subscription_data);
+                    $this->settings['repositories'][$repository_id]['subscription'] = array(
+                            'key' => $site_key,
+                            'data' => $subscription_data,
+                            'registered_by' => get_current_user_id()
+                    );
                     $this->save_settings();
                 } else {
                     $error = __( 'Invalid site key for the current site.', 'installer' )
@@ -1215,7 +1224,11 @@ final class WP_Installer{
                     $subscription_data = $this->fetch_subscription_data( $repository_id, $site_key, self::SITE_KEY_VALIDATION_SOURCE_UPDATES_CHECK );
 
                     if ( $subscription_data ) {
-                        $this->settings['repositories'][$repository_id]['subscription'] = array('key' => $site_key, 'data' => $subscription_data);
+                        $this->settings['repositories'][$repository_id]['subscription'] = array(
+                                'key' => $site_key,
+                                'data' => $subscription_data,
+                                'registered_by' => get_current_user_id()
+                        );
 
                         //also refresh products information
                         $this->refresh_repositories_data();

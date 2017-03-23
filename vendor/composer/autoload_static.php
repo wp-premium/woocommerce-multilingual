@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff
+class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -355,6 +355,7 @@ class ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff
         'WCML_Exchange_Rates_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-exchange-rates-ui.php',
         'WCML_Exchange_Rates_YahooFinance' => __DIR__ . '/../..' . '/inc/currencies/exchange-rate-services/class-wcml-exchange-rates-yahoo-finance.php',
         'WCML_Extra_Product_Options' => __DIR__ . '/../..' . '/compatibility/class-wcml-extra-product-options.php',
+        'WCML_File' => __DIR__ . '/../..' . '/inc/currencies/currency-switcher/class-wcml-file.php',
         'WCML_Fix_Copied_Custom_Fields_WPML353' => __DIR__ . '/../..' . '/inc/class-wcml-fix-copied-custom-fields-wpml353.php',
         'WCML_Flatsome' => __DIR__ . '/../..' . '/compatibility/class-wcml-flatsome.php',
         'WCML_Install' => __DIR__ . '/../..' . '/inc/class-wcml-install.php',
@@ -445,14 +446,6 @@ class ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff
         'WCML_sensei' => __DIR__ . '/../..' . '/compatibility/class-wcml-sensei.php',
         'WCML_wcExporter' => __DIR__ . '/../..' . '/compatibility/class-wcml-wcexporter.php',
         'WCML_xDomain_Data' => __DIR__ . '/../..' . '/inc/class-wcml-xdomain-data.php',
-        'WPML_Auto_Loader' => __DIR__ . '/..' . '/wpml/commons/src/wpml-auto-loader.php',
-        'WPML_Notice' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice.php',
-        'WPML_Notice_Action' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-action.php',
-        'WPML_Notice_Render' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notice-render.php',
-        'WPML_Notices' => __DIR__ . '/..' . '/wpml/commons/src/notices/class-wpml-notices.php',
-        'WPML_Templates_Factory' => __DIR__ . '/..' . '/wpml/commons/src/templating/class-wpml-templates-factory.php',
-        'WPML_Twig_WP_Plugin_Extension' => __DIR__ . '/..' . '/wpml/commons/src/twig/twig-extensions/wpml-twig-wp-plugin-extension.php',
-        'WPML_WP_API' => __DIR__ . '/..' . '/wpml/commons/src/wpml-wp/class-wpml-wp-api.php',
         'WooCommerce_Functions_Wrapper' => __DIR__ . '/../..' . '/inc/woocommerce-functions-wrapper.php',
         'woocommerce_wpml' => __DIR__ . '/../..' . '/inc/class-woocommerce-wpml.php',
         'xrstf\\Composer52\\AutoloadGenerator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
@@ -462,10 +455,10 @@ class ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitef9433f3fca31466e8742a1ca02f75ff::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$classMap;
 
         }, null, ClassLoader::class);
     }

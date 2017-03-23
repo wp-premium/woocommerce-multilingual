@@ -49,6 +49,7 @@ class WCML_Products{
         add_filter( 'wpml_copy_from_original_custom_fields', array( $this, 'filter_excerpt_field_content_copy' ) );
 
         add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
+        add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
     }
 
     // Check if original product
@@ -537,5 +538,39 @@ class WCML_Products{
             }
         }
     }
+
+	function check_product_sku( $sku_found, $product_id, $sku ) {
+
+		if ( $sku_found ) {
+
+			$product_trid = $this->sitepress->get_element_trid( $product_id, 'post_' . get_post_type( $product_id ) );
+
+			$products = $this->wpdb->get_results(
+				$this->wpdb->prepare(
+					"
+                SELECT p.ID
+                FROM {$this->wpdb->posts} as p
+                LEFT JOIN {$this->wpdb->postmeta} as pm ON ( p.ID = pm.post_id )
+                WHERE p.post_type IN ( 'product', 'product_variation' )
+                AND p.post_status = 'publish'
+                AND pm.meta_key = '_sku' AND pm.meta_value = '%s'
+             ",
+					wp_slash( $sku )
+				)
+			);
+
+			$sku_found = false;
+
+			foreach ( (array) $products as $product ) {
+				$trid = $this->sitepress->get_element_trid( $product->ID, 'post_' . get_post_type( $product_id ) );
+				if ( $product_trid !== $trid ) {
+					$sku_found = true;
+					break;
+				}
+			}
+		}
+
+		return $sku_found;
+	}
 
 }
