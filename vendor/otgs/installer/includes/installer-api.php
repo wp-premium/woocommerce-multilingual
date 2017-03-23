@@ -112,5 +112,23 @@ class WP_Installer_API{
 
     }
 
+	/**
+	 * Retrieve the ID of the last user who registered a repository.
+	 *
+	 * @since 1.7.16
+	 *
+	 * @param string The repository id (e.g. wpml)
+	 * @return int The user id (or zero)
+	 */
+	public static function get_registering_user_id( $repository_id = 'wpml' ){
+
+		$user_id = 0;
+		if( isset( WP_Installer()->settings['repositories'][$repository_id]['subscription']['registered_by'] ) ){
+			$user_id = WP_Installer()->settings['repositories'][$repository_id]['subscription']['registered_by'];
+		}
+
+		return $user_id;
+	}
+
 
 }

@@ -23,12 +23,13 @@ class WCML_Currency_Switcher_Templates {
     /* @var string $ds */
     private $ds = DIRECTORY_SEPARATOR;
 
-    public function __construct( &$woocommerce_wpml, WPML_File $wpml_file = null ) {
+    public function __construct( &$woocommerce_wpml, WCML_File $wpml_file = null ) {
 
         $this->woocommerce_wpml = $woocommerce_wpml;
 
         if ( ! $wpml_file ) {
-            $wpml_file = new WPML_File();
+            //TODO: use WPML_FILE class instead after changing requirements for WPML >= 3.6.0
+            $wpml_file = new WCML_File();
         }
 
         $this->wpml_file = $wpml_file;
@@ -67,14 +68,18 @@ class WCML_Currency_Switcher_Templates {
         $wcml_settings = $this->woocommerce_wpml->get_settings();
 
         if( isset( $wcml_settings[ 'currency_switchers' ] ) ){
-            foreach( $wcml_settings[ 'currency_switchers' ] as $switcher ){
+            foreach( $wcml_settings[ 'currency_switchers' ] as $switcher_id => $switcher ){
+                if( 'product' === $switcher_id && 0 === $wcml_settings[ 'currency_switcher_product_visibility' ] ){
+                    continue;
+                }
+
                 foreach( $this->templates as $key => $template ){
                     if( $switcher['switcher_style'] == $key && !isset( $templates[$key] ) ){
                         $templates[$key] = $template;
                     }
                 }
             }
-        }else{
+        }elseif( isset( $wcml_settings[ 'currency_switcher_product_visibility' ] ) && $wcml_settings[ 'currency_switcher_product_visibility' ] === 1 ){
             //set default template to active
             $templates['wcml-dropdown'] = $this->templates['wcml-dropdown'];
         }
@@ -316,31 +321,32 @@ class WCML_Currency_Switcher_Templates {
             }
         }
 
-        if( isset( $wcml_settings[ 'currency_switchers' ] ) ){
-            foreach( $wcml_settings[ 'currency_switchers' ] as $key => $switcher_data ){
+        if( $templates ){
+            if( isset( $wcml_settings[ 'currency_switchers' ] ) ){
+                foreach( $wcml_settings[ 'currency_switchers' ] as $key => $switcher_data ){
 
-                $switcher_template = $switcher_data['switcher_style'];
-                $css = $this->get_color_picket_css( $key, $switcher_data );
-                $template = $templates[ $switcher_template ];
+                    $switcher_template = $switcher_data['switcher_style'];
+                    $css = $this->get_color_picket_css( $key, $switcher_data );
+                    $template = $templates[ $switcher_template ];
 
-                if ( $template->has_styles() ) {
-                    wp_add_inline_style( $template->get_inline_style_handler(), $css );
+                    if ( $template->has_styles() ) {
+                        wp_add_inline_style( $template->get_inline_style_handler(), $css );
+                    }else{
+                        echo $this->get_inline_style( $key, $switcher_template, $css );
+                    }
+                }
+            }
+
+            if ( ! empty( $wcml_settings['currency_switcher_additional_css'] ) ) {
+                $additional_css = $this->sanitize_css( $wcml_settings['currency_switcher_additional_css'] );
+
+                if( $style_handler ){
+                    wp_add_inline_style( $style_handler, $additional_css );
                 }else{
-                    echo $this->get_inline_style( $key, $switcher_template, $css );
+                    echo $this->get_inline_style( 'currency_switcher', 'additional_css', $additional_css );
                 }
             }
         }
-
-        if ( ! empty( $wcml_settings['currency_switcher_additional_css'] ) ) {
-            $additional_css = $this->sanitize_css( $wcml_settings['currency_switcher_additional_css'] );
-
-            if( $style_handler ){
-                wp_add_inline_style( $style_handler, $additional_css );
-            }else{
-                echo $this->get_inline_style( 'currency_switcher', 'additional_css', $additional_css );
-            }
-        }
-
     }
 
     /**

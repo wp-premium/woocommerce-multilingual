@@ -22,7 +22,7 @@ class WCML_Setup_Introduction_UI extends WPML_Templates_Factory {
                 'description2'   => array(
 
                 	'title' => __("We'll help you:", 'woocommerce-multilingual'),
-	                'step1' => __('Translate the &quot;store&quot; pages', 'woocommerce-multilingual'),
+	                'step1' => __("Translate the 'store' pages", 'woocommerce-multilingual'),
 	                'step2' => __("Choose which attributes to make translatable", 'woocommerce-multilingual'),
 	                'step3' => __("Choose if you need multiple currencies", 'woocommerce-multilingual'),
 

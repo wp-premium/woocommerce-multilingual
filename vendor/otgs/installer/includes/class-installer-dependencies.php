@@ -113,47 +113,52 @@ class Installer_Dependencies{
             $plugins = get_plugins();
 
             $installer_settings = WP_Installer()->settings;
-            foreach ($installer_settings['repositories'] as $repository_id => $repository) {
+	        if ( isset( $installer_settings['repositories'] ) ) {
+		        foreach ( $installer_settings['repositories'] as $repository_id => $repository ) {
 
-                if ($this->is_win_paths_exception($repository_id)) {
+			        if ( $this->is_win_paths_exception( $repository_id ) ) {
 
-                    $repositories_plugins = array();
-                    foreach ($repository['data']['packages'] as $package) {
-                        foreach ($package['products'] as $product) {
-                            foreach ($product['plugins'] as $plugin_slug) {
-                                $download = $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'][$plugin_slug];
-                                if ( empty($download['free-on-wporg']) ) {
-                                    $repositories_plugins[$download['slug']] = $download['name'];
-                                }
-                            }
-                        }
-                    }
+				        $repositories_plugins = array();
+				        foreach ( $repository['data']['packages'] as $package ) {
+					        foreach ( $package['products'] as $product ) {
+						        foreach ( $product['plugins'] as $plugin_slug ) {
+							        $download = $installer_settings['repositories'][ $repository_id ]['data']['downloads']['plugins'][ $plugin_slug ];
+							        if ( empty( $download['free-on-wporg'] ) ) {
+								        $repositories_plugins[ $download['slug'] ] = $download['name'];
+							        }
+						        }
+					        }
+				        }
 
-                    foreach ($plugins as $plugin_id => $plugin) {
+				        foreach ( $plugins as $plugin_id => $plugin ) {
 
-                        if( in_array( $plugin_id, $plugins_with_updates ) ) {
+					        if ( in_array( $plugin_id, $plugins_with_updates ) ) {
 
-                            $wp_plugin_slug = dirname($plugin_id);
-                            if (empty($wp_plugin_slug)) {
-                                $wp_plugin_slug = basename($plugin_id, '.php');
-                            }
+						        $wp_plugin_slug = dirname( $plugin_id );
+						        if ( empty( $wp_plugin_slug ) ) {
+							        $wp_plugin_slug = basename( $plugin_id, '.php' );
+						        }
 
-                            foreach ($repositories_plugins as $slug => $name) {
-                                if ($wp_plugin_slug == $slug || $name == $plugin['Name'] || $name == $plugin['Title']) { //match order: slug, name, title
+						        foreach ( $repositories_plugins as $slug => $name ) {
+							        if ( $wp_plugin_slug == $slug || $name == $plugin['Name'] || $name == $plugin['Title'] ) { //match order: slug, name, title
 
-                                    remove_action("after_plugin_row_$plugin_id", 'wp_plugin_update_row', 10, 2);
-                                    add_action("after_plugin_row_$plugin_id", array($this, 'wp_plugin_update_row_win_exception'), 10, 2);
+								        remove_action( "after_plugin_row_$plugin_id", 'wp_plugin_update_row', 10, 2 );
+								        add_action( "after_plugin_row_$plugin_id", array(
+									        $this,
+									        'wp_plugin_update_row_win_exception',
+								        ), 10, 2 );
 
-                                }
-                            }
+							        }
+						        }
 
-                        }
+					        }
 
-                    }
+				        }
 
-                }
+			        }
 
 
+	            }
             }
 
         }
