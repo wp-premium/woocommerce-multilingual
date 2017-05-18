@@ -73,6 +73,3 @@ if( version_compare( $GLOBALS['wp_version'], '4.4.0' , '<' ) ){
     }
 
 }
-
-
-?>
