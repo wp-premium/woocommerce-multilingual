@@ -120,16 +120,13 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 	}
 
 	public function get_products_data(){
-		global $iclTranslationManagement;
 
 		$active_languages = $this->sitepress->get_active_languages();
 
 		$products_info = $this->get_product_info_from_self_edit_mode();
-
 		if( !$products_info ){
 			$products_info = $this->get_product_info_for_translators();
 		}
-
 		if( !$products_info ){
 			$products_info = $this->get_products_from_filter();
 		}
@@ -210,11 +207,12 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 
 		if ( isset( $_GET[ 'prid' ] ) ) {
 
-			if ( ! $this->woocommerce_wpml->products->is_original_product( $_GET[ 'prid' ] ) ) {
-				$original_language = $this->woocommerce_wpml->products->get_original_product_language( $_GET[ 'prid' ] );
-				$products[]        = get_post( apply_filters( 'translate_object_id', $_GET[ 'prid' ], 'product', true, $original_language ) );
+			$prid = sanitize_text_field( $_GET[ 'prid' ] );
+
+			if ( ! $this->woocommerce_wpml->products->is_original_product( $prid ) ){
+				$products[]        = get_post( $this->woocommerce_wpml->products->get_original_product_id( $prid ) );
 			} else {
-				$products[] = get_post( $_GET[ 'prid' ] );
+				$products[] = get_post( $prid );
 			}
 			$products_count = 1;
 
@@ -390,6 +388,7 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 		$sql .= " LEFT JOIN {$wpdb->prefix}icl_translations AS t ON t.element_id = p.id";
 
 		if(in_array($translation_status,array('not','need_update','in_progress','complete'))){
+
 			foreach($this->sitepress->get_active_languages() as $lang){
 
 				if( $lang['code'] == $slang ) continue;
@@ -429,16 +428,26 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 			$sql .= " AND (";
 			switch($translation_status){
 				case 'not':
-					$wheres = array();
 					foreach($this->sitepress->get_active_languages() as $lang){
 						if($lang['code'] == $slang) continue;
 						$tbl_alias_suffix = str_replace('-','_',$lang['code']);
-						$sql .= "( p.ID IN ( SELECT iclt_orig.element_id FROM {$wpdb->prefix}icl_translations iclt_orig LEFT JOIN {$wpdb->prefix}icl_translations iclt_{$tbl_alias_suffix}
-                        ON iclt_{$tbl_alias_suffix}.trid=iclt_orig.trid AND iclt_{$tbl_alias_suffix}.language_code='{$lang['code']}' WHERE iclt_orig.source_language_code IS NULL and iclt_{$tbl_alias_suffix}.element_id IS NULL ) ) OR\n";
+						$sql .= sprintf( "( p.ID iN ( 
+							SELECT iclt_orig.element_id 
+							FROM {$wpdb->prefix}icl_translations iclt_orig 
+							LEFT JOIN {$wpdb->prefix}icl_translations iclt_%s 
+								ON iclt_%s.trid= iclt_orig.trid AND 
+                                   iclt_%s.language_code='%s' 
+                            WHERE iclt_orig.source_language_code IS NULL AND 
+                                  iclt_%s.element_id IS NULL AND
+                                  iclt_%s.element_type IN ('post_product', 'post_product_variation') 
+                          ) 
+                        ) OR ",
+							esc_sql( $tbl_alias_suffix ), esc_sql( $tbl_alias_suffix ), esc_sql( $tbl_alias_suffix ),
+							esc_sql( $lang['code'] ), esc_sql( $tbl_alias_suffix ), esc_sql( $tbl_alias_suffix )
+						);
 					}
 					break;
 				case ( $translation_status == 'need_update' || $translation_status == 'not' ):
-					$wheres = array();
 					foreach($this->sitepress->get_active_languages() as $lang){
 						if($lang['code'] == $slang) continue;
 						$tbl_alias_suffix = str_replace('-','_',$lang['code']);
@@ -446,7 +455,6 @@ class WCML_Products_UI extends WPML_Templates_Factory {
 					}
 					break;
 				case 'in_progress':
-					$wheres = array();
 					foreach($this->sitepress->get_active_languages() as $lang){
 						if($lang['code'] == $slang) continue;
 						$tbl_alias_suffix = str_replace('-','_',$lang['code']);

@@ -4,7 +4,7 @@ class WooCommerce_Functions_Wrapper{
 
     public static function is_deprecated(){
 
-        if( version_compare( WC_VERSION , '2.7', '<' ) ){
+        if( version_compare( WC_VERSION , '3.0.0', '<' ) ){
             return true;
         }else{
             return false;
@@ -61,6 +61,22 @@ class WooCommerce_Functions_Wrapper{
             return $order->get_order_currency();
         }else{
             return $order->get_currency();
+        }
+    }
+    
+    public static function get_item_downloads( $object, $item ){
+        if( self::is_deprecated() ){
+            return $object->get_item_downloads( $item );
+        }else{
+            return $item->get_item_downloads( );
+        }
+    }
+
+    public static function get_order_id( $order ){
+        if( self::is_deprecated() ){
+            return $order->id;
+        }else{
+            return $order->get_id();
         }
     }
 

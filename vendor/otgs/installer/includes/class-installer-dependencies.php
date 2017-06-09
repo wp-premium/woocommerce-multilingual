@@ -42,7 +42,7 @@ class Installer_Dependencies{
 
                 $installer_settings = WP_Installer()->settings;
 
-                if ( is_array( $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'] ) ) {
+                if ( isset($installer_settings['repositories'][$repository_id]['data']) && is_array( $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'] ) ) {
                     $a_plugin = current( $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'] );
                     $url = WP_Installer()->append_site_key_to_download_url( $a_plugin['url'], 'xxxxxx', $repository_id );
                     $tmpfname = wp_tempnam( $url );

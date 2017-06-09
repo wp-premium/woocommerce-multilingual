@@ -49,7 +49,7 @@ class WCML_WC_Strings{
             $lang = $sitepress->get_user_admin_language( get_current_user_id(), true );
         }
 
-        if( $product ){
+        if( $product && is_object( $product ) ){
             $product_id = WooCommerce_Functions_Wrapper::get_product_id( $product );
         }elseif( is_numeric( $product_obj ) ){
             $product_id = $product_obj;

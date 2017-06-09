@@ -18,13 +18,11 @@ class WCML_Multi_Currency_Resources{
     }
 
     private static function load_inline_js(){
-        global $woocommerce_wpml;
 
         wp_register_script('wcml-mc-scripts', WCML_PLUGIN_URL . '/res/js/wcml-multi-currency' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION, true);
 
         wp_enqueue_script('wcml-mc-scripts');
 
-        $script_vars['wcml_mc_nonce']   = wp_create_nonce( 'switch_currency' );
         $script_vars['wcml_spinner']    = WCML_PLUGIN_URL . '/res/images/ajax-loader.gif';
         $script_vars['current_currency']= array(
             'code'  => self::$multi_currency->get_client_currency(),

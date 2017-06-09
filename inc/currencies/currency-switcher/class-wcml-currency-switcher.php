@@ -54,8 +54,13 @@ class WCML_Currency_Switcher{
 	}
 
 	public function wcml_currency_switcher( $args = array() ) {
+
 		if ( is_page( wc_get_page_id( 'myaccount' ) ) ) {
 			return '';
+		}
+
+		if( !is_array( $args ) ){
+			$args = array();
 		}
 
 		if( !isset( $args[ 'switcher_id' ] ) ){
@@ -70,8 +75,14 @@ class WCML_Currency_Switcher{
 			$currency_switcher_settings = $wcml_settings[ 'currency_switchers' ][ $args[ 'switcher_id' ] ];
 		}
 
-		if ( !isset( $args[ 'switcher_style' ] ) ) {
-			$args[ 'switcher_style' ] = isset( $currency_switcher_settings[ 'switcher_style' ] ) ? $currency_switcher_settings[ 'switcher_style' ] : 'wcml-dropdown';
+		$args = $this->check_and_convert_switcher_style( $args );
+
+		$switcher_style_not_available = !isset( $args[ 'switcher_style' ] ) || !$this->woocommerce_wpml->cs_templates->check_is_active( $args[ 'switcher_style' ] );
+		if (
+			!isset( $args[ 'preview' ] ) &&
+			$switcher_style_not_available
+		) {
+			$args[ 'switcher_style' ] = isset( $currency_switcher_settings[ 'switcher_style' ] ) ? $currency_switcher_settings[ 'switcher_style' ] : $this->woocommerce_wpml->cs_templates->get_first_active();
 		}
 
 		if ( !isset( $args[ 'format' ] ) ) {
@@ -94,9 +105,9 @@ class WCML_Currency_Switcher{
 				$show_currency_switcher = false;
 			}elseif( is_product() ){
 				$current_product_id = get_post()->ID;
-				$original_product_language = $this->woocommerce_wpml->products->get_original_product_language( $current_product_id );
+				$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $current_product_id );
 				$use_custom_prices  = get_post_meta(
-					apply_filters( 'translate_object_id', $current_product_id, get_post_type( $current_product_id ), true, $original_product_language ),
+					$original_product_id,
 					'_wcml_custom_prices_status',
 					true
 				);
@@ -195,6 +206,7 @@ class WCML_Currency_Switcher{
 	 * @deprecated 3.9
 	 */
 	public function currency_switcher( $args = array() ){
+
 		$this->wcml_currency_switcher( $args );
 	}
 
@@ -269,6 +281,28 @@ class WCML_Currency_Switcher{
 				'border_normal'             => ''
 			)
 		);
+	}
+
+	//backward compatibility to convert switcher style for users who uses old parameters wcml-1874
+	public function check_and_convert_switcher_style( $args ){
+
+		if( isset( $args[ 'switcher_style' ] ) ){
+			if(
+				'list' === $args[ 'switcher_style' ] &&
+				isset( $args[ 'orientation' ] )
+			){
+				if( 'horizontal' === $args[ 'orientation' ] ){
+					$args[ 'switcher_style' ] = 'wcml-horizontal-list';
+				}else{
+					$args[ 'switcher_style' ] = 'wcml-vertical-list';
+				}
+				unset( $args[ 'orientation' ] );
+			}elseif( 'dropdown' === $args[ 'switcher_style' ] ){
+				$args[ 'switcher_style' ] = 'wcml-dropdown';
+			}
+		}
+
+		return $args;
 	}
 
 }

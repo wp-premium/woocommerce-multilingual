@@ -44,6 +44,8 @@ class WCML_Orders{
         add_action( 'woocommerce_before_order_itemmeta', array( $this, 'backend_before_order_itemmeta' ), 100, 3 );
         add_action( 'woocommerce_after_order_itemmeta', array( $this, 'backend_after_order_itemmeta' ), 100, 3 );
 
+        add_filter( 'woocommerce_get_item_downloads', array( $this, 'filter_downloadable_product_items' ), 10, 3 );
+        add_filter( 'woocommerce_customer_get_downloadable_products', array( $this, 'filter_customer_get_downloadable_products' ), 10, 3 );
     }
 
     function filtered_woocommerce_new_order_note_data($translations, $text, $domain ){
@@ -374,6 +376,41 @@ class WCML_Orders{
             update_post_meta( $object_id, '_order_currency', get_woocommerce_currency() );
         }
 
+    }
+
+
+    public function filter_downloadable_product_items( $files, $item, $object  ){
+
+        $order_language = get_post_meta( WooCommerce_Functions_Wrapper::get_order_id( $object ), 'wpml_language', true );
+
+        if( $item['variation_id'] > 0 ){
+            $item['variation_id'] =  apply_filters( 'translate_object_id', $item['variation_id'], 'product_variation', false, $order_language );
+        }else{
+            $item['product_id'] = apply_filters( 'translate_object_id',  $item['product_id'], 'product', false, $order_language );
+        }
+
+        remove_filter( 'woocommerce_get_item_downloads', array( $this, 'filter_downloadable_product_items' ), 10, 3 );
+
+        $files = WooCommerce_Functions_Wrapper::get_item_downloads( $object, $item );
+
+        add_filter( 'woocommerce_get_item_downloads', array( $this, 'filter_downloadable_product_items' ), 10, 3 );
+
+        return $files;
+    }
+
+    public function filter_customer_get_downloadable_products( $downloads ){
+
+        foreach( $downloads as $key => $download ){
+
+            $translated_id =  apply_filters( 'translate_object_id',  $download['product_id'], get_post_type( $download['product_id'] ), false, $this->sitepress->get_current_language() );
+
+            if( $translated_id ){
+                $downloads[ $key ][ 'product_name' ] = get_the_title( $translated_id );
+            }
+
+        }
+
+        return $downloads;
     }
 
 

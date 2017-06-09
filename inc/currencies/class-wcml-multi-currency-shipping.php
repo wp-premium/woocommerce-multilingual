@@ -107,12 +107,8 @@ class WCML_Multi_Currency_Shipping{
         foreach( $packages as $package_id => $package ){
             if( isset( $package['rates'] ) ){
                 foreach( $package['rates'] as $rate_id => $rate  ){
-                    foreach( $rate->taxes as $tax_id => $tax){
-
-                        $packages[$package_id]['rates'][$rate_id]->taxes[$tax_id] =
-                            $this->multi_currency->prices->raw_price_filter( $tax );
-
-                    }
+	                $packages[$package_id]['rates'][$rate_id]->taxes =
+		                WC_Tax::calc_shipping_tax( $packages[$package_id]['rates'][$rate_id]->cost, WC_Tax::get_shipping_tax_rates() );
                 }
             }
         }

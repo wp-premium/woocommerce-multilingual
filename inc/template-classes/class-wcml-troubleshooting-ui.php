@@ -26,6 +26,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 			'prod_with_variations' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_with_variations(),
 			'prod_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_for_gallery_sync(),
 			'prod_categories_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_categories(),
+			'sync_stock_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_stock_sync(),
 			'all_products_taxonomies' => $this->get_all_products_taxonomies(),
 			'product_type_sync_needed' => !empty( $translated_product_type_terms ) ? true : false,
 			'media_def' => defined('WPML_MEDIA_VERSION'),
@@ -43,6 +44,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 				'none' => __( 'none', 'woocommerce-multilingual' ),
 				'start' => __( 'Start', 'woocommerce-multilingual' ),
 				'delete_terms' => __( 'Fix product_type taxonomy terms', 'woocommerce-multilingual' ),
+				'sync_stock' => __( 'Sync product stock quantity and status ( synchronizing min stock between translations )', 'woocommerce-multilingual' ),
 				'product_type_fix_done' => __( 'Done!', 'woocommerce-multilingual' )
 			),
 			'nonces' => array(
@@ -52,6 +54,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 				'trbl_sync_categories' => wp_nonce_field('trbl_sync_categories', 'trbl_sync_categories_nonce'),
 				'trbl_duplicate_terms' => wp_nonce_field('trbl_duplicate_terms', 'trbl_duplicate_terms_nonce'),
 				'trbl_product_type_terms' => wp_nonce_field('trbl_product_type_terms', 'trbl_product_type_terms_nonce'),
+				'trbl_sync_stock' => wp_nonce_field('trbl_sync_stock', 'trbl_sync_stock_nonce'),
 			)
 		);
 

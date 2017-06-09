@@ -30,8 +30,7 @@ class WCML_Mix_and_Match_Products{
 
             } else {
 
-                $original_product_language = $woocommerce_wpml->products->get_original_product_language( $post_id );
-                $original_product_id = apply_filters( 'translate_object_id', $post_id, 'product', true, $original_product_language );
+                $original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $post_id );
 
             }
 

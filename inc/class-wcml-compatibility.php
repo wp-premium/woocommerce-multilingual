@@ -180,6 +180,24 @@ class WCML_Compatibility {
 		    new WCML_The_Events_Calendar( $this->sitepress, $this->woocommerce_wpml );
 	    }
 
+	    // Klarna Gateway
+	    if( class_exists( 'WC_Gateway_Klarna' ) ){
+            $this->klarna_gateway = new WCML_Klarna_Gateway();
+            $this->klarna_gateway->add_hooks();
+	    }
+
+	    // YITH_WCQV
+	    if( class_exists( 'YITH_WCQV' ) ){
+		    $this->yith_wcqv = new WCML_YITH_WCQV();
+            $this->yith_wcqv->add_hooks();
+	    }
+
+	    // Woocommerce Memberships
+	    if( class_exists( 'WC_Memberships' ) ){
+		    $this->wc_memberships = new WCML_WC_Memberships();
+            $this->wc_memberships->add_hooks();
+	    }
+
 
     }
 

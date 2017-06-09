@@ -30,7 +30,7 @@ class WCML_Endpoints{
 
     function register_endpoints_translations( $language = null ){
 
-        if( !class_exists( 'woocommerce' ) || !defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE || version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) return false;
+        if( !class_exists( 'WooCommerce' ) || !defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE || version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) return false;
 
         $wc_vars = WC()->query->query_vars;
 
@@ -111,6 +111,8 @@ class WCML_Endpoints{
             delete_option( 'flush_rules_for_endpoints_translations' );
             WC()->query->init_query_vars();
             WC()->query->add_endpoints();
+            WC()->query->query_vars = apply_filters( 'wcml_flush_rules_query_vars', WC()->query->query_vars, $this );
+
 	        remove_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
             flush_rewrite_rules( false );
 	        add_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
@@ -150,7 +152,14 @@ class WCML_Endpoints{
 
             $current_lang = $sitepress->get_current_language();
             $page_lang = $sitepress->get_language_for_element( $post->ID, 'post_page');
-            if( $current_lang != $page_lang && apply_filters( 'translate_object_id', $pid, 'page', false, $page_lang ) == $post->ID  ){
+
+            if(
+                (
+                    $current_lang != $page_lang &&
+                    apply_filters( 'translate_object_id', $pid, 'page', false, $page_lang ) == $post->ID
+                ) ||
+                apply_filters( 'wcml_endpoint_force_permalink_filter', false, $current_lang, $page_lang )
+            ){
 
                 $endpoints = WC()->query->get_query_vars();
 
@@ -162,7 +171,7 @@ class WCML_Endpoints{
                         }elseif( $key === 'order-received' ){
                             $endpoint = get_option( 'woocommerce_checkout_order_received_endpoint' );
                         }else{
-                            $endpoint = get_option( 'woocommerce_myaccount_'.str_replace( '-','_',$key).'_endpoint' );
+                            $endpoint = get_option( 'woocommerce_myaccount_'.str_replace( '-','_',$key).'_endpoint', $endpoint );
                         }
 
                         $endpoint = apply_filters( 'wcml_endpoint_permalink_filter', $endpoint, $key );

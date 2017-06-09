@@ -2,137 +2,140 @@
 
 class WCML_WC_Subscriptions{
 
-    private $new_subscription = false;
+	private $new_subscription = false;
 
-    function __construct(){
+	function __construct(){
 
-        add_action('init', array($this, 'init'),9);
-        add_filter('wcml_variation_term_taxonomy_ids',array($this,'wcml_variation_term_taxonomy_ids'));
-        add_filter('woocommerce_subscription_lengths', array($this, 'woocommerce_subscription_lengths'), 10, 2);
+		add_action('init', array($this, 'init'),9);
+		add_filter('wcml_variation_term_taxonomy_ids',array($this,'wcml_variation_term_taxonomy_ids'));
+		add_filter('woocommerce_subscription_lengths', array($this, 'woocommerce_subscription_lengths'), 10, 2);
 
-        add_filter('wcml_register_endpoints_query_vars', array($this, 'register_endpoint' ), 10, 3 );
-        add_filter('wcml_endpoint_permalink_filter', array($this, 'endpoint_permalink_filter'), 10, 2);
+		add_filter('wcml_register_endpoints_query_vars', array($this, 'register_endpoint' ), 10, 3 );
+		add_filter('wcml_endpoint_permalink_filter', array($this, 'endpoint_permalink_filter'), 10, 2);
 
-        //custom prices
-        add_filter( 'wcml_custom_prices_fields', array( $this, 'set_prices_fields' ), 10, 2 );
-        add_filter( 'wcml_custom_prices_strings', array( $this, 'set_labels_for_prices_fields' ), 10, 2 );
-        add_filter( 'wcml_custom_prices_fields_labels', array( $this, 'set_labels_for_prices_fields' ), 10, 2 );
-        add_filter( 'wcml_update_custom_prices_values', array( $this, 'update_custom_prices_values' ), 10 ,3 );
-        add_action( 'wcml_after_custom_prices_block', array( $this, 'new_subscription_prices_block') );
+		//custom prices
+		add_filter( 'wcml_custom_prices_fields', array( $this, 'set_prices_fields' ), 10, 2 );
+		add_filter( 'wcml_custom_prices_strings', array( $this, 'set_labels_for_prices_fields' ), 10, 2 );
+		add_filter( 'wcml_custom_prices_fields_labels', array( $this, 'set_labels_for_prices_fields' ), 10, 2 );
+		add_filter( 'wcml_update_custom_prices_values', array( $this, 'update_custom_prices_values' ), 10 ,3 );
+		add_action( 'wcml_after_custom_prices_block', array( $this, 'new_subscription_prices_block') );
 
-        // reenable coupons for subscriptions when multicurrency is on
-        add_action('woocommerce_subscription_cart_after_grouping', array($this, 'woocommerce_subscription_cart_after_grouping'));
+		// reenable coupons for subscriptions when multicurrency is on
+		add_action('woocommerce_subscription_cart_after_grouping', array($this, 'woocommerce_subscription_cart_after_grouping'));
 
-        add_action( 'woocommerce_subscriptions_product_options_pricing',   array( $this, 'show_pointer_info' ) );
-        add_action( 'woocommerce_variable_subscription_pricing',   array( $this, 'show_pointer_info' ) );
-    }
+		add_action( 'woocommerce_subscriptions_product_options_pricing',   array( $this, 'show_pointer_info' ) );
+		add_action( 'woocommerce_variable_subscription_pricing',   array( $this, 'show_pointer_info' ) );
+	}
 
-    function init(){
-        if( !is_admin() ){
-            add_filter('woocommerce_subscriptions_product_sign_up_fee', array($this, 'product_price_filter'), 10, 2);                
-        }
-    }
-    
-    function product_price_filter($subscription_sign_up_fee, $product){
-        
-        $subscription_sign_up_fee = apply_filters('wcml_raw_price_amount', $subscription_sign_up_fee );
-        
-        return $subscription_sign_up_fee;
-    }
+	function init(){
+		if( !is_admin() ){
+			add_filter('woocommerce_subscriptions_product_sign_up_fee', array($this, 'product_price_filter'), 10, 2);
 
-    function wcml_variation_term_taxonomy_ids($get_variation_term_taxonomy_ids){
-        global $wpdb;
-        $get_variation_term_taxonomy_id = $wpdb->get_var("SELECT tt.term_taxonomy_id FROM $wpdb->terms AS t LEFT JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.slug = 'variable-subscription'");
-        
-        if(!empty($get_variation_term_taxonomy_id)){
-            $get_variation_term_taxonomy_ids[] = $get_variation_term_taxonomy_id;    
-        }
-        
-        return $get_variation_term_taxonomy_ids;
-    }
-    
-    public function woocommerce_subscription_lengths($subscription_ranges, $subscription_period) {
-        
-        if (is_array($subscription_ranges)) {
-            foreach ($subscription_ranges as $period => $ranges) {
-                if (is_array($ranges)) {
-                    foreach ($ranges as $range) {
-                        if ($range == "9 months") {
-                            $breakpoint = true;
-                        }
-                        $new_subscription_ranges[$period][] = apply_filters( 'wpml_translate_single_string', $range, 'wc_subscription_ranges', $range); 
-                    }
-                }
-            }
-        }
-        
-        return isset($new_subscription_ranges) ? $new_subscription_ranges : $subscription_ranges;
-    }
-    
-    public function woocommerce_subscription_cart_after_grouping() {
-        global $woocommerce_wpml;
-        
-        if( $woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
-            remove_action('woocommerce_before_calculate_totals', 'WC_Subscriptions_Coupon::remove_coupons', 10);
-        }
-        
-    }
+			add_action( 'woocommerce_before_calculate_totals', array( $this, 'maybe_backup_recurring_carts'), 1 );
+			add_action( 'woocommerce_after_calculate_totals', array( $this, 'maybe_restore_recurring_carts'), 200 );
+		}
+	}
 
-    function set_prices_fields( $fields, $product_id ){
-        if( $this->is_subscriptions_product( $product_id ) || $this->new_subscription ){
-            $fields[] = '_subscription_sign_up_fee';
-        }
+	function product_price_filter($subscription_sign_up_fee, $product){
 
-        return $fields;
+		$subscription_sign_up_fee = apply_filters('wcml_raw_price_amount', $subscription_sign_up_fee );
 
-    }
+		return $subscription_sign_up_fee;
+	}
 
-    function set_labels_for_prices_fields( $labels, $product_id ){
+	function wcml_variation_term_taxonomy_ids($get_variation_term_taxonomy_ids){
+		global $wpdb;
+		$get_variation_term_taxonomy_id = $wpdb->get_var("SELECT tt.term_taxonomy_id FROM $wpdb->terms AS t LEFT JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.slug = 'variable-subscription'");
 
-        if( $this->is_subscriptions_product( $product_id ) || $this->new_subscription ){
-            $labels[ '_regular_price' ] = __( 'Subscription Price', 'woocommerce-multilingual' );
-            $labels[ '_subscription_sign_up_fee' ] = __( 'Sign-up Fee', 'woocommerce-multilingual' );
-        }
+		if(!empty($get_variation_term_taxonomy_id)){
+			$get_variation_term_taxonomy_ids[] = $get_variation_term_taxonomy_id;
+		}
 
-        return $labels;
+		return $get_variation_term_taxonomy_ids;
+	}
 
-    }
+	public function woocommerce_subscription_lengths($subscription_ranges, $subscription_period) {
 
-    function update_custom_prices_values( $prices, $code, $variation_id = false ){
+		if (is_array($subscription_ranges)) {
+			foreach ($subscription_ranges as $period => $ranges) {
+				if (is_array($ranges)) {
+					foreach ($ranges as $range) {
+						if ($range == "9 months") {
+							$breakpoint = true;
+						}
+						$new_subscription_ranges[$period][] = apply_filters( 'wpml_translate_single_string', $range, 'wc_subscription_ranges', $range);
+					}
+				}
+			}
+		}
 
-        if( isset( $_POST[ '_custom_subscription_sign_up_fee' ][ $code ]  ) ){
-            $prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom_subscription_sign_up_fee' ][ $code ] );
-        }
+		return isset($new_subscription_ranges) ? $new_subscription_ranges : $subscription_ranges;
+	}
 
-        if( $variation_id && isset( $_POST[ '_custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ]  ) ){
-            $prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom__custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ] );
-        }
+	public function woocommerce_subscription_cart_after_grouping() {
+		global $woocommerce_wpml;
 
-        return $prices;
+		if( $woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
+			remove_action('woocommerce_before_calculate_totals', 'WC_Subscriptions_Coupon::remove_coupons', 10);
+		}
 
-    }
+	}
 
-    function is_subscriptions_product( $product_id ){
-        global $wpdb;
-        $get_variation_term_taxonomy_ids = $wpdb->get_col("SELECT tt.term_taxonomy_id FROM $wpdb->terms AS t LEFT JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.slug IN ( 'subscription', 'variable-subscription' ) AND tt.taxonomy = 'product_type'");
+	function set_prices_fields( $fields, $product_id ){
+		if( $this->is_subscriptions_product( $product_id ) || $this->new_subscription ){
+			$fields[] = '_subscription_sign_up_fee';
+		}
 
-        if( get_post_type( $product_id ) == 'product_variation' ){
-            $product_id = wp_get_post_parent_id( $product_id );
-        }
+		return $fields;
 
-        $is_subscriptions_product = $wpdb->get_var($wpdb->prepare("SELECT count(object_id) FROM $wpdb->term_relationships WHERE object_id = %d AND term_taxonomy_id IN (".join(',',$get_variation_term_taxonomy_ids).")",$product_id));
-        return $is_subscriptions_product;
-    }
+	}
 
-    function new_subscription_prices_block( $product_id ){
-        global $woocommerce_wpml;
-        if( $product_id == 'new' ){
-            $this->new_subscription = true;
-            echo '<div class="wcml_prices_if_subscription" style="display: none">';
-            $custom_prices_ui = new WCML_Custom_Prices_UI( $woocommerce_wpml, 'new' );
-            $custom_prices_ui->show();
-            echo '</div>';
-            ?>
+	function set_labels_for_prices_fields( $labels, $product_id ){
+
+		if( $this->is_subscriptions_product( $product_id ) || $this->new_subscription ){
+			$labels[ '_regular_price' ] = __( 'Subscription Price', 'woocommerce-multilingual' );
+			$labels[ '_subscription_sign_up_fee' ] = __( 'Sign-up Fee', 'woocommerce-multilingual' );
+		}
+
+		return $labels;
+
+	}
+
+	function update_custom_prices_values( $prices, $code, $variation_id = false ){
+
+		if( isset( $_POST[ '_custom_subscription_sign_up_fee' ][ $code ]  ) ){
+			$prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom_subscription_sign_up_fee' ][ $code ] );
+		}
+
+		if( $variation_id && isset( $_POST[ '_custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ]  ) ){
+			$prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom__custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ] );
+		}
+
+		return $prices;
+
+	}
+
+	function is_subscriptions_product( $product_id ){
+		global $wpdb;
+		$get_variation_term_taxonomy_ids = $wpdb->get_col("SELECT tt.term_taxonomy_id FROM $wpdb->terms AS t LEFT JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.slug IN ( 'subscription', 'variable-subscription' ) AND tt.taxonomy = 'product_type'");
+
+		if( get_post_type( $product_id ) == 'product_variation' ){
+			$product_id = wp_get_post_parent_id( $product_id );
+		}
+
+		$is_subscriptions_product = $wpdb->get_var($wpdb->prepare("SELECT count(object_id) FROM $wpdb->term_relationships WHERE object_id = %d AND term_taxonomy_id IN (".join(',',$get_variation_term_taxonomy_ids).")",$product_id));
+		return $is_subscriptions_product;
+	}
+
+	function new_subscription_prices_block( $product_id ){
+		global $woocommerce_wpml;
+		if( $product_id == 'new' ){
+			$this->new_subscription = true;
+			echo '<div class="wcml_prices_if_subscription" style="display: none">';
+			$custom_prices_ui = new WCML_Custom_Prices_UI( $woocommerce_wpml, 'new' );
+			$custom_prices_ui->show();
+			echo '</div>';
+			?>
             <script>
                 jQuery(document).ready(function($) {
                     jQuery('.wcml_prices_if_subscription .wcml_custom_prices_input').attr('name', '_wcml_custom_prices[new_subscription]').attr( 'id', '_wcml_custom_prices[new_subscription]');
@@ -167,34 +170,54 @@ class WCML_WC_Subscriptions{
                     });
                 });
             </script>
-        <?php
-        }
-    }
+			<?php
+		}
+	}
 
-    function register_endpoint( $query_vars, $wc_vars, $obj ){
+	function register_endpoint( $query_vars, $wc_vars, $obj ){
 
-        $query_vars[ 'view-subscription' ] = $obj->get_endpoint_translation( 'view-subscription',  isset( $wc_vars['view-subscription'] ) ? $wc_vars['view-subscription'] : 'view-subscription' );
-        return $query_vars;
-    }
+		$query_vars[ 'view-subscription' ] = $obj->get_endpoint_translation( 'view-subscription',  isset( $wc_vars['view-subscription'] ) ? $wc_vars['view-subscription'] : 'view-subscription' );
+		return $query_vars;
+	}
 
-    function endpoint_permalink_filter( $endpoint, $key ){
+	function endpoint_permalink_filter( $endpoint, $key ){
 
-        if( $key == 'view-subscription' ){
-            return 'view-subscription';
-        }
+		if( $key == 'view-subscription' ){
+			return 'view-subscription';
+		}
 
-        return $endpoint;
-    }
+		return $endpoint;
+	}
 
-    public function show_pointer_info(){
+	public function show_pointer_info(){
 
-        $pointer_ui = new WCML_Pointer_UI(
-            sprintf( __( 'You can translate strings related to subscription products on the %sWPML String Translation page%s. Use the search on the top of that page to find the strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php&context=woocommerce_subscriptions').'">', '</a>' ),
-            'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-subscriptions-woocommerce-multilingual/',
-            'general_product_data .subscription_pricing',
-            'prepend'
-        );
+		$pointer_ui = new WCML_Pointer_UI(
+			sprintf( __( 'You can translate strings related to subscription products on the %sWPML String Translation page%s. Use the search on the top of that page to find the strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php&context=woocommerce_subscriptions').'">', '</a>' ),
+			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-subscriptions-woocommerce-multilingual/',
+			'general_product_data .subscription_pricing',
+			'prepend'
+		);
 
-        $pointer_ui->show();
-    }
+		$pointer_ui->show();
+	}
+
+	/**
+	 * @param WC_Cart $cart
+	 */
+	public function maybe_backup_recurring_carts( $cart ){
+		if( ! empty( $cart->recurring_carts ) ){
+			$this->recurring_carts = $cart->recurring_carts;
+		}
+	}
+
+	/**
+	 * @param WC_Cart $cart
+	 */
+	public function maybe_restore_recurring_carts( $cart ){
+		if( ! empty( $this->recurring_carts ) ){
+			$cart->recurring_carts = $this->recurring_carts;
+			$this->recurring_carts = null;
+		}
+	}
+
 }
