@@ -30,8 +30,7 @@ function wcml_load_currency( currency, force_switch ){
         data : {
             action: 'wcml_switch_currency',
             currency : currency,
-            force_switch: force_switch,
-            wcml_nonce: wcml_mc_settings.wcml_mc_nonce
+            force_switch: force_switch
         },
         success: function(response) {
             if(typeof response.error !== 'undefined') {

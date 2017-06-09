@@ -471,11 +471,14 @@ final class WP_Installer{
                 $this->settings = unserialize($_settings);
             }
 
-	        if ( ! array_key_exists( 'repositories', $this->settings ) ) {
-		        $this->settings['repositories'] = array();
-	        }
+            // Initialize
+            if( empty( $this->settings ) ){
+                $this->settings = array(
+                        'repositories' => array()
+                );
+            }
 
-            if (is_multisite() && isset($this->settings['repositories'])) {
+            if ( is_multisite() ) {
                 $network_settings = maybe_unserialize(get_site_option('wp_installer_network'));
                 if ($network_settings) {
                     foreach ($this->settings['repositories'] as $rep_id => $repository) {
@@ -559,20 +562,16 @@ final class WP_Installer{
     private function _pre_1_6_backwards_compatibility($settings){
 
         if( version_compare($this->version(), '1.8', '<') && !empty($settings['repositories']) ){
-
             foreach ($settings['repositories'] as $repository_id => $repository) {
-
-                foreach ($repository['data']['downloads']['plugins'] as $slug => $download) {
-
-                    $settings['repositories'][$repository_id]['data']['downloads']['plugins'][$slug]['slug'] = $download['basename'];
-
+                if( isset( $repository['data'] ) ) {
+	                foreach ( $repository['data']['downloads']['plugins'] as $slug => $download ) {
+		                $settings['repositories'][ $repository_id ]['data']['downloads']['plugins'][ $slug ]['slug'] = $download['basename'];
+	                }
                 }
             }
-
         }
 
         return $settings;
-
     }
 
     //backward compatibility - support old products list format (downloads under products instead of global downloads list)
@@ -581,61 +580,41 @@ final class WP_Installer{
         if( version_compare($this->version(), '1.8', '<') && !empty($settings['repositories']) && empty($this->_old_products_format_backwards_compatibility) ) {
 
             foreach ($settings['repositories'] as $repository_id => $repository) {
-
                 $populate_downloads = false;
+	            if( isset( $repository['data'] ) ) {
 
-                foreach ($repository['data']['packages'] as $package_id => $package) {
+		            foreach ( $repository['data']['packages'] as $package_id => $package ) {
+			            foreach ( $package['products'] as $product_id => $product ) {
+				            if ( ! isset( $product['plugins'] ) ) {
+					            $populate_downloads = true;
+					            foreach ( $product['downloads'] as $download_id => $download ) {
+						            $settings['repositories'][ $repository_id ]['data']['packages'][ $package_id ]['products'][ $product_id ]['plugins'][] = $download['slug'];
+					            }
+				            }
+			            }
+		            }
 
-                    foreach ($package['products'] as $product_id => $product) {
-
-                        if (!isset($product['plugins'])) {
-
-                            $populate_downloads = true;
-
-                            foreach ($product['downloads'] as $download_id => $download) {
-
-                                $settings['repositories'][$repository_id]['data']['packages'][$package_id]['products'][$product_id]['plugins'][] = $download['slug'];
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-                if ($populate_downloads) {
-
-                    // Add downloads branch
-                    foreach ($repository['data']['packages'] as $package_id => $package) {
-
-                        foreach ($package['products'] as $product_id => $product) {
-
-                            foreach ($product['downloads'] as $download_id => $download) {
-
-                                if (!isset($settings['repositories'][$repository_id]['data']['downloads']['plugins'][$download['slug']])) {
-                                    $settings['repositories'][$repository_id]['data']['downloads']['plugins'][$download['slug']] = $download;
-                                }
-
-                                $settings['repositories'][$repository_id]['data']['packages'][$package_id]['products'][$product_id]['plugins'][] = $download['slug'];
-                            }
-
-                            unset($settings['repositories'][$repository_id]['data']['packages'][$package_id]['products'][$product_id]['downloads']);
-
-                        }
-
-                    }
-
-                }
-
+		            if ( $populate_downloads ) {
+			            // Add downloads branch
+			            foreach ( $repository['data']['packages'] as $package_id => $package ) {
+				            foreach ( $package['products'] as $product_id => $product ) {
+					            foreach ( $product['downloads'] as $download_id => $download ) {
+						            if ( ! isset( $settings['repositories'][ $repository_id ]['data']['downloads']['plugins'][ $download['slug'] ] ) ) {
+							            $settings['repositories'][ $repository_id ]['data']['downloads']['plugins'][ $download['slug'] ] = $download;
+						            }
+						            $settings['repositories'][ $repository_id ]['data']['packages'][ $package_id ]['products'][ $product_id ]['plugins'][] = $download['slug'];
+					            }
+					            unset( $settings['repositories'][ $repository_id ]['data']['packages'][ $package_id ]['products'][ $product_id ]['downloads'] );
+				            }
+			            }
+		            }
+	            }
             }
 
             $this->_old_products_format_backwards_compatibility = true;
-
         }
 
         return $settings;
-
     }
 
     public function get_installer_site_url( $repository_id = false ){

@@ -17,7 +17,7 @@ class WCML_Status_Status_UI extends WPML_Templates_Factory {
             'media_version' => defined( 'WPML_MEDIA_VERSION' ),
             'tm_version' => defined( 'WPML_TM_VERSION' ),
             'st_version' => defined( 'WPML_ST_VERSION' ),
-            'wc' => class_exists( 'Woocommerce' ),
+            'wc' => class_exists( 'WooCommerce' ),
             'icl_setup' => $this->sitepress->setup(),
             'strings' => array(
                 'status' => __( 'Plugins Status', 'woocommerce-multilingual' ),

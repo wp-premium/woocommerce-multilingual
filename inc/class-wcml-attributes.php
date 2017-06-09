@@ -23,7 +23,7 @@ class WCML_Attributes{
 
         add_action( 'woocommerce_before_attribute_delete', array( $this, 'refresh_taxonomy_translations_cache' ), 10, 3 );
 
-        if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '2.7', '<' ) ) ){
+        if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '3.0.0', '<' ) ) ){
             add_filter( 'woocommerce_get_product_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );
         }else{
             add_filter( 'woocommerce_product_get_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );

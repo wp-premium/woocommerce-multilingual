@@ -61,6 +61,7 @@
 		<custom-field action="translate">_variation_description</custom-field>
 		<custom-field action="ignore">wcml_sync_hash</custom-field>
 		<custom-field action="ignore">wpml_language</custom-field>
+		<custom-field action="ignore">_product_attributes</custom-field>
 	</custom-fields>
 	<custom-types>
 		<custom-type translate="1">product</custom-type>

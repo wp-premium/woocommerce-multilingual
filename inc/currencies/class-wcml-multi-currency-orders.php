@@ -7,8 +7,9 @@ class WCML_Multi_Currency_Orders{
      */
     private $multi_currency;
 
-    public function __construct( &$multi_currency ){
+    public function __construct( &$multi_currency, &$woocommerce_wpml ){
         $this->multi_currency =& $multi_currency;
+        $this->woocommerce_wpml =& $woocommerce_wpml;
 
         if( is_admin() ){
             add_filter( 'init', array( $this, 'orders_init' ) );
@@ -151,8 +152,8 @@ class WCML_Multi_Currency_Orders{
 
             if( isset( $_COOKIE[ '_wcml_order_currency' ] ) ){
                 $currency =  get_woocommerce_currency_symbol($_COOKIE[ '_wcml_order_currency' ]);
-            }elseif( get_post_meta( $_POST['order_id'], '_order_currency' ) ){
-                $currency = get_woocommerce_currency_symbol( get_post_meta( $_POST['order_id'], '_order_currency', true ) );
+            }elseif( isset( $_POST[ 'order_id' ] ) && $order_currency = get_post_meta( sanitize_text_field( $_POST[ 'order_id' ] ), '_order_currency', true ) ){
+                $currency = get_woocommerce_currency_symbol( $order_currency );
             }
 
             if( isset( $_SERVER[ 'HTTP_REFERER' ] ) ){
@@ -246,7 +247,8 @@ class WCML_Multi_Currency_Orders{
             $order_currency = get_post_meta( $_POST['order_id'], '_order_currency', true);
         }
 
-        $custom_price = get_post_meta( $_POST['item_to_add'], '_price_'.$order_currency, true );
+        $original_product_id = $this->woocommerce_wpml->products->get_original_product_id( sanitize_text_field( $_POST['item_to_add'][ 0 ] ) );
+        $custom_price = get_post_meta( $original_product_id, '_price_'.$order_currency, true );
 
         if( !isset( $this->multi_currency->prices ) ){
             $this->multi_currency->prices = new WCML_Multi_Currency_Prices( $this->multi_currency );
@@ -268,7 +270,6 @@ class WCML_Multi_Currency_Orders{
         $item['line_tax'] = $this->multi_currency->prices->convert_price_amount( $item['line_tax'], $order_currency );
         wc_update_order_item_meta( $item_id, '_line_tax', $item['line_tax'] );
 
-	    $item->save_meta_data();
         return $item;
     }
 
@@ -362,7 +363,7 @@ class WCML_Multi_Currency_Orders{
         $current_screen = get_current_screen();
 		if( !empty($current_screen) && $current_screen->id == 'shop_order' ){
 		    $order_id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
-			$order_currency = get_post_meta( $order_id, 'order_currency', true );
+			$order_currency = get_post_meta( $order_id, '_order_currency', true );
 			if( empty( $order_currency ) ){
 				$value = $this->get_order_currency_cookie();
 			}

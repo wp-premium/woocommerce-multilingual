@@ -188,7 +188,8 @@ class WCML_Currency_Switcher_Ajax{
 				'switcher_id'	 => $_POST['switcher_id'],
 				'format'         => isset( $_POST['template'] ) ? stripslashes_deep( $_POST['template'] ) : '%name% (%symbol%) - %code%',
 				'switcher_style' => $_POST['switcher_style'],
-				'color_scheme'   => $_POST['color_scheme']
+				'color_scheme'   => $_POST['color_scheme'],
+				'preview' => true
 			)
 		);
 		$switcher_preview = ob_get_contents();

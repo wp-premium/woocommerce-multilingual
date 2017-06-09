@@ -29,7 +29,7 @@ class WCML_Dependencies{
             $this->allok = false;
         }
 
-        if(!class_exists('woocommerce')){
+        if( !class_exists( 'WooCommerce' ) || !function_exists( 'WC' ) ){
             $this->missing['WooCommerce'] = 'http://www.woothemes.com/woocommerce/';
             $this->allok = false;
         }elseif( ( defined('WC_VERSION') && version_compare( WC_VERSION , '2.1', '<' ) ) || ( isset( $woocommerce->version ) && version_compare( $woocommerce->version , '2.1', '<' ) ) ){

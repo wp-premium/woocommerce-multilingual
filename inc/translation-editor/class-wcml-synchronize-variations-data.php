@@ -256,7 +256,7 @@ class WCML_Synchronize_Variations_Data{
                         if( $meta_key == '_stock'){
                             $this->update_stock_quantity( $variation_id, $meta_value );
                         }else{
-                            update_post_meta( $variation_id, $meta_key, $meta_value );
+                            update_post_meta( $variation_id, $meta_key, maybe_unserialize( $meta_value ) );
                         }
                     }elseif ( !isset( $settings[ $meta_key ] ) || $settings[ $meta_key ] == WPML_IGNORE_CUSTOM_FIELD ) {
                         continue;

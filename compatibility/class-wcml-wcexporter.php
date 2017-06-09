@@ -42,7 +42,7 @@ class WCML_wcExporter{
         global $sitepress,$woocommerce_wpml;
 
         $data->language = $sitepress->get_language_for_element($product_id,'post_'.get_post_type($product_id));
-        $data->translation_of = apply_filters( 'translate_object_id',$product_id,get_post_type($product_id),true, $woocommerce_wpml->products->get_original_product_language( $product_id ) );
+        $data->translation_of = $this->woocommerce_wpml->products->get_original_product_id( $product_id );
 
         return $data;
     }

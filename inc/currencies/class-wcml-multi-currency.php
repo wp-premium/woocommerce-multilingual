@@ -75,6 +75,11 @@ class WCML_Multi_Currency{
      */
     public $exchange_rate_services;
 
+    /**
+     * @var bool
+     */
+    public $load_filters;
+
 
     /**
      * WCML_Multi_Currency constructor.
@@ -88,14 +93,15 @@ class WCML_Multi_Currency{
 
         $this->init_currencies();
 
+        $this->load_filters   = $this->_load_filters();
         $this->prices   = new WCML_Multi_Currency_Prices( $this );
 
-        if( $this->_load_filters()) {
+        if( $this->load_filters ) {
             $this->coupons  = new WCML_Multi_Currency_Coupons();
             $this->shipping = new WCML_Multi_Currency_Shipping( $this );
         }
         $this->reports                  = new WCML_Multi_Currency_Reports();
-        $this->orders                   = new WCML_Multi_Currency_Orders( $this );
+        $this->orders                   = new WCML_Multi_Currency_Orders( $this, $woocommerce_wpml );
         $this->admin_currency_selector  = new WCML_Admin_Currency_Selector();
         $this->custom_prices            = new WCML_Custom_Prices( $woocommerce_wpml );
         $this->currency_switcher        = new WCML_Currency_Switcher( $woocommerce_wpml, $sitepress );
@@ -461,12 +467,6 @@ class WCML_Multi_Currency{
     }
 
     public function switch_currency(){
-
-        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        if(!$nonce || !wp_verify_nonce($nonce, 'switch_currency')){
-            echo json_encode(array('error' => __('Invalid nonce', 'woocommerce-multilingual')));
-            die();
-        }
 
         $currency = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $force_switch = filter_input( INPUT_POST, 'force_switch', FILTER_SANITIZE_FULL_SPECIAL_CHARS );

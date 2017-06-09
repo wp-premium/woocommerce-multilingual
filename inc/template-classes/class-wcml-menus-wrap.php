@@ -156,7 +156,7 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
             'rate' => array(
                 'on'        => !isset( $this->woocommerce_wpml->settings['rate-block'] ),
                 'message'   => sprintf(__('Thank you for using %sWooCommerce Multilingual%s! You can express your love and
-                                    support by %s rating our plugin and saying that %sit works%s for you.', 'woocommerce_wpml'),
+                                    support by %s rating our plugin and saying that %sit works%s for you.', 'woocommerce-wpml'),
                     '<strong>',
                     '</strong>',
                     '<a href="https://wordpress.org/support/view/plugin-reviews/woocommerce-multilingual?filter=5#postform" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>',

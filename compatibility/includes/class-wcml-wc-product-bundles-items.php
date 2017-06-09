@@ -24,7 +24,12 @@ class WCML_WC_Product_Bundles_Items{
 	 * @return array
 	 */
 	function get_item_data( $bundled_item ){
-		return $bundled_item->get_data();
+		$item_data = $bundled_item->get_data();
+		// #wcml-1927 - Insufficient Stock issue
+		if ( $item_data['max_stock'] === null ) {
+			$item_data['max_stock'] = '';
+		}
+		return $item_data;
 	}
 
 	function copy_item_data( $item_id_1, $item_id_2 ){

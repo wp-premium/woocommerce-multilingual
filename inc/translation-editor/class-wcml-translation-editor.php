@@ -216,13 +216,12 @@ class WCML_Translation_Editor{
             );
 
             $variations = get_posts( $args );
-            $original_language = $this->woocommerce_wpml->products->get_original_product_language( $product_id );
             $file_path_sync = array();
 
             if ( $variations ) {
                 foreach ($variations as $variation) {
                     $variation_id = absint( $variation->ID );
-                    $original_id = apply_filters( 'translate_object_id', $variation_id, 'product_variation', true, $original_language );
+                    $original_id = $this->woocommerce_wpml->products->get_original_product_id( $product_id );
                     $custom_product_sync = get_post_meta( $original_id, 'wcml_sync_files', true );
                     if( $custom_product_sync && $custom_product_sync == 'self' ) {
                         $file_path_sync[ $variation_id ] = false;

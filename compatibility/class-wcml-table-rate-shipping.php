@@ -57,7 +57,7 @@ class WCML_Table_Rate_Shipping {
 			if( isset( $_POST[ 'shipping_label' ] ) &&
 				isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
 				do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
-				if( version_compare( WC()->version, '2.7', '<' ) ){
+				if( version_compare( WC()->version, '3.0.0', '<' ) ){
 					$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
 				} else{
 					$shipping_labels = array_map( 'wc_clean', $_POST[ 'shipping_label' ] );

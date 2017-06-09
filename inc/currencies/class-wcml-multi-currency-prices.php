@@ -18,7 +18,8 @@ class WCML_Multi_Currency_Prices{
     public function __construct( &$multi_currency ){
 
         $this->multi_currency =& $multi_currency;
-        if( !is_admin() ) {
+
+        if( $this->multi_currency->load_filters ) {
             add_filter('init', array($this, 'prices_init'), 5);
 
             // Currency and Amount filters
@@ -143,11 +144,17 @@ class WCML_Multi_Currency_Prices{
 
         if(empty($no_filter) && in_array(get_post_type($object_id), array('product', 'product_variation'))){
 
-            $price_keys = array(
-                '_price', '_regular_price', '_sale_price',
-                '_min_variation_price', '_max_variation_price',
-                '_min_variation_regular_price', '_max_variation_regular_price',
-                '_min_variation_sale_price', '_max_variation_sale_price');
+	        $price_keys = apply_filters( 'wcml_price_custom_fields_filtered', array(
+		        '_price',
+		        '_regular_price',
+		        '_sale_price',
+		        '_min_variation_price',
+		        '_max_variation_price',
+		        '_min_variation_regular_price',
+		        '_max_variation_regular_price',
+		        '_min_variation_sale_price',
+		        '_max_variation_sale_price'
+	        ) );
 
             if(in_array($meta_key, $price_keys)){
                 $no_filter = true;
@@ -243,17 +250,7 @@ class WCML_Multi_Currency_Prices{
 
                 // exception - currencies_without_cents
                 if(in_array($currency, $this->multi_currency->get_currencies_without_cents())){
-
-                    if(version_compare(PHP_VERSION, '5.3.0') >= 0){
-                        $amount = round($amount, 0, PHP_ROUND_HALF_UP);
-                    }else{
-                        if($amount - floor($amount) < 0.5){
-                            $amount = floor($amount);
-                        }else{
-                            $amount = ceil($amount);
-                        }
-                    }
-
+	                $amount = $this->round_up( $amount );
                 }
 
             }else{
@@ -282,17 +279,7 @@ class WCML_Multi_Currency_Prices{
 
                 // exception - currencies_without_cents
                 if(in_array($currency, $this->multi_currency->get_currencies_without_cents())){
-
-                    if(version_compare(PHP_VERSION, '5.3.0') >= 0){
-                        $amount = round($amount, 0, PHP_ROUND_HALF_UP);
-                    }else{
-                        if($amount - floor($amount) < 0.5){
-                            $amount = floor($amount);
-                        }else{
-                            $amount = ceil($amount);
-                        }
-                    }
-
+	                $amount = $this->round_up( $amount );
                 }
 
             }else{
@@ -332,15 +319,7 @@ class WCML_Multi_Currency_Prices{
                     $rounded_price = floor($price);
                     break;
                 case 'nearest':
-                    if(version_compare(PHP_VERSION, '5.3.0') >= 0){
-                        $rounded_price = round($price, 0, PHP_ROUND_HALF_UP);
-                    }else{
-                        if($price - floor($price) < 0.5){
-                            $rounded_price = floor($price);
-                        }else{
-                            $rounded_price = ceil($price);
-                        }
-                    }
+	                $rounded_price = $this->round_up( $price );
                     break;
             }
 
@@ -366,6 +345,21 @@ class WCML_Multi_Currency_Prices{
 
         return apply_filters( 'wcml_rounded_price', $price, $currency );
 
+    }
+
+	/**
+	 * The PHP 5.2 compatible equivalent to "round($amount, 0, PHP_ROUND_HALF_UP)"
+	 * @param int $amount
+	 * @return int
+	 *
+	 */
+    private function round_up( $amount ){
+	    if( $amount - floor( $amount ) < 0.5 ){
+		    $amount = floor( $amount );
+	    }else{
+		    $amount = ceil( $amount );
+	    }
+	    return $amount;
     }
 
     /*

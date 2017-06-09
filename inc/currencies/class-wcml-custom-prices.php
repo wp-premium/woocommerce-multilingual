@@ -294,8 +294,7 @@ class WCML_Custom_Prices{
             isset($this->woocommerce_wpml->settings['display_custom_prices']) &&
             $this->woocommerce_wpml->settings['display_custom_prices'] ){
 
-            $orig_lang = $this->woocommerce_wpml->products->get_original_product_language( $variation_id );
-            $orig_child_id = apply_filters( 'translate_object_id', $variation_id, 'product_variation', true, $orig_lang );
+            $orig_child_id = $this->woocommerce_wpml->products->get_original_product_id( $variation_id );
 
             if( !get_post_meta( $orig_child_id, '_wcml_custom_prices_status', true ) ){
                 return false;
@@ -380,9 +379,9 @@ class WCML_Custom_Prices{
                             '_sale_price_dates_to' => $date_to ),
                         $code
                     );
-                    $this->update_custom_prices( $post_id, $custom_prices , $code );
+                    $product_price = $this->update_custom_prices( $post_id, $custom_prices , $code );
 
-                    do_action( 'wcml_after_save_custom_prices', $post_id );
+                    do_action( 'wcml_after_save_custom_prices', $post_id, $product_price, $custom_prices, $code );
                 }
             }
         }

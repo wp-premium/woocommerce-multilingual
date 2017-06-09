@@ -9,24 +9,26 @@ class WCML_WC_Shipping{
 
         $this->sitepress = $sitepress;
 
-        add_filter('woocommerce_package_rates', array($this, 'translate_shipping_methods_in_package'));
-        add_action('woocommerce_tax_rate_added', array($this, 'register_tax_rate_label_string'), 10, 2 );
-        add_filter('woocommerce_rate_label',array($this,'translate_woocommerce_rate_label'));
-
-        $this->shipping_methods_filters();
-        add_action('wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'save_shipping_zone_method_from_ajax'), 9 );
-
         $this->current_language = $this->sitepress->get_current_language();
         if( $this->current_language == 'all' ){
             $this->current_language = $this->sitepress->get_default_language();
         }
 
+    }
+
+    function add_hooks(){
+
+        add_action('woocommerce_tax_rate_added', array($this, 'register_tax_rate_label_string'), 10, 2 );
+        add_action('wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'save_shipping_zone_method_from_ajax'), 9 );
         add_action( 'icl_save_term_translation', array( $this, 'sync_class_costs_for_new_shipping_classes' ), 100, 2 );
+        add_action( 'wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs_from_ajax'), 9);
 
-
+        add_filter('woocommerce_package_rates', array($this, 'translate_shipping_methods_in_package'));
+        add_filter('woocommerce_rate_label',array($this,'translate_woocommerce_rate_label'));
         add_filter( 'pre_update_option_woocommerce_flat_rate_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
         add_filter( 'pre_update_option_woocommerce_international_delivery_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
-        add_action( 'wp_ajax_woocommerce_shipping_zone_methods_save_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs_from_ajax'), 9);
+
+        $this->shipping_methods_filters();
     }
 
     function shipping_methods_filters(){
@@ -119,8 +121,17 @@ class WCML_WC_Shipping{
     }
 
     function translate_shipping_method_title( $title, $shipping_id, $language = false ) {
-        $shipping_id = str_replace( ':', '', $shipping_id );
-        $title = apply_filters( 'wpml_translate_single_string', $title, 'woocommerce', $shipping_id .'_shipping_method_title', $language ? $language : $this->current_language );
+
+        if( !is_admin() ){
+            
+            $shipping_id = str_replace( ':', '', $shipping_id );        
+            $translated_title = apply_filters( 'wpml_translate_single_string', $title, 'woocommerce', $shipping_id .'_shipping_method_title', $language ? $language : $this->current_language );
+    
+            if( $translated_title ){
+                $title = $translated_title;
+            }
+            
+        }
 
         return $title;
     }
@@ -220,7 +231,7 @@ class WCML_WC_Shipping{
 
         $updated_costs_settings = $this->update_woocommerce_shipping_settings_for_class_costs( $settings );
 
-        $inst_settings = is_array( $inst_settings ) ? array_replace( $inst_settings, $updated_costs_settings ) : $updated_costs_settings;
+        $inst_settings = is_array( $inst_settings ) ? array_merge( $inst_settings, $updated_costs_settings ) : $updated_costs_settings;
 
         return $inst_settings;
     }

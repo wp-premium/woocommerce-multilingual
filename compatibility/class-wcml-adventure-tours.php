@@ -55,8 +55,7 @@ class WCML_Adventure_tours{
 
             } else {
 
-                $original_product_language = $woocommerce_wpml->products->get_original_product_language( $post_id );
-                $original_product_id = apply_filters( 'translate_object_id', $post_id, 'product', true, $original_product_language);
+                $original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $post_id );
 
             }
 
@@ -308,8 +307,7 @@ class WCML_Adventure_tours{
 
             remove_filter( 'get_post_metadata', array( $this, 'product_price_filter' ), 9, 4 );
 
-            $original_language = $woocommerce_wpml->products->get_original_product_language( $object_id );
-            $original_product = apply_filters( 'translate_object_id', $object_id, 'product', true, $original_language );
+            $original_product = $this->woocommerce_wpml->products->get_original_product_id( $object_id );
 
             if ( get_post_meta( $original_product, '_wcml_custom_prices_status' ) ) {
                 $custom_periods_prices = get_post_meta( $object_id, 'custom_booking_periods_prices', true );

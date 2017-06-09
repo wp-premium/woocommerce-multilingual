@@ -28,8 +28,8 @@ class WCML_Plugins_Wrap {
             'media_version' => defined( 'WPML_MEDIA_VERSION' ),
             'tm_version' => defined( 'WPML_TM_VERSION' ),
             'st_version' => defined( 'WPML_ST_VERSION' ),
-            'wc' => class_exists('Woocommerce') ,
-            'old_wc' => class_exists('Woocommerce') && version_compare( WC_VERSION, '2.0', '<'),
+            'wc' => class_exists('WooCommerce') ,
+            'old_wc' => class_exists('WooCommerce') && version_compare( WC_VERSION, '2.0', '<'),
             'wc_link' => 'http://wordpress.org/extend/plugins/woocommerce/',
             'strings' => array(
                 'title'             => __('WooCommerce Multilingual', 'woocommerce-multilingual'),
