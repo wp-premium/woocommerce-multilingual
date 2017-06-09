@@ -40,7 +40,12 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 			add_filter( 'wcml_js_lock_fields_ids', array( $this, 'wcml_js_lock_fields_ids' ) );
 			add_filter( 'wcml_after_load_lock_fields_js', array( $this, 'localize_lock_fields_js' ) );
 			add_action( 'init', array( $this, 'load_assets' ) );
+
+			add_action( 'wcml_after_save_custom_prices', array( $this, 'update_composite_custom_prices' ), 10, 4 );
+		}else{
+			add_filter( 'get_post_metadata', array( $this, 'filter_composite_product_cost' ), 10, 4 );
 		}
+
 	}
 
 	function woocommerce_composite_component_default_option($selected_value, $component_id, $object) {
@@ -474,6 +479,69 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
 	public function get_composite_data( $product_id ){
 		return get_post_meta( $product_id, '_bto_data', true );
+	}
+
+
+	function filter_composite_product_cost( $value, $object_id, $meta_key, $single ) {
+
+		if ( in_array( $meta_key, array(
+			'_bto_base_regular_price',
+			'_bto_base_sale_price',
+			'_bto_base_price'
+		) ) ) {
+
+			if ( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ) {
+
+				$original_id = $this->woocommerce_wpml->products->get_original_product_id( $object_id );
+
+				$cost_status = get_post_meta( $original_id, '_wcml_custom_prices_status', true );
+				
+				$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
+
+				if ( $currency == get_option( 'woocommerce_currency' ) ) {
+					return $value;
+				}
+
+				$cost = get_post_meta( $original_id, $meta_key . '_' . $currency, true );
+
+				if ( $cost_status && !empty( $cost ) ) {
+
+					return $cost;
+
+				} else {
+
+					remove_filter( 'get_post_metadata', array( $this, 'filter_composite_product_cost' ), 10, 4 );
+
+					$cost = get_post_meta( $original_id, $meta_key, true );
+
+					add_filter( 'get_post_metadata', array( $this, 'filter_composite_product_cost' ), 10, 4 );
+
+					if( $cost ){
+
+						$cost = $this->woocommerce_wpml->multi_currency->prices->convert_price_amount( $cost, $currency );
+
+						return $cost;
+					}
+
+				}
+
+			}
+
+		}
+
+		return $value;
+	}
+
+	function update_composite_custom_prices( $product_id, $product_price, $custom_prices, $code ){
+
+		if( $this->get_product_type( $product_id ) == 'composite' ){
+
+			update_post_meta( $product_id, '_bto_base_regular_price'.'_'.$code, $custom_prices[ '_regular_price' ] );
+			update_post_meta( $product_id, '_bto_base_sale_price'.'_'.$code, $custom_prices[ '_sale_price' ] );
+			update_post_meta( $product_id, '_bto_base_price'.'_'.$code, $product_price );
+
+		}
+
 	}
 
 }

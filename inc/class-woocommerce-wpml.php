@@ -67,6 +67,7 @@ class woocommerce_wpml {
 
 
     public function __construct(){
+	    global $sitepress;
 
         $this->settings = $this->get_settings();
         $this->currencies = new WCML_Currencies( $this );
@@ -74,10 +75,14 @@ class woocommerce_wpml {
 
 	    new WCML_Widgets( $this );
 
-	    if ( class_exists( 'woocommerce' ) && 'yes' == get_option( 'woocommerce_api_enabled' ) ) {
-		    global $sitepress;
-		    if ( version_compare( WC()->version, '2.6', '>=' ) ) {
-			    new WCML_REST_API_Support( $this, $sitepress );
+	    if ( class_exists( 'WooCommerce' ) && defined( 'WC_VERSION' ) && 'yes' == get_option( 'woocommerce_api_enabled' ) && ! is_null( $sitepress ) ) {
+		    if ( version_compare( WC_VERSION, '2.6', '>=' ) && WCML_REST_API_Support::is_rest_api_request() ) {
+			    if( WCML_REST_API_Support::get_api_request_version() === 1 ) {
+				    $wcml_rest_api_support = new WCML_REST_API_Support_V1( $this, $sitepress );
+			    }else{
+				    $wcml_rest_api_support = new WCML_REST_API_Support( $this, $sitepress );
+			    }
+			    $wcml_rest_api_support->initialize();
 		    } else {
 			    new WCML_WooCommerce_Rest_API_Support( $this, $sitepress );
 		    }
@@ -89,6 +94,8 @@ class woocommerce_wpml {
             $this->cs_templates = new WCML_Currency_Switcher_Templates( $this );
             $this->cs_templates->init_hooks();
         }
+
+
     }
 
     /**
@@ -149,12 +156,14 @@ class woocommerce_wpml {
             || ( isset( $_POST[ 'action' ] ) && in_array( $_POST[ 'action' ], $actions_that_need_mc ) )
         ){
             $this->multi_currency = new WCML_Multi_Currency;
+            $wcml_price_filters = new WCML_Price_Filter( $this );
+            $wcml_price_filters->add_hooks();
         }else{
             add_shortcode('currency_switcher', '__return_empty_string');
         }
 
         if( is_admin() ) {
-            $this->troubleshooting = new WCML_Troubleshooting();
+            $this->troubleshooting = new WCML_Troubleshooting( $this, $sitepress, $wpdb );
             $this->links = new WCML_Links($this, $sitepress);
             $this->translation_editor = new WCML_Translation_Editor($this, $sitepress, $wpdb);
             $this->languages_upgrader = new WCML_Languages_Upgrader;
@@ -165,7 +174,9 @@ class woocommerce_wpml {
         }
 
         $this->sync_product_data    = new WCML_Synchronize_Product_Data( $this, $sitepress, $wpdb );
+        $this->duplicate_product    = new WCML_WC_Admin_Duplicate_Product( $this, $sitepress, $wpdb );
         $this->products             = new WCML_Products( $this, $sitepress, $wpdb );
+        $this->products->add_hooks();
         $this->store                = new WCML_Store_Pages ($this, $sitepress ) ;
         $this->emails               = new WCML_Emails( $this, $sitepress );
         $this->terms                = new WCML_Terms( $this, $sitepress, $wpdb );
@@ -173,9 +184,11 @@ class woocommerce_wpml {
         $this->orders               = new WCML_Orders( $this, $sitepress );
         $this->strings              = new WCML_WC_Strings;
         $this->shipping             = new WCML_WC_Shipping( $sitepress );
+        $this->shipping->add_hooks();
         $this->gateways             = new WCML_WC_Gateways( $this, $sitepress );
         $this->currencies           = new WCML_Currencies( $this );
         $this->url_translation      = new WCML_Url_Translation ( $this, $sitepress );
+	    $this->url_translation->set_up();
 	    $this->endpoints            = new WCML_Endpoints( $this );
         $this->requests             = new WCML_Requests;
         $this->cart                 = new WCML_Cart( $this, $sitepress, $woocommerce );
@@ -183,6 +196,7 @@ class woocommerce_wpml {
         $this->locale               = new WCML_Locale( $this, $sitepress );
         $this->media                = new WCML_Media( $this, $sitepress, $wpdb );
         $this->downloadable         = new WCML_Downloadable_Products( $this, $sitepress );
+        $this->page_builders        = new WCML_Page_Builders( $sitepress );
         $this->reports              = new WCML_Reports;
         $this->wcml_products_screen = new WCML_Products_Screen_Options();
         $this->wcml_products_screen->init();
@@ -199,6 +213,11 @@ class woocommerce_wpml {
         add_filter('woocommerce_get_return_url', array('WCML_Links', 'filter_woocommerce_redirect_location'));
 
         add_action('wp_ajax_wcml_update_setting_ajx', array($this, 'update_setting_ajx'));
+
+        if( is_admin() ){
+	        $taxonomy_translation_link_filters = new WCML_Taxonomy_Translation_Link_Filters( $this->attributes );
+	        $taxonomy_translation_link_filters->add_filters();
+        }
     }
 
     public function get_settings(){
@@ -297,4 +316,5 @@ class woocommerce_wpml {
         }
 
     }
+
 }

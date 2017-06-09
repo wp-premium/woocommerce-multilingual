@@ -135,19 +135,16 @@ class WCML_WC_Gateways{
                         )
                     );
 
-                    $st_page = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=woocommerce&search='. esc_attr( $setting_value ) );
-                    if( $text_key === 'title' || $payment_gateway->id === 'paypal' ){
-                        $input_type = 'input';
-                    }else{
-                        $input_type = 'textarea';
-                    }
+                    $st_page = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=woocommerce&search='.esc_attr( preg_replace("/[\n\r]/","",$setting_value) ) );
                     ?>
                     <script>
-                        var input = jQuery('<?php echo $input_type  ?>[name="<?php echo $input_name  ?>"]');
-                        if ( input.length ) {
+                        var input = jQuery('#<?php echo esc_js( $input_name ); ?>');
+                        if ( input.length > 0 ) {
                             input.parent().append('<div class="translation_controls"></div>');
                             input.parent().find('.translation_controls').append('<a href="<?php echo $st_page ?>" style="margin-left: 10px"><?php _e('translations', 'woocommerce-multilingual') ?></a>');
                             jQuery('#<?php echo $gateway_option.'_'.$text_key.'_language_selector' ?>').prependTo( input.parent().find('.translation_controls') );
+                        }else{
+                            jQuery('#<?php echo $gateway_option.'_'.$text_key.'_language_selector' ?>').remove();
                         }
                     </script>
                 <?php }

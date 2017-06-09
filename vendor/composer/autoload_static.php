@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
+class ComposerStaticInit3d46cc8388475e6b99b9a4c2356d4330
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -360,6 +360,7 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
         'WCML_Flatsome' => __DIR__ . '/../..' . '/compatibility/class-wcml-flatsome.php',
         'WCML_Install' => __DIR__ . '/../..' . '/inc/class-wcml-install.php',
         'WCML_JCK_WSSV' => __DIR__ . '/../..' . '/compatibility/class-wcml-jck-wssv.php',
+        'WCML_Klarna_Gateway' => __DIR__ . '/../..' . '/compatibility/class-wcml-klarna-gateway.php',
         'WCML_Languages_Upgrade_Notice' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-languages-upgrade-notice.php',
         'WCML_Languages_Upgrader' => __DIR__ . '/../..' . '/inc/class-wcml-languages-upgrader.php',
         'WCML_Links' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-links.php',
@@ -381,18 +382,21 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
         'WCML_Multi_Currency_UI' => __DIR__ . '/../..' . '/inc/template-classes/multi-currency/class-wcml-multi-currency-ui.php',
         'WCML_Not_Translatable_Attributes' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-not-translatable-attributes.php',
         'WCML_Orders' => __DIR__ . '/../..' . '/inc/class-wcml-orders.php',
+        'WCML_Page_Builders' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-page-builders.php',
         'WCML_Per_Product_Shipping' => __DIR__ . '/../..' . '/compatibility/class-wcml-per-product-shipping.php',
         'WCML_Pip' => __DIR__ . '/../..' . '/compatibility/class-wcml-pip.php',
         'WCML_Plugins_Wrap' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-plugins-wrap.php',
         'WCML_Pointer_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-pointer-ui.php',
         'WCML_Pointers' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-pointers.php',
+        'WCML_Price_Filter' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-price-filter.php',
         'WCML_Product_Addons' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-addons.php',
         'WCML_Product_Bundles' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-bundles.php',
         'WCML_Product_Bundles_Legacy' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-bundles-legacy.php',
         'WCML_Products' => __DIR__ . '/../..' . '/inc/class-wcml-products.php',
         'WCML_Products_Screen_Options' => __DIR__ . '/../..' . '/inc/class-wcml-products-screen-options.php',
         'WCML_Products_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-products-ui.php',
-        'WCML_REST_API_Support' => __DIR__ . '/../..' . '/inc/rest-api-support/class-wcml-rest-api-suport.php',
+        'WCML_REST_API_Support' => __DIR__ . '/../..' . '/inc/rest-api-support/class-wcml-rest-api-support.php',
+        'WCML_REST_API_Support_V1' => __DIR__ . '/../..' . '/inc/rest-api-support/class-wcml-rest-api-support-v1.php',
         'WCML_Removed_Cart_Items_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-removed-cart-items-ui.php',
         'WCML_Reports' => __DIR__ . '/../..' . '/inc/class-wcml-reports.php',
         'WCML_Requests' => __DIR__ . '/../..' . '/inc/class-wcml-requests.php',
@@ -422,6 +426,7 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
         'WCML_TP_Support' => __DIR__ . '/../..' . '/inc/class-wcml-tp-support.php',
         'WCML_Tab_Manager' => __DIR__ . '/../..' . '/compatibility/class-wcml-tab-manager.php',
         'WCML_Table_Rate_Shipping' => __DIR__ . '/../..' . '/compatibility/class-wcml-table-rate-shipping.php',
+        'WCML_Taxonomy_Translation_Link_Filters' => __DIR__ . '/../..' . '/inc/admin-menus/class-wcml-taxonomy-translation-link-filters.php',
         'WCML_Terms' => __DIR__ . '/../..' . '/inc/class-wcml-terms.php',
         'WCML_The_Events_Calendar' => __DIR__ . '/../..' . '/compatibility/class-wcml-the-events-calendar.php',
         'WCML_Translation_Editor' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-translation-editor.php',
@@ -432,8 +437,10 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
         'WCML_Variation_Swatches_and_Photos' => __DIR__ . '/../..' . '/compatibility/class-wcml-variation-swatches-and-photos.php',
         'WCML_Vpc' => __DIR__ . '/../..' . '/compatibility/class-wcml-vpc.php',
         'WCML_W3TC_Multi_Currency' => __DIR__ . '/../..' . '/inc/currencies/class-wcml-w3tc-multi-currency.php',
+        'WCML_WC_Admin_Duplicate_Product' => __DIR__ . '/../..' . '/inc/translation-editor/class-wcml-wc-admin-duplicate-product.php',
         'WCML_WC_Ajax_Cart' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-ajax-cart.php',
         'WCML_WC_Gateways' => __DIR__ . '/../..' . '/inc/class-wcml-wc-gateways.php',
+        'WCML_WC_Memberships' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-memberships.php',
         'WCML_WC_Name_Your_Price' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-name-your-price.php',
         'WCML_WC_Product_Bundles_Items' => __DIR__ . '/../..' . '/compatibility/includes/class-wcml-wc-product-bundles-items.php',
         'WCML_WC_Shipping' => __DIR__ . '/../..' . '/inc/class-wcml-wc-shipping.php',
@@ -442,6 +449,7 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
         'WCML_WPSEO' => __DIR__ . '/../..' . '/compatibility/class-wcml-wpseo.php',
         'WCML_Widgets' => __DIR__ . '/../..' . '/inc/class-wcml-widgets.php',
         'WCML_WooCommerce_Rest_API_Support' => __DIR__ . '/../..' . '/inc/class-wcml-woocommerce-rest-api-support.php',
+        'WCML_YITH_WCQV' => __DIR__ . '/../..' . '/compatibility/class-wcml-yith-wcqv.php',
         'WCML_gravityforms' => __DIR__ . '/../..' . '/compatibility/class-wcml-gravityforms.php',
         'WCML_sensei' => __DIR__ . '/../..' . '/compatibility/class-wcml-sensei.php',
         'WCML_wcExporter' => __DIR__ . '/../..' . '/compatibility/class-wcml-wcexporter.php',
@@ -455,10 +463,10 @@ class ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb607dde9b5d8295faf917ebd1312c1e1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3d46cc8388475e6b99b9a4c2356d4330::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3d46cc8388475e6b99b9a4c2356d4330::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3d46cc8388475e6b99b9a4c2356d4330::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3d46cc8388475e6b99b9a4c2356d4330::$classMap;
 
         }, null, ClassLoader::class);
     }

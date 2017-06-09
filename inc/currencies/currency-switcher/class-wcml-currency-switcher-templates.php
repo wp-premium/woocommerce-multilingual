@@ -79,7 +79,7 @@ class WCML_Currency_Switcher_Templates {
                     }
                 }
             }
-        }elseif( isset( $wcml_settings[ 'currency_switcher_product_visibility' ] ) && $wcml_settings[ 'currency_switcher_product_visibility' ] === 1 ){
+        }else{
             //set default template to active
             $templates['wcml-dropdown'] = $this->templates['wcml-dropdown'];
         }
@@ -113,7 +113,7 @@ class WCML_Currency_Switcher_Templates {
      */
     private function get_uploads_path() {
         if ( ! $this->uploads_path ) {
-            $uploads = wp_get_upload_dir();
+            $uploads = wp_upload_dir( null, false );
 
             if ( isset( $uploads['basedir'] ) ) {
                 $this->uploads_path = $uploads['basedir'];
@@ -144,13 +144,6 @@ class WCML_Currency_Switcher_Templates {
         $templates = array();
         $dirs_to_scan = array();
 
-        /**
-         * Filter the directories to scan
-         *
-         * @param array $dirs_to_scan
-         */
-        $dirs_to_scan = apply_filters( 'wcml_cs_directories_to_scan', $dirs_to_scan );
-
         $sub_dir          = $this->ds . 'templates' . $this->ds . 'currency-switchers';
 
         $wcml_core_path   = WCML_PLUGIN_PATH . $sub_dir;
@@ -159,6 +152,13 @@ class WCML_Currency_Switcher_Templates {
         $uploads_path     = $this->get_uploads_path() . $this->ds . 'wpml' . $sub_dir;
 
         array_unshift( $dirs_to_scan, $wcml_core_path, $theme_path, $child_theme_path, $uploads_path );
+
+        /**
+         * Filter the directories to scan
+         *
+         * @param array $dirs_to_scan
+         */
+        $dirs_to_scan = apply_filters( 'wcml_cs_directories_to_scan', $dirs_to_scan );
 
         $templates_paths = $this->scan_template_paths( $dirs_to_scan );
 
@@ -417,4 +417,26 @@ class WCML_Currency_Switcher_Templates {
 	public function set_templates( $templates ) {
     	$this->templates = $templates;
 	}
+
+    public function check_is_active( $template ){
+        $is_active = false;
+
+        $active_templates = $this->get_active_templates();
+
+        foreach( $active_templates as $template_key => $active_template ){
+            if ( $template === $template_key ){
+                $is_active = true;
+                break;
+            }
+        }
+
+        return $is_active;
+
+    }
+
+    public function get_first_active( ){
+
+        return current( array_keys( $this->get_active_templates() ) );
+
+    }
 }

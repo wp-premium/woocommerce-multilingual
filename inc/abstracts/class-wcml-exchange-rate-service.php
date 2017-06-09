@@ -78,7 +78,7 @@ abstract class WCML_Exchange_Rate_Service{
      * @return bool
      */
     public function is_key_required(){
-        return static::REQUIRES_KEY;
+        return self::REQUIRES_KEY;
     }
 
     /**

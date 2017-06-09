@@ -73,9 +73,10 @@ class WCML_Pip{
 
         $pip_order_id = $this->get_pip_order_id();
 
-        if( $pip_order_id ){
+        if( $pip_order_id && isset( WC()->order_factory ) ){
 
-            $the_order = new WC_Order( $pip_order_id );
+            $the_order = WC()->order_factory->get_order( $pip_order_id );
+
             if( $the_order ){
                 $currency = WooCommerce_Functions_Wrapper::get_order_currency( $the_order );
 

@@ -193,7 +193,7 @@ class WCML_Install{
     }
 
     private static function handle_admin_texts(){
-        if(class_exists('woocommerce')){
+        if(class_exists('WooCommerce')){
             //emails texts
             $emails = new WC_Emails();
             foreach($emails->emails as $email){

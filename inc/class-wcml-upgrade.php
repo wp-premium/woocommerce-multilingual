@@ -537,7 +537,7 @@ class WCML_Upgrade{
     function upgrade_4_1_0(){
         global $wpdb;
 
-        if( !class_exists( 'woocommerce' ) ){
+        if( !class_exists( 'WooCommerce' ) ){
             update_option( '_wcml_4_1_0_migration_required', true );
         }else{
             $results = $wpdb->get_results("
