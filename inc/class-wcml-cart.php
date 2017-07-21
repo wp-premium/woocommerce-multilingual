@@ -1,28 +1,40 @@
 <?php
 class WCML_Cart
 {
-
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
+    /** @var WooCommerce */
     private $woocommerce;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$woocommerce )
+    /**
+     * WCML_Cart constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     * @param WooCommerce $woocommerce
+     */
+    public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, WooCommerce $woocommerce )
     {
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress = $sitepress;
         $this->woocommerce = $woocommerce;
+    }
 
-        if( $this->woocommerce_wpml->settings[ 'cart_sync' ][ 'currency_switch' ] == WCML_CART_CLEAR || $this->woocommerce_wpml->settings[ 'cart_sync' ][ 'lang_switch' ] == WCML_CART_CLEAR ){
+    public function add_hooks(){
+
+        if( $this->is_clean_cart_enabled() ){
+
             $this->enqueue_dialog_ui();
 
             add_action( 'wcml_removed_cart_items', array( $this, 'wcml_removed_cart_items_widget' ) );
             add_action( 'wp_ajax_wcml_cart_clear_removed_items', array( $this, 'wcml_cart_clear_removed_items' ) );
             add_action( 'wp_ajax_nopriv_wcml_cart_clear_removed_items', array( $this, 'wcml_cart_clear_removed_items' ) );
 
-            add_filter( 'wcml_switch_currency_exception', array( $this, 'cart_switching_currency' ), 10, 3 );
+            add_filter( 'wcml_switch_currency_exception', array( $this, 'cart_switching_currency' ), 10, 4 );
             add_action( 'wcml_before_switch_currency', array( $this, 'switching_currency_empty_cart_if_needed' ), 10, 2 );
-        }
-        else{
+        }else{
             //cart widget
             add_action( 'wp_ajax_woocommerce_get_refreshed_fragments', array( $this, 'wcml_refresh_fragments' ), 0 );
             add_action( 'wp_ajax_woocommerce_add_to_cart', array( $this, 'wcml_refresh_fragments' ), 0 );
@@ -31,7 +43,7 @@ class WCML_Cart
 
             //cart
             add_action( 'woocommerce_before_calculate_totals', array( $this, 'woocommerce_calculate_totals' ), 100 );
-            add_action( 'woocommerce_get_cart_item_from_session', array( $this, 'translate_cart_contents' ), 10 );
+            add_action( 'woocommerce_get_cart_item_from_session', array( $this, 'translate_cart_contents' ) );
             add_action( 'woocommerce_cart_loaded_from_session', array( $this, 'translate_cart_subtotal' ) );
             add_action( 'woocommerce_before_checkout_process', array( $this, 'wcml_refresh_cart_total' ) );
 
@@ -41,6 +53,20 @@ class WCML_Cart
             $this->localize_flat_rates_shipping_classes();
         }
 
+    }
+
+    public function is_clean_cart_enabled(){
+
+        $cart_sync_settings = $this->woocommerce_wpml->settings['cart_sync'];
+
+        if(
+            $cart_sync_settings[ 'currency_switch' ] === $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' ) ||
+            $cart_sync_settings[ 'lang_switch' ] === $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' )
+        ){
+            return true;
+        }
+
+        return false;
     }
 
     public function enqueue_dialog_ui(){
@@ -352,14 +378,16 @@ class WCML_Cart
 
         // translate the product id and product data
         $item[ 'product_id' ] = apply_filters( 'translate_object_id', $item[ 'product_id' ], 'product', true );
-        if ($item[ 'variation_id' ]) {
-            $item[ 'variation_id' ] = apply_filters( 'translate_object_id',$item[ 'variation_id' ], 'product_variation', true );
+        if( $item[ 'variation_id' ] ) {
+            $item[ 'variation_id' ] = apply_filters( 'translate_object_id', $item[ 'variation_id' ], 'product_variation', true );
         }
 
-        if( version_compare( WC()->version, '3.0.0', '>=' ) ){
-            $item[ 'data' ]->set_name( get_the_title( $item[ 'product_id' ] ) );
+        $item_product_title = $item[ 'variation_id' ] ? get_the_title( $item[ 'variation_id' ] ) : get_the_title( $item[ 'product_id' ] );
+
+        if( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.0.0', '>=' ) ) {
+            $item[ 'data' ]->set_name( $item_product_title );
         } else {
-	        $item[ 'data' ]->post->post_title = get_the_title( $item[ 'product_id' ] );
+	        $item[ 'data' ]->post->post_title = $item_product_title;
         }
 
         return $item;

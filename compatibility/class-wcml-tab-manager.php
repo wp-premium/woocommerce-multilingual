@@ -7,41 +7,46 @@ class WCML_Tab_Manager {
 	/**
 	 * @var WPML_Element_Translation_Package
 	 */
-	public $tp;
+	private $tp;
 
 	/**
 	 * @var SitePress
 	 */
-	public $sitepress;
+	private $sitepress;
 
 	/**
 	 * @var WooCommerce
 	 */
-	public $woocommerce;
+	private $woocommerce;
 
 	/**
 	 * @var woocommerce_wpml
 	 */
-	public $woocommerce_wpml;
+	private $woocommerce_wpml;
 
 	/**
 	 * @var wpdb
 	 */
-	public $wpdb;
+	private $wpdb;
 
 	/**
 	 * WCML_Tab_Manager constructor.
 	 *
-	 * @param $sitepress
-	 * @param $woocommerce
-	 * @param $woocommerce_wpml
-	 * @param $wpdb
+	 * @param SitePress $sitepress
+	 * @param WooCommerce $woocommerce
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param wpdb $wpdb
+	 * @param WPML_Element_Translation_Package $tp
 	 */
-	function __construct( &$sitepress, &$woocommerce, &$woocommerce_wpml, &$wpdb ) {
-		$this->sitepress = $sitepress;
-		$this->woocommerce = $woocommerce;
+	function __construct( SitePress $sitepress, WooCommerce $woocommerce, woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp ) {
+		$this->sitepress        = $sitepress;
+		$this->woocommerce      = $woocommerce;
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->wpdb = $wpdb;
+		$this->wpdb             = $wpdb;
+		$this->tp               = $tp;
+	}
+
+	public function add_hooks(){
 		add_action( 'wcml_update_extra_fields', array( $this, 'sync_tabs' ), 10, 4 );
 		add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
 		add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 4 );
@@ -50,13 +55,11 @@ class WCML_Tab_Manager {
 
 		add_filter( 'wc_tab_manager_tab_id', array( $this, 'wc_tab_manager_tab_id' ), 10, 1 );
 
-		if ( version_compare( WCML_VERSION, '3.7.2', '>' ) ) {
+		if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WCML_VERSION' ), '3.7.2', '>' ) ) {
 			add_filter( 'option_wpml_config_files_arr', array( $this, 'make__product_tabs_not_translatable_by_default' ), 0 );
 		}
 
 		if ( is_admin() ) {
-
-			$this->tp = new WPML_Element_Translation_Package;
 
 			add_action( 'save_post', array( $this, 'force_set_language_information_on_product_tabs' ), 10, 2 );
 			add_action( 'save_post', array( $this, 'sync_product_tabs' ), 10, 2 );
@@ -64,6 +67,8 @@ class WCML_Tab_Manager {
 			add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_custom_tabs_to_translation_package' ), 10, 2 );
 			add_action( 'wpml_translation_job_saved',   array( $this, 'save_custom_tabs_translation' ), 10, 3 );
 			add_action( 'woocommerce_product_data_panels', array( $this, 'show_pointer_info' ) );
+
+			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
 
 		}else{
 			add_filter( 'option_wc_tab_manager_default_layout', array( $this, 'filter_default_layout' ) );
@@ -717,4 +722,11 @@ class WCML_Tab_Manager {
 		$pointer_ui->show();
 
 	}
+
+	function replace_tm_editor_custom_fields_with_own_sections( $fields ){
+		$fields[] = '_product_tabs';
+
+		return $fields;
+	}
+
 }

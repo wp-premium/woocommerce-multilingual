@@ -11,6 +11,16 @@
 .installer-status-updating{color: #FF9900; }
 .installer-status-updated{color: #003300; font-weight: bold; }
 
+.installer-status-installed .error-details:before,
+.installer-status-updated .error-details:before{
+    content: "\f534";
+    font: 200 16px/1 dashicons;
+    vertical-align: text-bottom;
+    margin-left: 5px;
+    color: red;
+    cursor: help;
+}
+
 .installer-status-activating{color: #996666 }
 .installer-status-activated{color: #333366; font-weight: bold; }
 
@@ -63,8 +73,12 @@
     font-style: italic;
 }
 
+.installer-warn-text{
+    color: #FF6400;
+}
+
 .installer-warn-box{
-    -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;border:1px solid #962722;background-color:#F5C8C6;
+    -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;border:1px solid #FF6400;background-color:#df8a48;
     color: #333;
     padding: 5px;
 }
@@ -189,6 +203,60 @@
     padding-left:24px;
 }
 
+.installer-release-notes{
+    display: none;
+}
+
+.handle.extended:after{
+    content: "▾";
+    font-size: 24px;
+    vertical-align:bottom;
+}
+.installer-table-wrap a.handle:active,
+.installer-table-wrap a.handle:focus{
+    outline:0;
+    border:none;
+    -moz-outline-style: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.installer-release-notes .arrow_box {
+    position: relative;
+    background: #eee;
+    border: 1px solid #ccc;
+}
+.installer-release-notes .arrow_box:after, .installer-release-notes .arrow_box:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.installer-release-notes .arrow_box:after {
+    border-color: rgba(238, 238, 238, 0);
+    border-bottom-color: #eee;
+    border-width: 16px;
+    margin-left: -16px;
+}
+.installer-release-notes .arrow_box:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-bottom-color: #ccc;
+    border-width: 17px;
+    margin-left: -17px;
+}
+
+.installer-release-notes .arrow_box div{
+    margin-top:5px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
 .otgs-is-dismissible {
     position: relative;
     padding-right: 38px;
@@ -198,4 +266,24 @@
 }
 .otgs-is-dismissible p [class*="button-"] {
     margin: -5px 5px;
+}
+
+.otgsi_downloads_form{
+    margin-top: 15px;
+}
+
+.spinner-with-text{
+    padding-left: 25px;
+    float:none;
+    width: auto;
+}
+.installer-channel-update-ok{
+    padding-left: 10px;
+    display: none;
+    color: #006600;
+}
+.installer-channel-update-fail{
+    padding-left: 10px;
+    display: none;
+    color: #962722;
 }

@@ -3,11 +3,6 @@
 class WCML_Products{
 
     /**
-     * @var WCML_TP_Support
-     */
-    public $tp_support;
-
-    /**
      * @var woocommerce_wpml
      */
     private $woocommerce_wpml;
@@ -36,8 +31,6 @@ class WCML_Products{
             add_filter( 'woocommerce_json_search_found_products', array( $this, 'woocommerce_json_search_found_products' ) );
 
             add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
-
-            $this->tp_support = new WCML_TP_Support();
 
             add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
 
@@ -473,8 +466,7 @@ class WCML_Products{
         foreach( $products as $product ){
             if( $product->language_code == $language ) continue;
 
-            $element_key        = array( 'trid' => $product->trid, 'language_code' => $language );
-            $translation_status = apply_filters( 'wpml_tm_translation_status', null, $element_key );
+            $translation_status = apply_filters( 'wpml_translation_status', null, $product->trid, $language );
 
             if( in_array( $translation_status, array( ICL_TM_NOT_TRANSLATED, ICL_TM_WAITING_FOR_TRANSLATOR, ICL_TM_IN_PROGRESS ) ) ){
                 $count++;

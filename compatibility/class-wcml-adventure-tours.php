@@ -2,22 +2,44 @@
 
 class WCML_Adventure_tours{
 
+    /**
+     * @var woocommerce_wpml
+     */
+    private $woocommerce_wpml;
+    /**
+     * @var SitePress
+     */
+    private $sitepress;
+
+    /**
+     * @var WPML_Element_Translation_Package
+     */
     private $tp;
 
-    function __construct(){
-        add_action('updated_post_meta', array($this, 'sync_tour_data_across_translations'), 10, 4);
+    /**
+     * WCML_Adventure_tours constructor.
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     * @param WPML_Element_Translation_Package $tp
+     */
+    function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, WPML_Element_Translation_Package $tp ) {
+        $this->woocommerce_wpml = $woocommerce_wpml;
+        $this->sitepress        = $sitepress;
+        $this->tp               = $tp;
+    }
+
+    public function add_hooks(){
+        add_action( 'updated_post_meta', array( $this, 'sync_tour_data_across_translations' ), 10, 4 );
         add_filter( 'get_post_metadata', array( $this, 'product_price_filter'), 9, 4 );
 
-        if (is_admin()) {
+        if ( is_admin() ) {
 
-            add_action('wcml_gui_additional_box_html', array($this, 'custom_box_html'), 10, 3);
-            add_filter('wcml_gui_additional_box_data', array($this, 'custom_box_html_data'), 10, 4);
-            add_action('wcml_update_extra_fields', array($this, 'tour_data_update'), 10, 3);
+            add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
+            add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 4 );
+            add_action( 'wcml_update_extra_fields', array( $this, 'tour_data_update' ), 10, 3 );
 
-            $this->tp = new WPML_Element_Translation_Package();
-
-            add_filter('wpml_tm_translation_job_data', array($this, 'append_tour_data_translation_package'), 10, 2);
-            add_action('wpml_translation_job_saved', array($this, 'save_tour_data_translation'), 10, 3);
+            add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_tour_data_translation_package' ), 10, 2 );
+            add_action( 'wpml_translation_job_saved', array( $this, 'save_tour_data_translation' ), 10, 3 );
 
             add_action( 'admin_footer', array( $this, 'load_assets' ) );
             add_action( 'wcml_after_custom_prices_block', array( $this, 'add_custom_prices_block' ) );
@@ -26,6 +48,12 @@ class WCML_Adventure_tours{
             add_filter( 'wcml_is_variable_product', array( $this, 'is_variable_tour' ), 10, 2 );
             add_filter( 'wcml_variation_term_taxonomy_ids', array( $this, 'add_tour_tax_id' ) );
             add_filter( 'wcml_is_attributes_page', array( $this, 'is_attributes_page' ) );
+            add_filter( 'wcml_is_attributes_page', array( $this, 'is_attributes_page' ) );
+
+            add_filter( 'wcml_do_not_display_custom_fields_for_product', array(
+                $this,
+                'replace_tm_editor_custom_fields_with_own_sections'
+            ) );
         }
     }
 
@@ -35,8 +63,6 @@ class WCML_Adventure_tours{
         if ($meta_key != 'tour_tabs_meta')
             return false;
 
-
-        global $sitepress, $woocommerce_wpml;
 
         $post = get_post($post_id);
 
@@ -49,18 +75,14 @@ class WCML_Adventure_tours{
 
             remove_action('updated_post_meta', array($this, 'sync_tour_data_across_translations'), 10, 4);
 
-            if ( $woocommerce_wpml->products->is_original_product( $post_id ) ) {
-
-                $original_product_id = $post_id;
-
-            } else {
-
-                $original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $post_id );
-
+            $original_product_id = $post_id;
+            if ( ! $this->woocommerce_wpml->products->is_original_product( $post_id ) ) {
+                $original_product_language = $this->woocommerce_wpml->products->get_original_product_language( $post_id );
+                $original_product_id       = apply_filters( 'translate_object_id', $post_id, 'product', true, $original_product_language );
             }
 
-            $product_trid = $sitepress->get_element_trid( $original_product_id, 'post_product' );
-            $product_translations = $sitepress->get_element_translations( $product_trid, 'post_product' );
+            $product_trid = $this->sitepress->get_element_trid( $original_product_id, 'post_product' );
+            $product_translations = $this->sitepress->get_element_translations( $product_trid, 'post_product' );
 
             foreach ($product_translations as $product_translation) {
 
@@ -237,7 +259,7 @@ class WCML_Adventure_tours{
     }
 
     function load_assets(){
-        global $pagenow, $woocommerce_wpml;
+        global $pagenow;
 
         if( $pagenow == 'post.php' || $pagenow == 'post-new.php' ){
             wp_register_script( 'wcml-adventure-tours', WCML_PLUGIN_URL . '/compatibility/res/js/wcml-adventure-tours.js', array( 'jquery' ), WCML_VERSION );
@@ -246,10 +268,9 @@ class WCML_Adventure_tours{
     }
 
     function add_custom_prices_block( $product_id ){
-        global $woocommerce_wpml;
 
         if( $product_id != 'new' ){
-            $currencies = $woocommerce_wpml->multi_currency->get_currencies();
+            $currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
             $tour_booking_periods = get_post_meta( $product_id, 'tour_booking_periods', true );
             $custom_periods_prices = get_post_meta( $product_id, 'custom_booking_periods_prices', true );
             if( $tour_booking_periods ){
@@ -274,10 +295,9 @@ class WCML_Adventure_tours{
     }
 
     function save_custom_costs( $post_id ){
-        global $woocommerce_wpml;
 
         $tour_spec_price = array();
-        $currencies = $woocommerce_wpml->multi_currency->get_currencies();
+        $currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
 
         if( isset( $_POST[ 'tour_spec_price' ] ) && is_array( $_POST[ 'tour_spec_price' ] ) ) {
 
@@ -295,19 +315,19 @@ class WCML_Adventure_tours{
     }
 
     function product_price_filter( $value, $object_id, $meta_key, $single ){
-        global $woocommerce_wpml;
 
         if(
-            get_post_type( $object_id ) == 'product' &&
-            $meta_key == 'tour_booking_periods' &&
-            $woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+            get_post_type( $object_id ) === 'product' &&
+            $meta_key === 'tour_booking_periods' &&
+            $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] === WCML_MULTI_CURRENCIES_INDEPENDENT &&
             !is_admin() &&
-            ( $currency = $woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
+            ( $currency = $this->woocommerce_wpml->multi_currency->get_client_currency() ) !== get_option( 'woocommerce_currency' )
         ) {
 
             remove_filter( 'get_post_metadata', array( $this, 'product_price_filter' ), 9, 4 );
 
-            $original_product = $this->woocommerce_wpml->products->get_original_product_id( $object_id );
+            $original_language = $this->woocommerce_wpml->products->get_original_product_language( $object_id );
+            $original_product = apply_filters( 'translate_object_id', $object_id, 'product', true, $original_language );
 
             if ( get_post_meta( $original_product, '_wcml_custom_prices_status' ) ) {
                 $custom_periods_prices = get_post_meta( $object_id, 'custom_booking_periods_prices', true );
@@ -364,6 +384,12 @@ class WCML_Adventure_tours{
         }
 
         return $is_attributes_page;
+    }
+
+    function replace_tm_editor_custom_fields_with_own_sections( $fields ){
+        $fields[] = 'tour_tabs_meta';
+
+        return $fields;
     }
 
 }

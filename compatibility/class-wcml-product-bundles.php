@@ -162,6 +162,22 @@ class WCML_Product_Bundles {
 
 	}
 
+	/**
+	 * @param array $allowed_variations
+	 * @param string $lang
+	 *
+	 * @return array
+	 */
+	public function translate_allowed_variations( $allowed_variations, $lang ) {
+
+		foreach ( $allowed_variations as $k => $variation_id ) {
+			$allowed_variations[ $k ] =
+				apply_filters( 'translate_object_id', $variation_id, 'product_variation', true, $lang );
+		}
+
+		return $allowed_variations;
+	}
+
 	private function get_product_id_for_item_id( $item_id ) {
 		global $wpdb;
 
@@ -370,6 +386,17 @@ class WCML_Product_Bundles {
 				if ( isset( $data[ md5( 'bundle_' . $product_id . '_desc' ) ] ) ) {
 					$translated_bundle_data[ $translated_item_id ]['description']          = $data[ md5( 'bundle_' . $product_id . '_desc' ) ];
 					$translated_bundle_data[ $translated_item_id ]['override_description'] = $bundle_item_data['override_description'];
+				}
+
+				if( isset( $bundle_item_data['allowed_variations'] ) ){
+					if( is_array( $bundle_item_data['allowed_variations'] ) ){
+						$translated_bundle_data[ $translated_item_id ]['allowed_variations'] =
+							$this->translate_allowed_variations( $bundle_item_data['allowed_variations'], $lang );
+					}else{
+						$translated_bundle_data[ $translated_item_id ]['allowed_variations'] =
+							$bundle_item_data['allowed_variations'];
+					}
+
 				}
 
 			}

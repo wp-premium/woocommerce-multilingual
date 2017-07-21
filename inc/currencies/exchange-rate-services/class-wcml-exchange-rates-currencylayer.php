@@ -10,19 +10,18 @@ class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service{
     protected $api_key      = '';
     protected $requires_key = true;
 
-    const REQUIRES_KEY = true;
-
     function __construct() {
         parent::__construct( $this->id, $this->name, $this->api_url, $this->url );
     }
 
-    /**
-     * @param $from string
-     * @param $to array
-     * @return array
-     * @throws Exception
-     */
-    public function get_rates( $from, $tos ){
+	/**
+	 * @param string $from
+	 * @param array $tos
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function get_rates( $from, $tos ) {
 
         parent::clear_last_error( );
         $rates = array();

@@ -2,14 +2,22 @@
 
 class WCML_Settings_UI extends WPML_Templates_Factory {
 
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
 
-    function __construct( &$woocommerce_wpml, &$sitepress ){
+    /**
+     * WCML_Settings_UI constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     */
+    function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ){
         parent::__construct();
 
-        $this->woocommerce_wpml = &$woocommerce_wpml;
-        $this->sitepress = &$sitepress;
+        $this->woocommerce_wpml = $woocommerce_wpml;
+        $this->sitepress        = $sitepress;
 
     }
 
@@ -22,7 +30,7 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
                 'translation_interface' => array(
                     'heading'   => __('Product Translation Interface','woocommerce-multilingual'),
                     'tip'       => __( 'The recommended way is using the WPML Translation Editor. It is streamlined for making the translation process much easier while also providing a much better integration with various WooCommerce extensions.',
-                                    'woocommerce-multilingual' ),
+                        'woocommerce-multilingual' ),
                     'wcml'      => array(
                         'label' => __('WPML Translation Editor', 'woocommerce-multilingual'),
 
@@ -71,6 +79,11 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
                         'sync_label'  => __('Synchronize cart content when switching currencies', 'woocommerce-multilingual'),
                         'clear_label' => __('Prompt for a confirmation and reset the cart', 'woocommerce-multilingual'),
                         'value'       => $this->woocommerce_wpml->settings['cart_sync']['currency_switch']
+                    ),
+                    'wpml_cookie_enabled' => $this->sitepress->get_setting( WPML_Cookie_Setting::COOKIE_SETTING_FIELD ),
+                    'cookie_not_enabled_message' => sprintf( __( 'This feature was disabled. Please enable %sWPML cookies%s to continue.',
+                        'woocommerce-multilingual' ),
+                        '<a href="'. admin_url( '?page='.WPML_PLUGIN_FOLDER.'/menu/languages.php#cookie' ) .'" target="_blank">', '</a>'
                     ),
                     'doc_link' => sprintf( __( 'Not sure which option to choose? Read about %spotential issues when switching languages and currencies while the cart has items%s.',
                         'woocommerce-multilingual' ),

@@ -2,16 +2,22 @@
 
 class WCML_Multi_Currency_Resources{
 
+    /**
+     * @var WCML_Multi_Currency
+     */
     static $multi_currency;
+    /**
+     * @var woocommerce_wpml
+     */
     static $woocommerce_wpml;
 
-    public static function set_up( &$multi_currency, &$woocommerce_wpml ){
+    public static function set_up( WCML_Multi_Currency $multi_currency, woocommerce_wpml $woocommerce_wpml ){
         global $pagenow;
 
-        self::$multi_currency =& $multi_currency;
-        self::$woocommerce_wpml =& $woocommerce_wpml;
+        self::$multi_currency = $multi_currency;
+        self::$woocommerce_wpml = $woocommerce_wpml;
 
-        if(!is_admin() && $pagenow != 'wp-login.php' ){
+        if( !is_admin() && $pagenow != 'wp-login.php' && $woocommerce_wpml->cs_templates->get_active_templates() ){
             self::load_inline_js();
         }
 
