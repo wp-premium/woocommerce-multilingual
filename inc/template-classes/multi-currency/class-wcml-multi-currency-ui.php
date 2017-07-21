@@ -305,6 +305,8 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
 
         foreach( $currency_switchers as $switcher_id => $currency_switcher ){
 
+            if ( 'new_widget' !== $switcher_id && !$this->woocommerce_wpml->cs_properties->is_currency_switcher_active( $switcher_id, $wcml_settings ) ) continue;
+
             if( $switcher_id == 'product'){
                 $dialog_title = __('Edit Product Currency Switcher', 'woocommerce-multilingual');
             }elseif( $switcher_id == 'new_widget' ){

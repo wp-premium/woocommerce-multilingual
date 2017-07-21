@@ -18,7 +18,8 @@ class WCML_Upgrade{
         '3.9',
         '3.9.1',
         '4.0',
-        '4.1.0'
+        '4.1.0',
+        '4.2.0'
     );
     
     function __construct(){
@@ -591,6 +592,15 @@ class WCML_Upgrade{
             $wcml_settings[ 'currency_switcher_additional_css' ] = '';
             update_option('_wcml_settings', $wcml_settings );
         }
+    }
+
+    function upgrade_4_2_0(){
+
+        $wcml_settings = get_option( '_wcml_settings' );
+        $wcml_settings[ 'dismiss_cart_warning' ] = 0;
+
+        update_option( '_wcml_settings', $wcml_settings );
+
     }
     
 }

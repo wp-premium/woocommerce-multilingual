@@ -7,29 +7,31 @@
  */
 class WCML_Currency_Switcher{
 
+	/** @var woocommerce_wpml */
 	private $woocommerce_wpml;
+	/** @var Sitepress */
 	private $sitepress;
+	/** @var boolean */
 	private $is_touch_screen;
 
-	public function __construct( &$woocommerce_wpml, &$sitepress ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ) {
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
+		$this->sitepress        = $sitepress;
 
-		add_action( 'init', array($this, 'init'), 5 );
 	}
 
-	public function init() {
+	public function add_hooks() {
+		add_action( 'init', array( $this, 'on_init' ), 5 );
+	}
 
-		add_action( 'wcml_currency_switcher', array($this, 'wcml_currency_switcher') );
+	public function on_init() {
+		add_action( 'wcml_currency_switcher', array( $this, 'wcml_currency_switcher' ) );
 		//@deprecated 3.9
-		add_action( 'currency_switcher', array($this, 'currency_switcher') );
-
-		add_shortcode( 'currency_switcher', array($this, 'currency_switcher_shortcode') );
-
+		add_action( 'currency_switcher', array( $this, 'currency_switcher' ) );
+		add_shortcode( 'currency_switcher', array( $this, 'currency_switcher_shortcode' ) );
 		// Built in currency switcher
-		add_action( 'woocommerce_product_meta_start', array($this, 'show_currency_switcher') );
-
+		add_action( 'woocommerce_product_meta_start', array( $this, 'show_currency_switcher' ) );
 		add_action( 'pre_update_option_sidebars_widgets', array( $this, 'update_option_sidebars_widgets' ), 10, 2 );
 	}
 

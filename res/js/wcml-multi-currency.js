@@ -11,7 +11,7 @@ jQuery(document).ready(function(){
         wcml_load_currency( jQuery(this).attr('rel') );
     });
 
-    if( typeof woocommerce_price_slider_params != 'undefined' ){
+    if( typeof woocommerce_price_slider_params !== 'undefined' ){
         woocommerce_price_slider_params.currency_symbol = wcml_mc_settings.current_currency.symbol;
     }
 });

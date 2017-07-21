@@ -63,8 +63,6 @@ class WCML_Emails{
             $this->set_emails_string_language();
         }
 
-        add_filter( 'get_post_metadata', array( $this, 'filter_payment_method_string' ), 10, 4 );
-
         if(
             (
                 !isset( $_GET['post_type'] ) ||
@@ -244,22 +242,6 @@ class WCML_Emails{
         if( isset( $_POST[ 'wc_order_action' ] ) && $_POST[ 'wc_order_action' ] == 'send_email_new_order' ){
             $this->new_order_admin_email( $order_id );
         }
-    }
-
-    function filter_payment_method_string( $title, $object_id, $meta_key, $single ){
-
-        if( $object_id && 'shop_order' === get_post_type( $object_id ) && '_payment_method_title' === $meta_key ){
-
-            remove_filter( 'get_post_metadata', array( $this, 'filter_payment_method_string' ), 10, 4 );
-            $payment_gateway = wc_get_payment_gateway_by_order( $object_id );
-            add_filter( 'get_post_metadata', array( $this, 'filter_payment_method_string' ), 10, 4 );
-
-            if( $payment_gateway ){
-                $title = $this->woocommerce_wpml->gateways->translate_gateway_title( $payment_gateway->title, $payment_gateway->id, $this->sitepress->get_current_language() );
-            }
-        }
-
-        return $title;
     }
 
     function filter_formatted_items( $formatted_meta, $object ){

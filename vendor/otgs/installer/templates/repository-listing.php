@@ -137,9 +137,12 @@
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <?php if($package['downloads']): ?>
-            <?php include $this->plugin_path() . '/templates/downloads-list.php'; ?>
-            <?php endif; ?>
+	        <?php
+	        if ( $package['downloads'] ) {
+		        WP_Installer_Channels()->load_channel_selector( $repository_id, $package['downloads'] );
+		        include $this->plugin_path() . '/templates/downloads-list.php';
+	        }
+	        ?>
 
             <?php if(!empty($package['sub-packages'])): ?>
 

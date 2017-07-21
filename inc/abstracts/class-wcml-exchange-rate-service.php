@@ -10,8 +10,7 @@ abstract class WCML_Exchange_Rate_Service{
     private $settings = array();
 
     protected $api_key      = '';
-
-    const REQUIRES_KEY = false;
+	protected $requires_key = false;
 
     public function __construct( $id, $name, $api_url, $url = '' ) {
 
@@ -78,7 +77,7 @@ abstract class WCML_Exchange_Rate_Service{
      * @return bool
      */
     public function is_key_required(){
-        return self::REQUIRES_KEY;
+	    return $this->requires_key;
     }
 
     /**

@@ -12,6 +12,7 @@ class WCML_Endpoints{
         add_action( 'icl_ajx_custom_call', array( $this, 'rewrite_rule_endpoints' ), 11, 2 );
         add_action( 'woocommerce_update_options', array( $this, 'add_endpoints' ) );
         add_filter( 'pre_update_option_rewrite_rules', array( $this, 'update_rewrite_rules' ), 100, 2 );
+	    add_filter( 'wpml_sl_blacklist_requests', array( $this, 'reserved_requests' ), 10, 2 );
 
         add_filter( 'page_link', array( $this, 'endpoint_permalink_filter' ), 10, 2 ); //after WPML
 
@@ -27,6 +28,51 @@ class WCML_Endpoints{
         add_filter( 'woocommerce_settings_saved', array( $this, 'update_original_endpoints_strings') );
     }
 
+	public function reserved_requests( $requests, SitePress $sitepress ) {
+		$cache_key   = 'reserved_requests';
+		$cache_group = 'wpml-endpoints';
+
+		$found        = null;
+		$reserved_requests = wp_cache_get( $cache_key, $cache_group, false, $found );
+
+		if ( ! $found || ! $reserved_requests ) {
+			$reserved_requests = array();
+
+			$current_language = $sitepress->get_current_language();
+			$languages        = $sitepress->get_active_languages();
+			$languages_codes  = array_keys( $languages );
+			foreach ( $languages_codes as $language_code ) {
+				$sitepress->switch_lang( $language_code );
+
+				$my_account_page_id = get_option( 'woocommerce_myaccount_page_id' );
+				if ( $my_account_page_id ) {
+					$my_account_page = get_post( $my_account_page_id );
+					if ( $my_account_page ) {
+						$account_base = $my_account_page->post_name;
+
+						$reserved_requests[] = $account_base;
+
+						foreach ( $this->woocommerce_wpml->get_wc_query_vars() as $key => $endpoint ) {
+							$translated_endpoint = $this->get_endpoint_translation( $key, $endpoint, $language_code );
+
+							$reserved_requests[] = $account_base . '/' . $translated_endpoint;
+						}
+					}
+				}
+			}
+			$sitepress->switch_lang( $current_language );
+
+			if ( $reserved_requests ) {
+				wp_cache_set( $cache_key, $reserved_requests, $cache_group );
+			}
+		}
+
+		if ( $reserved_requests ) {
+			$requests = array_unique( array_merge( $requests, $reserved_requests ) );
+		}
+
+		return $requests;
+	}
 
     function register_endpoints_translations( $language = null ){
 
