@@ -2,13 +2,28 @@
 
 class WCML_TP_Support {
 
+    /** @var woocommerce_wpml */
+    private $woocommerce_wpml;
+    /** @var  wpdb */
+    private $wpdb;
     /** @var WPML_Element_Translation_Package */
     private $tp;
 
-    public function __construct() {
+    /**
+     * WCML_Attributes constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param wpdb $wpdb
+     * @param WPML_Element_Translation_Package $tp
+     */
+    public function __construct( woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp ){
 
-        $this->tp = new WPML_Element_Translation_Package;
+        $this->woocommerce_wpml = $woocommerce_wpml;
+        $this->wpdb             = $wpdb;
+        $this->tp               = $tp;
+    }
 
+    public function add_hooks(){
         add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_custom_attributes_to_translation_package' ), 10, 2 );
         add_action( 'wpml_translation_job_saved',   array( $this, 'save_custom_attribute_translations' ), 10, 2 );
 
@@ -20,15 +35,13 @@ class WCML_TP_Support {
 
         add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_images_to_translation_package' ), 10, 2 );
         add_action( 'wpml_translation_job_saved',   array( $this, 'save_images_translations' ), 10, 3 );
-
     }
     
     public function append_custom_attributes_to_translation_package( $package, $post ) {
 
-        if ( $post->post_type == 'product' ) {
+        if ( $post->post_type === 'product' ) {
 
             $product = wc_get_product( $post->ID );
-
             $product_type = WooCommerce_Functions_Wrapper::get_product_type( $post->ID );
 
             if ( ! empty( $product ) && $product_type === 'variable' ) {
@@ -36,39 +49,34 @@ class WCML_TP_Support {
                 $attributes = $product->get_attributes();
 
                 foreach ( $attributes as $attribute_key => $attribute ) {
-                    if ( ! $attribute['is_taxonomy'] ) {
 
-                        $package['contents'][ 'wc_attribute_name:' . $attribute_key ] = array(
+                    if( $this->woocommerce_wpml->attributes->is_a_taxonomy( $attribute ) ){
+                        continue;
+                    }
+
+                    $package[ 'contents' ][ 'wc_attribute_name:' . $attribute_key ] = array(
+                        'translate' => 1,
+                        'data'      => $this->tp->encode_field_data( $attribute[ 'name' ], 'base64' ),
+                        'format'    => 'base64'
+                    );
+                    $values = explode( '|', $attribute[ 'value' ] );
+                    $values = array_map( 'trim', $values );
+
+                    foreach ( $values as $value_key => $value ) {
+                        $package[ 'contents' ][ 'wc_attribute_value:' . $value_key . ':' . $attribute_key ] = array(
                             'translate' => 1,
-                            'data'      => $this->tp->encode_field_data( $attribute['name'], 'base64' ),
+                            'data'      => $this->tp->encode_field_data( $value, 'base64' ),
                             'format'    => 'base64'
                         );
-
-                        $values = explode( '|', $attribute['value'] );
-                        $values = array_map( 'trim', $values );
-
-                        foreach ( $values as $value_key => $value ) {
-
-                            $package['contents'][ 'wc_attribute_value:' . $value_key . ':' . $attribute_key ] = array(
-                                'translate' => 1,
-                                'data'      => $this->tp->encode_field_data( $value, 'base64' ),
-                                'format'    => 'base64'
-                            );
-
-                        }
-
                     }
                 }
-
             }
-
         }
 
         return $package;
     }
 
     public function save_custom_attribute_translations( $post_id, $data ) {
-        global $woocommerce_wpml;
 
         $translated_attributes = array();
 
@@ -101,7 +109,7 @@ class WCML_TP_Support {
 
             $product_attributes = get_post_meta( $post_id, '_product_attributes', true );
 
-            $original_post_language = $woocommerce_wpml->products->get_original_product_language( $post_id );
+            $original_post_language = $this->woocommerce_wpml->products->get_original_product_language( $post_id );
             $original_post_id       = apply_filters( 'translate_object_id', $post_id, 'product', false, $original_post_language );
 
             $original_attributes = get_post_meta( $original_post_id, '_product_attributes', true );
@@ -204,14 +212,13 @@ class WCML_TP_Support {
     }
 
     public function save_slug_translations( $post_id, $data ) {
-        global $wpdb;
 
         foreach ( $data as $data_key => $value ) {
             if ( $value['finished'] && isset( $value['field_type'] ) && 'slug' === $value['field_type'] ) {
                 $product = get_post( $post_id );
                 if ( $product->post_type == 'product' ) {
                     $new_slug = wp_unique_post_slug( sanitize_title( $value['data'] ), $post_id, $product->post_status, $product->post_type,  $product->post_parent );
-                    $wpdb->update( $wpdb->posts, array( 'post_name' => $new_slug ), array( 'ID' => $post_id ) );
+                    $this->wpdb->update( $this->wpdb->posts, array( 'post_name' => $new_slug ), array( 'ID' => $post_id ) );
                     break;
                 }
             }
@@ -219,15 +226,13 @@ class WCML_TP_Support {
     }
 
     public function append_images_to_translation_package( $package, $post ) {
-        global $wpdb;
 
         if ( $post->post_type == 'product' ) {
 
-            $woocommerce_wpml = woocommerce_wpml::instance();
-            $product_images   = $woocommerce_wpml->media->product_images_ids( $post->ID );
-            $product_images   = $woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $post->ID );
+            $product_images   = $this->woocommerce_wpml->media->product_images_ids( $post->ID );
+            $product_images   = $this->woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $post->ID );
             foreach ( $product_images as $image_id ) {
-                $attachment_data = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_excerpt,post_content FROM {$wpdb->posts} WHERE ID = %d", $image_id ) );
+                $attachment_data = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT post_title,post_excerpt,post_content FROM {$this->wpdb->posts} WHERE ID = %d", $image_id ) );
                 if ( ! $attachment_data ) {
                     continue;
                 }
@@ -244,13 +249,10 @@ class WCML_TP_Support {
     }
 
     public function save_images_translations( $post_id, $data, $job ) {
-        global $wpdb;
 
         $language = $job->language_code;
 
-        $woocommerce_wpml = woocommerce_wpml::instance();
-
-        $product_images = $woocommerce_wpml->media->product_images_ids( $job->original_doc_id );
+        $product_images = $this->woocommerce_wpml->media->product_images_ids( $job->original_doc_id );
         foreach ( $product_images as $image_id ) {
             $translated_prod_image = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $language );
             $image_data       = $this->get_image_data( $image_id, $data );
@@ -268,7 +270,7 @@ class WCML_TP_Support {
                 }
 
                 if( $translation ){
-                    $wpdb->update( $wpdb->posts, $translation, array( 'id' => $translated_prod_image ) );
+                    $this->wpdb->update( $this->wpdb->posts, $translation, array( 'id' => $translated_prod_image ) );
                 }
 
                 if ( isset( $image_data['alt-text'] ) ) {

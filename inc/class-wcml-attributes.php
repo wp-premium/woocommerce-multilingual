@@ -2,14 +2,27 @@
 
 class WCML_Attributes{
 
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
+    /** @var wpdb */
     private $wpdb;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb ){
+    /**
+     * WCML_Attributes constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     * @param wpdb $wpdb
+     */
+    public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ){
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress = $sitepress;
         $this->wpdb = $wpdb;
+    }
+
+    public function add_hooks(){
 
         add_action( 'init', array( $this, 'init' ) );
 
@@ -23,12 +36,12 @@ class WCML_Attributes{
 
         add_action( 'woocommerce_before_attribute_delete', array( $this, 'refresh_taxonomy_translations_cache' ), 10, 3 );
 
-        if( ( defined('WC_VERSION') && version_compare( WC_VERSION , '3.0.0', '<' ) ) ){
+        $deprecated_wc = $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.0.0', '<' );
+        if ( $deprecated_wc ) {
             add_filter( 'woocommerce_get_product_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );
         }else{
             add_filter( 'woocommerce_product_get_attributes', array( $this, 'filter_adding_to_cart_product_attributes_names' ) );
         }
-
     }
 
     public function init(){
@@ -247,7 +260,7 @@ class WCML_Attributes{
             }elseif( !$orig_product_attr[ 'is_taxonomy' ] ){
                 if( isset( $trnsl_product_attrs[ $key ] ) ){
                     $orig_product_attrs[ $key_to_save ][ 'value' ] = $trnsl_product_attrs[ $key ][ 'value' ];
-                }else{
+                }elseif( !empty( $trnsl_product_attrs ) ){
                     unset ( $orig_product_attrs[ $key_to_save ] );
                 }
             }
@@ -530,6 +543,24 @@ class WCML_Attributes{
         }
 
         return $attributes;
+    }
+
+    public function is_a_taxonomy( $attribute ){
+
+        if(
+            (
+                $attribute instanceof WC_Product_Attribute &&
+                $attribute->is_taxonomy()
+            ) ||
+            (
+                is_array( $attribute ) &&
+                $attribute['is_taxonomy']
+            )
+        ){
+            return true;
+        }
+
+        return false;
     }
 
 }

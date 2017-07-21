@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.8.0
-Stable tag: 4.1.4
+Tested up to: 4.8
+Stable tag: 4.2.0
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -142,53 +142,44 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
-= 4.1.4 =
-* Fix: A PHP warning was shown on a product bundle page on the front end (when using WooCommerce Product Bundles)
-* Fix: Added possibility to filter available Currency Switcher templates paths via "wcml_cs_directories_to_scan" filter
-* Fix: The "Copy to a new draft" link was showing two times on the product edit page
-* Fix: For taxonomies having the term_id distinct from term_taxonomy_id, the translations could have been accidentally overwritten
-* Fix: In some conditions, a fatal error could come up when editing a product
-* Fix: In some circustances, disabling currency switcher on product page produced a fatal error
-* Fix: Custom attributes in the translations were reset after editing the original product
-* Fix: Sometimes, the translated product category pages were returning a 404 error
-* Fix: It was not possible to filter products by price on the shop page using the WooCommerce Price Filter widget
+= 4.2.0 =
+* Added the ability to translate Sensei question custom post types
+* Added the ability to translate serialized custom fields in the Translation Editor
+* Payment method title not displaying in emails Mollie Payment's payment processor compatibility
+* Show an admin notice for environments in which switching the language or currency on the front end, could corrupt the cart contents
+* When selecting the currencylayer provider for automatic exchange rate, the API KEY filter was not visible
+* The multi-currency component made the admin dashboard page loading unnecessarily slow
+* Variations with custom attributes could not be duplicated as translations
+* A fatal error occurred when using old WordPress versions (before 4.4.0) - rest_get_url_prefix didn't exist
+* The admin orders page was loading slower than necessary
+* A PHP fatal error was occurring when using the Adventure Tours extension
+* A product addon was added to the cart more then once in combination with Bookings
+* For translated products, the product variation names were displayed in the old format (before WooCommerce 3.0)
+* The prices in the secondary currencies for products in secondary languages for products read via the REST API were incorrect
+* CSS for the currency switcher was loaded when the multi-currency was not enabled
+* Fixed a javascript error on the shop page
+* It was not possible to use the clear cart feature with enabled WPML Ajax cookies only
+* WooCommerce Product Bundles: Bundled items filtering by variation was not synced with translations
+* Bookings max availability value was changing after adding bookable product to cart few times
+* In some cases the option to prompt for a confirmation about resetting the cart when switching the language was not working
+* The variation names were, sometimes, displayed in the wrong language in the orders, on the back-end
 
-= 4.1.3 =
-* Improvements for the REST API support (compliant with WooCommerce REST API v2)
-* Bug fix: Order confirmation emails were not translated correctly when using WooCommerce 3.0
-* Bug fix: The admin language switcher was displayed in a wrong place when using the Swish
-* Bug fix: Composite products were displaying the wrong price amount in secondary currencies
-* Bug fix: Sometimes switching the currency on the front end didn't work when using a caching plugin
-* Bug fix: Don't enforce the REST API support (added in 4.1) for legacy WooCommerce REST calls
-* Bug fix: In some conditions, variations custom fields were double-serialized when copied to the translations
-* Bug fix: Sometimes the currency switcher preview was not displaying correctly
-* Bug fix: Manually adding a product to an order was sometimes causing a fatal error
-* Bug fix: A fatal error was occurring when trying to translate a bookable product with Persons
-* Bug fix: The RTL styles were loaded incorrectly on the translation management when Yoast SEO was active
-* Bug fix: Trying to display the currency switcher with the 'do_action' function was causing a fatal error
-* Bug fix: Product urls were incorrect when permalink structure was set to /index.php/%postname%/
-* Bug fix: Product variation custom fields were double-serialized when copied to translations
-* Bug fix: Language switcher was misplaced when using the Swish Gateway extension
-* Bug fix: Downloadable files were not available in secondary languages
-* Bug fix: Using The Events Calendar without Tribe Tickets RSVP and Tribe Tickets Plus caused errors
-* Bug fix: Incorrect currency was shown in the backend for orders placed in a secondary currency
-* Bug fix: In some circumstances, the shipping tax was rounded incorrectly in the secondary currencies
-* Bug fix: After duplicating a variable product, the variations weren't showing on the translated product edit page
-* Added the option to synchronize the products stock information on the troubleshooting section
-* Fixed a compatibility issue with WooCommerce Bookings and WooCommerce Product addons (both active)
-* Fixed a compatibility issue with WooCommerce Subscriptions (shipping costs incorrectly displayed)
-* Fixed a compatibility issue with WooCommerce Product Bundles (removed items were not synced with translations)
-* Fixed a compatibility issue with WooCommerce Membership
-* Fixed a compatibility issue with WooCommerce Print Invoices/Packing Lists (PHP notices and possible a fatal error)
-* Fixed compatibility issues with Aelia Currency Switcher and Aelia Foundation
-* Fixed a compatibility issue with Visual Composer: shortcodes were not parsed in the translation editor
+= 4.1.4 =
+* Added possibility to filter available Currency Switcher templates paths via "wcml_cs_directories_to_scan" filter
+* The "Copy to a new draft" link was showing two times on the product edit page
+* For taxonomies having the term_id distinct from term_taxonomy_id, the translations could have been accidentally overwritten
+* In some conditions, a fatal error could come up when editing a product
+* In some circustances, disabling currency switcher on product page produced a fatal error
+* Custom attributes in the translations were reset after editing the original product
+* Sometimes, the translated product category pages were returning a 404 error
+* It was not possible to filter products by price on the shop page using the WooCommerce Price Filter widget
 
 = 4.1.2 =
 * Fixed `Fatal error: Call to undefined method WPML_WP_API::defined`
 * Fixed the currency switcher not being displayed correctly when using the Storefront theme
 * Fixed `Fatal error: Call to undefined function wc_format_decimal()`
 * Fixed a bug causing an error when upgrading WooCommerce Multilingual to version 4.1 with WooCommerce inactive.
-* Fixed the currency switcher css being loaded when no currency switcher was displayed
+* ixed the currency switcher css being loaded when no currency switcher was displayed
 
 = 4.1.1 =
 * Fixed a pre PHP 5.4 compatibility issue

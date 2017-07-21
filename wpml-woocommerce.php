@@ -6,14 +6,16 @@
   Author: OnTheGoSystems
   Author URI: http://www.onthegosystems.com/
   Text Domain: woocommerce-multilingual
-  Version: 4.1.4
+  Requires at least: 3.9
+  Tested up to: 4.8
+  Version: 4.2.0
 */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.1.4' );
+define( 'WCML_VERSION', '4.2.0' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -29,8 +31,10 @@ include WCML_PLUGIN_PATH . '/inc/wcml-switch-lang-request.php';
 include WCML_PLUGIN_PATH . '/inc/wcml-cart-switch-lang-functions.php';
 
 if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists( 'SitePress' ) ) {
+	global $sitepress;
 	//detecting language switching
-	$wcml_switch_lang_request = new WCML_Switch_Lang_Request( new WPML_Cookie(), new WPML_WP_API() );
+	$wcml_switch_lang_request = new WCML_Switch_Lang_Request( new WPML_Cookie(), new WPML_WP_API(), $sitepress );
+	$wcml_switch_lang_request->add_hooks();
 
 	//cart related language switching functions
 	$wcml_cart_switch_lang_functions = new WCML_Cart_Switch_Lang_Functions();

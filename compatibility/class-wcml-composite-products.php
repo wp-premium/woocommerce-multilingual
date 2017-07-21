@@ -6,18 +6,29 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 	/**
 	 * @var SitePress
 	 */
-	public $sitepress;
-
+	private $sitepress;
 	/**
 	 * @var woocommerce_wpml
 	 */
-	public $woocommerce_wpml;
-
+	private $woocommerce_wpml;
+	/**
+	 * @var WPML_Element_Translation_Package
+	 */
 	private $tp;
 
-	function __construct( &$sitepress, &$woocommerce_wpml ) {
-		$this->sitepress = $sitepress;
+	/**
+	 * WCML_Composite_Products constructor.
+	 * @param SitePress $sitepress
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param WPML_Element_Translation_Package $tp
+	 */
+	function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml, WPML_Element_Translation_Package $tp ) {
+		$this->sitepress        = $sitepress;
 		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->tp               = $tp;
+	}
+
+	public function add_hooks(){
 
 		add_filter( 'woocommerce_composite_component_default_option', array($this, 'woocommerce_composite_component_default_option'), 10, 3 );
 		add_filter( 'wcml_cart_contents', array($this, 'wpml_composites_compat'), 11, 4 );
@@ -31,8 +42,6 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 			add_action( 'wcml_update_extra_fields', array( $this, 'components_update' ), 10, 4 );
 			add_filter( 'woocommerce_json_search_found_products', array( $this, 'woocommerce_json_search_found_products' ) );
 
-			$this->tp = new WPML_Element_Translation_Package();
-
 			add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_composite_data_translation_package' ), 10, 2 );
 			add_action( 'wpml_translation_job_saved',   array( $this, 'save_composite_data_translation' ), 10, 3 );
 			//lock fields on translations pages
@@ -42,6 +51,8 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 			add_action( 'init', array( $this, 'load_assets' ) );
 
 			add_action( 'wcml_after_save_custom_prices', array( $this, 'update_composite_custom_prices' ), 10, 4 );
+
+			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
 		}else{
 			add_filter( 'get_post_metadata', array( $this, 'filter_composite_product_cost' ), 10, 4 );
 		}
@@ -542,6 +553,13 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
 		}
 
+	}
+
+	function replace_tm_editor_custom_fields_with_own_sections( $fields ){
+		$fields[] = '_bto_data';
+		$fields[] = '_bto_scenario_data';
+
+		return $fields;
 	}
 
 }

@@ -4,7 +4,6 @@ class WCML_Requests{
     function __construct(){
         
         add_action('init', array($this, 'run') );
-
         
     }
     
@@ -12,6 +11,21 @@ class WCML_Requests{
         global $woocommerce_wpml;
 
         $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $settings_needs_update = false;
+
+        if( isset( $_GET[ 'wcml_action' ] ) ){
+            $settings_needs_update = true;
+
+            if( $_GET['wcml_action'] == 'dismiss' ){
+                $woocommerce_wpml->settings['dismiss_doc_main'] = 1;
+            }elseif( $_GET['wcml_action'] == 'dismiss_tm_warning' ){
+                $woocommerce_wpml->settings['dismiss_tm_warning'] = 1;
+            }elseif( $_GET['wcml_action'] == 'dismiss_cart_warning' ){
+                $woocommerce_wpml->settings['dismiss_cart_warning'] = 1;
+            }else{
+                $settings_needs_update = false;
+            }
+        }
 
         if(isset($_POST['wcml_save_settings']) && wp_verify_nonce($nonce, 'wcml_save_settings_nonce')){
             global $sitepress,$sitepress_settings;
@@ -27,8 +41,6 @@ class WCML_Requests{
 
             $woocommerce_wpml->settings['cart_sync']['lang_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT ) );
             $woocommerce_wpml->settings['cart_sync']['currency_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT ) );
-
-            $woocommerce_wpml->update_settings();
 
             $new_value = $wcml_file_path_sync == 0 ? 2 :$wcml_file_path_sync;
             $sitepress_settings['translation-management']['custom_fields_translation']['_downloadable_files'] = $new_value;
@@ -46,14 +58,11 @@ class WCML_Requests{
                 'show_once'     => true
             );
             ICL_AdminNotifier::add_message( $message );
+
+            $settings_needs_update = true;
         }
 
-        if( isset( $_GET[ 'wcml_action' ] ) ){
-            if( $_GET['wcml_action'] == 'dismiss' ){
-                $woocommerce_wpml->settings['dismiss_doc_main'] = 1;
-            }elseif( $_GET['wcml_action'] == 'dismiss_tm_warning' ){
-                $woocommerce_wpml->settings['dismiss_tm_warning'] = 1;
-            }
+        if( $settings_needs_update ){
             $woocommerce_wpml->update_settings();
         }
 

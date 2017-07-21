@@ -21,6 +21,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
     private $product_id;
     private $product_type;
     private $not_display_fields_for_variables_product;
+    private $not_display_custom_fields_for_product;
 
 	function __construct( $job_details, &$woocommerce_wpml, &$sitepress, &$wpdb  ) {
 		global $iclTranslationManagement;
@@ -33,6 +34,8 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                                                                  '_price', '_min_variation_price', '_max_variation_price',
                                                                  '_min_variation_regular_price', '_max_variation_regular_price',
                                                                  '_min_variation_sale_price', '_max_variation_sale_price','_downloadable_files' );
+
+        $this->not_display_custom_fields_for_product = array( '_upsell_ids', '_crosssell_ids','_downloadable_files' );
 
         $this->job_details = $job_details;
         $this->product = wc_get_product( $job_details[ 'job_id' ] );
@@ -152,7 +155,6 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $custom_fields = $this->get_product_custom_fields_to_translate( $this->product_id );
 
-
         if( $this->product_type === 'external' ){
             $custom_fields = array_diff( $custom_fields, array( '_product_url', '_button_text' ) );
         }
@@ -163,19 +165,38 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
             foreach( $custom_fields as $custom_field ){
 
-	            $cf_settings = new WPML_Post_Custom_Field_Setting( $this->tm_instance, $custom_field );
-	            switch( $cf_settings->get_editor_style() ){
-	            	case 'visual':
-			            $cf_field = new WPML_Editor_UI_WYSIWYG_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
-                        break;
-		            case 'textarea':
-			            $cf_field = new WPML_Editor_UI_TextArea_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
-		            	break;
-		            default: //line
-			            $cf_field = new WPML_Editor_UI_Single_Line_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
-	            }
+                if( $this->check_custom_field_is_single_value( $this->product_id, $custom_field ) ){
 
-	            $custom_fields_section->add_field( $cf_field );
+                    $cf_settings = new WPML_Post_Custom_Field_Setting( $this->tm_instance, $custom_field );
+
+                    switch( $cf_settings->get_editor_style() ){
+                        case 'visual':
+                            $cf_field = new WPML_Editor_UI_WYSIWYG_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+                            break;
+                        case 'textarea':
+                            $cf_field = new WPML_Editor_UI_TextArea_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+                            break;
+                        default: //line
+                            $cf_field = new WPML_Editor_UI_Single_Line_Field( $custom_field, $cf_settings->get_editor_label(), $this->data, true );
+                    }
+
+                    $custom_fields_section->add_field( $cf_field );
+
+                }else{
+
+                    $custom_fields_values = array_values( array_filter( get_post_meta($this->product_id, $custom_field , true ) ) );
+
+                    if( $custom_fields_values ){
+                        $cf_fields_group = new WPML_Editor_UI_Field_Group();
+
+                        foreach( $custom_fields_values as $custom_field_index => $custom_field_val ){
+                            $cf_fields_group = $this->add_single_custom_field_content( $cf_fields_group, $custom_field, $custom_field_index, $custom_field_val );
+                        }
+
+                        $custom_fields_section->add_field( $cf_fields_group );
+                    }
+
+                }
 
             }
 
@@ -275,6 +296,44 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 }
             }
         }
+
+    }
+
+    public function add_single_custom_field_content( $cf_fields_group, $custom_field, $custom_field_index, $custom_field_val ){
+
+        if( is_scalar( $custom_field_val ) ){
+            $key_index = $custom_field . '-' . $custom_field_index;
+            $cf        = 'field-' . $key_index;
+
+            $cf_field = new WPML_Editor_UI_Single_Line_Field( $cf, $cf, $this->data, false );
+            $cf_fields_group->add_field( $cf_field );
+
+        }else{
+            foreach ( $custom_field_val as $ind => $value ) {
+                $cf_fields_group = $this->add_single_custom_field_content( $cf_fields_group, $custom_field, $custom_field_index . '-' . str_replace( '-', ':::', $ind ), $value );
+            }
+        }
+
+        return $cf_fields_group;
+
+    }
+
+    public function add_single_custom_field_content_value( $element_data, $custom_field, $custom_field_index, $custom_field_val, $trnsl_custom_field_value ){
+
+        if( is_scalar( $custom_field_val ) ){
+            $key_index = $custom_field . '-' . $custom_field_index;
+            $cf        = 'field-' . $key_index;
+            $element_data[ $cf ] = array( 'original' => $custom_field_val );
+            $element_data[ $cf ][ 'translation' ] = ( $trnsl_custom_field_value ) ? $trnsl_custom_field_value : '';
+
+        }else{
+            foreach ( $custom_field_val as $ind => $value ) {
+                $translated_value = isset( $trnsl_custom_field_value[ $ind ] ) ? $trnsl_custom_field_value[ $ind ] : '';
+                $element_data = $this->add_single_custom_field_content_value( $element_data, $custom_field, $custom_field_index . '-' . str_replace( '-', ':::', $ind ), $value, $translated_value );
+            }
+        }
+
+        return $element_data;
 
     }
 
@@ -453,7 +512,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                             continue;
                         }
 
-                        $element_data[ 't_'.$term->term_taxonomy_id ] = array( 'original' => $term->name );
+                        $element_data[ 't_'.$term->term_taxonomy_id ] = array( 'original' => htmlspecialchars_decode( $term->name ) );
                         $element_data[ 't_'.$term->term_taxonomy_id ][ 'translation' ] = $translated_term->term_taxonomy_id != $term->term_taxonomy_id ? $translated_term->name : '';
                     }
                 }
@@ -468,11 +527,11 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         if( $custom_fields ){
             foreach( $custom_fields as $custom_field ) {
                 $orig_custom_field_values = get_post_meta( $element_id, $custom_field );
-                $trnsl_custom_field_values = array();
+                $translated_custom_field_values = array();
                 $trnsl_mid_ids = array();
 
                 if ( $translation_id ) {
-                    $trnsl_custom_field_values = get_post_meta( $translation_id, $custom_field );
+                    $translated_custom_field_values = get_post_meta( $translation_id, $custom_field );
                     $trnsl_mid_ids = $this->woocommerce_wpml->products->get_mid_ids_by_key( $translation_id, $custom_field );
                 }
 
@@ -481,15 +540,36 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 }
 
                 foreach( $orig_custom_field_values as $val_key => $orig_custom_field_value ){
-                    if( count( $orig_custom_field_values ) == 1 ){
-                        $element_data[ $custom_field ] = array( 'original' => $orig_custom_field_value );
-                        $element_data[ $custom_field ][ 'translation' ] = ( $translation_id && isset( $trnsl_custom_field_values[ $val_key ] ) ) ? $trnsl_custom_field_values[ $val_key ] : '';
+
+                    if( $this->check_custom_field_is_single_value( $element_id, $custom_field ) ){
+
+                        if( count( $orig_custom_field_values ) == 1 ){
+                            $element_data[ $custom_field ] = array( 'original' => $orig_custom_field_value );
+                            $element_data[ $custom_field ][ 'translation' ] = ( $translation_id && isset( $translated_custom_field_values[ $val_key ] ) ) ? $translated_custom_field_values[ $val_key ] : '';
+                        }else{
+
+                            $custom_field_key = $custom_field.':'. ( isset( $trnsl_mid_ids[ $val_key ] ) ? $trnsl_mid_ids[ $val_key ] : 'new_'. $val_key );
+
+                            $element_data[ $custom_field ][ $custom_field_key ] = array( 'original' => $orig_custom_field_value );
+                            $element_data[ $custom_field ][ $custom_field_key ][ 'translation' ] = ($translation_id && isset( $translated_custom_field_values[ $val_key ] ) ) ? $translated_custom_field_values[ $val_key ] : '';
+                        }
+
                     }else{
 
-                        $custom_field_key = $custom_field.':'. ( isset( $trnsl_mid_ids[ $val_key ] ) ? $trnsl_mid_ids[ $val_key ] : 'new_'. $val_key );
+                        $custom_fields_values = array_values( array_filter( get_post_meta($this->product_id, $custom_field, true ) ) );
 
-                        $element_data[ $custom_field ][ $custom_field_key ] = array( 'original' => $orig_custom_field_value );
-                        $element_data[ $custom_field ][ $custom_field_key ][ 'translation' ] = ($translation_id && isset( $trnsl_custom_field_values[ $val_key ] ) ) ? $trnsl_custom_field_values[ $val_key ] : '';
+                        if( $custom_fields_values ){
+                            if ( $translation_id ) {
+                                $translated_custom_field_values = array_values( array_filter( get_post_meta( $translation_id, $custom_field , true ) ) );
+                            }
+                            foreach( $custom_fields_values as $custom_field_index => $custom_field_val ){
+
+                                $translated_custom_field_value = isset( $translated_custom_field_values[ $custom_field_index ] )? $translated_custom_field_values[ $custom_field_index ] : '';
+
+                                    $element_data = $this->add_single_custom_field_content_value( $element_data, $custom_field, $custom_field_index, $custom_field_val, $translated_custom_field_value );
+
+                            }
+                        }
                     }
                 }
             }
@@ -741,12 +821,11 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         $settings = $sitepress->get_settings();
         $label = '';
 	    if ( isset( $settings['translation-management']['custom_fields_translation'][ $field ] ) && $settings['translation-management']['custom_fields_translation'][ $field ] == WPML_TRANSLATE_CUSTOM_FIELD  ) {
-		    if ( in_array( $field, $this->not_display_fields_for_variables_product, true ) ) {
+		    if ( in_array( $field, apply_filters( 'wcml_not_display_single_fields_to_translate', $this->not_display_fields_for_variables_product ), true ) ) {
                 return false;
             }
 
-            $exception = apply_filters('wcml_product_content_exception', true, $this->product_id, $field);
-            if ( !$exception ) {
+            if ( in_array( $field, apply_filters( 'wcml_do_not_display_custom_fields_for_product', $this->not_display_custom_fields_for_product ), true ) ) {
                 return false;
             }
 
@@ -804,11 +883,8 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 	                if ( in_array( $meta_key, apply_filters( 'wcml_not_display_single_fields_to_translate', $this->not_display_fields_for_variables_product ), true ) ) {
                         continue;
                     }
-                }else{
-                    $exception = apply_filters( 'wcml_product_content_exception', true, $product_id, $meta_key );
-                    if( $exception ) {
-                        continue;
-                    }
+                }elseif( in_array( $meta_key, apply_filters( 'wcml_do_not_display_custom_fields_for_product', $this->not_display_custom_fields_for_product ), true ) ) {
+                    continue;
                 }
                 $contents[] = $meta_key;
             }

@@ -2,19 +2,28 @@
 
 class WCML_Switch_Lang_Request{
 
+    /** @var string $default_language */
     protected $default_language;
+    /** @var WPML_WP_API */
     protected $wp_api;
+    /** @var WPML_Cookie */
     private   $cookie;
+    /** @var Sitepress */
+    private $sitepress;
 
-    function __construct( $cookie, $wp_api ){
+    function __construct( WPML_Cookie $cookie, WPML_WP_API $wp_api, Sitepress $sitepress ){
 
         if( !is_admin() ){
-            global $sitepress;
-
             $this->cookie = $cookie;
             $this->wp_api = $wp_api;
-            $this->default_language = $sitepress->get_default_language();
+            $this->sitepress = $sitepress;
+            $this->default_language = $this->sitepress->get_default_language();
+        }
+    }
 
+    public function add_hooks(){
+
+        if( !is_admin() && $this->sitepress->get_setting( $this->wp_api->constant( 'WPML_Cookie_Setting::COOKIE_SETTING_FIELD' ) ) ) {
             add_action( 'wpml_before_init', array( $this, 'detect_user_switch_language' ) );
         }
     }

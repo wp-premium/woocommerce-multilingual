@@ -1,22 +1,18 @@
-<?php 
-define('WP_INSTALLER_VERSION', '1.7.17');
-  
-include_once dirname(__FILE__) . '/includes/installer.class.php';
+<?php
+define( 'WP_INSTALLER_VERSION', '1.8' );
 
-function WP_Installer() {
-    return WP_Installer::instance();
-}
+include_once dirname( __FILE__ ) . '/includes/functions-core.php';
+include_once dirname( __FILE__ ) . '/includes/class-wp-installer.php';
 
-
-WP_Installer();
-
-include_once WP_Installer()->plugin_path() . '/includes/installer-api.php';
-include_once WP_Installer()->plugin_path() . '/includes/translation-service-info.class.php';
+include_once WP_Installer()->plugin_path() . '/includes/class-wp-installer-api.php';
+include_once WP_Installer()->plugin_path() . '/includes/class-translation-service-info.php';
 include_once WP_Installer()->plugin_path() . '/includes/class-installer-dependencies.php';
+include_once WP_Installer()->plugin_path() . '/includes/class-wp-installer-channels.php';
 
-// Ext function 
-function WP_Installer_Show_Products($args = array()){
-    
-    WP_Installer()->show_products($args);
-    
-}
+include_once WP_Installer()->plugin_path() . '/includes/functions-templates.php';
+
+// Initialization
+WP_Installer();
+WP_Installer_Channels();
+
+

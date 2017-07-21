@@ -2,25 +2,45 @@
 
 class WCML_Synchronize_Product_Data{
 
+    const CUSTOM_FIELD_KEY_SEPARATOR = ':::';
+
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
     /**
      * @var SitePress
      */
     private $sitepress;
+    /** @var wpdb */
     private $wpdb;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb ) {
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-        $this->wpdb = $wpdb;
 
+    /**
+     * WCML_Synchronize_Product_Data constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     * @param wpdb $wpdb
+     */
+    public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ) {
+        $this->woocommerce_wpml = $woocommerce_wpml;
+        $this->sitepress        = $sitepress;
+        $this->wpdb             = $wpdb;
+    }
+
+    public function add_hooks(){
         if( is_admin() ){
             // filters to sync variable products
-            add_action( 'save_post', array( $this, 'synchronize_products' ), 110, 2 ); // After WPML
+            add_action( 'save_post', array( $this, 'synchronize_products' ), PHP_INT_MAX, 2 ); // After WPML
 
             add_action( 'icl_pro_translation_completed', array( $this, 'icl_pro_translation_completed' ) );
 
             add_filter( 'icl_make_duplicate', array( $this, 'icl_make_duplicate'), 110, 4 );
+
+            if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.0.0', '<' ) ) {
+                add_action('woocommerce_duplicate_product', array($this, 'woocommerce_duplicate_product'), 10, 2);
+            }else{
+                add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
+            }
 
             //quick & bulk edit
             add_action( 'woocommerce_product_quick_edit_save', array( $this, 'woocommerce_product_quick_edit_save' ) );
@@ -60,7 +80,9 @@ class WCML_Synchronize_Product_Data{
         //set trid for variations
         if ( $post_type == 'product_variation' ) {
             $var_lang = $this->sitepress->get_language_for_element( wp_get_post_parent_id( $post_id ), 'post_product' );
-            if( $this->woocommerce_wpml->products->is_original_product( wp_get_post_parent_id( $post_id ) ) ){
+            $is_parent_original = $this->woocommerce_wpml->products->is_original_product( wp_get_post_parent_id( $post_id ) );
+            $variation_language_details = $this->sitepress->get_element_language_details( $post_id, 'post_product_variation' );
+            if( $is_parent_original && !$variation_language_details ){
                 $this->sitepress->set_element_language_details( $post_id, 'post_product_variation', false, $var_lang );
             }
         }
@@ -77,7 +99,7 @@ class WCML_Synchronize_Product_Data{
             return;
         }
         // Remove filter to avoid double sync
-        remove_action( 'save_post', array( $this, 'synchronize_products' ), 110, 2 );
+        remove_action( 'save_post', array( $this, 'synchronize_products' ), PHP_INT_MAX, 2 );
 
         do_action( 'wcml_before_sync_product', $original_product_id, $post_id );
 
@@ -440,7 +462,7 @@ class WCML_Synchronize_Product_Data{
                     }elseif ( $data ) {
                         if ( isset( $settings[ $key ] ) && $settings[ $key ] == WPML_TRANSLATE_CUSTOM_FIELD ) {
 
-                            $post_fields = $this->sync_custom_field_value( $key, $data, $trnsl_product_id, $post_fields );
+                            $post_fields = $this->sync_custom_field_value( $key, $data, $trnsl_product_id, $post_fields, $original_product_id );
                         }
                     }
                 }
@@ -469,15 +491,25 @@ class WCML_Synchronize_Product_Data{
             unset( $post_fields[ $custom_filed_key ] );
         }else{
             foreach( $post_fields as $post_field_key => $post_field ){
-                $meta_value = $translation_data[ md5( $post_field_key ) ];
-                $field_key = explode( ':', $post_field_key );
-                if( $field_key[0] == $custom_filed_key ){
-                    if( substr( $field_key[1], 0, 3 ) == 'new' ){
-                        add_post_meta( $trnsl_product_id, $custom_field, $meta_value );
-                    }else{
-                        update_meta( $field_key[1], $custom_field, $meta_value );
+
+                if( 1 === preg_match( '/field-' . $custom_field . '-.*?/', $post_field_key ) ){
+                    $custom_fields_values = array_values( array_filter( get_post_meta( $original_product_id, $custom_field, true ) ) );
+                    foreach( $custom_fields_values as $custom_field_index => $custom_field_value ) {
+                        $custom_fields_values = $this->get_translated_custom_field_values( $custom_fields_values, $translation_data, $custom_field, $custom_field_value, $custom_field_index );
                     }
-                    unset( $post_fields[ $post_field_key ] );
+
+                    update_post_meta( $trnsl_product_id, $custom_field, $custom_fields_values );
+                }else{
+                    $meta_value = $translation_data[ md5( $post_field_key ) ];
+                    $field_key = explode( ':', $post_field_key );
+                    if( $field_key[0] == $custom_filed_key ){
+                        if( 'new' === substr( $field_key[1], 0, 3 ) ){
+                            add_post_meta( $trnsl_product_id, $custom_field, $meta_value );
+                        }else{
+                            update_meta( $field_key[1], $custom_field, $meta_value );
+                        }
+                        unset( $post_fields[ $post_field_key ] );
+                    }
                 }
             }
         }
@@ -485,6 +517,125 @@ class WCML_Synchronize_Product_Data{
         return $post_fields;
     }
 
+    public function get_translated_custom_field_values( $custom_fields_values, $translation_data, $custom_field, $custom_field_value, $custom_field_index ){
+
+        if( is_scalar( $custom_field_value ) ){
+            $key_index = $custom_field . '-' .$custom_field_index;
+            $cf        = 'field-' . $key_index;
+            $meta_keys = explode( '-', $custom_field_index );
+            $meta_keys = array_map( array( $this, 'replace_separator' ), $meta_keys );
+            $custom_fields_values = $this->insert_under_keys(
+               $meta_keys, $custom_fields_values, $translation_data[ md5( $cf ) ]
+            );
+        }else{
+            foreach ( $custom_field_value as $ind => $value ) {
+                $field_index = $custom_field_index. '-' . str_replace( '-', self::CUSTOM_FIELD_KEY_SEPARATOR, $ind );
+                $custom_fields_values = $this->get_translated_custom_field_values( $custom_fields_values, $translation_data, $custom_field, $value, $field_index );
+            }
+        }
+
+        return $custom_fields_values;
+
+    }
+
+    private function replace_separator( $el ) {
+        return str_replace( self::CUSTOM_FIELD_KEY_SEPARATOR, '-', $el );
+    }
+
+    /**
+     * Inserts an element into an array, nested by keys.
+     * Input ['a', 'b'] for the keys, an empty array for $array and $x for the value would lead to
+     * [ 'a' => ['b' => $x ] ] being returned.
+     *
+     * @param array $keys indexes ordered from highest to lowest level
+     * @param array $array array into which the value is to be inserted
+     * @param mixed $value to be inserted
+     *
+     * @return array
+     */
+    private function insert_under_keys( $keys, $array, $value ) {
+        $array[ $keys[0] ] = count( $keys ) === 1
+            ? $value
+            : $this->insert_under_keys(
+                array_slice($keys, 1),
+                ( isset( $array[ $keys[0] ] ) ? $array[ $keys[0] ] : array() ),
+                $value );
+
+        return $array;
+    }
+
+
+    public function woocommerce_duplicate_product( $new_id, $post ){
+        $duplicated_products = array();
+
+        //duplicate original first
+        $trid = $this->sitepress->get_element_trid( $post->ID, 'post_' . $post->post_type );
+        $orig_id = $this->sitepress->get_original_element_id_by_trid( $trid );
+        $orig_lang = $this->woocommerce_wpml->products->get_original_product_language( $post->ID );
+
+        $wc_admin = new WC_Admin_Duplicate_Product();
+
+        if( $orig_id == $post->ID ){
+            $this->sitepress->set_element_language_details( $new_id, 'post_' . $post->post_type, false, $orig_lang );
+            $new_trid = $this->sitepress->get_element_trid( $new_id, 'post_' . $post->post_type );
+            $new_orig_id = $new_id;
+        }else{
+            $post_to_duplicate = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} WHERE ID=%d", $orig_id ) );
+            if ( ! empty( $post_to_duplicate ) ) {
+                $new_orig_id = $wc_admin->duplicate_product( $post_to_duplicate );
+                do_action( 'wcml_after_duplicate_product' , $new_id, $post_to_duplicate );
+                $this->sitepress->set_element_language_details( $new_orig_id, 'post_' . $post->post_type, false, $orig_lang );
+                $new_trid = $this->sitepress->get_element_trid( $new_orig_id, 'post_' . $post->post_type );
+                if( get_post_meta( $orig_id, '_icl_lang_duplicate_of' ) ){
+                    update_post_meta( $new_id, '_icl_lang_duplicate_of', $new_orig_id );
+                }
+                $this->sitepress->set_element_language_details( $new_id, 'post_' . $post->post_type, $new_trid, $this->sitepress->get_current_language() );
+            }
+        }
+
+        // Set language info for variations
+        if ( $children_products = get_children( 'post_parent=' . $new_orig_id . '&post_type=product_variation' ) ) {
+            foreach ( $children_products as $child ) {
+                $this->sitepress->set_element_language_details( $child->ID, 'post_product_variation', false, $orig_lang );
+            }
+        }
+
+        $translations = $this->sitepress->get_element_translations( $trid, 'post_' . $post->post_type );
+        $duplicated_products[ 'translations' ] = array();
+        if( $translations ){
+            foreach( $translations as $translation ){
+                if( !$translation->original && $translation->element_id != $post->ID ){
+                    $post_to_duplicate = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} WHERE ID=%d", $translation->element_id ) );
+
+                    if( ! empty( $post_to_duplicate ) ) {
+                        $new_id = $wc_admin->duplicate_product( $post_to_duplicate );
+                        $new_id_obj = get_post( $new_id );
+                        $new_slug = wp_unique_post_slug( sanitize_title( $new_id_obj->post_title ), $new_id, $post_to_duplicate->post_status, $post_to_duplicate->post_type, $new_id_obj->post_parent );
+
+                        $this->wpdb->update(
+                            $this->wpdb->posts,
+                            array(
+                                'post_name'     => $new_slug,
+                                'post_status'   => 'draft'
+                            ),
+                            array( 'ID' => $new_id )
+                        );
+
+                        do_action( 'wcml_after_duplicate_product' , $new_id, $post_to_duplicate );
+                        $this->sitepress->set_element_language_details( $new_id, 'post_' . $post->post_type, $new_trid, $translation->language_code );
+                        if( get_post_meta( $translation->element_id, '_icl_lang_duplicate_of' ) ){
+                            update_post_meta( $new_id, '_icl_lang_duplicate_of', $new_orig_id );
+                        }
+                        $duplicated_products[ 'translations' ][] = $new_id;
+                    }
+                }
+            }
+        }
+
+        $duplicated_products[ 'original' ] = $new_orig_id;
+
+        return $duplicated_products;
+    }
 
     public function icl_connect_translations_action(){
         if( isset( $_POST[ 'icl_ajx_action' ] ) && $_POST[ 'icl_ajx_action' ] == 'connect_translations' ) {
