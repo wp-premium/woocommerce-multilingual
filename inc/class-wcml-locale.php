@@ -23,13 +23,19 @@ class WCML_Locale{
     }
 
     public function switch_locale( $lang_code = false ) {
-        global $l10n;
+        global $l10n, $st_gettext_hooks;
         static $original_l10n;
         if ( ! empty( $lang_code ) ) {
+
+	        if ( null !== $st_gettext_hooks ) {
+		        $st_gettext_hooks->switch_language_hook( $lang_code );
+	        }
+
             $original_l10n = isset( $l10n[ 'woocommerce-multilingual' ] ) ? $l10n[ 'woocommerce-multilingual' ] : null;
             if ( $original_l10n !== null ) {
                 unset( $l10n[ 'woocommerce-multilingual' ] );
             }
+
             return load_textdomain( 'woocommerce-multilingual',
                 WCML_LOCALE_PATH . '/woocommerce-multilingual-' . $this->sitepress->get_locale( $lang_code ) . '.mo' );
 

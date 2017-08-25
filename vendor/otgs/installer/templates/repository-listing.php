@@ -122,7 +122,7 @@
 
     <?php foreach($packages as $package): ?>
     <tr id="repository-<?php echo $repository_id ?>_<?php echo $package['id'] ?>">
-        <td><img width="140" height="140" src="<?php echo $package['image_url'] ?>" /></td>
+        <td class="installer-repository-image"><img width="140" src="<?php echo $package['image_url'] ?>" /></td>
         <td>
             <p><strong><?php echo $package['name'] ?></strong></p>
             <p><?php echo $package['description'] ?></p>

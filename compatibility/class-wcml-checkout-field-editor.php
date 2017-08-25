@@ -4,26 +4,51 @@ class WCML_Checkout_Field_Editor {
 
     protected $package, $billing, $shipping, $additional;
 
-    function __construct() {
-        $this->package = (object) array(
-            'kind' => 'WooCommerce Add-On',
+    function __construct( $package = false ){
+        $this->package = $package ? $package : (object) array(
+            'kind'      => 'WooCommerce Add-On',
             'kind_slug' => 'woocommerce-add-on',
-            'name' => 'checkout-field-editor',
-            'title' => 'WooCommerce Checkout Field Editor'
+            'name'      => 'checkout-field-editor',
+            'title'     => 'WooCommerce Checkout Field Editor'
         );
+    }
+
+    function add_hooks() {
         global $supress_field_modification;
-        if ( !is_admin() && !$supress_field_modification ) {
-            add_filter( 'pre_option_wc_fields_billing', array($this, 'get_billing') );
-            add_filter( 'pre_option_wc_fields_shipping', array($this, 'get_shipping') );
-            add_filter( 'pre_option_wc_fields_additional', array($this, 'get_additional') );
+        if ( ! is_admin() && ! $supress_field_modification ) {
+            add_filter( 'pre_option_wc_fields_billing', array( $this, 'get_billing' ) );
+            add_filter( 'pre_option_wc_fields_shipping', array( $this, 'get_shipping' ) );
+            add_filter( 'pre_option_wc_fields_additional', array( $this, 'get_additional' ) );
         }
-        add_filter( 'pre_update_option_wc_fields_billing', array($this, 'register_fields') );
-        add_filter( 'pre_update_option_wc_fields_shipping', array($this, 'register_fields') );
-        add_filter( 'pre_update_option_wc_fields_additional', array($this, 'register_fields') );
+        add_filter( 'pre_update_option_wc_fields_billing', array( $this, 'register_fields' ) );
+        add_filter( 'pre_update_option_wc_fields_shipping', array( $this, 'register_fields' ) );
+        add_filter( 'pre_update_option_wc_fields_additional', array( $this, 'register_fields' ) );
+    }
+
+    private function get_exclude_fields() {
+
+        $exclude_fields = array(
+            'shipping_address_1',
+            'shipping_city',
+            'shipping_state',
+            'shipping_postcode',
+            'billing_address_1',
+            'billing_city',
+            'billing_state',
+            'billing_postcode'
+        );
+
+        return apply_filters( 'wcml_cfe_exclude_fields_to_register', $exclude_fields );
+
     }
 
     public function register_fields( $fields ) {
         foreach ( $fields as $string_name => $field ) {
+
+            if ( in_array( $string_name, $this->get_exclude_fields() ) ) {
+                continue;
+            }
+
             // Translate label
             if ( !empty( $field['label'] ) ) {
                 do_action( 'wpml_register_string',
@@ -64,6 +89,11 @@ class WCML_Checkout_Field_Editor {
 
     public function translate_fields( $fields ) {
         foreach ( $fields as $string_name => &$field ) {
+
+            if ( in_array( $string_name, $this->get_exclude_fields() ) ) {
+                continue;
+            }
+
             // Translate label
             if ( !empty( $field['label'] ) ) {
                 $field['label'] = apply_filters( 'wpml_translate_string',

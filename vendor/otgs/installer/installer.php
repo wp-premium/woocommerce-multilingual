@@ -1,5 +1,5 @@
 <?php
-define( 'WP_INSTALLER_VERSION', '1.8' );
+define( 'WP_INSTALLER_VERSION', '1.8.2' );
 
 include_once dirname( __FILE__ ) . '/includes/functions-core.php';
 include_once dirname( __FILE__ ) . '/includes/class-wp-installer.php';

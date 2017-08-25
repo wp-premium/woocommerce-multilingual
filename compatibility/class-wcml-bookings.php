@@ -164,7 +164,20 @@ class WCML_Bookings {
 
 			//allow filtering resources by language
 			add_filter( 'get_booking_resources_args', array( $this, 'filter_get_booking_resources_args' ) );
-			add_filter( 'get_translatable_documents', array( $this, 'filter_translatable_documents' ) );
+
+            if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'ICL_SITEPRESS_VERSION' ), '3.8.0', '<' ) ) {
+                add_filter( 'get_translatable_documents', array( $this, 'filter_translatable_documents' ) );
+
+                //@TODO review after WPML 3.6
+                if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'ICL_SITEPRESS_VERSION' ), '3.6', '<' ) ) {
+                    add_action( 'added_post_meta', array(
+                        $this,
+                        'maybe_fix_double_serialized_wc_booking_availability'
+                    ), 10, 4 );
+                }
+            }
+            add_filter( 'get_translatable_documents_all', array( $this, 'filter_translatable_documents' ) );
+
 			add_filter( 'pre_wpml_is_translated_post_type', array( $this, 'filter_is_translated_post_type' ) );
 
 			add_action( 'woocommerce_product_data_panels',   array( $this, 'show_pointer_info' ) );
@@ -175,15 +188,7 @@ class WCML_Bookings {
 		if ( ! is_admin() || isset( $_POST['action'] ) && $_POST['action'] == 'wc_bookings_calculate_costs' ) {
 			add_filter( 'get_post_metadata', array( $this, 'filter_wc_booking_cost' ), 10, 4 );
 		}
-
-		//@TODO review after WPML 3.6
-		if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'ICL_SITEPRESS_VERSION' ), '3.6', '<' ) ) {
-			add_action( 'added_post_meta', array(
-				$this,
-				'maybe_fix_double_serialized_wc_booking_availability'
-			), 10, 4 );
-		}
-
+		
 		add_filter( 'wpml_language_filter_extra_conditions_snippet', array( $this, 'extra_conditions_to_filter_bookings' ) );
 
 		$this->clear_transient_fields();

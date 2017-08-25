@@ -1,11 +1,11 @@
 === WooCommerce Multilingual - run WooCommerce with WPML ===
-Contributors: AmirHelzer, sergey.r, mihaimihai, EduardMaghakyan
+Contributors: AmirHelzer, sergey.r, mihaimihai, EduardMaghakyan, andrewp-2
 Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilingual/
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.8
-Stable tag: 4.2.0
+Tested up to: 4.8.1
+Stable tag: 4.2.1.1
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -142,11 +142,45 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
+= 4.2.1.1 =
+* WC Subscriptions compatibility error
+
+= 4.2.1 =
+* Added the ability to set custom currencies for orders created via the REST API
+* Filter by translation status displays wrong results on WooCommerce Multilingual products list page
+* Prices were not synced when creating a product translation via REST API
+* Missing Woocommerce pages were created in default language
+* Fatal error while custom call not active currency switcher template
+* Duplicating from WooCommerce resulted in losing language data for the original product
+* Coupon with category restriction removed when switching language on cart page
+* PHP errors were shown on the admin dashboard when no orders existed and displaying errors was on
+* Fixed issue with problem in downloadable products in secondary language with different domain per language is enabled
+* A fatal error (undefiend get_current_screen) was occurring in some conditions on the WP admin side
+* Cart widget shows wrong product names
+* Fixed a small but that defualt currency template didn't load correctly in new installation
+* Added compatibility for grouped products
+* Fixed an issue in lost password endpoint when edit it
+* The cart total in a secondary currencies could have been added a previously removed shipping tax
+* Post translation won't save when Product Bundles plugin is active
+* Fixed comp issue with dynamic price with translated variations don't work in secondary language
+* Cart reset button point to wrong language
+* Fix issue with not matched translated labels because of special characters
+* Fixed an issue when sold individually is enabled and different variations of the same product
+* Fix the ability to set custom download files in downloadable variable products with WCML product editor
+* Fixed small issue in separate file control in downloadable variation product
+* Fix a bug where Variations were made downloadable after their description was updated.
+* Checkout Field Editor compatibility fix
+* Fixed issue with displaying custom prices in Bundles Products
+* Add filter for 'woocommerce_subscriptions_product_price'
+* Fixed compatibi;ity issue with coupos not applied correctly in a subscription product
+* The `wcml_raw_price_amount` filter could not be used to convert to a different currency than the current user currency
+
 = 4.2.0 =
 * Added the ability to translate Sensei question custom post types
-* Added the ability to translate serialized custom fields in the Translation Editor
+* Added the ability to translate serialized custom fields with in the Translation Editor
 * Payment method title not displaying in emails Mollie Payment's payment processor compatibility
 * Show an admin notice for environments in which switching the language or currency on the front end, could corrupt the cart contents
+* Changing the order of the variations was disconnecting them from their translations
 * When selecting the currencylayer provider for automatic exchange rate, the API KEY filter was not visible
 * The multi-currency component made the admin dashboard page loading unnecessarily slow
 * Variations with custom attributes could not be duplicated as translations
@@ -161,7 +195,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * It was not possible to use the clear cart feature with enabled WPML Ajax cookies only
 * WooCommerce Product Bundles: Bundled items filtering by variation was not synced with translations
 * Bookings max availability value was changing after adding bookable product to cart few times
-* In some cases the option to prompt for a confirmation about resetting the cart when switching the language was not working
+* In some cases the the option to prompt for a confirmation about resetting the cart when switching the language was not working
 * The variation names were, sometimes, displayed in the wrong language in the orders, on the back-end
 
 = 4.1.4 =

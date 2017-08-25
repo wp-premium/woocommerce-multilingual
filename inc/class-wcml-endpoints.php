@@ -321,11 +321,18 @@ class WCML_Endpoints{
     function filter_get_endpoint_url( $url, $endpoint, $value, $permalink ){
 
         // return translated edit account slugs
-        if( isset( WC()->query->query_vars[ 'edit-address' ] ) && WC()->query->query_vars[ 'edit-address' ] == $endpoint && in_array( $value, array('shipping','billing'))){
-            remove_filter('woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url'),10,4);
+        remove_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
+        if ( isset( WC()->query->query_vars['edit-address'] ) && WC()->query->query_vars['edit-address'] == $endpoint && in_array( $value, array(
+                'shipping',
+                'billing'
+            ) )
+        ) {
             $url = wc_get_endpoint_url( 'edit-address', $this->get_translated_edit_address_slug( $value ) );
-            add_filter('woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url'),10,4);
+        } elseif ( $endpoint === get_option( 'woocommerce_myaccount_lost_password_endpoint' ) ) {
+            $translated_lost_password_endpoint = apply_filters( 'wpml_translate_single_string', $endpoint, 'WooCommerce Endpoints', 'lost-password' );
+            $url                              = wc_get_endpoint_url( $translated_lost_password_endpoint );
         }
+        add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
 
         return $url;
     }

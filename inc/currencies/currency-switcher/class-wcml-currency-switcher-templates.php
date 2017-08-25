@@ -314,12 +314,12 @@ class WCML_Currency_Switcher_Templates {
     public function enqueue_template_resources( $templates = false ) {
 
         if( !$templates ){
-            $templates =  $this->get_active_templates();
+            $templates =  $this->get_active_templates( true );
         }
 
         $wcml_settings = $this->woocommerce_wpml->get_settings();
 
-        foreach( $templates as $slug => $template ) {
+        foreach ( $templates as $slug => $template ) {
 
             foreach ( $template->get_scripts() as $k => $url ) {
                 wp_enqueue_script( $template->get_resource_handler( $k ), $url, array(), WCML_VERSION );
@@ -327,7 +327,6 @@ class WCML_Currency_Switcher_Templates {
 
             foreach ( $template->get_styles() as $k => $url ) {
                 wp_enqueue_style( $template->get_resource_handler( $k ), $url, array(), WCML_VERSION );
-
             }
 
             if ( $template->has_styles() ) {
@@ -340,6 +339,11 @@ class WCML_Currency_Switcher_Templates {
                 foreach( $wcml_settings[ 'currency_switchers' ] as $key => $switcher_data ){
 
                     $switcher_template = $switcher_data['switcher_style'];
+
+                    if ( ! isset( $templates[ $switcher_template ] ) ) {
+                        continue;
+                    }
+
                     $css = $this->get_color_picket_css( $key, $switcher_data );
                     $template = $templates[ $switcher_template ];
 
@@ -354,7 +358,7 @@ class WCML_Currency_Switcher_Templates {
             if ( ! empty( $wcml_settings['currency_switcher_additional_css'] ) ) {
                 $additional_css = $this->sanitize_css( $wcml_settings['currency_switcher_additional_css'] );
 
-                if( $style_handler ){
+                if( !empty( $style_handler ) ){
                     wp_add_inline_style( $style_handler, $additional_css );
                 }else{
                     echo $this->get_inline_style( 'currency_switcher', 'additional_css', $additional_css );
