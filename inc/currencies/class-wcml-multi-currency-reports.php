@@ -22,7 +22,7 @@ class WCML_Multi_Currency_Reports {
 	 * @param wpdb $wpdb
 	 * @param WPML_WP_Cache $wpml_cache
 	 */
-	public function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress, wpdb $wpdb, WPML_WP_Cache $wpml_cache = null ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress, wpdb $wpdb, $wpml_cache = null ) {
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->sitepress        = $sitepress;
@@ -213,7 +213,9 @@ class WCML_Multi_Currency_Reports {
 	public function filter_dashboard_status_widget_sales_query( $query ) {
 		$order_ids_list = $this->get_dashboard_currency_list_of_orders_ids();
 
-		$query['where'] .= " AND posts.ID IN  ( " . $order_ids_list . " ) ";
+		if( $order_ids_list ){
+			$query['where'] .= " AND posts.ID IN (" . $order_ids_list . ") ";
+        }
 
 		return $query;
 	}
@@ -236,7 +238,7 @@ class WCML_Multi_Currency_Reports {
                     ", $currency
 				)
 			);
-			$orders_ids      = implode( ',', $order_ids_array );
+			$orders_ids      = wpml_prepare_in( $order_ids_array, '%d' );
 
 			$this->wpml_cache->set( $cache_key, $orders_ids );
 		}

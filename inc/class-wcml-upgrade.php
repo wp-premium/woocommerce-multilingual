@@ -86,7 +86,7 @@ class WCML_Upgrade{
     }
     
     function run(){
-        
+
         $version_in_db = get_option('_wcml_version');
         
         // exception - starting in 2.3.2
@@ -541,10 +541,11 @@ class WCML_Upgrade{
         if( !class_exists( 'WooCommerce' ) ){
             update_option( '_wcml_4_1_0_migration_required', true );
         }else{
-            $results = $wpdb->get_results("
+
+            $results = $wpdb->get_results( "
                         SELECT *
                         FROM {$wpdb->postmeta}
-                        WHERE meta_key LIKE '_price_%' OR meta_key LIKE '_regular_price_%' OR ( meta_key LIKE '_sale_price_%' AND meta_key NOT LIKE '_sale_price_dates%' )
+                        WHERE meta_key LIKE '\\_price\\_%' OR meta_key LIKE '\\_regular_price\\_%' OR ( meta_key LIKE '\\_sale_price\\_%' AND meta_key NOT LIKE '\\_sale\\_price\\_dates%' )
                     ");
 
             foreach( $results as $price ){

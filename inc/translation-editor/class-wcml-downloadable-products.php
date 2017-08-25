@@ -2,19 +2,23 @@
 
 class WCML_Downloadable_Products{
 
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
 
 	/**
 	 * WCML_Downloadable_Products constructor.
 	 *
 	 * @param woocommerce_wpml $woocommerce_wpml
-	 * @param SitePress        $sitepress
+	 * @param Sitepress        $sitepress
 	 */
-	public function __construct( &$woocommerce_wpml, &$sitepress ) {
-		$this->woocommerce_wpml = &$woocommerce_wpml;
-		$this->sitepress        = &$sitepress;
+	public function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ) {
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+    }
 
+    public function add_hooks(){
         //downloadable files custom
         add_action( 'woocommerce_product_options_downloads', array( $this, 'product_options_downloads_custom_option' ) );
         add_action( 'woocommerce_variation_options_download', array( $this, 'product_options_downloads_custom_option' ), 10, 3 );
@@ -30,16 +34,20 @@ class WCML_Downloadable_Products{
 
         $product_id = false;
         $is_variation = false;
-        if( $pagenow === 'post.php' && isset( $_GET['post'] ) ){
+        if( 'post.php' === $pagenow && isset( $_GET['post'] ) ){
             $product_id =  $_GET['post'];
         }elseif( isset( $_POST['product_id'] ) ){
             $product_id = $_POST['product_id'];
         }
 
-		if ( ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'product' && isset( $_GET['source_lang'] ) )
-		     || ( get_post_type( $product_id ) !== 'product' || ! $this->woocommerce_wpml->products->is_original_product( $product_id ) )
-		){
-            return;
+        $native_editor_translation_product_page = isset( $_GET['post_type'] ) && 'product' === $_GET['post_type'] && isset( $_GET['source_lang'] );
+        if ( $native_editor_translation_product_page) {
+            return false;
+        }
+
+        $is_not_original_product = $product_id && ( 'product' !== get_post_type( $product_id ) || ! $this->woocommerce_wpml->products->is_original_product( $product_id ) );
+        if ( $is_not_original_product) {
+            return false;
         }
 
         $this->load_custom_files_js_css();
@@ -55,8 +63,13 @@ class WCML_Downloadable_Products{
     }
 
     public function load_custom_files_js_css(){
-        wp_register_style( 'wpml-wcml-files', WCML_PLUGIN_URL . '/res/css/wcml-files.css', null, WCML_VERSION );
-        wp_register_script( 'wcml-scripts-files', WCML_PLUGIN_URL . '/res/js/files' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
+
+        $wcml_plugin_url = $this->sitepress->get_wp_api()->constant( 'WCML_PLUGIN_URL' );
+        $wcml_version = $this->sitepress->get_wp_api()->constant( 'WCML_VERSION' );
+        $wcml_js_min = $this->sitepress->get_wp_api()->constant( 'WCML_JS_MIN' );
+
+        wp_register_style( 'wpml-wcml-files', $wcml_plugin_url . '/res/css/wcml-files.css', null, $wcml_version );
+        wp_register_script( 'wcml-scripts-files', $wcml_plugin_url . '/res/js/files' . $wcml_js_min . '.js', array( 'jquery' ), $wcml_version );
 
         wp_enqueue_style('wpml-wcml-files');
         wp_enqueue_script('wcml-scripts-files');

@@ -17,7 +17,7 @@ class WCML_Multi_Currency_Resources{
         self::$multi_currency = $multi_currency;
         self::$woocommerce_wpml = $woocommerce_wpml;
 
-        if( !is_admin() && $pagenow != 'wp-login.php' && $woocommerce_wpml->cs_templates->get_active_templates() ){
+        if( !is_admin() && $pagenow != 'wp-login.php' && $woocommerce_wpml->cs_templates->get_active_templates( true ) ){
             self::load_inline_js();
         }
 

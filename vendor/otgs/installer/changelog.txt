@@ -1,3 +1,20 @@
+= 1.8.2 =
+* Bug fix: registration warning was shown for free plugins
+
+= 1.8.1 =
+* Fixed a bug potentially making the downloads list under the Commercial not display correctly
+
+= 1.8 =
+* Added support for update channels (beta, developement and production)
+
+= 1.7.17 =
+* Fixed some warnings and notices
+
+= 1.7.16 =
+* Fixed a bug with plugins list showing twice for the Toolset repository
+* Replaced get_locale() with get_user_locale()
+* Added WP_Installer_API::get_registering_user_id()
+
 = 1.7.15 =
 * Bug fix: New search, results not visible with WordPress 4.6 when searching from installer page
 * Bug fix: A js error was showing on the admin pages: `pagenow` is undefined

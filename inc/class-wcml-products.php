@@ -13,14 +13,27 @@ class WCML_Products{
     /**
      * @var wpdb
      */
-    private $wpdb;
+    private $wpdb;/**
+     * @var WPML_WP_Cache
+     */
+    private $wpml_cache;
 
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb  )
-    {
+    /**
+     * WCML_Products constructor.
+     *
+     * @param woocommerce_wpml $woocommerce_wpml
+     * @param SitePress $sitepress
+     * @param wpdb $wpdb
+     * @param WPML_WP_Cache $wpml_cache
+     */
+    public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb, WPML_WP_Cache $wpml_cache = null ) {
         $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-        $this->wpdb = $wpdb;
+        $this->sitepress        = $sitepress;
+        $this->wpdb             = $wpdb;
+
+        $cache_group = 'WCML_Products';
+        $this->wpml_cache    = is_null( $wpml_cache ) ? new WPML_WP_Cache( $cache_group ) : $wpml_cache;
 
     }
 
@@ -38,6 +51,8 @@ class WCML_Products{
             add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
             add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
             add_filter( 'woocommerce_shortcode_products_query', array( $this, 'add_lang_to_shortcode_products_query' ) );
+
+            add_filter( 'woocommerce_product_file_download_path', array( $this, 'filter_file_download_path' ) );
         }
 
         add_filter( 'woocommerce_upsell_crosssell_search_products', array( $this, 'filter_woocommerce_upsell_crosssell_posts_by_language' ) );
@@ -111,6 +126,33 @@ class WCML_Products{
         wp_cache_set( $cache_key, $is_variable_product, $cache_group );
 
         return $is_variable_product;
+    }
+
+    public function is_downloadable_product( $product ) {
+
+        $cache_key   = 'is_downloadable_product_'.$product->get_id();
+
+        $found           = false;
+        $is_downloadable = $this->wpml_cache->get( $cache_key, $found );
+        if ( ! $found ) {
+            if ( $product->is_downloadable() ) {
+                $is_downloadable = true;
+            } elseif ( $this->is_variable_product( $product->get_id() ) ) {
+                $variations = $product->get_available_variations();
+                if ( ! empty( $variations ) ) {
+                    foreach ( $variations as $variation ) {
+                        if ( $variation['is_downloadable'] ) {
+                            $is_downloadable = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            $this->wpml_cache->set( $cache_key, $is_downloadable );
+        }
+
+        return $is_downloadable;
+
     }
 
     public function is_grouped_product($product_id){
@@ -584,6 +626,25 @@ class WCML_Products{
         $query_args[ 'lang' ] = $this->sitepress->get_current_language();
 
         return $query_args;
+    }
+
+
+    /**
+     * Get file download path in correct domain
+     *
+     * @param string $file_path file path URL
+     * @return string
+     */
+    public function filter_file_download_path( $file_path ) {
+
+        $is_per_domain = $this->sitepress->get_wp_api()->constant( 'WPML_LANGUAGE_NEGOTIATION_TYPE_DOMAIN' ) === (int) $this->sitepress->get_setting( 'language_negotiation_type' );
+
+        if ( $is_per_domain ) {
+            $file_path = $this->sitepress->convert_url( $file_path );
+        }
+
+        return $file_path;
+
     }
 
 }

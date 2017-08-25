@@ -59,11 +59,11 @@ class WCML_Custom_Prices{
 
         if(!empty($product_meta['_wcml_custom_prices_status'][0])){
 
-            $prices_keys = array(
+            $prices_keys = apply_filters( 'wcml_price_custom_fields_filtered', array(
                 '_price', '_regular_price', '_sale_price',
                 '_min_variation_price', '_max_variation_price',
                 '_min_variation_regular_price', '_max_variation_regular_price',
-                '_min_variation_sale_price', '_max_variation_sale_price');
+                '_min_variation_sale_price', '_max_variation_sale_price' ));
 
             foreach($prices_keys as $key){
 

@@ -38,7 +38,7 @@ WP_Installer_Setup( $wp_installer_instance,
 ); 
 ```
 
-After `init`, configure display the OTGS WP Installer UI like in teh example below:
+After `init`, configure display the OTGS WP Installer UI like in the example below:
 
 ```php 
 WP_Installer_Show_Products( 

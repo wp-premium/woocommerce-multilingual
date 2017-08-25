@@ -2,15 +2,22 @@
 
 class WCML_Coupons{
 
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress ){
+    public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress ) {
         $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
+        $this->sitepress        = $sitepress;
+    }
+
+    public function add_hooks(){
 
         add_action( 'woocommerce_coupon_loaded', array( $this, 'wcml_coupon_loaded' ) );
         add_action( 'admin_init', array( $this, 'icl_adjust_terms_filtering' ) );
+
+        add_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
     }
 
     public function wcml_coupon_loaded( $coupons_data ){
@@ -83,6 +90,36 @@ class WCML_Coupons{
             global $icl_adjust_id_url_filter_off;
             $icl_adjust_id_url_filter_off = true;
         }
+    }
+
+
+    /**
+     * @param bool $valid
+     * @param WC_Product $product
+     * @param WC_Coupon $object
+     * @param array $values
+     *
+     * @return bool
+     */
+    public function is_valid_for_product( $valid, $product, $object, $values )
+    {
+
+        $product_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+
+        $translated_product_id = apply_filters( 'translate_object_id', $product_id, 'product', false, $this->sitepress->get_current_language() );
+
+        if ( $product_id !== $translated_product_id ) {
+
+            remove_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
+
+            $valid = $object->is_valid_for_product( wc_get_product( $translated_product_id ), $values );
+
+            add_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
+
+        }
+
+        return $valid;
+
     }
 
 }

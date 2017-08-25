@@ -6,9 +6,9 @@
  */
 class WP_Installer_Channels{
 
-	const CHANNEL_PRODUCTION = 1;
-	const CHANNEL_BETA = 2;
-	const CHANNEL_DEVELOPMENT = 3;
+	const CHANNEL_PRODUCTION = 'production';
+	const CHANNEL_BETA = 'beta';
+	const CHANNEL_DEVELOPMENT = 'development';
 
 	protected static $_instance = null;
 
@@ -31,33 +31,14 @@ class WP_Installer_Channels{
 	/**
 	 * Get the channel literal id based on the numeric id
 	 *
-	 * @param int $int
-	 *
-	 * @return string
-	 */
-	public static function channel_id( $int ) {
-		if ( self::CHANNEL_DEVELOPMENT === $int ) {
-			$channel = 'development';
-		} elseif ( self::CHANNEL_BETA === $int ) {
-			$channel = 'beta';
-		} else {
-			$channel = 'production';
-		}
-
-		return $channel;
-	}
-
-	/**
-	 * Get the channel literal id based on the numeric id
-	 *
 	 * @param mixed $id
 	 *
 	 * @return string
 	 */
 	public static function channel_name_by_id( $id ) {
-		if ( self::CHANNEL_DEVELOPMENT === $id || self::channel_id( self::CHANNEL_DEVELOPMENT ) === $id ) {
+		if ( self::CHANNEL_DEVELOPMENT === $id ) {
 			$channel = __( 'Development', 'installer' );
-		} elseif ( self::CHANNEL_BETA === $id || self::channel_id( self::CHANNEL_BETA ) === $id  ) {
+		} elseif ( self::CHANNEL_BETA === $id ) {
 			$channel = __( 'Beta', 'installer' );
 		} else {
 			$channel = __( 'Production', 'installer' );
@@ -87,7 +68,7 @@ class WP_Installer_Channels{
 	 */
 	public function set_channel(){
 		$repository_id  = sanitize_text_field( $_POST['repository_id'] );
-		$channel = intval( $_POST['channel'] );
+		$channel = sanitize_text_field( $_POST['channel'] );
 
 		$response = array();
 
@@ -114,7 +95,7 @@ class WP_Installer_Channels{
 	 * @return int
 	 */
 	public function get_channel( $repository_id ){
-		$channel = 0;
+		$channel = self::CHANNEL_PRODUCTION;
 		if( isset( WP_Installer()->settings['repositories'][$repository_id]['channel'] ) ){
 			$channel = WP_Installer()->settings['repositories'][$repository_id]['channel'];
 		}
@@ -138,7 +119,6 @@ class WP_Installer_Channels{
 				'no_prompt'       => !empty( WP_Installer()->settings['repositories'][ $repository_id ]['no-prompt'] ),
 				'nonce'           => wp_create_nonce( 'installer_set_channel:' . $repository_id )
 			);
-
 			extract( $args );
 			include WP_Installer()->plugin_path() . '/templates/channel-selector.php';
 		}
@@ -181,10 +161,10 @@ class WP_Installer_Channels{
 		foreach ( $downloads as $type => $download_types ) {
 			foreach ( $download_types as $download ) {
 				$extra_channels = isset( $download['extra_channels'] ) ? array_keys( $download['extra_channels'] ) : array();
-				if ( ! $beta && in_array( self::channel_id( self::CHANNEL_BETA ), $extra_channels ) ) {
+				if ( ! $beta && in_array( self::CHANNEL_BETA, $extra_channels ) ) {
 					$beta = true;
 				}
-				if ( ! $dev && in_array( self::channel_id( self::CHANNEL_DEVELOPMENT ), $extra_channels ) ) {
+				if ( ! $dev && in_array( self::CHANNEL_DEVELOPMENT, $extra_channels ) ) {
 					$dev = true;
 				}
 				if ( $beta && $dev ) {
@@ -220,18 +200,18 @@ class WP_Installer_Channels{
 		foreach ( $downloads as $type => $type_downloads ) {
 			foreach ( $type_downloads as $slug => $download ) {
 
-				$override_download = false;
+				$override_download = array();
 				if ( $current_channel === self::CHANNEL_DEVELOPMENT ) {
 					if( ! empty( $download['channels']['development'] ) ){
 						$override_download            = $download['channels']['development'];
-						$override_download['channel'] = self::channel_id( self::CHANNEL_DEVELOPMENT );
+						$override_download['channel'] = self::CHANNEL_DEVELOPMENT;
 					}elseif( ! empty( $download['channels']['beta'] ) ){
 						$override_download            = $download['channels']['beta'];
-						$override_download['channel'] = self::channel_id( self::CHANNEL_BETA );
+						$override_download['channel'] = self::CHANNEL_BETA;
 					}
 				}elseif ( $current_channel === self::CHANNEL_BETA && ! empty( $download['channels']['beta'] ) ) {
 					$override_download            = $download['channels']['beta'];
-					$override_download['channel'] = self::channel_id( self::CHANNEL_BETA );
+					$override_download['channel'] = self::CHANNEL_BETA;
 				}
 
 				if ( $override_download ) {
@@ -239,7 +219,7 @@ class WP_Installer_Channels{
 						$downloads[ $type ][ $slug ][ $key ] = $value;
 					}
 				} else {
-					$downloads[ $type ][ $slug ]['channel'] = self::channel_id( self::CHANNEL_PRODUCTION );
+					$downloads[ $type ][ $slug ]['channel'] = self::CHANNEL_PRODUCTION;
 				}
 				unset ( $downloads[ $type ][ $slug ]['channels'] );
 

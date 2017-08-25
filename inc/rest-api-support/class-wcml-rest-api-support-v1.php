@@ -36,6 +36,7 @@ class WCML_REST_API_Support_V1{
 		add_action( 'woocommerce_rest_update_product', array( $this, 'set_product_custom_prices' ), 10, 2 );
 
 		add_action( 'woocommerce_rest_prepare_product', array( $this, 'copy_product_custom_fields' ), 10 , 3 );
+		add_action( 'woocommerce_rest_insert_product', array( $this, 'copy_custom_fields_from_original' ), 10, 1 );
 
 		// Orders
 		add_filter( 'woocommerce_rest_shop_order_query', array( $this, 'filter_orders_by_language' ), 20, 2 );
@@ -277,6 +278,17 @@ class WCML_REST_API_Support_V1{
 			}
 		}
 
+	}
+
+	/**
+	 * @param WP_Post $post
+	 */
+	public function copy_custom_fields_from_original( $post ){
+		$original_post_id = $this->sitepress->get_original_element_id_filter('', $post->ID, 'post_product' );
+
+		if( $original_post_id !== $post->ID ){
+			$this->sitepress->copy_custom_fields( $original_post_id, $post->ID );
+		}
 	}
 
 	/**

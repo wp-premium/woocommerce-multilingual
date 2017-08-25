@@ -53,22 +53,14 @@ class WCML_Currency_Switcher_Template extends WPML_Templates_Factory {
     }
 
     public function get_formatted_price( $currency, $format ){
-
         $wc_currencies = get_woocommerce_currencies();
-        if( preg_match( '#%subtotal%#', $format ) ){ // include cart total
-            $cart_object =& $this->woocommerce_wpml->cart;
-        }
+
         $wcml_settings  =  $this->woocommerce_wpml->get_settings();
-        $multi_currency =& $this->woocommerce_wpml->multi_currency;
-        $client_currency = $multi_currency->get_client_currency();
+        $multi_currency = $this->woocommerce_wpml->multi_currency;
 
         if( preg_match( '#%subtotal%#', $format ) ) { // include cart total
             if( !is_admin() ){
-
-                $multi_currency->set_client_currency( $currency );
-                $cart_object->woocommerce_calculate_totals( WC()->cart, $currency );
-                $cart_subtotal = WC()->cart->get_cart_subtotal();
-
+	            $cart_subtotal = $multi_currency->prices->get_cart_subtotal_in_given_currency( $this->woocommerce_wpml, $currency );
             }else{
                 switch( $wcml_settings['currency_options'][$currency]['position'] ){
                     case 'left' :
@@ -106,10 +98,6 @@ class WCML_Currency_Switcher_Template extends WPML_Templates_Factory {
                 $cart_subtotal
 
             ), $format );
-
-        if( preg_match( '#%subtotal%#', $format )  && !is_admin() ) { // include cart total
-            $multi_currency->set_client_currency( $client_currency );
-        }
 
         return $currency_format;
     }

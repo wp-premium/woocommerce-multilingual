@@ -50,6 +50,11 @@ class WCML_Product_Addons {
 			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
 		}
 
+		add_filter( 'wcml_cart_contents_not_changed', array(
+			$this,
+			'filter_booking_addon_product_in_cart_contents'
+		), 20 );
+
 	}
 
 	/**
@@ -272,6 +277,22 @@ class WCML_Product_Addons {
 		$fields[] = '_product_addons';
 
 		return $fields;
+	}
+
+	// special case for WC Bookings plugin - need add addon cost after re-calculating booking costs #wcml-1877
+	public function filter_booking_addon_product_in_cart_contents( $cart_item ) {
+
+		if ( $cart_item['data'] instanceof WC_Product_Booking && isset( $cart_item['addons'] ) ) {
+			$cost = $cart_item['data']->get_price();
+
+			foreach( $cart_item['addons'] as $addon ){
+				$cost += $addon['price'];
+			}
+
+			$cart_item['data']->set_price( $cost );
+		}
+
+		return $cart_item;
 	}
 
 }

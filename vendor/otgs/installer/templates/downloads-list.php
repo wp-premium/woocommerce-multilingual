@@ -59,7 +59,7 @@
                                 <td><?php echo date_i18n('F j, Y', strtotime($download['date'])) ?></td>
                                 <td>
 	                                <?php if ( !empty( $download['release-notes'] ) ): ?>
-                                    <a class="js-release-notes handle" href="#">Release notes</a></td>
+                                    <a class="js-release-notes handle" href="#"><?php esc_html_e( 'Release notes', 'installer' ) ?></a></td>
                                     <?php endif; ?>
                                 <td>
                                     <span class="installer-status-installing"><?php _e('installing...', 'installer') ?></span>
