@@ -47,11 +47,13 @@ class WCML_Compatibility {
 		//WooCommerce Table Rate Shipping plugin
 		if ( defined( 'TABLE_RATE_SHIPPING_VERSION' ) ) {
 			$this->table_rate_shipping = new WCML_Table_Rate_Shipping( $this->sitepress, $this->woocommerce_wpml );
+			$this->table_rate_shipping->add_hooks();
 		}
 
 		//WooCommerce Subscriptions
 		if ( class_exists( 'WC_Subscriptions' ) ) {
-			$this->wp_subscriptions = new WCML_WC_Subscriptions();
+			$this->wp_subscriptions = new WCML_WC_Subscriptions( $this->woocommerce_wpml, $this->wpdb );
+			$this->wp_subscriptions->add_hooks();
 		}
 
 		//WooCommerce Name Your Price
@@ -113,6 +115,7 @@ class WCML_Compatibility {
 		// Dynamic Pricing
 		if ( class_exists( 'WC_Dynamic_Pricing' ) ) {
 			$this->dynamic_pricing = new WCML_Dynamic_Pricing( $this->sitepress );
+			$this->dynamic_pricing->add_hooks();
 		}
 
 		// WooCommerce Bookings
@@ -129,6 +132,7 @@ class WCML_Compatibility {
 		// WooCommerce Checkout Field Editor
 		if ( function_exists( 'woocommerce_init_checkout_field_editor' ) ) {
 			$this->checkout_field_editor = new WCML_Checkout_Field_Editor();
+			$this->checkout_field_editor->add_hooks();
 		}
 
 		if ( class_exists( 'WC_Bulk_Stock_Management' ) ) {

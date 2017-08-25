@@ -287,3 +287,7 @@
     display: none;
     color: #962722;
 }
+
+.otgs_wp_installer_table .installer-repository-image {
+    padding: 8px 20px;
+}

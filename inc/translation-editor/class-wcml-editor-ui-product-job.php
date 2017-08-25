@@ -35,7 +35,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                                                                  '_min_variation_regular_price', '_max_variation_regular_price',
                                                                  '_min_variation_sale_price', '_max_variation_sale_price','_downloadable_files' );
 
-        $this->not_display_custom_fields_for_product = array( '_upsell_ids', '_crosssell_ids','_downloadable_files' );
+        $this->not_display_custom_fields_for_product = array( '_upsell_ids', '_crosssell_ids', '_children', '_downloadable_files' );
 
         $this->job_details = $job_details;
         $this->product = wc_get_product( $job_details[ 'job_id' ] );
@@ -218,7 +218,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             }
         }
 
-        if( $this->product->is_downloadable() ){
+        if( $this->woocommerce_wpml->products->is_downloadable_product( $this->product ) ){
             $is_variable = false;
             if( $this->woocommerce_wpml->products->is_variable_product( $this->product_id ) ){
                 $files_data = $this->get_files_for_variations();

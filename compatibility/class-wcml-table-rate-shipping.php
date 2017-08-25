@@ -18,19 +18,28 @@ class WCML_Table_Rate_Shipping {
 	/**
 	 * WCML_Table_Rate_Shipping constructor.
 	 *
-	 * @param $sitepress
-	 * @param $woocommerce_wpml
+	 * @param SitePress $sitepress
+	 * @param woocommerce_wpml $woocommerce_wpml
 	 */
-	function __construct( &$sitepress, &$woocommerce_wpml ) {
+	function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml ) {
 		$this->sitepress = $sitepress;
 		$this->woocommerce_wpml = $woocommerce_wpml;
+	}
+
+	public function add_hooks(){
+
 		add_action( 'init', array( $this, 'init' ), 9 );
 
-		add_filter( 'get_the_terms',array( $this, 'shipping_class_id_in_default_language' ), 10, 3 );
+		if ( ! is_admin() ) {
+			add_filter( 'get_the_terms', array( $this, 'shipping_class_id_in_default_language' ), 10, 3 );
+		}
 
-		if( wcml_is_multi_currency_on() ){
+		if ( wcml_is_multi_currency_on() ) {
 			add_filter( 'woocommerce_table_rate_query_rates_args', array( $this, 'filter_query_rates_args' ) );
-			add_filter( 'woocommerce_table_rate_package_row_base_price', array( $this, 'filter_product_base_price' ), 10, 3 );
+			add_filter( 'woocommerce_table_rate_package_row_base_price', array(
+				$this,
+				'filter_product_base_price'
+			), 10, 3 );
 		}
 
 	}
@@ -78,9 +87,10 @@ class WCML_Table_Rate_Shipping {
 	 * @return mixed
 	 */
 	public function shipping_class_id_in_default_language( $terms, $post_id, $taxonomy ) {
-		global $icl_adjust_id_url_filter_off, $pagenow;
+		global $icl_adjust_id_url_filter_off;
 
-		if( $terms && $pagenow != 'post.php' && ( get_post_type( $post_id ) == 'product' || get_post_type( $post_id ) == 'product_variation' ) && $taxonomy == 'product_shipping_class' ){
+		$is_product_object = 'product' === get_post_type( $post_id ) || 'product_variation' === get_post_type( $post_id );
+		if( $terms && $is_product_object && 'product_shipping_class' === $taxonomy ){
 
 			if( is_admin() ){
 				$shipp_class_language = $this->woocommerce_wpml->products->get_original_product_language( $post_id );

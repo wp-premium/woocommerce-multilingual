@@ -2255,7 +2255,6 @@ final class WP_Installer {
 						foreach ( $product['plugins'] as $plugin_slug ) {
 
 							$download = $this->settings['repositories'][ $repository_id ]['data']['downloads']['plugins'][ $plugin_slug ];
-
 							if ( ! empty( $download['free-on-wporg'] ) && $download['channel'] == WP_Installer_Channels::CHANNEL_PRODUCTION ) {
 								continue;
 							}

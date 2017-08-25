@@ -284,7 +284,7 @@ class WCML_TP_Support {
         $image_data = array();
 
         foreach ( $data as $data_key => $value ) {
-            if ( $value['finished'] ) {
+            if ( $value['finished'] && isset( $value['field_type'] ) ) {
                 if ( strpos( $value['field_type'], 'image-id-' . $image_id ) === 0 ) {
                     if ( $value['field_type'] === 'image-id-' . $image_id . '-title' ) {
                         $image_data['title'] = $value['data'];

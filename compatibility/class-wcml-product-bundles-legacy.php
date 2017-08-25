@@ -332,7 +332,7 @@ class WCML_Product_Bundles_Legacy{
 
 	function resync_bundle_clean( $cart ) {
 		foreach ( $cart->cart_contents as $cart_item_key => $cart_item ) {
-			if ( isset( $cart_item[ 'bundled_items' ] ) && WooCommerce_Functions_Wrapper::get_product_type( $cart_item[ 'product_id' ] ) === 'bundle' ) {
+			if ( isset( $cart_item[ 'bundled_items' ] ) && $this->is_bundle_product( $cart_item[ 'product_id' ] ) ) {
 				if ( isset( $cart_item[ 'remapped_bundled_item_ids' ] ) ) {
 					unset( WC()->cart->cart_contents[ $cart_item_key ][ 'remapped_bundled_item_ids' ] );
 				}
@@ -373,45 +373,49 @@ class WCML_Product_Bundles_Legacy{
 
 	function save_bundle_data_translation( $post_id, $data, $job ){
 
-		remove_action( 'wcml_after_duplicate_product_post_meta', array( $this, 'sync_bundled_ids' ), 10, 2 );
+		if ( $this->is_bundle_product( $post_id ) ) {
 
-		$bundle_data = get_post_meta( $post_id, '_bundle_data', true );
+			remove_action( 'wcml_after_duplicate_product_post_meta', array( $this, 'sync_bundled_ids' ), 10, 2 );
 
-		$bundle_data_original = get_post_meta( $job->original_doc_id , '_bundle_data', true );
+			$bundle_data = get_post_meta( $post_id, '_bundle_data', true );
 
-		$translated_bundle_pieces = array();
+			$bundle_data_original = get_post_meta( $job->original_doc_id , '_bundle_data', true );
 
-		foreach( $data as $value){
+			$translated_bundle_pieces = array();
 
-			if( preg_match( '/product_bundles:([0-9]+):(.+)/', $value[ 'field_type' ], $matches ) ){
+			foreach( $data as $value){
 
-				$bundle_key = $matches[1];
-				$field      = $matches[2];
+				if( preg_match( '/product_bundles:([0-9]+):(.+)/', $value[ 'field_type' ], $matches ) ){
 
-				$key_data = $this->translate_bundle_key( $bundle_key, $job->language_code  );
+					$bundle_key = $matches[1];
+					$field      = $matches[2];
 
-				if( !isset( $bundle_data[ $key_data->tr_key ] ) ){
-					$bundle_data[ $key_data->tr_key ] = array(
-						'product_id'            => $key_data->tr_id,
-						'hide_thumbnail'        => $bundle_data_original[ $bundle_key ][ 'hide_thumbnail' ],
-						'override_title'        => $bundle_data_original[ $bundle_key ][ 'override_title' ],
-						'product_title'         => '',
-						'override_description'  => $bundle_data_original[ $bundle_key ][ 'override_description' ],
-						'product_description'   => '',
-						'optional'              => $bundle_data_original[ $bundle_key ][ 'optional' ],
-						'bundle_quantity'       => $bundle_data_original[ $bundle_key ][ 'bundle_quantity' ],
-						'bundle_quantity_max'   => $bundle_data_original[ $bundle_key ][ 'bundle_quantity_max' ],
-						'bundle_discount'       => $bundle_data_original[ $bundle_key ][ 'bundle_discount' ],
-						'visibility'            => $bundle_data_original[ $bundle_key ][ 'visibility' ],
-					);
+					$key_data = $this->translate_bundle_key( $bundle_key, $job->language_code  );
+
+					if( !isset( $bundle_data[ $key_data->tr_key ] ) ){
+						$bundle_data[ $key_data->tr_key ] = array(
+							'product_id'            => $key_data->tr_id,
+							'hide_thumbnail'        => $bundle_data_original[ $bundle_key ][ 'hide_thumbnail' ],
+							'override_title'        => $bundle_data_original[ $bundle_key ][ 'override_title' ],
+							'product_title'         => '',
+							'override_description'  => $bundle_data_original[ $bundle_key ][ 'override_description' ],
+							'product_description'   => '',
+							'optional'              => $bundle_data_original[ $bundle_key ][ 'optional' ],
+							'bundle_quantity'       => $bundle_data_original[ $bundle_key ][ 'bundle_quantity' ],
+							'bundle_quantity_max'   => $bundle_data_original[ $bundle_key ][ 'bundle_quantity_max' ],
+							'bundle_discount'       => $bundle_data_original[ $bundle_key ][ 'bundle_discount' ],
+							'visibility'            => $bundle_data_original[ $bundle_key ][ 'visibility' ],
+						);
+					}
+
+					$bundle_data[ $key_data->tr_key ][ 'product_'.$field ] = $value[ 'data' ];
+
 				}
-
-				$bundle_data[ $key_data->tr_key ][ 'product_'.$field ] = $value[ 'data' ];
-
 			}
-		}
 
-		update_post_meta( $post_id, '_bundle_data', $bundle_data );
+			update_post_meta( $post_id, '_bundle_data', $bundle_data );
+
+		}
 
 	}
 
@@ -419,6 +423,14 @@ class WCML_Product_Bundles_Legacy{
 		$fields[] = '_bundle_data';
 
 		return $fields;
+	}
+
+	public function is_bundle_product( $product_id ){
+		if ( 'bundle' === WooCommerce_Functions_Wrapper::get_product_type( $product_id ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

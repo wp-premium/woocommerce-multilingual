@@ -265,6 +265,7 @@ class WCML_Multi_Currency_Orders {
 
 		if ( ! isset( $this->multi_currency->prices ) ) {
 			$this->multi_currency->prices = new WCML_Multi_Currency_Prices( $this->multi_currency );
+			$this->multi_currency->prices->add_hooks();
 			$this->multi_currency->prices->prices_init();
 		}
 
@@ -376,17 +377,19 @@ class WCML_Multi_Currency_Orders {
 	}
 
 	public function get_currency_for_new_order( $value, $order ) {
-		$current_screen = get_current_screen();
-		if ( ! empty( $current_screen ) && $current_screen->id == 'shop_order' ) {
-			$order_id       = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
-			$order_currency = get_post_meta( $order_id, '_order_currency', true );
-			if ( empty( $order_currency ) ) {
-				$value = $this->get_order_currency_cookie();
+
+		if ( did_action( 'current_screen' ) ) {
+			$current_screen = get_current_screen();
+			if ( ! empty( $current_screen ) && $current_screen->id == 'shop_order' ) {
+				$order_id       = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+				$order_currency = get_post_meta( $order_id, '_order_currency', true );
+				if ( empty( $order_currency ) ) {
+					$value = $this->get_order_currency_cookie();
+				}
 			}
 		}
 
 		return $value;
 	}
-
 
 }
