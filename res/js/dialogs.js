@@ -194,7 +194,7 @@ jQuery( function($){
             }
         });
 
-        // dialog open handler
+        // dialog open handler for currency switcher
         $(document).on( 'click','.js-wcml-cs-dialog-trigger', function(e){
 
             e.preventDefault();

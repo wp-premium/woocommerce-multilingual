@@ -27,6 +27,11 @@ class WCML_Dependencies{
         } elseif(version_compare(ICL_SITEPRESS_VERSION, '3.4', '<')){
             add_action('admin_notices', array($this, '_old_wpml_warning'));
             $this->allok = false;
+        }elseif ( !$sitepress->setup() ) {
+	        if ( !( isset( $_GET['page'] ) && ICL_PLUGIN_FOLDER.'/menu/languages.php' === $_GET['page'] ) ) {
+		        add_action('admin_notices', array($this, '_wpml_not_installed_warning'));
+	        }
+	        $this->allok = false;
         }
 
         if( !class_exists( 'WooCommerce' ) || !function_exists( 'WC' ) ){
@@ -67,6 +72,7 @@ class WCML_Dependencies{
         
         if($this->allok){
             $this->check_for_incompatible_permalinks();
+	        $this->check_for_transaltable_default_taxonomies();
         }
 
         if(isset($sitepress)){
@@ -86,6 +92,13 @@ class WCML_Dependencies{
         <div class="message error"><p><?php printf(__('WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML</a> versions prior %s.',
                     'woocommerce-multilingual'), WCML_Links::generate_tracking_link('https://wpml.org/'), '3.4'); ?></p></div>
     <?php }
+
+	function _wpml_not_installed_warning() {
+		?>
+        <div class="message error">
+            <p><?php printf( __( 'WooCommerce Multilingual is enabled but not effective. Please finish the installation of WPML first.', 'woocommerce-multilingual' ) ); ?></p></div>
+		<?php
+	}
 
     function _old_wc_warning(){
         ?>
@@ -110,7 +123,42 @@ class WCML_Dependencies{
         <div class="message error"><p><?php printf(__('WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML Media</a> versions prior %s.',
                     'woocommerce-multilingual'), WCML_Links::generate_tracking_link('https://wpml.org/'), '2.1'); ?></p></div>
     <?php }
-    
+
+	/**
+	 * Adds default taxonomies notice.
+	 */
+    public function check_for_transaltable_default_taxonomies() {
+
+        $default_taxonomies = array( 'product_cat', 'product_tag', 'product_shipping_class' );
+        $show_error         = false;
+
+        foreach ( $default_taxonomies as $taxonomy ) {
+            if ( ! is_taxonomy_translated( $taxonomy ) ) {
+                $show_error = true;
+                break;
+            }
+        }
+
+        if ( $show_error ) {
+            $support_link = '<a href="https://wpml.org/forums/forum/english-support/">' . __( 'WPML support', 'woocommerce-multilingual' ) . '</a>';
+
+            /* translators: Part 1/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = _x( "Some taxonomies in your site are forced to be untranslatable. This is causing a problem when you're trying to run a multilingual WooCommerce site.", 'Default taxonomies must be translatable: 1/6', 'woocommerce-multilingual' );
+            /* translators: Part 2/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = _x( 'A plugin or the theme are probably doing this.', 'Default taxonomies must be translatable: 2/6', 'woocommerce-multilingual' );
+            /* translators: Part 3/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = _x( 'What you can do:', 'Default taxonomies must be translatable: 3/6', 'woocommerce-multilingual' );
+            /* translators: Part 4/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = _x( '1. Temporarily disable plugins and see if this message disappears.', 'Default taxonomies must be translatable: 4/6', 'woocommerce-multilingual' );
+            /* translators: Part 5/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = _x( '2. Temporarily switch the theme and see if this message disappears.', 'Default taxonomies must be translatable: 5/6', 'woocommerce-multilingual' );
+            /* translators: Part 6/6 of a message telling users that some taxonomies, required for WCML to work, are not set as translatable when they should */
+            $sentences[] = sprintf( _x( "It's best to contact %s, tell that you're getting this message and offer to send a Duplicator copy of the site. We will work with the theme/plugin author and fix the problem for good. In the meanwhile, we'll give you a temporary solution, so you're not stuck.", 'Default taxonomies must be translatable: 6/6', 'woocommerce-multilingual' ), $support_link );
+
+            $this->err_message = '<div class="message error"><p>' . implode( '</p><p>', $sentences ) . '</p></div>';
+            add_action( 'admin_notices', array( $this, 'plugin_notice_message' ) );
+        }
+    }
       
     /**
     * Adds admin notice.

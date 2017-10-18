@@ -276,7 +276,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $taxonomies = get_object_taxonomies( 'product', 'objects' );
         foreach( $taxonomies as $taxonomy => $taxonomy_obj ){
-            if( $taxonomy != 'product_type' && is_taxonomy_translated( $taxonomy ) ){
+            if( $this->woocommerce_wpml->terms->is_translatable_wc_taxonomy( $taxonomy ) && is_taxonomy_translated( $taxonomy ) ){
                 $product_terms = wp_get_post_terms( $this->product_id, $taxonomy );
                 if( $product_terms ){
                     $tax_section = new WPML_Editor_UI_Field_Section( $taxonomy_obj->label, __( 'Changes in these translations will affect terms in general! ( Not only for this product )', 'woocommerce-multilingual' ));
@@ -500,7 +500,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         $taxonomies = get_object_taxonomies( 'product', 'objects' );
 
         foreach( $taxonomies as $taxonomy => $taxonomy_obj ){
-            if( $taxonomy != 'product_type' && is_taxonomy_translated( $taxonomy ) ){
+            if( $this->woocommerce_wpml->terms->is_translatable_wc_taxonomy( $taxonomy ) && is_taxonomy_translated( $taxonomy ) ){
                 $product_terms = wp_get_post_terms( $this->product_id, $taxonomy );
                 if( !is_wp_error( $product_terms ) ){
                     foreach( $product_terms as $term ){
@@ -684,7 +684,11 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 $_POST[ 'new_title' ] = $translations[ md5( 'title' ) ];
                 $_POST[ 'new_slug' ] = $new_post_name;
                 $new_slug = wp_unique_post_slug( $new_post_name, $tr_product_id, $this->original_post->post_status, $this->original_post->post_type, $args[ 'post_parent' ] );
-                $this->wpdb->update( $this->wpdb->posts, array( 'post_name' => $new_slug ), array( 'ID' => $tr_product_id ) );
+                
+			    wp_update_post( array(
+				    'ID'        => $tr_product_id,
+				    'post_name' => $new_slug
+			    ) );
             }
 
             $this->sitepress->set_element_language_details( $tr_product_id, 'post_' . $this->original_post->post_type, $product_trid, $this->get_target_language() );

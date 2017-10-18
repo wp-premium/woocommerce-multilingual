@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.8.1
-Stable tag: 4.2.1.1
+Stable tag: 4.2.4
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,35 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.2.4 =
+* Allow translating categories used in shortcodes when the simple tax query is used
+* Switching language/currency reset cart feature redirect to random product page after reset cart
+* Fixed and incompatibility issue with the WooCommerce EU VAT Number extension
+* Wrong prices in secondary currency when applying coupons
+* Fixed a bug that was preventing adding multiple products to cart after changing the site language and resetting the cart
+* Fixed an incompatibility issue with WooCommerce Bookings: the layout of the conformation prompt from switching the cart was broken.
+* Serialized custom fields were translated incorrectly using the WooCommerce Multilingual Translation Editor
+
+= 4.2.3 =
+* A fatal error occurred when deactivating WPML with WooCommerce Multilingual being active
+
+= 4.2.2 =
+* Added a filter to include links to the String Translation table for custom options/settings in Woocommerce Gateway settings panel
+* Added logic to display a warning in the back-end when built in taxonomies translation status (set to 'translate') is overridden
+* Added the ability to translate the currency switcher format in String Translation
+* My account Bookings list page displays bookings in all languages
+* Updating variable product does not refresh product visibility terms
+* Currency switcher doesn't reload the product page if # is present in the URL
+* Fixed a PHP fatal error that was occurring when using WooCommerce Multilingual together with Sensei
+* The 'featured' product field was not synchronized across product translations
+* When updating a translation, the product translation slug was overwritten if product contains page builders fields
+* The 'reset password' form in a secondary language pointed to a 404 error
+* "product/%product_cat%" product permalink doesn't work for products without category assigned in second language if "Uncategorized" string not translated in String Translation module
+* It was not possible to set the custom price value in secondary currencies as '0'
+* It was not possible to translate attribute slugs if the attributes base was not translated
+* Currency switcher styles were not loaded when using only a shortcode currency switcher
+* The customer order email was sent in default language when the 'Processing' button was clicked on the back-end
 
 = 4.2.1.1 =
 * WC Subscriptions compatibility error
