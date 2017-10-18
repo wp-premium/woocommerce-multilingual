@@ -9,6 +9,13 @@ class WCML_Cart_Switch_Lang_Functions{
 	    add_action( 'wp_footer', array( $this, 'wcml_language_switch_dialog' ) );
 	    add_action( 'wp_loaded', array( $this, 'wcml_language_force_switch' ) );
 	    add_action( 'wcml_user_switch_language', array( $this, 'language_has_switched' ), 10 , 2 );
+
+	    add_filter( 'woocommerce_product_add_to_cart_url', array( $this, 'remove_force_switch_from_add_to_cart_url' ) );
+    }
+
+    public function remove_force_switch_from_add_to_cart_url( $url ){
+        $url = str_replace('force_switch=1&', '', $url );
+        return $url;
     }
 
     public function language_has_switched( $lang_from, $lang_to ){
@@ -29,7 +36,7 @@ class WCML_Cart_Switch_Lang_Functions{
     public function wcml_language_force_switch(){
         global $woocommerce_wpml, $woocommerce;
 
-        if( isset( $_GET[ 'force_switch' ] ) && $_GET[ 'force_switch' ] == true ){
+        if( ! wpml_is_ajax() && isset( $_GET[ 'force_switch' ] ) && '1' === $_GET[ 'force_switch' ] ){
             $woocommerce_wpml->cart->empty_cart_if_needed( 'lang_switch' );
             $woocommerce->session->set( 'wcml_switched_type', 'lang_switch' );
         }
@@ -44,9 +51,14 @@ class WCML_Cart_Switch_Lang_Functions{
 
             $current_url = home_url( add_query_arg( array(), $wp->request ) );
 
-            if( isset( $post->ID ) ){
+            if( is_shop() ){
+                $requested_page_id = apply_filters( 'translate_object_id', wc_get_page_id('shop'), 'post', true, $this->lang_from );
+            }elseif( isset( $post->ID ) ){
                 $requested_page_id = apply_filters( 'translate_object_id', $post->ID, get_post_type( $post->ID ), true, $this->lang_from );
-                $request_url = add_query_arg( 'force_switch', 0, $sitepress->convert_url( get_permalink( $requested_page_id ), $this->lang_from ) );
+            }
+            
+            if( isset( $requested_page_id ) ){
+                $request_url = add_query_arg( 'force_switch', '0', $sitepress->convert_url( get_permalink( $requested_page_id ), $this->lang_from ) );
             }else{
                 $request_url = $current_url;
             }
@@ -58,7 +70,7 @@ class WCML_Cart_Switch_Lang_Functions{
 
             if( $this->lang_from && $this->lang_to && $request_url && !empty( $cart_for_session ) ) {
 
-	            $force_cart_url   = add_query_arg( 'force_switch', 1, $current_url );
+	            $force_cart_url   = add_query_arg( 'force_switch', '1', $current_url );
 	            $active_languages = apply_filters( 'wpml_active_languages', null, null );
 	            $dialog_title     = __( 'Switching language?', 'woocommerce-multilingual' );
 

@@ -152,7 +152,8 @@ class WCML_Multi_Currency{
                         'woocommerce_checkout',
                         'woocommerce_add_to_cart',
                         'woocommerce_update_shipping_method',
-                        'woocommerce_json_search_products_and_variations'
+                        'woocommerce_json_search_products_and_variations',
+                        'woocommerce_add_coupon_discount'
                     )
                 );
 

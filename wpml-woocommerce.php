@@ -8,14 +8,14 @@
   Text Domain: woocommerce-multilingual
   Requires at least: 3.9
   Tested up to: 4.8.1
-  Version: 4.2.1.1
+  Version: 4.2.4
 */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.2.1.1' );
+define( 'WCML_VERSION', '4.2.4' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );

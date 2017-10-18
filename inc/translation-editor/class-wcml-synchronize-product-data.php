@@ -43,6 +43,8 @@ class WCML_Synchronize_Product_Data{
             add_action( 'wpml_translation_update', array( $this, 'icl_connect_translations_action' ) );
 
             add_action( 'deleted_term_relationships', array( $this, 'delete_term_relationships_update_term_count' ), 10, 2 );
+
+            add_action( 'woocommerce_product_set_visibility', array( $this, 'sync_product_translations_visibility' ) );
         }
 
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'sync_product_stocks_reduce' ) );
@@ -174,14 +176,14 @@ class WCML_Synchronize_Product_Data{
             $tt_names = array();
             if ($terms) {
                 foreach ($terms as $term) {
-                    if( $term->taxonomy == 'product_type' ){
+	                if ( in_array( $term->taxonomy, array( 'product_type', 'product_visibility' ) ) ) {
                         $tt_names[] = $term->name;
                         continue;
                     }
                     $tt_ids[] = $term->term_id;
                 }
 
-                if( $taxonomy == 'product_type' ) {
+	            if ( ! $this->woocommerce_wpml->terms->is_translatable_wc_taxonomy( $taxonomy ) ) {
                     wp_set_post_terms( $tr_product_id, $tt_names, $taxonomy );
                 }else{
                     $this->wcml_update_term_count_by_ids( $tt_ids, $lang, $taxonomy, $tr_product_id );
@@ -511,12 +513,26 @@ class WCML_Synchronize_Product_Data{
             foreach( $post_fields as $post_field_key => $post_field ){
 
                 if( 1 === preg_match( '/field-' . $custom_field . '-.*?/', $post_field_key ) ){
-                    $custom_fields_values = array_values( array_filter( get_post_meta( $original_product_id, $custom_field, true ) ) );
-                    foreach( $custom_fields_values as $custom_field_index => $custom_field_value ) {
-                        $custom_fields_values = $this->get_translated_custom_field_values( $custom_fields_values, $translation_data, $custom_field, $custom_field_value, $custom_field_index );
-                    }
+	                $custom_fields        = array_filter( get_post_meta( $original_product_id, $custom_field, true ) );
+	                $custom_fields_values = array_values( $custom_fields );
+	                $custom_fields_keys   = array_keys( $custom_fields );
+	                foreach ( $custom_fields_values as $custom_field_index => $custom_field_value ) {
+		                $custom_fields_values =
+			                $this->get_translated_custom_field_values(
+				                $custom_fields_values,
+				                $translation_data,
+				                $custom_field,
+				                $custom_field_value,
+				                $custom_field_index
+			                );
+	                }
 
-                    update_post_meta( $trnsl_product_id, $custom_field, $custom_fields_values );
+	                $custom_fields_translated = array();
+	                foreach ( $custom_fields_values as $index => $value ) {
+		                $custom_fields_translated[ $custom_fields_keys[ $index ] ] = $value;
+	                }
+
+                    update_post_meta( $trnsl_product_id, $custom_field, $custom_fields_translated );
                 }else{
                     $meta_value = $translation_data[ md5( $post_field_key ) ];
                     $field_key = explode( ':', $post_field_key );
@@ -677,5 +693,30 @@ class WCML_Synchronize_Product_Data{
 
         return $is_sync_needed;
     }
+
+	public function sync_product_translations_visibility( $product_id ) {
+
+		if ( $this->woocommerce_wpml->products->is_original_product( $product_id ) ) {
+
+			$trid         = $this->sitepress->get_element_trid( $product_id, 'post_product' );
+			$translations = $this->sitepress->get_element_translations( $trid, 'post_product' );
+
+			if ( $translations ) {
+
+				$product = wc_get_product( $product_id );
+				$terms   = array();
+				if ( $product->is_featured() ) {
+					$terms[] = 'featured';
+				}
+
+				foreach ( $translations as $translation ) {
+					if ( ! $translation->original ) {
+						wp_set_post_terms( $translation->element_id, $terms, 'product_visibility', false );
+					}
+				}
+			}
+		}
+
+	}
 
 }

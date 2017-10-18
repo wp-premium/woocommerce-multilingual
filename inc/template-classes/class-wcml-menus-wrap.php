@@ -95,14 +95,16 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                         'title'     => !$this->woocommerce_wpml->terms->is_fully_translated( 'product_cat' ) ? __('You have untranslated terms!', 'woocommerce-multilingual') : '',
                         'active'    => $current_tab == 'product_cat' ? 'nav-tab-active':'',
                         'url'       => admin_url('admin.php?page=wpml-wcml&tab=product_cat'),
-                        'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_cat' )
+                        'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_cat' ),
+                        'is_translatable' => is_taxonomy_translated( 'product_cat' )
                     ),
                     'product_tag' => array(
                         'name'      => __('Tags', 'woocommerce-multilingual'),
                         'title'     => !$this->woocommerce_wpml->terms->is_fully_translated( 'product_tag' ) ? __('You have untranslated terms!', 'woocommerce-multilingual') : '',
                         'active'    => $current_tab == 'product_tag' ? 'nav-tab-active':'',
                         'url'       => admin_url('admin.php?page=wpml-wcml&tab=product_tag'),
-                        'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_tag' )
+                        'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_tag' ),
+                        'is_translatable' => is_taxonomy_translated( 'product_tag' )
                     )
                 ),
                 'custom_taxonomies' => array(
@@ -123,7 +125,8 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
                     'title'     => !$this->woocommerce_wpml->terms->is_fully_translated( 'product_shipping_class' ) ? __('You have untranslated terms!', 'woocommerce-multilingual') : '',
                     'active'    => $current_tab == 'product_shipping_class' ? 'nav-tab-active':'',
                     'url'       => admin_url('admin.php?page=wpml-wcml&tab=product_shipping_class'),
-                    'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_shipping_class' )
+                    'translated'=> $this->woocommerce_wpml->terms->is_fully_translated( 'product_shipping_class' ),
+                    'is_translatable' => is_taxonomy_translated( 'product_shipping_class' )
                 ),
                 'settings' => array(
                     'name'      => __( 'Settings', 'woocommerce-multilingual' ),
@@ -156,7 +159,7 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
             'rate' => array(
                 'on'        => !isset( $this->woocommerce_wpml->settings['rate-block'] ),
                 'message'   => sprintf(__('Thank you for using %sWooCommerce Multilingual%s! You can express your love and
-                                    support by %s rating our plugin and saying that %sit works%s for you.', 'woocommerce-wpml'),
+                                    support by %s rating our plugin and saying that %sit works%s for you.', 'woocommerce-multilingual' ),
                     '<strong>',
                     '</strong>',
                     '<a href="https://wordpress.org/support/view/plugin-reviews/woocommerce-multilingual?filter=5#postform" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>',

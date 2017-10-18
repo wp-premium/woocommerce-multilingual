@@ -38,19 +38,23 @@ function wcml_load_currency( currency, force_switch ){
             }else if( typeof response.prevent_switching !== 'undefined' ){
                 jQuery('body').append( response.prevent_switching );
             }else{
-                if(typeof wcml_mc_settings.w3tc !== 'undefined'){
-                    var original_url = window.location.href;
-                    original_url = original_url.replace(/&wcmlc(\=[^&]*)?(?=&|$)|wcmlc(\=[^&]*)?(&|$)/, '');
-                    original_url = original_url.replace(/\?$/, '');
 
-                    var url_glue = original_url.indexOf('?') != -1 ? '&' : '?';
-                    var target_location = original_url + url_glue + 'wcmlc=' + currency;
+                var target_location = window.location.href;
+                if(-1 !== target_location.indexOf('#') || wcml_mc_settings.w3tc ){
 
-                }else{
-                    var target_location = window.location.href;
+                    var url_dehash = target_location.split('#');
+                    var hash = url_dehash.length > 1 ? '#' + url_dehash[1] : '';
+
+                    target_location = url_dehash[0]
+                                    .replace(/&wcmlc(\=[^&]*)?(?=&|$)|wcmlc(\=[^&]*)?(&|$)/, '')
+                                    .replace(/\?$/, '');
+
+                    var url_glue = target_location.indexOf('?') != -1 ? '&' : '?';
+                    target_location += url_glue + 'wcmlc=' + currency + hash;
+
                 }
-
                 window.location = target_location;
+
             }
         }
     });

@@ -2,22 +2,29 @@
 
 class WCML_Synchronize_Variations_Data{
 
-    private $woocommerce_wpml;
-    private $sitepress;
+	/** @var woocommerce_wpml */
+	private $woocommerce_wpml;
+	/** @var SitePress */
+	private $sitepress;
+	/** @var wpdb */
     private $wpdb;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb ) {
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-        $this->wpdb = $wpdb;
+	public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ) {
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+		$this->wpdb             = $wpdb;
+	}
 
-        add_action( 'woocommerce_ajax_save_product_variations', array( $this, 'sync_product_variations_action' ), 11 );
-        add_action( 'wp_ajax_woocommerce_remove_variations', array( $this, 'remove_translations_for_variations' ), 9 );
+    public function add_hooks(){
 
-        //save taxonomy in WPML interface
-        add_action( 'wp_ajax_wpml_tt_save_term_translation', array( $this, 'update_taxonomy_in_variations' ), 7 );
+	    add_action( 'woocommerce_ajax_save_product_variations', array( $this, 'sync_product_variations_action' ), 11 );
+	    add_action( 'wp_ajax_woocommerce_remove_variations', array( $this, 'remove_translations_for_variations' ), 9 );
 
-        add_action( 'wp_ajax_woocommerce_remove_variation', array( $this, 'remove_variation_ajax' ), 9 );
+	    //save taxonomy in WPML interface
+	    add_action( 'wp_ajax_wpml_tt_save_term_translation', array( $this, 'update_taxonomy_in_variations' ), 7 );
+
+	    add_action( 'wp_ajax_woocommerce_remove_variation', array( $this, 'remove_variation_ajax' ), 9 );
+
     }
 
     public function sync_product_variations_action( $product_id ){
@@ -206,9 +213,10 @@ class WCML_Synchronize_Variations_Data{
                         $name = $tt;
                     }
 
-                    $terms = get_the_terms( $original_variation_id, $name );
+	                $terms    = get_the_terms( $original_variation_id, $name );
+	                $tax_sync = array();
+
                     if ( !empty( $terms ) ) {
-                        $tax_sync = array();
                         foreach ( $terms as $term ) {
                             if ( $this->sitepress->is_translated_taxonomy( $tt ) ) {
                                 $term_id = apply_filters( 'translate_object_id', $term->term_id, $name, false, $lang );
@@ -221,6 +229,8 @@ class WCML_Synchronize_Variations_Data{
                         }
                         //set the fourth parameter in 'true' because we need to add new terms, instead of replacing all
                         wp_set_object_terms( $tr_variation_id, $tax_sync, $name, true );
+                    }elseif( ! $this->woocommerce_wpml->terms->is_translatable_wc_taxonomy( $name ) ){
+	                    wp_set_object_terms( $tr_variation_id, $tax_sync, $name );
                     }
                 }
             }

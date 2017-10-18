@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda
+class ComposerStaticInit55764b6d2d88b7d4a989a95374d49eb9
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -461,6 +461,7 @@ class ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda
         'WCML_WC_Name_Your_Price' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-name-your-price.php',
         'WCML_WC_Product_Bundles_Items' => __DIR__ . '/../..' . '/compatibility/includes/class-wcml-wc-product-bundles-items.php',
         'WCML_WC_Shipping' => __DIR__ . '/../..' . '/inc/class-wcml-wc-shipping.php',
+        'WCML_WC_Shortcode_Product_Category' => __DIR__ . '/../..' . '/classes/shortcodes/class-wcml-wc-shortcode-product-category.php',
         'WCML_WC_Strings' => __DIR__ . '/../..' . '/inc/class-wcml-wc-strings.php',
         'WCML_WC_Subscriptions' => __DIR__ . '/../..' . '/compatibility/class-wcml-wc-subscriptions.php',
         'WCML_WPSEO' => __DIR__ . '/../..' . '/compatibility/class-wcml-wpseo.php',
@@ -479,10 +480,10 @@ class ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit7428252d40ecd68dca24189fb1e0bbda::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit55764b6d2d88b7d4a989a95374d49eb9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit55764b6d2d88b7d4a989a95374d49eb9::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit55764b6d2d88b7d4a989a95374d49eb9::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit55764b6d2d88b7d4a989a95374d49eb9::$classMap;
 
         }, null, ClassLoader::class);
     }

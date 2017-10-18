@@ -95,11 +95,8 @@ class WCML_WC_Gateways{
 
     function show_language_links_for_gateways(){
 
-        $text_keys = array(
-            'title',
-            'description',
-            'instructions'
-        );
+        $text_keys = $this->get_gateway_text_keys_to_translate();
+
         $wc_payment_gateways = WC_Payment_Gateways::instance();
 
         foreach( $wc_payment_gateways->payment_gateways() as $payment_gateway ) {
@@ -154,31 +151,42 @@ class WCML_WC_Gateways{
 
     function register_and_set_gateway_strings_language(){
 
-        foreach( $_POST as $key => $language ){
+	    foreach( $_POST as $key => $language ){
 
-            if( substr( $key, 0, 9 ) == 'wcml_lang' ){
-
-                $gateway_string = explode( '-', $key );
-
-                if( isset( $gateway_string[2] ) ){
-
-                    $gateway_key = str_replace( '_settings', '',  $gateway_string[1] );
-                    $gateway_string_name = str_replace( 'woocommerce_', '',  $gateway_key ) .'_gateway_'. $gateway_string[2];
-                    $gateway_key .= '_'.$gateway_string[2];
-
-                    $gateway_settings = get_option( $gateway_string[1], true );
-
-                    $string_value = isset( $_POST[ $gateway_key ] ) ? $_POST[ $gateway_key ] : '';
-                    $opt_string_value =  isset( $gateway_settings[ $gateway_string[2] ] ) ? $gateway_settings[ $gateway_string[2] ] : $string_value;
-
-                    $context = 'woocommerce';
-
-                    do_action( 'wpml_register_single_string', $context, $gateway_string_name, $string_value, false, $this->woocommerce_wpml->strings->get_string_language( $opt_string_value, $context ) );
-
-                    $this->woocommerce_wpml->strings->set_string_language( $string_value, $context, $gateway_string_name, $language );
-                }
+		    if( '_enabled' === substr( $key, -8 ) ){
+			    $gateway = str_replace( '_enabled', '',  $key );
+			    $gateway_settings = get_option( $gateway.'_settings', array() );
             }
-        }
+	    }
+
+	    if ( isset( $gateway ) ) {
+		    $text_keys = $this->get_gateway_text_keys_to_translate();
+
+		    foreach ( $text_keys as $text_key ) {
+			    $gateway_string_name = str_replace( 'woocommerce_', '', $gateway ) . '_gateway_' . $text_key;
+			    $gateway_key         = $gateway . '_' . $text_key;
+
+			    $string_value     = isset( $_POST[ $gateway_key ] ) ? $_POST[ $gateway_key ] : '';
+			    $opt_string_value = isset( $gateway_settings[ $text_key ] ) ? $gateway_settings[ $text_key ] : $string_value;
+
+			    $context = 'woocommerce';
+
+			    do_action( 'wpml_register_single_string', $context, $gateway_string_name, $string_value, false, $this->woocommerce_wpml->strings->get_string_language( $opt_string_value, $context ) );
+
+			    $this->woocommerce_wpml->strings->set_string_language( $string_value, $context, $gateway_string_name, $language );
+		    }
+	    }
+    }
+
+    public function get_gateway_text_keys_to_translate(){
+
+	    $text_keys = array(
+		    'title',
+		    'description',
+		    'instructions'
+	    );
+
+        return apply_filters( 'wcml_gateway_text_keys_to_translate', $text_keys );
     }
 
 }

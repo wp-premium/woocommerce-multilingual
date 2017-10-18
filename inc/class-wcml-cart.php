@@ -53,6 +53,8 @@ class WCML_Cart
             $this->localize_flat_rates_shipping_classes();
         }
 
+		add_filter( 'woocommerce_cart_needs_payment', array( $this, 'use_cart_contents_total_for_needs_payment' ), 10, 2 );
+
     }
 
     public function is_clean_cart_enabled(){
@@ -169,14 +171,20 @@ class WCML_Cart
                     modal: true,
                     closeOnEscape: false,
                     dialogClass: "wcml-cart-dialog",
+                    create: function(){
+                        jQuery('#jquery-ui-style-css').attr('disabled', 'disabled');
+                    },
                     open: function(event, ui) {
                         jQuery(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                    },
+                    close: function(event, ui){
+                        jQuery('#jquery-ui-style-css').removeAttr('disabled');
                     },
                     buttons: {
                         "<?php echo $switch_to; ?>": function() {
                             jQuery( this ).dialog( "close" );
                             <?php if( $language_switch ): ?>
-                                window.location = '<?php echo esc_js( $switch_to_value ); ?>';
+                                window.location = '<?php echo esc_url( $switch_to_value, null, 'redirect' ); ?>';
                             <?php else: ?>
                                 jQuery('.wcml_currency_switcher').parent().find('img').remove();
                                 wcml_load_currency( "<?php echo esc_js( $switch_to_value ); ?>", true );
@@ -186,7 +194,7 @@ class WCML_Cart
                         "<?php echo $stay_in; ?>": function() {
                             jQuery( this ).dialog( "close" );
                             <?php if( $language_switch ): ?>
-                                window.location = '<?php echo esc_js( $stay_in_value ); ?>';
+                                window.location = '<?php echo esc_url( $stay_in_value, null, 'redirect' ); ?>';
                             <?php else: ?>
                                 jQuery('.wcml_currency_switcher').parent().find('img').remove();
                                 jQuery('.wcml_currency_switcher').removeAttr('disabled');
@@ -516,5 +524,18 @@ class WCML_Cart
         throw new Exception( $message );
 
     }
+
+	/**
+	 * @param bool $needs
+	 * @param WC_Cart $cart
+	 *
+	 * @return bool
+	 */
+	public function use_cart_contents_total_for_needs_payment( $needs, $cart ){
+		if( isset( $cart->cart_contents_total ) && version_compare( WC()->version,'3.2', '<' ) ){
+			$needs = $cart->cart_contents_total > 0;
+		}
+		return $needs;
+	}
 
 }

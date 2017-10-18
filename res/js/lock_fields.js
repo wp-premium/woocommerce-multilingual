@@ -123,7 +123,7 @@ jQuery(document).ready(function($){
     });
 
 
-    $('#product_attributes input[type="checkbox"]').each(function(){
+    $('#product_attributes input[type="checkbox"],#_featured').each(function(){
         $(this).attr('disabled','disabled');
         $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     });

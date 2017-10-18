@@ -11,13 +11,14 @@ class WCML_Admin_Menus{
         self::$sitepress =& $sitepress;
         self::$wpdb =& $wpdb;
 
-        add_action( 'admin_menu', array(__CLASS__, 'register_menus' ), 80 );
-
         if( self::is_page_without_admin_language_switcher() ){
             self::remove_wpml_admin_language_switcher();
         }
 
         if( is_admin() && !is_null( $sitepress ) && $check_dependencies ){
+
+	        add_action( 'admin_menu', array(__CLASS__, 'register_menus' ), 80 );
+
             add_action( 'admin_footer', array(__CLASS__, 'documentation_links' ) );
             add_action( 'admin_head', array( __CLASS__, 'hide_multilingual_content_setup_box' ) );
             add_action( 'admin_init', array( __CLASS__, 'restrict_admin_with_redirect' ) );
@@ -47,7 +48,7 @@ class WCML_Admin_Menus{
                 $wp_api = self::$sitepress->get_wp_api();
                 if (!$wp_api->current_user_can('wpml_manage_translation_management')) {
                     $wp_api->add_submenu_page(null,
-                        __('Translations', 'wpml-translation-management'), __('Translations', 'wpml-translation-management'),
+                        __( 'Translations', 'woocommerce-multilingual' ), __( 'Translations', 'woocommerce-multilingual' ),
                         'wpml_operate_woocommerce_multilingual', WPML_TM_FOLDER . '/menu/translations-queue.php', array($WPML_Translation_Management, 'translation_queue_page'));
                 }
             }
@@ -151,7 +152,7 @@ class WCML_Admin_Menus{
 
             if ( $pos !== false && $pagenow == 'edit-tags.php' ) {
                 $prot_link = '<span class="button" style="padding:4px;margin-top:0px; float: left;"><img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon16.png" width="16" height="16" style="margin-bottom:-4px" /> <a href="' . WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/', 'woocommerce-multilingual', 'documentation', '#3' ) . '" target="_blank" style="text-decoration: none;">' .
-                    __( 'How to translate attributes', 'sitepress' ) . '<\/a>' . '<\/span><br \/><br \/>';
+                    __( 'How to translate attributes', 'woocommerce-multilingual' ) . '<\/a>' . '<\/span><br \/><br \/>';
                 ?>
                 <script type="text/javascript">
                     jQuery("table.widefat").before('<?php echo $prot_link ?>');
@@ -163,7 +164,7 @@ class WCML_Admin_Menus{
         if ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'product_cat' ) {
 
             $prot_link = '<span class="button" style="padding:4px;margin-top:0px; float: left;"><img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon16.png" width="16" height="16" style="margin-bottom:-4px" /> <a href="' . WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/', 'woocommerce-multilingual', 'documentation', '#3' ) . '" target="_blank" style="text-decoration: none;">' .
-                __( 'How to translate product categories', 'sitepress' ) . '<\/a>' . '<\/span><br \/><br \/>';
+                __( 'How to translate product categories', 'woocommerce-multilingual' ) . '<\/a>' . '<\/span><br \/><br \/>';
             ?>
             <script type="text/javascript">
                 jQuery("table.widefat").before('<?php echo $prot_link ?>');

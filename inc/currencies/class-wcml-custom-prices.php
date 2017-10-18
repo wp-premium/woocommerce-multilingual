@@ -67,7 +67,7 @@ class WCML_Custom_Prices{
 
             foreach($prices_keys as $key){
 
-                if(!empty($product_meta[$key . '_' . $currency][0])){
+                if( isset($product_meta[$key . '_' . $currency][0])){
                     $custom_prices[$key] = $product_meta[$key . '_' . $currency][0];
                 }
 
@@ -80,8 +80,7 @@ class WCML_Custom_Prices{
         $current__price_value = $custom_prices['_price'];
 
         // update sale price
-        if(!empty($custom_prices['_sale_price'])){
-
+        if(isset($custom_prices['_sale_price']) && is_numeric($custom_prices['_sale_price']) ){
             if(!empty($product_meta['_wcml_schedule_' . $currency][0])){
                 // custom dates
                 if(!empty($product_meta['_sale_price_dates_from_' . $currency][0]) && !empty($product_meta['_sale_price_dates_to_' . $currency][0])){

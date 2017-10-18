@@ -4,10 +4,12 @@
         <a class="nav-tab {{ menu.products.active }}" href="{{ menu.products.url }}">{{ menu.products.title }}</a>
         {%  if can_operate_options %}
             {% for key, taxonomy in menu.taxonomies %}
-            <a class="js-tax-tab-{{ key }} nav-tab {{ taxonomy.active }}" href="{{ taxonomy.url }}" title="{{ taxonomy.title }}">
-            {{ taxonomy.name }}
-            {% if taxonomy.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
-            </a>
+                {% if taxonomy.is_translatable %}
+                    <a class="js-tax-tab-{{ key }} nav-tab {{ taxonomy.active }}" href="{{ taxonomy.url }}" title="{{ taxonomy.title }}">
+                    {{ taxonomy.name }}
+                    {% if taxonomy.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
+                    </a>
+                {% endif %}
             {% endfor %}
             {%  if menu.custom_taxonomies.show  %}
             <a class="nav-tab tax-custom-taxonomies {{ menu.custom_taxonomies.active }}" href="{{ menu.custom_taxonomies.url }}">
@@ -19,11 +21,12 @@
                 {{ menu.attributes.name }}
                 {% if menu.attributes.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
             </a>
-
-            <a class="js-tax-tab-product_shipping_class nav-tab {{ menu.shipping_classes.active }}" href="{{ menu.shipping_classes.url }}"
-               title="{{ menu.shipping_classes.title }}">{{ menu.shipping_classes.name }}
-               {% if menu.shipping_classes.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
-            </a>
+            {% if menu.shipping_classes.is_translatable %}
+                <a class="js-tax-tab-product_shipping_class nav-tab {{ menu.shipping_classes.active }}" href="{{ menu.shipping_classes.url }}"
+                   title="{{ menu.shipping_classes.title }}">{{ menu.shipping_classes.name }}
+                   {% if menu.shipping_classes.translated == false %}<i class="otgs-ico-warning"></i>{% endif %}
+                </a>
+            {% endif %}
         {% endif %}
 
         {% if can_manage_options %}
