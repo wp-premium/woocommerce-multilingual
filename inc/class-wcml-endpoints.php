@@ -318,24 +318,27 @@ class WCML_Endpoints{
         return $translated_slug;
     }
 
-    function filter_get_endpoint_url( $url, $endpoint, $value, $permalink ){
+	function filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
 
-        // return translated edit account slugs
-        remove_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
-        if ( isset( WC()->query->query_vars['edit-address'] ) && WC()->query->query_vars['edit-address'] == $endpoint && in_array( $value, array(
-                'shipping',
-                'billing'
-            ) )
-        ) {
-            $url = wc_get_endpoint_url( 'edit-address', $this->get_translated_edit_address_slug( $value ) );
-        } elseif ( $endpoint === get_option( 'woocommerce_myaccount_lost_password_endpoint' ) ) {
-            $translated_lost_password_endpoint = apply_filters( 'wpml_translate_single_string', $endpoint, 'WooCommerce Endpoints', 'lost-password' );
-            $url                              = wc_get_endpoint_url( $translated_lost_password_endpoint );
-        }
-        add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
+		// return translated edit account slugs
+		remove_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
+		if ( isset( WC()->query->query_vars['edit-address'] ) && WC()->query->query_vars['edit-address'] == $endpoint && in_array( $value, array(
+				'shipping',
+				'billing'
+			) )
+		) {
+			$url = wc_get_endpoint_url( 'edit-address', $this->get_translated_edit_address_slug( $value ) );
+		} elseif ( $endpoint === get_option( 'woocommerce_myaccount_lost_password_endpoint' ) ) {
+			$translated_lost_password_endpoint = apply_filters( 'wpml_translate_single_string', $endpoint, 'WooCommerce Endpoints', 'lost-password' );
 
-        return $url;
-    }
+			$wc_account_page_url = wc_get_page_permalink( 'myaccount' );
+			$url                 = wc_get_endpoint_url( $translated_lost_password_endpoint, '', $wc_account_page_url );
+
+		}
+		add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
+
+		return $url;
+	}
 
     public function update_original_endpoints_strings(){
 

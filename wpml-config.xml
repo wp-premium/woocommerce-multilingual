@@ -75,6 +75,7 @@
 		<taxonomy translate="1">product_tag</taxonomy>
 		<taxonomy translate="0">product_type</taxonomy>
 		<taxonomy translate="0">shop_order_status</taxonomy>
+		<taxonomy translate="0">product_visibility</taxonomy>
 		<taxonomy translate="1">product_shipping_class</taxonomy>
 	</taxonomies>
 	<admin-texts>

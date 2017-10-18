@@ -6,48 +6,68 @@ class WCML_Terms{
     private $NEW_TAXONOMY_TERMS = 1;
     private $NEW_TAXONOMY_IGNORED = 2;
 
-    private $woocommerce_wpml;
-    private $sitepress;
+	/** @var woocommerce_wpml */
+	private $woocommerce_wpml;
+	/** @var SitePress */
+	private $sitepress;
+	/** @var wpdb */
     private $wpdb;
 
-    function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb ){
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-        $this->wpdb = $wpdb;
-
-        add_action('updated_woocommerce_term_meta',array($this,'sync_term_order'), 100,4);
-
-        add_filter('wp_get_object_terms', array($this->sitepress, 'get_terms_filter'));
-        
-        add_action('icl_save_term_translation', array($this,'save_wc_term_meta'), 100,4);
-        
-        add_action('created_term', array($this, 'translated_terms_status_update'), 10,3);
-        add_action('edit_term', array($this, 'translated_terms_status_update'), 10,3);
-        add_action('wp_ajax_wcml_update_term_translated_warnings', array( $this, 'wcml_update_term_translated_warnings'));
-
-        add_action('created_term', array( $this, 'set_flag_for_variation_on_attribute_update'), 10, 3);
-
-        add_filter('wpml_taxonomy_translation_bottom', array( $this, 'sync_taxonomy_translations'), 10, 3 );
-
-        add_action('wp_ajax_wcml_sync_product_variations', array( $this, 'wcml_sync_product_variations'));
-        add_action('wp_ajax_wcml_tt_sync_taxonomies_in_content', array( $this, 'wcml_sync_taxonomies_in_content'));
-        add_action('wp_ajax_wcml_tt_sync_taxonomies_in_content_preview', array( $this, 'wcml_sync_taxonomies_in_content_preview'));
-        
-        if(is_admin()){
-            add_action('admin_menu', array($this, 'admin_menu_setup'));    
-        }
-        
-        add_action('delete_term',array($this, 'wcml_delete_term'),10,4);
-        add_filter('get_the_terms',array($this,'shipping_terms'),10,3);
-        //filter coupons terms in admin
-        add_filter('get_terms',array($this,'filter_coupons_terms'),10,3);
-        add_filter('get_terms',array($this,'filter_shipping_classes_terms'),10,3);
-
-        add_filter( 'woocommerce_get_product_terms', array( $this, 'get_product_terms_filter' ), 10, 4 );
-        add_action( 'created_term_translation', array( $this, 'set_flag_to_sync'), 10, 3 );
-
-        add_action( 'updated_term_meta', array( $this, 'update_product_count_term'), 10, 4 );
+	/**
+	 * WCML_Terms constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress $sitepress
+	 * @param wpdb $wpdb
+	 */
+    function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ){
+	    $this->woocommerce_wpml = $woocommerce_wpml;
+	    $this->sitepress        = $sitepress;
+	    $this->wpdb             = $wpdb;
     }
+
+	public function add_hooks() {
+
+		add_action( 'updated_woocommerce_term_meta', array( $this, 'sync_term_order' ), 100, 4 );
+
+		add_filter( 'wp_get_object_terms', array( $this->sitepress, 'get_terms_filter' ) );
+
+		add_action( 'icl_save_term_translation', array( $this, 'save_wc_term_meta' ), 100, 4 );
+
+		add_action( 'created_term', array( $this, 'translated_terms_status_update' ), 10, 3 );
+		add_action( 'edit_term', array( $this, 'translated_terms_status_update' ), 10, 3 );
+		add_action( 'wp_ajax_wcml_update_term_translated_warnings', array(
+			$this,
+			'wcml_update_term_translated_warnings'
+		) );
+
+		add_action( 'created_term', array( $this, 'set_flag_for_variation_on_attribute_update' ), 10, 3 );
+
+		add_filter( 'wpml_taxonomy_translation_bottom', array( $this, 'sync_taxonomy_translations' ), 10, 3 );
+
+		add_action( 'wp_ajax_wcml_sync_product_variations', array( $this, 'wcml_sync_product_variations' ) );
+		add_action( 'wp_ajax_wcml_tt_sync_taxonomies_in_content', array( $this, 'wcml_sync_taxonomies_in_content' ) );
+		add_action( 'wp_ajax_wcml_tt_sync_taxonomies_in_content_preview', array(
+			$this,
+			'wcml_sync_taxonomies_in_content_preview'
+		) );
+
+		if ( is_admin() ) {
+			add_action( 'admin_menu', array( $this, 'admin_menu_setup' ) );
+		}
+
+		add_action( 'delete_term', array( $this, 'wcml_delete_term' ), 10, 4 );
+		add_filter( 'get_the_terms', array( $this, 'shipping_terms' ), 10, 3 );
+		//filter coupons terms in admin
+		add_filter( 'get_terms', array( $this, 'filter_coupons_terms' ), 10, 3 );
+		add_filter( 'get_terms', array( $this, 'filter_shipping_classes_terms' ), 10, 3 );
+
+		add_filter( 'woocommerce_get_product_terms', array( $this, 'get_product_terms_filter' ), 10, 4 );
+		add_action( 'created_term_translation', array( $this, 'set_flag_to_sync' ), 10, 3 );
+
+		add_action( 'updated_term_meta', array( $this, 'update_product_count_term' ), 10, 4 );
+
+	}
     
     function admin_menu_setup(){
         global $pagenow;
@@ -537,6 +557,7 @@ class WCML_Terms{
         global $wp_post_types, $wp_taxonomies;
 
         $default_language = $this->sitepress->get_default_language();
+	    $is_taxonomy_translatable = $this->is_translatable_wc_taxonomy( $taxonomy );
 
         $posts = $this->wpdb->get_results($this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} AS p LEFT JOIN {$this->wpdb->prefix}icl_translations AS tr ON tr.element_id = p.ID WHERE p.post_status = 'publish' AND p.post_type = %s AND tr.source_language_code is NULL", $object_type ) );
 
@@ -574,11 +595,11 @@ class WCML_Terms{
                             $updated_terms = array();
                             foreach($current_terms as $cterm){
                                 if($cterm->term_id != $term->term_id){
-                                    $updated_terms[] = $taxonomy != 'product_type' ? $term->term_id : $term->name;
+                                    $updated_terms[] = $is_taxonomy_translatable ? $term->term_id : $term->name;
                                 }
                                 if(!$preview){
 
-                                    if( $taxonomy != 'product_type' && !is_taxonomy_hierarchical($taxonomy)){
+                                    if( $is_taxonomy_translatable && !is_taxonomy_hierarchical($taxonomy)){
                                         $updated_terms = array_unique( array_map( 'intval', $updated_terms ) );
                                     }
 
@@ -615,7 +636,7 @@ class WCML_Terms{
 
                             if(!$preview){
 
-                                if( $taxonomy != 'product_type' && !is_taxonomy_hierarchical($taxonomy)){
+                                if( $is_taxonomy_translatable && !is_taxonomy_hierarchical($taxonomy)){
                                     $terms_array = array_unique( array_map( 'intval', $terms_array ) );
                                 }
 
@@ -918,11 +939,16 @@ class WCML_Terms{
 
         $no_tax_to_trnls = false;
         foreach ( $taxonomies as $taxonomy ){
-            if ( $taxonomy == 'product_type' || $this->get_untranslated_terms_number( $taxonomy ) == 0 ) {
-                continue;
-            } else {
-                $no_tax_to_trnls = true;
-            }
+
+        	$is_fully_translated = 0 === $this->get_untranslated_terms_number( $taxonomy );
+	        if (
+		        ! $this->is_translatable_wc_taxonomy( $taxonomy ) ||
+		        $is_fully_translated
+	        ) {
+		        continue;
+	        } else {
+		        $no_tax_to_trnls = true;
+	        }
         }
 
         return $no_tax_to_trnls;
@@ -986,5 +1012,13 @@ class WCML_Terms{
 
         add_action( 'updated_term_meta', array( $this, 'update_product_count_term'), 10, 4 );
     }
+
+	public function is_translatable_wc_taxonomy( $taxonomy ) {
+		if ( in_array( $taxonomy, array( 'product_type', 'product_visibility' ), true ) ) {
+			return false;
+		}
+
+		return true;
+	}
 
 }

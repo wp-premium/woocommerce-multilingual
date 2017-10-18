@@ -197,6 +197,8 @@ class WCML_Bookings {
 
 		add_filter( 'wcml_add_to_cart_sold_individually', array( $this, 'add_to_cart_sold_individually'	), 10, 4 );
 
+		add_filter( 'woocommerce_bookings_account_tables', array( $this, 'filter_my_account_bookings_tables_by_current_language'	) );
+
 	}
 
 	function wcml_price_field_after_booking_base_cost( $post_id ) {
@@ -2352,6 +2354,33 @@ class WCML_Bookings {
 
 		}
 
+	}
+
+	public function filter_my_account_bookings_tables_by_current_language( $tables ) {
+
+		$current_language = $this->sitepress->get_current_language();
+
+		foreach ( $tables as $table_key => $table ) {
+
+			if ( isset( $table['bookings'] ) ) {
+
+				foreach ( $table['bookings'] as $key => $booking ) {
+					$language_code    = get_post_meta( $booking->get_id(), '_language_code', true );
+
+					if( !$language_code ){
+					    $language_code = $this->sitepress->get_language_for_element( $booking->get_product_id(), 'post_product' );
+                    }
+
+					if ( $language_code !== $current_language ) {
+						unset( $tables[ $table_key ]['bookings'][ $key ] );
+					}
+				}
+			}
+
+			$tables[ $table_key ]['bookings'] = array_values( $tables[ $table_key ]['bookings'] );
+		}
+
+		return $tables;
 	}
 
 

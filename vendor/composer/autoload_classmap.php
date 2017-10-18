@@ -429,6 +429,7 @@ return array(
     'WCML_WC_Name_Your_Price' => $baseDir . '/compatibility/class-wcml-wc-name-your-price.php',
     'WCML_WC_Product_Bundles_Items' => $baseDir . '/compatibility/includes/class-wcml-wc-product-bundles-items.php',
     'WCML_WC_Shipping' => $baseDir . '/inc/class-wcml-wc-shipping.php',
+    'WCML_WC_Shortcode_Product_Category' => $baseDir . '/classes/shortcodes/class-wcml-wc-shortcode-product-category.php',
     'WCML_WC_Strings' => $baseDir . '/inc/class-wcml-wc-strings.php',
     'WCML_WC_Subscriptions' => $baseDir . '/compatibility/class-wcml-wc-subscriptions.php',
     'WCML_WPSEO' => $baseDir . '/compatibility/class-wcml-wpseo.php',

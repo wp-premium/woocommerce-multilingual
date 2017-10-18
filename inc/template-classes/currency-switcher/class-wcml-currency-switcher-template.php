@@ -205,4 +205,15 @@ class WCML_Currency_Switcher_Template extends WPML_Templates_Factory {
     public function is_core() {
         return isset( $this->template['is_core'] ) ? (bool) $this->template['is_core'] : false;
     }
+
+	public function is_path_valid() {
+		$valid = true;
+		foreach ( $this->template_paths as $path ) {
+			if ( ! file_exists( $path ) ) {
+				$valid = false;
+				break;
+			}
+		}
+		return $valid;
+	}
 }

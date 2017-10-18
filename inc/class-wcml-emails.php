@@ -3,54 +3,91 @@ class WCML_Emails{
 
     private $order_id = false;
     private $locale = false;
+    /** @var woocommerce_wpml */
     private $woocommerce_wpml;
+    /** @var Sitepress */
     private $sitepress;
+    /** @var WooCommerce */
+    private $woocommerce;
 
-    function __construct( &$woocommerce_wpml, &$sitepress ) {
+    function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, WooCommerce $woocommerce ) {
         $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-
-        add_action( 'init', array( $this, 'init' ) );
+        $this->sitepress        = $sitepress;
+        $this->woocommerce      = $woocommerce;
     }
 
-    function init(){
+    function add_hooks(){
         global $pagenow;
         //wrappers for email's header
-        if(is_admin() && !defined( 'DOING_AJAX' )){
-            add_action('woocommerce_order_status_completed_notification', array($this, 'email_heading_completed'),9);
-            add_action('woocommerce_order_status_changed', array($this, 'comments_language'),10);
+        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+            add_action( 'woocommerce_order_status_completed_notification', array(
+                $this,
+                'email_heading_completed'
+            ), 9 );
+            add_action( 'woocommerce_order_status_changed', array( $this, 'comments_language' ), 10 );
         }
 
-        add_action('woocommerce_new_customer_note_notification', array($this, 'email_heading_note'),9);
-        add_action('wp_ajax_woocommerce_mark_order_complete',array($this,'email_refresh_in_ajax'),9);
+        add_action( 'woocommerce_new_customer_note_notification', array( $this, 'email_heading_note' ), 9 );
 
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'email_heading_processing' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array( $this, 'email_heading_processing' ), 9 );
+        add_action( 'wp_ajax_woocommerce_mark_order_status', array( $this, 'email_refresh_in_ajax' ), 9 );
+
+        add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
+            $this,
+            'email_heading_processing'
+        ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array(
+            $this,
+            'email_heading_processing'
+        ), 9 );
 
         //wrappers for email's body
-        add_action('woocommerce_before_resend_order_emails', array($this, 'email_header'));
-        add_action('woocommerce_after_resend_order_email', array($this, 'email_footer'));
+        add_action( 'woocommerce_before_resend_order_emails', array( $this, 'email_header' ) );
+        add_action( 'woocommerce_after_resend_order_email', array( $this, 'email_footer' ) );
 
         //filter string language before for emails
-        add_filter('icl_current_string_language',array($this,'icl_current_string_language'),10 ,2);
+        add_filter( 'icl_current_string_language', array( $this, 'icl_current_string_language' ), 10, 2 );
 
         //change order status
-        add_action('woocommerce_order_status_completed',array($this,'refresh_email_lang_complete'),9);
-        add_action('woocommerce_order_status_pending_to_processing_notification',array($this,'refresh_email_lang'),9);
-        add_action('woocommerce_order_status_pending_to_on-hold_notification',array($this,'refresh_email_lang'),9);
-        add_action('woocommerce_new_customer_note',array($this,'refresh_email_lang'),9);
+        add_action( 'woocommerce_order_status_completed', array( $this, 'refresh_email_lang_complete' ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
+            $this,
+            'refresh_email_lang'
+        ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array(
+            $this,
+            'refresh_email_lang'
+        ), 9 );
+        add_action( 'woocommerce_new_customer_note', array( $this, 'refresh_email_lang' ), 9 );
 
 
-        add_action('woocommerce_order_partially_refunded_notification', array($this,'email_heading_refund'), 9);
-        add_action('woocommerce_order_partially_refunded_notification', array($this,'refresh_email_lang'), 9);
+        add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'email_heading_refund' ), 9 );
+        add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'refresh_email_lang' ), 9 );
 
         //new order admins email
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'new_order_admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_completed_notification', array( $this, 'new_order_admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array( $this, 'new_order_admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'new_order_admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'new_order_admin_email' ), 9 );
-        add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'new_order_admin_email' ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_completed_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
+        add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_processing_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_completed_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
+        add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array(
+            $this,
+            'new_order_admin_email'
+        ), 9 );
         add_action( 'woocommerce_before_resend_order_emails', array( $this, 'backend_new_order_admin_email' ), 9 );
 
         add_filter( 'icl_st_admin_string_return_cached', array( $this, 'admin_string_return_cached' ), 10, 2 );
@@ -58,31 +95,44 @@ class WCML_Emails{
         add_filter( 'plugin_locale', array( $this, 'set_locale_for_emails' ), 10, 2 );
         add_filter( 'woocommerce_countries', array( $this, 'translate_woocommerce_countries' ) );
 
-        if( is_admin() && $pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == 'wc-settings' && isset($_GET['tab']) && $_GET['tab'] == 'email' ){
-            add_action('admin_footer', array($this, 'show_language_links_for_wc_emails'));
+        if ( is_admin() && $pagenow == 'admin.php' && isset( $_GET['page'] ) && $_GET['page'] == 'wc-settings' && isset( $_GET['tab'] ) && $_GET['tab'] == 'email' ) {
+            add_action( 'admin_footer', array( $this, 'show_language_links_for_wc_emails' ) );
             $this->set_emails_string_language();
         }
 
-        if(
+        if (
             (
-                !isset( $_GET['post_type'] ) ||
+                ! isset( $_GET['post_type'] ) ||
                 $_GET['post_type'] != 'shop_order'
             ) &&
             (
-                !isset( $_GET[ 'action' ] ) ||
-                !in_array( $_GET['action'] , array( 'woocommerce_mark_order_complete', 'woocommerce_mark_order_status', 'mark_processing' ) )
+                ! isset( $_GET['action'] ) ||
+                ! in_array( $_GET['action'], array(
+                    'woocommerce_mark_order_status'
+                ) )
             )
-        ){
+        ) {
             add_filter( 'woocommerce_order_items_meta_get_formatted', array( $this, 'filter_formatted_items' ), 10, 2 );
         }
 
-        add_filter( 'woocommerce_allow_send_queued_transactional_email', array( $this, 'send_queued_transactional_email' ), 10, 3 );
+        add_filter( 'woocommerce_allow_send_queued_transactional_email', array(
+            $this,
+            'send_queued_transactional_email'
+        ), 10, 3 );
+
+	    add_filter( 'woocommerce_email_setup_locale', '__return_false' );
+	    add_filter( 'woocommerce_email_restore_locale', '__return_false' );
     }
 
-    function email_refresh_in_ajax(){
-        if( isset( $_GET[ 'order_id' ] ) ){
-            $this->refresh_email_lang( $_GET[ 'order_id' ] );
-            $this->email_heading_completed( $_GET[ 'order_id' ], true );
+    function email_refresh_in_ajax() {
+        if ( isset( $_GET['order_id'] ) ) {
+            $this->refresh_email_lang( $_GET['order_id'] );
+
+            if ( isset( $_GET['status'] ) && 'completed' === $_GET['status'] ) {
+                $this->email_heading_completed( $_GET['order_id'], true );
+            }
+
+            return true;
         }
     }
 
@@ -141,80 +191,78 @@ class WCML_Emails{
     }
 
     function email_heading_completed( $order_id, $no_checking = false ){
-        global $woocommerce;
-        if( ( class_exists( 'WC_Email_Customer_Completed_Order' ) || $no_checking ) && isset( $woocommerce->mailer()->emails[ 'WC_Email_Customer_Completed_Order' ] ) ){
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]heading' );
+        if( ( class_exists( 'WC_Email_Customer_Completed_Order' ) || $no_checking ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Customer_Completed_Order' ] ) ){
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]subject' );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]heading' );
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->heading_downloadable = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]heading_downloadable' );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]subject' );
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->subject_downloadable = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]subject_downloadable' );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->heading_downloadable = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]heading_downloadable' );
 
-            $enabled = $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled = false;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->trigger($order_id);
-            $woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled = $enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->subject_downloadable = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_completed_order_settings', '[woocommerce_customer_completed_order_settings]subject_downloadable' );
+
+            $enabled = $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled = false;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->trigger($order_id);
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Completed_Order']->enabled = $enabled;
         }
     }
 
     function email_heading_processing($order_id){
-        global $woocommerce;
 
-        if( class_exists( 'WC_Email_Customer_Processing_Order' ) && isset( $woocommerce->mailer()->emails[ 'WC_Email_Customer_Processing_Order' ] ) ){
+        if( class_exists( 'WC_Email_Customer_Processing_Order' ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Customer_Processing_Order' ] ) ){
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_processing_order_settings', '[woocommerce_customer_processing_order_settings]heading', $order_id );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_processing_order_settings', '[woocommerce_customer_processing_order_settings]heading', $order_id );
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_processing_order_settings', '[woocommerce_customer_processing_order_settings]subject', $order_id );
-            $enabled = $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled = false;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->trigger($order_id);
-            $woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled = $enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_processing_order_settings', '[woocommerce_customer_processing_order_settings]subject', $order_id );
+            $enabled = $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled = false;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->trigger($order_id);
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Processing_Order']->enabled = $enabled;
 
         }
     }
 
     function email_heading_note($args){
-        global $woocommerce;
 
-        if( class_exists( 'WC_Email_Customer_Note' ) && isset( $woocommerce->mailer()->emails[ 'WC_Email_Customer_Note' ] ) ){
+        if( class_exists( 'WC_Email_Customer_Note' ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Customer_Note' ] ) ){
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Note']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_note_settings', '[woocommerce_customer_note_settings]heading' );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_note_settings', '[woocommerce_customer_note_settings]heading' );
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Note']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_note_settings', '[woocommerce_customer_note_settings]subject' );
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_note_settings', '[woocommerce_customer_note_settings]subject' );
 
-            $enabled = $woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled = false;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Note']->trigger($args);
-            $woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled = $enabled;
+            $enabled = $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled = false;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->trigger($args);
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Note']->enabled = $enabled;
         }
     }
 
     function email_heading_refund( $order_id, $refund_id = null ){
-        global $woocommerce;
-        if( class_exists( 'WC_Email_Customer_Refunded_Order' ) && isset( $woocommerce->mailer()->emails[ 'WC_Email_Customer_Refunded_Order' ] ) ){
 
-            $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->heading =
+        if( class_exists( 'WC_Email_Customer_Refunded_Order' ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Customer_Refunded_Order' ] ) ){
+
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->heading =
                 $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_refunded_order_settings',
                     '[woocommerce_customer_refunded_order_settings]heading_partial', $order_id );
-            $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->subject =
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->subject =
                 $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_refunded_order_settings',
                     '[woocommerce_customer_refunded_order_settings]subject_partial', $order_id );
 
-            $enabled = $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = false;
-            $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->trigger($order_id, true, $refund_id);
-            $woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = $enabled;
+            $enabled = $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = false;
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->trigger($order_id, true, $refund_id);
+            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = $enabled;
 
         }
     }
 
 
     function new_order_admin_email($order_id){
-        global $woocommerce;
-        if( isset( $woocommerce->mailer()->emails[ 'WC_Email_New_Order' ] ) ){
-            $recipients = explode(',',$woocommerce->mailer()->emails['WC_Email_New_Order']->get_recipient());
+
+        if( isset( $this->woocommerce->mailer()->emails[ 'WC_Email_New_Order' ] ) ){
+            $recipients = explode(',',$this->woocommerce->mailer()->emails['WC_Email_New_Order']->get_recipient());
             foreach($recipients as $recipient){
                 $user = get_user_by('email',$recipient);
                 if($user){
@@ -225,15 +273,15 @@ class WCML_Emails{
 
                 $this->change_email_language( $user_lang );
 
-                $woocommerce->mailer()->emails['WC_Email_New_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]heading', $order_id );
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]heading', $order_id );
 
-                $woocommerce->mailer()->emails['WC_Email_New_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]subject', $order_id );
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]subject', $order_id );
 
-                $woocommerce->mailer()->emails['WC_Email_New_Order']->recipient = $recipient;
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->recipient = $recipient;
 
-                $woocommerce->mailer()->emails['WC_Email_New_Order']->trigger($order_id);
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->trigger($order_id);
             }
-            $woocommerce->mailer()->emails['WC_Email_New_Order']->enabled = false;
+            $this->woocommerce->mailer()->emails['WC_Email_New_Order']->enabled = false;
             $this->refresh_email_lang($order_id);
         }
     }
@@ -284,16 +332,16 @@ class WCML_Emails{
 
     }
 
-    function change_email_language($lang){
-        global $woocommerce;
-        $this->sitepress->switch_lang($lang,true);
+    function change_email_language( $lang ) {
+
+        $this->sitepress->switch_lang( $lang, true );
         $this->locale = $this->sitepress->get_locale( $lang );
-        unload_textdomain('woocommerce');
+        unload_textdomain( 'woocommerce' );
         unload_textdomain( 'default' );
         global $wp_locale;
         $wp_locale = new WP_Locale();
 
-        $woocommerce->load_plugin_textdomain();
+        $this->woocommerce->load_plugin_textdomain();
         load_default_textdomain( $this->locale );
     }
 
