@@ -159,6 +159,7 @@ class woocommerce_wpml {
 		);
 
 		$this->cart = new WCML_Cart( $this, $sitepress, $woocommerce );
+		$this->cart->add_hooks();
 
 		if ( $this->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT
 		     || ( isset( $_GET['page'] ) && $_GET['page'] == 'wpml-wcml' && isset( $_GET['tab'] ) && $_GET['tab'] == 'multi-currency' )
@@ -206,8 +207,6 @@ class woocommerce_wpml {
 		$this->url_translation->set_up();
 		$this->endpoints = new WCML_Endpoints( $this );
 		$this->requests  = new WCML_Requests;
-		$this->cart      = new WCML_Cart( $this, $sitepress, $woocommerce );
-		$this->cart->add_hooks();
 		$this->coupons      = new WCML_Coupons( $this, $sitepress );
 		$this->coupons->add_hooks();
 		$this->locale       = new WCML_Locale( $this, $sitepress );
