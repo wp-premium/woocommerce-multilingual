@@ -9,13 +9,19 @@ class WCML_Product_Addons {
 	 * @var SitePress
 	 */
 	public $sitepress;
+	/**
+	 * @var int
+	 */
+	private $enable_multi_currency_setting;
 
 	/**
 	 * WCML_Product_Addons constructor.
 	 * @param SitePress $sitepress
+	 * @param int $enable_multi_currency_setting
 	 */
-	function __construct( $sitepress ){
-		$this->sitepress = $sitepress;
+	function __construct( SitePress $sitepress, $enable_multi_currency_setting ){
+		$this->sitepress        = $sitepress;
+		$this->enable_multi_currency_setting = $enable_multi_currency_setting;
 	}
 
 	public function add_hooks(){
@@ -282,7 +288,10 @@ class WCML_Product_Addons {
 	// special case for WC Bookings plugin - need add addon cost after re-calculating booking costs #wcml-1877
 	public function filter_booking_addon_product_in_cart_contents( $cart_item ) {
 
-		if ( $cart_item['data'] instanceof WC_Product_Booking && isset( $cart_item['addons'] ) ) {
+		$is_multi_currency_on = $this->enable_multi_currency_setting == WCML_MULTI_CURRENCIES_INDEPENDENT;
+		$is_booking_product_with_addons = $cart_item['data'] instanceof WC_Product_Booking && isset( $cart_item['addons'] );
+
+		if ( $is_multi_currency_on && $is_booking_product_with_addons ) {
 			$cost = $cart_item['data']->get_price();
 
 			foreach( $cart_item['addons'] as $addon ){
