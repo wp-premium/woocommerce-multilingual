@@ -332,7 +332,7 @@ class WCML_Store_Pages{
             foreach ($miss_lang['codes'] as $mis_lang) {
                 $args = array();
 
-                $this->woocommerce_wpml->locale->switch_locale( $mis_lang );
+	            $this->switch_lang( $mis_lang );
 
                 foreach ($check_pages as $page) {
                     $orig_id = get_option($page);
@@ -384,9 +384,24 @@ class WCML_Store_Pages{
                         $this->sitepress->set_element_language_details($new_page_id, 'post_page', $trid, $mis_lang);
                     }
                 }
-                $this->woocommerce_wpml->locale->switch_locale();
+	            $this->switch_lang();
             }
         }
+    }
+
+    private function switch_lang( $lang_code = false ){
+
+    	$st_prior_2_6 = version_compare( $this->sitepress->get_wp_api()->constant( 'WPML_ST_VERSION' ), '2.6.0', '<' );
+
+    	if( !$st_prior_2_6 ){
+		    $is_mo_loading_disabled = WPML_Theme_Localization_Type::USE_ST_AND_NO_MO_FILES === $this->sitepress->get_setting('theme_localization_type' );
+	    }
+
+    	if( $st_prior_2_6 || !isset($is_mo_loading_disabled)  ){
+		    $this->woocommerce_wpml->locale->switch_locale( $lang_code );
+	    }else{
+		    $this->sitepress->switch_lang( $lang_code );
+	    }
     }
     
      /**

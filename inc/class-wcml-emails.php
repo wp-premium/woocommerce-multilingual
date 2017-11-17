@@ -59,10 +59,6 @@ class WCML_Emails{
         ), 9 );
         add_action( 'woocommerce_new_customer_note', array( $this, 'refresh_email_lang' ), 9 );
 
-
-        add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'email_heading_refund' ), 9 );
-        add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'refresh_email_lang' ), 9 );
-
         //new order admins email
         add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
             $this,
@@ -119,6 +115,10 @@ class WCML_Emails{
             $this,
             'send_queued_transactional_email'
         ), 10, 3 );
+
+	    add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'refresh_email_lang' ), 9 );
+	    add_action( 'woocommerce_order_fully_refunded_notification', array( $this, 'refresh_email_lang' ), 9 );
+	    add_filter( 'woocommerce_email_get_option', array( $this, 'filter_refund_emails_strings' ), 10, 4 );
 
 	    add_filter( 'woocommerce_email_setup_locale', '__return_false' );
 	    add_filter( 'woocommerce_email_restore_locale', '__return_false' );
@@ -239,25 +239,21 @@ class WCML_Emails{
         }
     }
 
-    function email_heading_refund( $order_id, $refund_id = null ){
+    public function filter_refund_emails_strings( $value, $object , $old_value, $key ){
 
-        if( class_exists( 'WC_Email_Customer_Refunded_Order' ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Customer_Refunded_Order' ] ) ){
-
-            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->heading =
-                $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_refunded_order_settings',
-                    '[woocommerce_customer_refunded_order_settings]heading_partial', $order_id );
-            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->subject =
-                $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_refunded_order_settings',
-                    '[woocommerce_customer_refunded_order_settings]subject_partial', $order_id );
-
-            $enabled = $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled;
-            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = false;
-            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->trigger($order_id, true, $refund_id);
-            $this->woocommerce->mailer()->emails['WC_Email_Customer_Refunded_Order']->enabled = $enabled;
-
+        if( in_array( $key, array( 'subject_partial', 'subject_full', 'heading_partial', 'heading_full' ) ) && $object->object ){
+	        $translated_value = $this->get_refund_email_translated_string( $key, $object );
         }
+
+        return !empty( $translated_value ) ? $translated_value : $value;
     }
 
+	public function get_refund_email_translated_string( $key, $object){
+
+		return	$this->wcml_get_translated_email_string( 'admin_texts_woocommerce_customer_refunded_order_settings',
+					'[woocommerce_customer_refunded_order_settings]'.$key, $object->object->get_id() );
+
+	}
 
     function new_order_admin_email($order_id){
 
@@ -273,9 +269,9 @@ class WCML_Emails{
 
                 $this->change_email_language( $user_lang );
 
-                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]heading', $order_id );
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]heading', $order_id, $user_lang );
 
-                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]subject', $order_id );
+                $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject = $this->wcml_get_translated_email_string( 'admin_texts_woocommerce_new_order_settings', '[woocommerce_new_order_settings]subject', $order_id, $user_lang );
 
                 $this->woocommerce->mailer()->emails['WC_Email_New_Order']->recipient = $recipient;
 
@@ -352,11 +348,9 @@ class WCML_Emails{
         return $value;
     }
 
-    function wcml_get_translated_email_string( $context, $name, $order_id = false ){
+    function wcml_get_translated_email_string( $context, $name, $order_id = false, $language_code = null ){
 
-        $language_code = null;
-
-        if( $order_id ){
+        if( $order_id && !$language_code ){
             $order_language = get_post_meta( $order_id, 'wpml_language', true );
             if( $order_language ){
                 $language_code = $order_language;

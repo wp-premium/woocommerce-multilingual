@@ -348,6 +348,7 @@ return array(
     'WCML_Languages_Upgrader' => $baseDir . '/inc/class-wcml-languages-upgrader.php',
     'WCML_Links' => $baseDir . '/inc/admin-menus/class-wcml-links.php',
     'WCML_Locale' => $baseDir . '/inc/class-wcml-locale.php',
+    'WCML_MaxStore' => $baseDir . '/compatibility/class-wcml-maxstore.php',
     'WCML_Media' => $baseDir . '/inc/class-wcml-media.php',
     'WCML_Menus_Wrap' => $baseDir . '/inc/template-classes/class-wcml-menus-wrap.php',
     'WCML_Mix_and_Match_Products' => $baseDir . '/compatibility/class-wcml-mix-and-match-products.php',

@@ -465,23 +465,26 @@ class WCML_Synchronize_Product_Data{
     public function duplicate_product_post_meta( $original_product_id, $trnsl_product_id, $data = false ){
         global $iclTranslationManagement;
 
-        if( $this->check_if_product_fields_sync_needed( $original_product_id, $trnsl_product_id, 'postmeta_fields' ) ){
-            $settings = $iclTranslationManagement->settings[ 'custom_fields_translation' ];
+        if( $this->check_if_product_fields_sync_needed( $original_product_id, $trnsl_product_id, 'postmeta_fields' ) || $data ){
             $all_meta = get_post_custom( $original_product_id );
             $post_fields = null;
 
+	        $settings_factory = new WPML_Custom_Field_Setting_Factory( $iclTranslationManagement );
             unset( $all_meta[ '_thumbnail_id' ] );
 
             foreach ( $all_meta as $key => $meta ) {
-                if ( !isset( $settings[ $key ] ) || $settings[ $key ] == WPML_IGNORE_CUSTOM_FIELD ) {
+
+            	$setting = $settings_factory->post_meta_setting( $key );
+
+                if ( WPML_IGNORE_CUSTOM_FIELD === $setting->status() ) {
                     continue;
                 }
+
                 foreach ( $meta as $meta_value ) {
                     if( $key == '_downloadable_files' ){
                         $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_product_id, $trnsl_product_id, $data );
                     }elseif ( $data ) {
-                        if ( isset( $settings[ $key ] ) && $settings[ $key ] == WPML_TRANSLATE_CUSTOM_FIELD ) {
-
+                        if ( WPML_TRANSLATE_CUSTOM_FIELD  === $setting->status() ) {
                             $post_fields = $this->sync_custom_field_value( $key, $data, $trnsl_product_id, $post_fields, $original_product_id );
                         }
                     }

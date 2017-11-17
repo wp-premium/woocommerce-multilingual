@@ -33,32 +33,38 @@ class WCML_WC_Shortcode_Product_Category {
 	 */
 	public function translate_category( $args, $atts ) {
 
-		if ( isset( $args['product_cat'] ) ) {
-			$args = $this->translate_categories_using_simple_tax_query( $args );
-		} elseif ( isset( $atts['category'] ) ) {
+		if( $this->sitepress->get_default_language() !== $this->sitepress->get_current_language() ) {
 
-			// Get translated category slugs, we need to remove WPML filter.
-			$filter_exists = remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );
-			$categories    = get_terms( array( 'slug' => $atts['category'], 'taxonomy' => 'product_cat' ) );
+			if ( isset( $args['product_cat'] ) ) {
+				$args = $this->translate_categories_using_simple_tax_query( $args );
+			} elseif ( isset( $atts['category'] ) ) {
 
-			if ( $filter_exists ) {
-				add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
-			}
+				// Get translated category slugs, we need to remove WPML filter.
+				$filter_exists = remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );
+				$slugs = array_filter( explode(',', $atts['category'] ), 'trim' ) ;
+				$categories    = get_terms( array( 'slug' => $slugs, 'taxonomy' => 'product_cat' ) );
 
-			// Replace slugs in query arguments.
-			$terms = wp_list_pluck( $categories, 'slug' );
-			foreach ( $args['tax_query'] as $i => $tax_query ) {
-				$args['tax_query'][ $i ] = array();
-				if ( ! is_int( key( $tax_query ) ) ) {
-					$tax_query = array( $tax_query );
+				if ( $filter_exists ) {
+					add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
 				}
-				foreach ( $tax_query as $j => $condition ) {
-					if ( 'product_cat' === $condition['taxonomy'] ) {
-						$condition['terms'] = $terms;
+
+				// Replace slugs in query arguments.
+				$terms = wp_list_pluck( $categories, 'slug' );
+
+				foreach ( $args['tax_query'] as $i => $tax_query ) {
+					$args['tax_query'][ $i ] = array();
+					if ( ! is_int( key( $tax_query ) ) ) {
+						$tax_query = array( $tax_query );
 					}
-					$args['tax_query'][ $i ][] = $condition;
+					foreach ( $tax_query as $j => $condition ) {
+						if ( 'product_cat' === $condition['taxonomy'] ) {
+							$condition['terms'] = $terms;
+						}
+						$args['tax_query'][ $i ][] = $condition;
+					}
 				}
 			}
+
 		}
 
 		return $args;

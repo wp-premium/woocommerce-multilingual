@@ -200,7 +200,7 @@ class WCML_Multi_Currency_Prices {
 					} else {
 						// 2. automatic conversion
 						$price = get_post_meta( $object_id, $meta_key, $single );
-						if( $price ){
+						if( is_numeric( $price ) ){
 							$price = apply_filters( 'wcml_raw_price_amount', $price );
 						}
 					}

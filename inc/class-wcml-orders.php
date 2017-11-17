@@ -174,31 +174,17 @@ class WCML_Orders{
                         }
 
                         $tr_product_id = apply_filters( 'translate_object_id', $item_product_id, 'product', false, $language_to_filter );
+
                         if( !is_null( $tr_product_id ) ){
                             $item->set_product_id( $tr_product_id );
                             $item->set_name( get_post( $tr_product_id )->post_title );
                         }
+
                         $tr_variation_id = apply_filters( 'translate_object_id', $item->get_variation_id(), 'product_variation', false, $language_to_filter );
-                        if( !is_null( $tr_variation_id ) ){
-                            $item->set_variation_id( $tr_variation_id );
-                        }
-
-                        $meta_data = array();
-                        foreach( $item->get_meta_data() as $data ){
-
-                            if( substr( $data->key, 0, 3) == 'pa_' ){
-                                $term_id = $this->woocommerce_wpml->terms->wcml_get_term_id_by_slug( $data->key, $data->value  );
-                                $tr_id = apply_filters( 'translate_object_id', $term_id, $data->key, false, $language_to_filter );
-
-                                if(!is_null($tr_id)){
-                                    $translated_term = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $tr_id, $data->key);
-                                    $data->value = $translated_term->slug;
-                                }
-                            }
-
-                            $meta_data[] = $data;
-
-                        }
+	                    if ( ! is_null( $tr_variation_id ) ) {
+		                    $item->set_variation_id( $tr_variation_id );
+		                    $item->set_name( wc_get_product( $tr_variation_id )->get_name() );
+	                    }
                     }
                 }elseif( $item instanceof WC_Order_Item_Shipping ){
                     if( $item->get_method_id() ){

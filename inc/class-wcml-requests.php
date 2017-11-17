@@ -39,8 +39,10 @@ class WCML_Requests{
 
             $woocommerce_wpml->settings['file_path_sync'] = $wcml_file_path_sync;
 
-            $woocommerce_wpml->settings['cart_sync']['lang_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT ) );
-            $woocommerce_wpml->settings['cart_sync']['currency_switch'] = intval( filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT ) );
+	        if ( isset( $_POST['cart_sync_lang'] ) && isset( $_POST['cart_sync_currencies'] ) ) {
+		        $woocommerce_wpml->settings['cart_sync']['lang_switch']     = (int) filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT );
+		        $woocommerce_wpml->settings['cart_sync']['currency_switch'] = (int) filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT );
+	        }
 
             $new_value = $wcml_file_path_sync == 0 ? 2 :$wcml_file_path_sync;
             $sitepress_settings['translation-management']['custom_fields_translation']['_downloadable_files'] = $new_value;

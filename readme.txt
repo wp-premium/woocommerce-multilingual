@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.8.1
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,23 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.2.5 =
+* Cannot update Purchase note (any other custom field) once the job is completed
+* New order admin emails have un-translated heading and subject when admin language is different of default
+* Product in cart not adjusted to correct language when switching languages
+* WooCommerce Subscriptions -> Product with free trial has no payment method
+* Strings for subject and title are not translating for Refund emails
+* Page builder strings does not translate in a product when WCML is enabled
+* Fixed small glitch with no payment methods in free product with extra shipping cost
+* Fix an issue that caused fatal error in WooCommerce Store Exporter plugin
+* Fixed wrong output when using multiple categories in shortcodes
+* Fixed compatibility issue in WC Membership with wrong product url
+* Un-trashing product results of redirect to post listing in WCML
+* Fix a bug that the price calculation is not correct in combination with WC Bookings and WC Deposit plugin
+* MaxStore Pro theme compatibility for mini cart
+* Product price was doubled on cart in combination with Booking and Product Addons
+* Added 'wcml_hide_cart_alert_dialog' filter to support hide cart alert switching dialog
 
 = 4.2.4 =
 * Allow translating categories used in shortcodes when the simple tax query is used

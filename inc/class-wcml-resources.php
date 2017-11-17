@@ -142,6 +142,7 @@ class WCML_Resources {
             wp_localize_script( 'cart-widget', 'actions', array(
                 'is_lang_switched' => self::$sitepress->get_language_from_url( $referer ) !=  self::$sitepress->get_current_language() ? 1 : 0,
                 'is_currency_switched' => isset( $_GET[ 'wcmlc' ] ) ? 1 : 0,
+                'force_reset' => apply_filters( 'wcml_force_reset_cart_fragments', 0 ),
                 'cart_fragment' => apply_filters( 'woocommerce_cart_fragment_name', 'wc_fragments_' . md5( get_current_blog_id() . '_' . get_site_url( get_current_blog_id(), '/' ) ) ),
             ) );
         } elseif( is_admin() ) {
