@@ -68,7 +68,7 @@ class WCML_Compatibility {
 				$this->product_bundles->add_hooks();
 			} else {
 				$product_bundle_items  = new WCML_WC_Product_Bundles_Items();
-				$this->product_bundles = new WCML_Product_Bundles( $this->sitepress, $this->woocommerce_wpml, $product_bundle_items );
+				$this->product_bundles = new WCML_Product_Bundles( $this->sitepress, $this->woocommerce_wpml, $product_bundle_items, $this->wpdb );
 			}
 		}
 
@@ -227,6 +227,18 @@ class WCML_Compatibility {
 		if ( function_exists( 'maxstore_pro_setup' ) ) {
 			$this->maxstore = new WCML_MaxStore();
 			$this->maxstore->add_hooks();
+		}
+
+		// MaxStore-Pro Theme
+		if ( defined( 'ETHEME_THEME_NAME') && 'Blanco' === ETHEME_THEME_NAME ) {
+			$this->etheme_blanco = new WCML_Etheme_Blanco();
+			$this->etheme_blanco->add_hooks();
+		}
+
+		// WPBakery Page Builder
+		if ( defined( 'WPB_VC_VERSION') ) {
+			$this->wpb_vc= new WCML_Wpb_Vc();
+			$this->wpb_vc->add_hooks();
 		}
 
 	}

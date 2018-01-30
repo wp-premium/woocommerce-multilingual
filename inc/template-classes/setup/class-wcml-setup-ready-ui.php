@@ -27,6 +27,7 @@ class WCML_Setup_Ready_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
+                'step_id'       =>  'ready_step',
                 'heading'       => __('Setup Complete', 'woocommerce-multilingual'),
                 'description1'  => __('Your multilingual shop is almost ready. Next, you should go to the different tabs in %sWooCommerce &raquo; WooCommerce Multilingual%s admin and do the final setup.', 'woocommerce-multilingual'),
                 'description2'  => __("For your convenience, we've marked items that require your attention with a notice icon. You can see a list of everything that you should complete in the %sStatus%s tab.", 'woocommerce-multilingual'),

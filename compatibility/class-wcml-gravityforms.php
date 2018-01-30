@@ -24,6 +24,12 @@ class WCML_gravityforms{
 	}
 
     function sync_gf_data($original_product_id, $trnsl_product_id, $data){
+        // sync only if WCML editor is in use
+        $wcml_settings = get_option('_wcml_settings');
+        if ($wcml_settings['trnsl_interface'] != 1) {
+            return;
+        }
+
         $orig_gf = maybe_unserialize( get_post_meta( $original_product_id, '_gravity_form_data' , true ) );
         $trnsl_gf = maybe_unserialize( get_post_meta( $trnsl_product_id, '_gravity_form_data' , true ) );
 

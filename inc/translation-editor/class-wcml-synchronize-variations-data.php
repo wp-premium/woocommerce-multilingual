@@ -180,6 +180,8 @@ class WCML_Synchronize_Variations_Data{
                 wp_delete_post( $current_post_variation->ID, true );
             }
 
+	        $this->sync_prices_variation_ids( $product_id, $tr_product_id, $lang );
+
             add_action ( 'save_post', array( $wpml_post_translations, 'save_post_actions' ), 100, 2 );
         }
     }
@@ -422,6 +424,37 @@ class WCML_Synchronize_Variations_Data{
                 }
             }
         }
+    }
+
+	/**
+	 * Synchronize prices variation ids for product
+	 *
+	 * @param int $product_id
+	 * @param int $tr_product_id
+	 * @param string $language
+	 */
+    public function sync_prices_variation_ids( $product_id, $tr_product_id, $language ){
+
+	    $prices_variation_ids_fields = array(
+	    	'_min_price_variation_id',
+	    	'_min_regular_price_variation_id',
+	    	'_min_sale_price_variation_id',
+	    	'_max_price_variation_id',
+	    	'_max_regular_price_variation_id',
+	    	'_max_sale_price_variation_id'
+	    );
+
+	    foreach( $prices_variation_ids_fields as $price_field ){
+
+	    	$original_price_variation_id = get_post_meta( $product_id, $price_field, true );
+
+	    	if( $original_price_variation_id ){
+			    $translated_price_variation_id = apply_filters( 'translate_object_id', $original_price_variation_id, 'product_variation', false, $language );
+			    if( !is_null( $translated_price_variation_id ) ){
+			    	update_post_meta( $tr_product_id, $price_field, $translated_price_variation_id );
+			    }
+		    }
+	    }
     }
 
 }

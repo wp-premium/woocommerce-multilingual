@@ -30,7 +30,6 @@ class WCML_Product_Addons {
 
 		add_action( 'updated_post_meta', array( $this, 'register_addons_strings' ), 10, 4 );
 		add_action( 'added_post_meta', array( $this, 'register_addons_strings' ), 10, 4 );
-		add_filter( 'get_post_metadata', array( $this, 'translate_addons_strings' ), 10, 4 );
 
 		global $pagenow;
 		if ( 'edit.php' === $pagenow &&
@@ -54,12 +53,19 @@ class WCML_Product_Addons {
 			add_action( 'woocommerce_product_data_panels',   array( $this, 'show_pointer_info' ) );
 
 			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
+		}else{
+			add_filter( 'get_post_metadata', array( $this, 'translate_addons_strings' ), 10, 4 );
 		}
 
 		add_filter( 'wcml_cart_contents_not_changed', array(
 			$this,
 			'filter_booking_addon_product_in_cart_contents'
 		), 20 );
+
+		add_filter( 'get_product_addons_global_query_args', array(
+			$this,
+			'set_global_ids_in_query_args'
+		) );
 
 	}
 
@@ -302,6 +308,26 @@ class WCML_Product_Addons {
 		}
 
 		return $cart_item;
+	}
+
+	public function set_global_ids_in_query_args( $args ) {
+
+		remove_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
+		remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
+		remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
+
+		$matched_addons_ids = wp_list_pluck( get_posts( $args ), 'ID' );
+
+		if ( $matched_addons_ids ) {
+			$args['include'] = $matched_addons_ids;
+			unset( $args['tax_query'] );
+		}
+
+		add_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
+		add_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
+		add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
+
+		return $args;
 	}
 
 }

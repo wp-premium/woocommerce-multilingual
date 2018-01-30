@@ -199,9 +199,9 @@ class WCML_Dependencies{
             return;
         }
         
-        $message = sprintf('Because this site uses the default permalink structure, you cannot use slug translation for product permalinks.', 'woocommerce-multilingual');
+        $message = __('Because this site uses the default permalink structure, you cannot use slug translation for product permalinks.', 'woocommerce-multilingual');
         $message .= '<br /><br />';
-        $message .= sprintf('Please choose a different permalink structure or disable slug translation.', 'woocommerce-multilingual');
+        $message .= __('Please choose a different permalink structure or disable slug translation.', 'woocommerce-multilingual');
         $message .= '<br /><br />';            
         $message .= '<a href="' . admin_url('options-permalink.php') . '">' . __('Permalink settings', 'woocommerce-multilingual') . '</a>';
         $message .= ' | ';
@@ -281,16 +281,16 @@ class WCML_Dependencies{
     }
     
     public function check_wpml_config(){
-        global $sitepress_settings;
-        
-        if(empty($sitepress_settings)) return;
-        
+        global $sitepress_settings, $sitepress, $woocommerce_wpml;
+
+        if(empty($sitepress_settings)  || ! $this->check() ) return;
+
         $file = realpath(WCML_PLUGIN_PATH  . '/wpml-config.xml');
         if(!file_exists($file)){
             $this->xml_config_errors[] = __('wpml-config.xml file missing from WooCommerce Multilingual folder.', 'woocommerce-multilingual');
         }else{
-            $config = icl_xml2array(file_get_contents($file));    
-            
+            $config = icl_xml2array(file_get_contents($file));
+
             if(isset($config['wpml-config'])){
 
                 //custom-fields
@@ -302,21 +302,21 @@ class WCML_Dependencies{
                             $cfs[] = $cf;
                         }
                     }
-                    
+
                     if($cfs)
                     foreach($cfs as $cf){
-                        if(!isset($sitepress_settings['translation-management']['custom_fields_translation'][$cf['value']])) continue; 
-                                               
+                        if(!isset($sitepress_settings['translation-management']['custom_fields_translation'][$cf['value']])) continue;
+
                         $effective_config_value = $sitepress_settings['translation-management']['custom_fields_translation'][$cf['value']];
                         $correct_config_value   = $cf['attr']['action'] == 'copy' ? 1 : ($cf['attr']['action'] == 'translate' ? 2: 0);
-                        
+
                         if($effective_config_value != $correct_config_value){
                             $this->xml_config_errors[] = sprintf(__('Custom field %s configuration from wpml-config.xml file was altered!', 'woocommerce-multilingual'), '<i>' . $cf['value'] . '</i>');
                         }
                     }
-                    
+
                 }
-                
+
                 //custom-types
                 if(isset($config['wpml-config']['custom-types'])){
                     if(isset($config['wpml-config']['custom-types']['custom-type']['value'])){ //single
@@ -326,18 +326,24 @@ class WCML_Dependencies{
                             $cts[] = $cf;
                         }
                     }
-                    
-                    if($cts)
-                    foreach($cts as $ct){
-                        if(!isset($sitepress_settings['custom_posts_sync_option'][$ct['value']])) continue;
-                        $effective_config_value = $sitepress_settings['custom_posts_sync_option'][$ct['value']];
-                        $correct_config_value   = $ct['attr']['translate'];
-                        
-                        if($effective_config_value != $correct_config_value){
-                            $this->xml_config_errors[] = sprintf(__('Custom type %s configuration from wpml-config.xml file was altered!', 'woocommerce-multilingual'), '<i>' . $ct['value'] . '</i>');
-                        }
+
+                    if($cts){
+	                    foreach($cts as $ct){
+		                    if(!isset($sitepress_settings['custom_posts_sync_option'][$ct['value']])) continue;
+		                    $effective_config_value = $sitepress_settings['custom_posts_sync_option'][$ct['value']];
+		                    $correct_config_value   = $ct['attr']['translate'];
+
+
+			                    if ('product' === $ct['value'] && $woocommerce_wpml->products->is_product_display_as_translated_post_type() ) {
+				                    $correct_config_value = WPML_CONTENT_TYPE_DISPLAY_AS_IF_TRANSLATED;
+			                    }
+
+
+		                    if($effective_config_value != $correct_config_value){
+			                    $this->xml_config_errors[] = sprintf(__('Custom type %s configuration from wpml-config.xml file was altered!', 'woocommerce-multilingual'), '<i>' . $ct['value'] . '</i>');
+		                    }
+	                    }
                     }
-                    
                 }
 
                 //taxonomies
@@ -349,22 +355,26 @@ class WCML_Dependencies{
                             $txs[] = $cf;
                         }
                     }
-                    
+
                     if($txs)
                     foreach($txs as $tx){
                         if(!isset($sitepress_settings['taxonomies_sync_option'][$tx['value']])) continue;
                         $effective_config_value = $sitepress_settings['taxonomies_sync_option'][$tx['value']];
                         $correct_config_value   = $tx['attr']['translate'];
-                        
+
+	                    if( method_exists( $sitepress, 'is_display_as_translated_taxonomy' ) && $sitepress->is_display_as_translated_taxonomy( $tx['value'] ) ){
+		                    $correct_config_value = WPML_CONTENT_TYPE_DISPLAY_AS_IF_TRANSLATED;
+                        }
+
                         if($effective_config_value != $correct_config_value){
                             $this->xml_config_errors[] = sprintf(__('Custom taxonomy %s configuration from wpml-config.xml file was altered!', 'woocommerce-multilingual'), '<i>' . $tx['value'] . '</i>');
                         }
                     }
-                    
+
                 }
             }
         }
-        
+
     }
 
     public function required_plugin_install_link($repository = 'wpml'){

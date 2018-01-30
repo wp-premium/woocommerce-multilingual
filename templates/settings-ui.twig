@@ -9,6 +9,12 @@
         </div>
         <div class="wcml-section-content">
 
+            <div id="wcml-translation-interface-dialog-confirm" title="{{ form.translation_interface.heading }}" class="hidden">
+                <p>{{ form.translation_interface.pb_warning }}</p>
+                <input type="hidden" class="ok-button" value="{{ form.translation_interface.pb_warning_ok_button }}" />
+                <input type="hidden" class="cancel-button" value="{{ form.translation_interface.pb_warning_cancel_button }}"/>
+            </div>
+
             <ul>
                 <li>
                     <input type="radio" name="trnsl_interface" value="{{ wpml_translation }}"

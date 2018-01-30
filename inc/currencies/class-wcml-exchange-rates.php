@@ -26,7 +26,6 @@ class WCML_Exchange_Rates{
         $this->initialize_settings();
 
         // Load built in services
-        $this->services['yahoo']         = new WCML_Exchange_Rates_YahooFinance();
         $this->services['fixierio']      = new WCML_Exchange_Rates_Fixierio();
         $this->services['currencylayer'] = new WCML_Exchange_Rates_Currencylayer();
 
@@ -59,7 +58,7 @@ class WCML_Exchange_Rates{
 
             $this->settings = array(
                 'automatic'      => 0,
-                'service'        => 'yahoo',
+                'service'        => 'fixierio',
                 'lifting_charge' => 0,
                 'schedule'       => 'manual',
                 'week_day'       => 1,
@@ -318,8 +317,8 @@ class WCML_Exchange_Rates{
             if( $this->settings['month_day'] >= date('j') && $this->settings['month_day'] <= $days_in_current_month ){
                 $interval = 3600 * 24 * $days_in_current_month;
             }else{
-                $month_number = $current_month == 12 ? 1 : $current_month + 1;
-                $year_number  = $current_month == 12 ? date('Y') + 1 : date('Y');
+                $month_number = (int)$current_month == 12 ? 1 : $current_month + 1;
+                $year_number  = (int)$current_month == 12 ? date('Y') + 1 : date('Y');
                 $interval = 3600 * 24 * cal_days_in_month( CAL_GREGORIAN, $month_number, $year_number  );
             }
 
