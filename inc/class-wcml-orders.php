@@ -88,30 +88,28 @@ class WCML_Orders{
         return $translations;
     }
 
-    function get_filtered_comments($comments){
+    function get_filtered_comments( $comments ){
 
         $user_id = get_current_user_id();
 
-        if( $user_id ){
-            
-            $user_language    = get_user_meta( $user_id, 'icl_admin_language', true );
+	    if ( $user_id ) {
+		    $user_language = get_user_meta( $user_id, 'icl_admin_language', true );
 
-            foreach($comments as $key=>$comment){
+		    foreach ( $comments as $key => $comment ) {
+			    $comment_string_id = icl_get_string_id( $comment->comment_content, 'woocommerce' );
 
-                $comment_string_id = icl_get_string_id( $comment->comment_content, 'woocommerce');
+			    if ( $comment_string_id ) {
+				    $comment_strings = icl_get_string_translations_by_id( $comment_string_id );
 
-                if($comment_string_id){
-                    $comment_strings = icl_get_string_translations_by_id( $comment_string_id );
-                    if($comment_strings){
-                        $comments[$key]->comment_content = $comment_strings[$user_language]['value'];
-                    }
-                }
-            }        
-            
-        }
+				    if ( $comment_strings && isset( $comment_strings[ $user_language ] ) ) {
+					    $comments[ $key ]->comment_content = $comment_strings[ $user_language ][ 'value' ];
+				    }
+			    }
+		    }
+
+	    }
 
         return $comments;
-
     }
     
     function woocommerce_order_get_items( $items, $order ){

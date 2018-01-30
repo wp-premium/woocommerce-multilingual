@@ -49,7 +49,7 @@ class WCML_Synchronize_Product_Data{
 
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'sync_product_stocks_reduce' ) );
         add_action( 'woocommerce_restore_order_stock', array( $this, 'sync_product_stocks_restore' ) );
-        add_action( 'woocommerce_product_set_stock_status', array($this, 'sync_stock_status_for_translations' ), 10, 2);
+        add_action( 'woocommerce_product_set_stock_status', array($this, 'sync_stock_status_for_translations' ), 100, 2);
         add_action( 'woocommerce_variation_set_stock_status', array($this, 'sync_stock_status_for_translations' ), 10, 2);
 
         add_filter( 'future_product', array( $this, 'set_schedule_for_translations'), 10, 2 );
@@ -84,16 +84,20 @@ class WCML_Synchronize_Product_Data{
         }
 
         // exceptions
-        $ajax_call = ( !empty( $_POST[ 'icl_ajx_action' ] ) && $_POST[ 'icl_ajx_action' ] == 'make_duplicates' );
-        $api_call  = !empty( $wp->query_vars['wc-api-version'] );
-        if (
-            $post_type != 'product' ||
-            ( empty( $original_product_id ) || isset( $_POST[ 'autosave' ] ) ) ||
-            ( $pagenow != 'post.php' && $pagenow != 'post-new.php' && $pagenow != 'admin.php' && !$ajax_call && !$api_call ) ||
-            ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'trash' )
-        ) {
-            return;
-        }
+	    $ajax_call  = ( ! empty( $_POST['icl_ajx_action'] ) && 'make_duplicates' === $_POST['icl_ajx_action'] );
+	    $api_call   = ! empty( $wp->query_vars['wc-api-version'] );
+	    $auto_draft = 'auto-draft' === $post->post_status;
+	    $trashing = isset( $_GET['action'] ) && 'trash' === $_GET['action'];
+	    if (
+		    $post_type !== 'product' ||
+		    empty( $original_product_id ) ||
+		    isset( $_POST['autosave'] )  ||
+		    ( $pagenow !== 'post.php' && $pagenow !== 'post-new.php' && $pagenow != 'admin.php' && ! $ajax_call && ! $api_call ) ||
+		    $trashing ||
+		    $auto_draft
+	    ) {
+		    return;
+	    }
         // Remove filter to avoid double sync
         remove_action( 'save_post', array( $this, 'synchronize_products' ), PHP_INT_MAX, 2 );
 
@@ -333,24 +337,39 @@ class WCML_Synchronize_Product_Data{
             // Process for non-current languages
             foreach( $translations as $translation ){
                 if ( $ld->language_code != $translation->language_code ) {
-                    //check if product exist
-                    if( get_post_type( $translation->element_id ) == 'product_variation' && !get_post( wp_get_post_parent_id( $translation->element_id ) ) ){
-                        continue;
-                    }
+
+	                $translation_product_id = $translation->element_id;
+	                //check if product exist
+	                if ( get_post_type( $translation->element_id ) === 'product_variation' ) {
+		                if ( ! get_post( wp_get_post_parent_id( $translation->element_id ) ) ) {
+			                continue;
+		                }
+		                $translation_product_id = wp_get_post_parent_id( $translation->element_id );
+	                }
+
                     $_product = wc_get_product( $translation->element_id );
 
-                    if( $_product && $_product->exists() && $_product->managing_stock() ) {
-                        $total_sales    = get_post_meta( $translation->element_id, 'total_sales', true);
+                    $managing_stock = $_product && $_product->exists() && $_product->managing_stock();
 
-                        if( $action == 'reduce'){
-                            $stock  = WooCommerce_Functions_Wrapper::reduce_stock( $translation->element_id, $qty );
-                            $total_sales   += $qty;
-                        }else{
-                            $stock  = WooCommerce_Functions_Wrapper::increase_stock( $translation->element_id, $qty );
-                            $total_sales   -= $qty;
-                        }
-                        update_post_meta( $translation->element_id, 'total_sales', $total_sales );
-                    }
+	                $total_sales = get_post_meta( $translation_product_id, 'total_sales', true );
+
+	                if ( $action === 'reduce' ) {
+		                $total_sales += $qty;
+
+	                	if( $managing_stock ){
+			                WooCommerce_Functions_Wrapper::reduce_stock( $translation->element_id, $qty );
+		                }
+	                } else {
+		                $total_sales -= $qty;
+
+		                if( $managing_stock ){
+		                    WooCommerce_Functions_Wrapper::increase_stock( $translation->element_id, $qty );
+		                }
+	                }
+
+	                update_post_meta( $translation_product_id, 'total_sales', $total_sales );
+
+	                $this->wc_taxonomies_recount_after_stock_change( (int)$translation_product_id );
                 }
             }
         }
@@ -366,9 +385,27 @@ class WCML_Synchronize_Product_Data{
             foreach ( $translations as $translation ) {
                 if ( !$translation->original ) {
                     update_post_meta( $translation->element_id, '_stock_status', $status );
+
+                    $this->wc_taxonomies_recount_after_stock_change( (int)$translation->element_id );
                 }
             }
         }
+
+    }
+
+	/**
+	 * @param int $product_id
+	 */
+    private function wc_taxonomies_recount_after_stock_change( $product_id ){
+
+	    remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1, 1 );
+
+	    wp_cache_delete( $product_id, 'product_cat_relationships' );
+	    wp_cache_delete( $product_id, 'product_tag_relationships' );
+
+	    wc_recount_after_stock_change( $product_id );
+
+	    add_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1, 1 );
 
     }
 

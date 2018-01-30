@@ -19,9 +19,8 @@ class WCML_Dynamic_Pricing {
 			), 10, 2 );
 			add_filter( 'dynamic_pricing_product_rules', array( $this, 'dynamic_pricing_product_rules' ) );
 			add_filter( 'wcml_calculate_totals_exception', array( $this, 'calculate_totals_exception' ) );
-		} else {
-			add_filter( 'woocommerce_product_get__pricing_rules', array( $this, 'translate_variations_in_rules' ) );
 		}
+		add_filter( 'woocommerce_product_get__pricing_rules', array( $this, 'translate_variations_in_rules' ) );
 
 	}
 

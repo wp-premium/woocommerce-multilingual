@@ -42,6 +42,7 @@ class WCML_Setup_Store_Pages_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
+                'step_id'       => 'store_pages_step',
                 'heading'       => __('Translate Store Pages', 'woocommerce-multilingual'),
                 'description'   => __("All store pages must be translated in the languages configured on the site.", 'woocommerce-multilingual'),
                 'continue'      => __('Continue', 'woocommerce-multilingual'),

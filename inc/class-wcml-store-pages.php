@@ -11,24 +11,31 @@ class WCML_Store_Pages{
 	 */
 	private $sitepress;
 
-    function __construct( $woocommerce_wpml, $sitepress ){
+    function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress ){
 
-    	$this->woocommerce_wpml =& $woocommerce_wpml;
-	    $this->sitepress        =& $sitepress;
+	    $this->woocommerce_wpml = $woocommerce_wpml;
+	    $this->sitepress        = $sitepress;
 
-        add_action('init', array($this, 'init'));
-        add_filter( 'woocommerce_create_pages', array( $this, 'switch_pages_language' ), 9 );
-        add_filter( 'woocommerce_create_pages', array( $this, 'install_pages_action' ), 11 );
-        //update wc pages ids after change default language or create new if not exists
-        add_action( 'icl_after_set_default_language', array( $this, 'after_set_default_language' ), 10, 2 );
-        // Translate shop page ids
-        $this->add_filter_to_get_shop_translated_page_id();
-        add_filter( 'template_include', array( $this, 'template_loader' ), 100 );
+    }
+
+    public function add_hooks(){
+
+	    add_action( 'init', array( $this, 'init' ) );
+	    add_filter( 'woocommerce_create_pages', array( $this, 'switch_pages_language' ), 9 );
+	    add_filter( 'woocommerce_create_pages', array( $this, 'install_pages_action' ), 11 );
+	    //update wc pages ids after change default language or create new if not exists
+	    add_action( 'icl_after_set_default_language', array( $this, 'after_set_default_language' ), 10, 2 );
+	    // Translate shop page ids
+	    $this->add_filter_to_get_shop_translated_page_id();
+	    add_filter( 'template_include', array( $this, 'template_loader' ), 100 );
 
 	    if( is_admin() ){
-	    	add_action( 'icl_post_languages_options_before', array( $this, 'show_translate_shop_pages_notice') );
+		    add_action( 'icl_post_languages_options_before', array( $this, 'show_translate_shop_pages_notice') );
 	    }
-    }   
+
+	    add_filter( 'post_type_archive_link', array( $this, 'filter_shop_archive_link' ), 10, 2 );
+
+    }
     
     function init(){        
 
@@ -111,8 +118,7 @@ class WCML_Store_Pages{
                         AND post_name = %s 
                         AND icl.element_type = 'post_page' 
                         AND icl.language_code = %s LIMIT 1;
-                    ",
-	                esc_sql( $page['name'] ), $this->sitepress->get_default_language() ) );
+                    ", $page['name'], $this->sitepress->get_default_language() ) );
             }
 
             if( !$page_found ){
@@ -120,7 +126,7 @@ class WCML_Store_Pages{
                     'post_status'       => 'publish',
                     'post_type'         => 'page',
                     'post_author'       => 1,
-                    'post_name'         => esc_sql( $page['name'] ),
+                    'post_name'         => $page['name'],
                     'post_title'        => $page['title'],
                     'post_content'      => $page['content'],
                     'post_parent'       => ! empty( $page['parent'] ) ? wc_get_page_id( $page['parent'] ) : '',
@@ -624,6 +630,19 @@ class WCML_Store_Pages{
 	    }
 
 
+    }
+
+    public function filter_shop_archive_link( $link, $post_type ){
+
+    	if(
+    		'product' === $post_type &&
+		    (int)$this->front_page_id === (int)$this->shop_page_id &&
+		    $this->sitepress->get_current_language() !== $this->sitepress->get_default_language()
+	    ){
+    		$link = home_url( '/' );
+	    }
+
+	    return $link;
     }
     
 }

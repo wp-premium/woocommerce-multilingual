@@ -70,6 +70,9 @@ class WCML_Tab_Manager {
 
 			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
 
+			add_filter( 'wpml_duplicate_custom_fields_exceptions', array( $this, 'duplicate_categories_exception' ) );
+			add_action( 'wpml_after_copy_custom_field', array( $this, 'translate_categories' ), 10, 3 );
+
 		}else{
 			add_filter( 'option_wc_tab_manager_default_layout', array( $this, 'filter_default_layout' ) );
 		}
@@ -727,6 +730,31 @@ class WCML_Tab_Manager {
 		$fields[] = '_product_tabs';
 
 		return $fields;
+	}
+
+	function duplicate_categories_exception( $fields ) {
+		$fields[] = '_wc_tab_categories';
+
+		return $fields;
+	}
+
+	function translate_categories( $post_id_from, $post_id_to, $meta_key ) {
+		if ( '_wc_tab_categories' === $meta_key ) {
+			// Saving has already been processed, remove nonce so that we dont
+			// process translations too (which would overwrite _wc_tab_categories.
+			unset( $_POST['wc_tab_manager_metabox_nonce'] );
+
+			$args = array('element_id' => $post_id_to, 'element_type' => 'wc_product_tab' );
+			$language = apply_filters( 'wpml_element_language_code', false, $args );
+
+			$categories = array();
+			$meta_value = get_post_meta( $post_id_from, $meta_key, true );
+			foreach ( $meta_value as $category ) {
+				$categories[] = apply_filters( 'wpml_object_id', $category, 'product_cat', true, $language );
+			}
+
+			update_post_meta( $post_id_to, $meta_key, $categories, $meta_value );
+		}
 	}
 
 }
