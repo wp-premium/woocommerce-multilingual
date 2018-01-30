@@ -501,13 +501,12 @@ class WCML_Multi_Currency_Prices {
 		return $cart_contents_total;
 	}
 
-	public function filter_woocommerce_cart_subtotal( $cart_subtotal, $compound, $obj ) {
-		global $woocommerce;
+	public function filter_woocommerce_cart_subtotal( $cart_subtotal, $compound, $cart_object ) {
+
 		remove_filter( 'woocommerce_cart_subtotal', array( $this, 'filter_woocommerce_cart_subtotal' ), 100, 3 );
-		if ( apply_filters( 'wcml_calculate_totals_exception', true ) ) {
-			$woocommerce->cart->calculate_totals();
-		}
-		$cart_subtotal = $woocommerce->cart->get_cart_subtotal( $compound );
+
+		$cart_subtotal = $cart_object->get_cart_subtotal( $compound );
+
 		add_filter( 'woocommerce_cart_subtotal', array( $this, 'filter_woocommerce_cart_subtotal' ), 100, 3 );
 
 		return $cart_subtotal;

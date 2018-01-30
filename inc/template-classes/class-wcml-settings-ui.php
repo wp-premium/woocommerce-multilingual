@@ -40,7 +40,9 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
 
                     ),
                     'controls_value' => $this->woocommerce_wpml->settings['trnsl_interface'],
-
+                    'pb_warning' => __("If you are using a page builder to design WooCommerce products, you should only use WPML's Translation Editor.", 'woocommerce-multilingual'),
+                    'pb_warning_ok_button' => __('OK (translate with the WordPress editor)', 'woocommerce-multilingual'),
+                    'pb_warning_cancel_button' => __('Cancel (stay with the Translation Editor)', 'woocommerce-multilingual'),
                 ),
 
                 'synchronization' => array(

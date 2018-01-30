@@ -28,17 +28,19 @@ class WCML_Cart {
 			$this->enqueue_dialog_ui();
 
 			add_action( 'wcml_removed_cart_items', array( $this, 'wcml_removed_cart_items_widget' ) );
-			add_action( 'wp_ajax_wcml_cart_clear_removed_items', array( $this, 'wcml_cart_clear_removed_items' ) );
+ 			add_action( 'wp_ajax_wcml_cart_clear_removed_items', array( $this, 'wcml_cart_clear_removed_items' ) );
 			add_action( 'wp_ajax_nopriv_wcml_cart_clear_removed_items', array(
 				$this,
 				'wcml_cart_clear_removed_items'
 			) );
 
-			add_filter( 'wcml_switch_currency_exception', array( $this, 'cart_switching_currency' ), 10, 4 );
-			add_action( 'wcml_before_switch_currency', array(
-				$this,
-				'switching_currency_empty_cart_if_needed'
-			), 10, 2 );
+			if( $this->is_clean_cart_enabled_for_currency_switch() ){
+				add_filter( 'wcml_switch_currency_exception', array( $this, 'cart_switching_currency' ), 10, 4 );
+				add_action( 'wcml_before_switch_currency', array(
+					$this,
+					'switching_currency_empty_cart_if_needed'
+				), 10, 2 );
+            }
 		} else {
 			//cart widget
 			add_action( 'wp_ajax_woocommerce_get_refreshed_fragments', array( $this, 'wcml_refresh_fragments' ), 0 );
@@ -81,6 +83,21 @@ class WCML_Cart {
 			$wpml_cookies_enabled &&
 			( $cart_sync_settings['currency_switch'] === $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' ) ||
 			  $cart_sync_settings['lang_switch'] === $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' ) )
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function is_clean_cart_enabled_for_currency_switch() {
+
+		$cart_sync_settings   = $this->woocommerce_wpml->settings['cart_sync'];
+		$wpml_cookies_enabled = $this->sitepress->get_setting( $this->sitepress->get_wp_api()->constant( 'WPML_Cookie_Setting::COOKIE_SETTING_FIELD' ) );
+
+		if (
+			$wpml_cookies_enabled &&
+			$cart_sync_settings['currency_switch'] === $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' )
 		) {
 			return true;
 		}
@@ -148,7 +165,8 @@ class WCML_Cart {
 
 	public function cart_switching_currency( $exc, $current_currency, $new_currency, $return = false ) {
 
-		$cart_for_session = WC()->cart->get_cart_for_session();
+		$cart_for_session = !is_null( WC()->cart ) ? array_filter( WC()->cart->get_cart_contents() ) : false;
+
 		if ( $this->woocommerce_wpml->settings['cart_sync']['currency_switch'] == WCML_CART_SYNC || empty( $cart_for_session ) ) {
 			return $exc;
 		}
@@ -178,50 +196,70 @@ class WCML_Cart {
             <p><?php echo esc_html( $confirmation_message ); ?></p>
         </div>
 
-        <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery("#wcml-cart-dialog-confirm").dialog({
-                    resizable: false,
-                    draggable: false,
-                    height: "auto",
-                    width: 500,
-                    modal: true,
-                    closeOnEscape: false,
-                    dialogClass: "wcml-cart-dialog",
-                    create: function () {
-                        jQuery('#jquery-ui-style-css').attr('disabled', 'disabled');
-                    },
-                    open: function (event, ui) {
-                        jQuery(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-                    },
-                    close: function (event, ui) {
-                        jQuery('#jquery-ui-style-css').removeAttr('disabled');
-                    },
-                    buttons: {
-                        "<?php echo $switch_to; ?>": function () {
-                            jQuery(this).dialog("close");
-							<?php if( $language_switch ): ?>
-                            window.location = '<?php echo esc_url( $switch_to_value, null, 'redirect' ); ?>';
-							<?php else: ?>
-                            jQuery('.wcml_currency_switcher').parent().find('img').remove();
-                            wcml_load_currency("<?php echo esc_js( $switch_to_value ); ?>", true);
-							<?php endif; ?>
+	    <script type="text/javascript">
+		  jQuery(document).ready(function () {
+			  var dialogBox = jQuery("#wcml-cart-dialog-confirm");
+			  dialogBox.dialog({
+				  resizable: false,
+				  draggable: false,
+				  height: "auto",
+				  width: 500,
+				  modal: true,
+				  closeOnEscape: false,
+				  dialogClass: "otgs-ui-dialog wcml-cart-dialog",
+				  create: function () {
+					  jQuery('#jquery-ui-style-css').attr('disabled', 'disabled');
+				  },
+				  open: function (event, ui) {
+					  jQuery(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+					  repositionDialog();
+				  },
+				  close: function (event, ui) {
+					  jQuery('#jquery-ui-style-css').removeAttr('disabled');
+				  },
+				  buttons: {
+					  "<?php echo $switch_to; ?>": function () {
+						  jQuery(this).dialog("close");
+					      <?php if( $language_switch ): ?>
+						  window.location = '<?php echo esc_url( $switch_to_value, null, 'redirect' ); ?>';
+					      <?php else: ?>
+						  jQuery('.wcml_currency_switcher').parent().find('img').remove();
+						  wcml_load_currency("<?php echo esc_js( $switch_to_value ); ?>", true);
+					      <?php endif; ?>
 
-                        },
-                        "<?php echo $stay_in; ?>": function () {
-                            jQuery(this).dialog("close");
-							<?php if( $language_switch ): ?>
-                            window.location = '<?php echo esc_url( $stay_in_value, null, 'redirect' ); ?>';
-							<?php else: ?>
-                            jQuery('.wcml_currency_switcher').parent().find('img').remove();
-                            jQuery('.wcml_currency_switcher').removeAttr('disabled');
-                            jQuery('.wcml_currency_switcher').val('<?php echo esc_js( $stay_in_value ); ?>');
-							<?php endif; ?>
-                        }
-                    }
-                });
-            });
-        </script>
+					  },
+					  "<?php echo $stay_in; ?>": function () {
+						  jQuery(this).dialog("close");
+					      <?php if( $language_switch ): ?>
+						  window.location = '<?php echo esc_url( $stay_in_value, null, 'redirect' ); ?>';
+					      <?php else: ?>
+						  jQuery('.wcml_currency_switcher').parent().find('img').remove();
+						  jQuery('.wcml_currency_switcher').removeAttr('disabled');
+						  jQuery('.wcml_currency_switcher').val('<?php echo esc_js( $stay_in_value ); ?>');
+					      <?php endif; ?>
+					  }
+				  }
+			  });
+
+			  jQuery(window).resize(repositionDialog);
+
+			  function repositionDialog() {
+				  var winH = jQuery(window).height() - 180;
+				  jQuery('.wcml-cart-dialog').css({
+					  "max-height": winH,
+					  "max-width": "95%"
+				  });
+
+				  dialogBox.dialog("option", "position", {
+					  my: "center",
+					  at: "center",
+					  of: window
+				  });
+			  };
+
+
+		  });
+	    </script>
 		<?php
 	}
 
@@ -271,7 +309,8 @@ class WCML_Cart {
 				$cart->cart_contents[ $key ]['data']->price = get_post_meta( $cart_item['product_id'], '_price', 1 );
 			}
 
-			if ( $cart_item['product_id'] == $tr_product_id ) {
+			$display_as_translated = apply_filters(  'wpml_is_display_as_translated_post_type', false, 'product' );
+            if ( $cart_item['product_id'] == $tr_product_id || $display_as_translated ) {
 				$new_cart_data[ $key ] = apply_filters( 'wcml_cart_contents_not_changed', $cart->cart_contents[ $key ], $key, $current_language );
 				continue;
 			}
@@ -359,7 +398,7 @@ class WCML_Cart {
 					$term             = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $trnsl_term_id, $taxonomy );
 					$attr_translation = $term->slug;
 				}
-			} else {
+			} elseif( $variation_id ) {
 
 				$trnsl_attr = get_post_meta( $variation_id, $attr_key, true );
 

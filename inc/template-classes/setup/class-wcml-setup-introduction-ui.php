@@ -17,14 +17,15 @@ class WCML_Setup_Introduction_UI extends WPML_Templates_Factory {
 
         $model = array(
             'strings' => array(
-                'heading'       => __("Let's turn your WooCommerce shop multilingual", 'woocommerce-multilingual'),
+                'step_id'        => 'introduction_step',
+                'heading'        => __("Let's turn your WooCommerce shop multilingual", 'woocommerce-multilingual'),
                 'description1'   => __('Thank you for choosing WooCommerce Multilingual. We need to do a few upgrades to your site, so that it has everything needed to run multilingual.', 'woocommerce-multilingual'),
                 'description2'   => array(
 
-                	'title' => __("We'll help you:", 'woocommerce-multilingual'),
-	                'step1' => __("Translate the 'store' pages", 'woocommerce-multilingual'),
-	                'step2' => __("Choose which attributes to make translatable", 'woocommerce-multilingual'),
-	                'step3' => __("Choose if you need multiple currencies", 'woocommerce-multilingual'),
+                    'title' => __("We'll help you:", 'woocommerce-multilingual'),
+                    'step1' => __("Translate the 'store' pages", 'woocommerce-multilingual'),
+                    'step2' => __("Choose which attributes to make translatable", 'woocommerce-multilingual'),
+                    'step3' => __("Choose if you need multiple currencies", 'woocommerce-multilingual'),
 
                 ),
                 'description3'  => sprintf( __("You can make these updates now, or later from the %sWooCommerce &raquo; WooCommerce Multilingual%s menu.", 'woocommerce-multilingual'), '<strong>', '</strong>' ),

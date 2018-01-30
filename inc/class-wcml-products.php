@@ -63,7 +63,6 @@ class WCML_Products{
 
         add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
         add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
-
     }
 
     // Check if original product
@@ -646,5 +645,14 @@ class WCML_Products{
         return $file_path;
 
     }
+
+
+	/**
+	 *
+	 * @return bool
+	 */
+	public function is_product_display_as_translated_post_type() {
+		return apply_filters( 'wpml_is_display_as_translated_post_type', false, 'product' );
+	}
 
 }

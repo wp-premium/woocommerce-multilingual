@@ -176,6 +176,7 @@ class woocommerce_wpml {
 			$this->troubleshooting      = new WCML_Troubleshooting( $this, $sitepress, $wpdb );
 			$this->links                = new WCML_Links( $this, $sitepress );
 			$this->translation_editor   = new WCML_Translation_Editor( $this, $sitepress, $wpdb );
+			$this->translation_editor->add_hooks();
 			$this->languages_upgrader   = new WCML_Languages_Upgrader;
 			$this->sync_variations_data = new WCML_Synchronize_Variations_Data( $this, $sitepress, $wpdb );
 			$this->sync_variations_data->add_hooks();
@@ -190,6 +191,7 @@ class woocommerce_wpml {
 		$this->products          = new WCML_Products( $this, $sitepress, $wpdb );
 		$this->products->add_hooks();
 		$this->store   = new WCML_Store_Pages ( $this, $sitepress );
+		$this->store->add_hooks();
 		$this->strings = new WCML_WC_Strings( $this, $sitepress );
 		$this->strings->add_hooks();
 		$this->emails = new WCML_Emails( $this, $sitepress, $woocommerce );
@@ -223,7 +225,8 @@ class woocommerce_wpml {
 		$payment_method_filter = new WCML_Payment_Method_Filter();
 		$payment_method_filter->add_hooks();
 
-		new WCML_Ajax_Setup( $sitepress );
+		$wcml_ajax_setup = new WCML_Ajax_Setup( $sitepress );
+		$wcml_ajax_setup->add_hooks();
 		new WCML_Fix_Copied_Custom_Fields_WPML353();
 
 		WCML_Install::initialize( $this, $sitepress );

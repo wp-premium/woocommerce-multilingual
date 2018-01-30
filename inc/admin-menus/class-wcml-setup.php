@@ -35,13 +35,22 @@ class WCML_Setup {
                 'name'    =>  __( 'Multiple Currencies', 'woocommerce-multilingual' ),
                 'view'    => array( $this, 'setup_multi_currency' ),
                 'handler' => array( $this, 'save_multi_currency' )
-            ),
-            'ready' => array(
-                'name'    =>  __( 'Ready!', 'woocommerce-multilingual' ),
-                'view'    => array( $this, 'setup_ready' ),
-                'handler' => ''
             )
         );
+
+	    if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'ICL_SITEPRESS_VERSION' ), '3.9.0', '>=' ) ) {
+		    $this->steps['translation-options'] = array(
+			    'name'    =>  __( 'Translation Options', 'woocommerce-multilingual' ),
+			    'view'    => array( $this, 'setup_translation_options' ),
+			    'handler' => array( $this, 'save_translation_options' )
+		    );
+	    }
+
+	    $this->steps['ready'] = array(
+		    'name'    =>  __( 'Ready!', 'woocommerce-multilingual' ),
+		    'view'    => array( $this, 'setup_ready' ),
+		    'handler' => ''
+	    );
 
         if( current_user_can( 'manage_options' ) ) {
             if ( isset( $_GET['page'] ) && $_GET['page'] === 'wcml-setup' ) {
@@ -228,6 +237,7 @@ class WCML_Setup {
         $this->next_step = isset( $steps[$step_index + 1] ) ? $steps[$step_index + 1] : '';
 
         $ouput_steps = $this->steps;
+
         array_shift( $ouput_steps );
         ?>
         <ol class="wcml-setup-steps">
@@ -267,6 +277,11 @@ class WCML_Setup {
 
     public function setup_multi_currency(){
         $ui = new WCML_Setup_Multi_Currency_UI( $this->woocommerce_wpml, $this->next_step_url() );
+        echo $ui->get_view();
+    }
+
+    public function setup_translation_options(){
+        $ui = new WCML_Setup_Translation_Options_UI( $this->woocommerce_wpml, $this->next_step_url() );
         echo $ui->get_view();
     }
 
@@ -332,6 +347,29 @@ class WCML_Setup {
             $this->woocommerce_wpml->multi_currency->disable();
         }
 
+    }
+
+    /**
+     * handler
+     */
+    public function save_translation_options( $data ){
+
+        if ( isset( $data['translation-option'] ) ) {
+
+	        $settings_helper = wpml_load_settings_helper();
+
+            if( 1 === (int) $data['translation-option'] ){
+	            $settings_helper->set_post_type_display_as_translated( 'product' );
+	            $settings_helper->set_post_type_translation_unlocked_option( 'product' );
+	            $settings_helper->set_taxonomy_display_as_translated('product_cat' );
+	            $settings_helper->set_taxonomy_translation_unlocked_option( 'product_cat' );
+            }else{
+	            $settings_helper->set_post_type_translatable( 'product' );
+	            $settings_helper->set_post_type_translation_unlocked_option( 'product', false );
+	            $settings_helper->set_taxonomy_translatable('product_cat' );
+	            $settings_helper->set_taxonomy_translation_unlocked_option( 'product_cat', false );
+            }
+	    }
     }
 
     /**

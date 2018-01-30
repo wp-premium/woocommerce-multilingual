@@ -3,11 +3,13 @@
 class WCML_Status_Taxonomies_UI extends WPML_Templates_Factory {
 
     private $woocommerce_wpml;
+    private $sitepress;
 
-    function __construct( &$woocommerce_wpml ){
+    function __construct( $sitepress, $woocommerce_wpml ){
         parent::__construct();
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
+	    $this->sitepress        = $sitepress;
+	    $this->woocommerce_wpml = $woocommerce_wpml;
     }
 
     public function get_model() {
@@ -41,7 +43,9 @@ class WCML_Status_Taxonomies_UI extends WPML_Templates_Factory {
         $taxonomies_data = array();
 
         foreach ( $taxonomies as $key => $taxonomy ) {
-            if( !is_taxonomy_translated( $taxonomy ) ) continue;
+	        if ( ! is_taxonomy_translated( $taxonomy ) || $this->sitepress->is_display_as_translated_taxonomy( $taxonomy ) ) {
+		        continue;
+	        }
             $taxonomies_data[$key]['tax'] = $taxonomy;
             $taxonomies_data[$key]['untranslated'] = $this->woocommerce_wpml->terms->get_untranslated_terms_number($taxonomy);
             $taxonomies_data[$key]['fully_trans'] = $this->woocommerce_wpml->terms->is_fully_translated($taxonomy);

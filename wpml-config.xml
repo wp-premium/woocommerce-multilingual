@@ -63,6 +63,7 @@
 		<custom-field action="ignore">wpml_language</custom-field>
 		<custom-field action="ignore">_product_attributes</custom-field>
 		<custom-field action="translate">_children</custom-field>
+		<custom-field action="copy">_subscription_limit</custom-field>
 	</custom-fields>
 	<custom-types>
 		<custom-type translate="1">product</custom-type>
