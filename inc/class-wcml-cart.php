@@ -436,6 +436,7 @@ class WCML_Cart {
 		unset( $cart_contents['line_subtotal_tax'] );
 		unset( $cart_contents['line_tax_data'] );
 		unset( $cart_contents['data'] );
+		unset( $cart_contents['key'] );
 
 		return apply_filters( 'wcml_filter_cart_item_data', $cart_contents );
 	}

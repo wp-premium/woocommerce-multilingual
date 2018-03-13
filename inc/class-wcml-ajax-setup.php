@@ -37,7 +37,7 @@ class WCML_Ajax_Setup{
 			add_filter( 'wc_cart_fragments_params', array( $this, 'add_language_parameter_to_ajax_url' ) );
 			add_filter( 'wc_add_to_cart_params', array( $this, 'add_language_parameter_to_ajax_url' ) );
 		} else {
-			add_filter( 'woocommerce_get_script_data', array( $this, 'filter_woocommerce_ajax_params' ) );
+			add_filter( 'woocommerce_get_script_data', array( $this, 'add_language_parameter_to_ajax_url' ) );
 		}
 
 		add_action( 'woocommerce_checkout_order_review', array( $this, 'filter_woocommerce_order_review' ), 9 );
@@ -56,14 +56,14 @@ class WCML_Ajax_Setup{
 		do_action( 'wpml_add_language_form_field' );
 	}
 
-    function add_language_parameter_to_ajax_url($woocommerce_params){
+	function add_language_parameter_to_ajax_url( $woocommerce_params ) {
 
-        if($this->sitepress->get_current_language() !== $this->sitepress->get_default_language()){
-            $woocommerce_params['ajax_url'] = add_query_arg('lang', ICL_LANGUAGE_CODE, $woocommerce_params['ajax_url']);
-        }
-        
-        return $woocommerce_params;
-    }
+		if ( isset( $woocommerce_params['ajax_url'] ) && $this->sitepress->get_current_language() !== $this->sitepress->get_default_language() ) {
+			$woocommerce_params['ajax_url'] = add_query_arg( 'lang', $this->sitepress->get_wp_api()->constant( 'ICL_LANGUAGE_CODE' ), $woocommerce_params['ajax_url'] );
+		}
+
+		return $woocommerce_params;
+	}
     
     function filter_woocommerce_ajax_params($woocommerce_params){
         global $post;
@@ -78,9 +78,9 @@ class WCML_Ajax_Setup{
 		        }
 	        }
         }
-        
+
         if(!isset($post->ID)){
-            return $value; 
+            return $value;
         }
 
         $ch_pages = wp_cache_get('ch_pages', 'wcml_ch_pages');
@@ -113,7 +113,7 @@ class WCML_Ajax_Setup{
             $value['is_pay_page'] = 1;
         }
 
-        return $value; 
+        return $value;
     }
 
 	public function wcml_localize_woocommerce_on_ajax() {
