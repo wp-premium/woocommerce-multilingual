@@ -58,8 +58,6 @@ class WCML_Terms{
 
 		add_action( 'delete_term', array( $this, 'wcml_delete_term' ), 10, 4 );
 		add_filter( 'get_the_terms', array( $this, 'shipping_terms' ), 10, 3 );
-		//filter coupons terms in admin
-		add_filter( 'get_terms', array( $this, 'filter_coupons_terms' ), 10, 3 );
 		add_filter( 'get_terms', array( $this, 'filter_shipping_classes_terms' ), 10, 3 );
 
 		add_filter( 'woocommerce_get_product_terms', array( $this, 'get_product_terms_filter' ), 10, 4 );
@@ -702,21 +700,6 @@ class WCML_Terms{
             $terms = get_the_terms( apply_filters( 'translate_object_id', $post_id, get_post_type($post_id), true, $this->sitepress->get_current_language() ),'product_shipping_class');
             add_filter('get_the_terms',array($this,'shipping_terms'), 10, 3);
             return $terms;
-        }
-
-        return $terms;
-    }
-
-    function filter_coupons_terms($terms, $taxonomies, $args){
-        global $pagenow;
-
-        if(is_admin() && (($pagenow == 'post-new.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_coupon') || ($pagenow == 'post.php' && isset($_GET['post']) && get_post_type($_GET['post']) == 'shop_coupon')) && in_array('product_cat',$taxonomies)){
-            remove_filter('get_terms',array($this,'filter_coupons_terms'));
-            $current_language = $this->sitepress->get_current_language();
-            $this->sitepress->switch_lang($this->sitepress->get_default_language());
-            $terms = get_terms( 'product_cat', 'orderby=name&hide_empty=0');
-            add_filter('get_terms',array($this,'filter_coupons_terms'),10,3);
-            $this->sitepress->switch_lang($current_language);
         }
 
         return $terms;

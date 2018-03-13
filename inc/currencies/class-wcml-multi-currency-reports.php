@@ -112,10 +112,7 @@ class WCML_Multi_Currency_Reports {
 			}
 
 			add_filter( 'woocommerce_currency_symbol', array( $this, '_set_reports_currency_symbol' ) );
-			add_filter( 'woocommerce_report_sales_by_category_get_products_in_category', array(
-				$this,
-				'_use_categories_in_all_languages'
-			), 10, 2 );
+
 
 		}
 	}
@@ -138,26 +135,6 @@ class WCML_Multi_Currency_Reports {
 		}
 
 		return $currency;
-	}
-
-	public function _use_categories_in_all_languages( $product_ids, $category_id ) {
-
-		$category_term = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $category_id, 'product_cat' );
-
-		if ( ! is_wp_error( $category_term ) ) {
-			$trid         = $this->sitepress->get_element_trid( $category_term->term_taxonomy_id, 'tax_product_cat' );
-			$translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat', true );
-
-			foreach ( $translations as $translation ) {
-				if ( $translation->term_id != $category_id ) {
-					$term_ids    = get_term_children( $translation->term_id, 'product_cat' );
-					$term_ids[]  = $translation->term_id;
-					$product_ids = array_merge( array_unique( $product_ids ), get_objects_in_term( $term_ids, 'product_cat' ) );
-				}
-			}
-		}
-
-		return $product_ids;
 	}
 
 	public function set_reports_currency() {
