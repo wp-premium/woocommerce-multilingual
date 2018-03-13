@@ -30,7 +30,7 @@ class WCML_Custom_Currency_Options extends WPML_Templates_Factory {
         if( $exchange_rates_automatic ){
             $service_id = $exchange_rate_services->get_setting('service');
             $services   = $exchange_rate_services->get_services();
-            $exchange_rates_service = $services[$service_id]->get_name();
+            $exchange_rates_service = isset( $services[ $service_id ] ) ? $services[ $service_id ]->get_name() : '';
         } else {
             $exchange_rates_service = '';
         }

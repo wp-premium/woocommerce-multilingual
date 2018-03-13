@@ -128,7 +128,7 @@ class WCML_Dynamic_Pricing {
 	function translate_variations_in_rules( $rules ) {
 		if ( is_array( $rules ) ) {
 			foreach ( $rules as $r_key => $rule ) {
-				if ( array_key_exists( 'variation_rules', $rule ) ) {
+				if ( isset( $rule['variation_rules']['args']['variations'] ) ) {
 					foreach ( $rule['variation_rules']['args']['variations'] as $i => $variation_id ) {
 						$rules[ $r_key ]['variation_rules']['args']['variations'][ $i ] = apply_filters( 'translate_object_id', $variation_id, 'product_variation', true );
 					}

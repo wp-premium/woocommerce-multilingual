@@ -24,7 +24,12 @@ class WCML_Reports{
             if ( $this->tab == 'orders' && $this->report == 'sales_by_product' ) {
                 add_filter( 'woocommerce_reports_get_order_report_data', array( $this, 'combine_report_by_languages' ) );
             }
-
+	        if ( $this->tab == 'orders' && $this->report == 'sales_by_category' ) {
+		        add_filter( 'woocommerce_report_sales_by_category_get_products_in_category', array(
+			        $this,
+			        'use_categories_in_all_languages'
+		        ), 10, 2 );
+	        }
         }
 
         add_filter( 'woocommerce_report_most_stocked_query_from', array( $this, 'filter_reports_stock_query' ) );
@@ -263,5 +268,26 @@ class WCML_Reports{
 
         return $query_from;
     }
+
+	public function use_categories_in_all_languages( $product_ids, $category_id ) {
+		global $woocommerce_wpml, $sitepress;
+
+		$category_term = $woocommerce_wpml->terms->wcml_get_term_by_id( $category_id, 'product_cat' );
+
+		if ( ! is_wp_error( $category_term ) ) {
+			$trid         = $sitepress->get_element_trid( $category_term->term_taxonomy_id, 'tax_product_cat' );
+			$translations = $sitepress->get_element_translations( $trid, 'tax_product_cat', true );
+
+			foreach ( $translations as $translation ) {
+				if ( $translation->term_id != $category_id ) {
+					$term_ids    = get_term_children( $translation->term_id, 'product_cat' );
+					$term_ids[]  = $translation->term_id;
+					$product_ids = array_merge( array_unique( $product_ids ), get_objects_in_term( $term_ids, 'product_cat' ) );
+				}
+			}
+		}
+
+		return $product_ids;
+	}
     
 }
