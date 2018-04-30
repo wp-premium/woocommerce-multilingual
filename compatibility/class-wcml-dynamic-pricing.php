@@ -62,7 +62,7 @@ class WCML_Dynamic_Pricing {
 	 * @return bool|WP_Error
 	 */
 	function woocommerce_dynamic_pricing_is_applied_to( $process_discounts, $_product, $module_id, $obj, $cat_ids ) {
-		if ( $cat_ids && isset( $obj->available_rulesets ) && count( $obj->available_rulesets ) > 0 ) {
+		if ( $cat_ids && ( ! empty( $obj->available_rulesets ) || ! empty( $obj->adjustment_sets ) ) ) {
 
 			if ( ! is_array( $cat_ids ) ) {
 				$cat_ids = array( $cat_ids );

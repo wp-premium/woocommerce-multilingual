@@ -7,7 +7,7 @@ class WCML_Custom_Taxonomy_Translation_UI extends WPML_Templates_Factory {
 	private $sitepress;
 
 	private $custom_taxonomies = array();
-	private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type' ); //'product_type' is used for tags (?)
+	private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type', 'translation_priority' ); //'product_type' is used for tags (?)
 
 
 	public function __construct( &$woocommerce_wpml, &$sitepress ){
@@ -23,6 +23,7 @@ class WCML_Custom_Taxonomy_Translation_UI extends WPML_Templates_Factory {
 		}
 
 		$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
+
 		foreach( $product_taxonomies as $product_taxonomy_name => $product_taxonomy_object ){
 			if(
 				!isset( $product_attributes[$product_taxonomy_name] ) &&

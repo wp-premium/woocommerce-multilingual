@@ -19,7 +19,8 @@ class WCML_Cart_Sync_Warnings{
 		'WC_Bookings' => 'Woocommerce Bookings',
 		'WC_Accommodation_Bookings_Plugin' => 'Woocommerce Accommodation Bookings',
 		'WC_Product_Bundle' => 'Woocommerce Product Bundles',
-		'WC_Composite_Products' => 'Woocommerce Composite Products'
+		'WC_Composite_Products' => 'Woocommerce Composite Products',
+		'WC_Dynamic_Pricing' => 'Woocommerce Dynamic Pricing',
 	);
 
 	public function __construct( $woocommerce_wpml, $sitepress ){

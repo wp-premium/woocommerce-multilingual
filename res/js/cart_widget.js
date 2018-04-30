@@ -1,15 +1,15 @@
-jQuery(document).ready(function($){
-    try {
-        var cart_hash_key = wc_cart_fragments_params.ajax_url.toString() + '-wc_cart_hash';
+jQuery(document).ready(function ($) {
 
-        if (sessionStorage.getItem( 'woocommerce_cart_hash' ) == '' || actions.is_lang_switched == 1 || actions.is_currency_switched == 1 || actions.force_reset == 1 ) {
-            sessionStorage.removeItem( actions.cart_fragment );
-
-            //backward compatibility for WC < 3.0
-            sessionStorage.removeItem( 'wc_fragments' );
-        }
-    } catch(err){
-        //console.log(err.message);
+    var empty_cart_hash = sessionStorage.getItem('woocommerce_cart_hash') == '';
+    if ( empty_cart_hash || actions.is_lang_switched == 1 || actions.force_reset == 1 ) {
+        wcml_reset_cart_fragments();
     }
 });
 
+function wcml_reset_cart_fragments(){
+    try {
+        jQuery( document.body ).trigger( 'wc_fragment_refresh' );
+        //backward compatibility for WC < 3.0
+        sessionStorage.removeItem( 'wc_fragments' );
+    } catch(err){}
+}
