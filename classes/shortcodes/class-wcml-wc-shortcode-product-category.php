@@ -37,7 +37,7 @@ class WCML_WC_Shortcode_Product_Category {
 
 			if ( isset( $args['product_cat'] ) ) {
 				$args = $this->translate_categories_using_simple_tax_query( $args );
-			} elseif ( isset( $atts['category'] ) ) {
+			} elseif ( isset( $atts['category'] ) && isset( $args['tax_query'] ) ) {
 
 				// Get translated category slugs, we need to remove WPML filter.
 				$filter_exists = remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );

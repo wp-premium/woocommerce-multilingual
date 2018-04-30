@@ -195,7 +195,7 @@ class WCML_Url_Translation {
 
 			$string = icl_get_string_id( $slug, $this->url_strings_context(), $this->url_string_name( 'product' ) );
 			if ( ! $string ) {
-				do_action( 'wpml_register_single_string', $this->url_strings_context(), $this->url_string_name( 'product' ), $slug );
+				do_action( 'wpml_register_single_string', $this->url_strings_context(), $this->url_string_name( 'product' ), trim( $slug, '/' ) );
 			}
 
 		}

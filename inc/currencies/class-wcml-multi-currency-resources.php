@@ -35,11 +35,23 @@ class WCML_Multi_Currency_Resources{
             'symbol'=> get_woocommerce_currency_symbol( self::$multi_currency->get_client_currency() )
         );
 
-	    $script_vars['w3tc'] = (int) ! empty( self::$multi_currency->W3TC )
-	                           || ( function_exists( 'wp_cache_is_enabled' ) && wp_cache_is_enabled() );
+	    $script_vars = self::set_cache_compatibility_variables( $script_vars );
 
         wp_localize_script('wcml-mc-scripts', 'wcml_mc_settings', $script_vars );
 
+    }
+
+    private static function set_cache_compatibility_variables( $script_vars ){
+
+    	$script_vars['w3tc'] = (int) ! empty( self::$multi_currency->W3TC )
+	                           || ( function_exists( 'wp_cache_is_enabled' ) && wp_cache_is_enabled() );
+
+	    global $sg_cachepress_environment;
+	    if( $sg_cachepress_environment ){
+		    $script_vars['sg_cachepress'] = $sg_cachepress_environment->cache_is_enabled();
+	    }
+
+    	return $script_vars;
     }
 
 }

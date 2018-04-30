@@ -260,9 +260,13 @@ class WCML_Synchronize_Variations_Data{
                         // adjust the global attribute slug in the custom field
                         $attid = null;
                         if( substr( $meta_key, 0, 10 ) == 'attribute_' ) {
-                            $trn_post_meta = $this->woocommerce_wpml->attributes->get_translated_variation_attribute_post_meta( $meta_value, $meta_key, $original_variation_id, $variation_id, $lang );
-                            $meta_value = $trn_post_meta['meta_value'];
-                            $meta_key = $trn_post_meta['meta_key'];
+	                        if( $meta_value ){
+		                        $trn_post_meta = $this->woocommerce_wpml->attributes->get_translated_variation_attribute_post_meta( $meta_value, $meta_key, $original_variation_id, $variation_id, $lang );
+		                        $meta_value = $trn_post_meta['meta_value'];
+		                        $meta_key = $trn_post_meta['meta_key'];
+	                        }else{
+		                        $meta_value = '';
+	                        }
                         }
 
                         if( $meta_key == '_stock'){

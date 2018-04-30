@@ -437,7 +437,7 @@ class WCML_Terms{
             $posts_processed = 0;
             foreach($post_ids as $post_id){
                 $terms = wp_get_post_terms($post_id, $taxonomy);    
-                $terms_count = count($terms) . "\n\n";
+                $terms_count = count($terms);
                 
                 $trid = $this->sitepress->get_element_trid($post_id, 'post_product');
                 $translations = $this->sitepress->get_element_translations($trid, 'post_product');

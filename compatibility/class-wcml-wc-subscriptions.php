@@ -68,8 +68,11 @@ class WCML_WC_Subscriptions{
 			$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 
 			if ( $currency !== get_option( 'woocommerce_currency' ) ) {
-				if ( get_post_meta( $product->get_id(), '_wcml_custom_prices_status', true ) ) {
-					$subscription_sign_up_fee = get_post_meta( $product->get_id(), '_subscription_sign_up_fee_' . $currency, true );
+
+				$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $product->get_id() );
+
+				if ( get_post_meta( $original_product_id, '_wcml_custom_prices_status', true ) ) {
+					$subscription_sign_up_fee = get_post_meta( $original_product_id, '_subscription_sign_up_fee_' . $currency, true );
 				} else {
 					$subscription_sign_up_fee = apply_filters( 'wcml_raw_price_amount', $subscription_sign_up_fee );
 				}

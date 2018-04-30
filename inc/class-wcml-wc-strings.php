@@ -366,7 +366,7 @@ class WCML_WC_Strings{
                 $trnsl_base['translated_base'] = $trnsl_base['original_value'];
             }
 
-            if ( $shop_page->ID && strstr( $trnsl_base['translated_base'], urldecode( $shop_page->post_name ) ) && get_option( 'page_on_front' ) != $shop_page->ID ) {
+            if ( is_woocommerce() && $shop_page->ID && strstr( $trnsl_base['translated_base'], urldecode( $shop_page->post_name ) ) && get_option( 'page_on_front' ) != $shop_page->ID ) {
                 $breadcrumbs_buff = array();
                 $i = 0;
                 foreach( $breadcrumbs as $key => $breadcrumb ){

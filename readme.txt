@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.9.1
-Stable tag: 4.2.9
+Tested up to: 4.9.5
+Stable tag: 4.2.10
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -141,6 +141,25 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.2.10 =
+* Fix compatibility issues with PHP 7.1
+* Fix issue with product slug when using language per domain in WPML
+* Removed notice when set domain per language in WPML
+* WooCommerce Bookings: Added support to translate booking emails
+* Removed warning from translation editor  when set display as translated
+* Added compatibility for unsupported WooCommerce themes
+* Removed some custom WPML taxonomies from plugin's Dashboard
+* Fix an error with product variations which you cannot add them in cart if display as translated feature is used
+* WooCommerce Composite Products: Fix Default option sync when using component option category
+* WooCommerce Subscriptions: Fix Sign-up fee recalculation cost in some situations
+* Theme Storefront: Fix Cart widget currency symbol not switched after switching currency
+* Siteground Optimizer: Fix an issue with currency switcher
+* Wrong price when manually adding product to an order with multicurrency enabled
+* WooCommerce Bookings : Fix Block cost recalculation in second currency
+* Added filter for oder_item_quantity
+* Fix issue in endpoints when set My Account as homepage
+* WooCommerce Dynamic Pricing: Fix Order total rules by category
 
 = 4.2.9 =
 * Fix wrong qty in cart page for same product and different language

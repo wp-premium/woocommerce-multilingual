@@ -324,6 +324,8 @@ class WCML_Synchronize_Product_Data{
                 $qty = $item[ 'qty' ];
             }
 
+	        $qty = apply_filters( 'wcml_order_item_quantity', $qty, $order, $item );
+
             if( $variation_id > 0 ){
                 $trid = $this->sitepress->get_element_trid( $variation_id, 'post_product_variation' );
                 $translations = $this->sitepress->get_element_translations( $trid, 'post_product_variation' );

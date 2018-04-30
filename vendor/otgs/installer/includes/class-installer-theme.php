@@ -936,7 +936,7 @@ class Installer_Theme_Class {
     public function installer_theme_filter_themes_by_subscription( $themes, $active_tab ) {
 
         //Step1, we only filter OTGS themes
-        $orig = count( $themes );
+        $orig = is_array( $themes ) ? count( $themes ) : 0;
         if ( in_array( $active_tab, $this->theme_repo ) ) {
             //OTGS Theme
             //Step2, we retrieved the available themes based on client subscription
@@ -959,7 +959,7 @@ class Installer_Theme_Class {
                 }
             }
         }
-        $new = count( $themes );
+        $new = is_array( $themes ) ? count( $themes ) : 0;
         if ( $orig != $new ) {
             //It is filtered
             $themes = array_values( $themes );

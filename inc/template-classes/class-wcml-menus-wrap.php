@@ -5,7 +5,7 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
     private $woocommerce_wpml;
 
     private $product_attribute_names        = array();
-    private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type' ); //'product_type' is used for tags (?)
+    private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type', 'translation_priority' ); //'product_type' is used for tags (?)
     private $product_extra_taxonomy_names   = array();
 
     private $product_attributes             = array();
