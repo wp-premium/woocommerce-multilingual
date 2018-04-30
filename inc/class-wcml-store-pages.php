@@ -285,7 +285,9 @@ class WCML_Store_Pages{
 
     function adjust_shop_page($q) {
 
-        if ( $this->sitepress->get_default_language() != $this->sitepress->get_current_language() ) {
+	    $is_wc_prior_3_3 = $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.3', '<' );
+
+        if ( $is_wc_prior_3_3 && $this->sitepress->get_default_language() != $this->sitepress->get_current_language() ) {
             if (!empty($q->query_vars['pagename'])) {
                 $shop_page = get_post( wc_get_page_id('shop') );
                 // we should explode by / for children page

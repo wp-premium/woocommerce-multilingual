@@ -382,6 +382,7 @@ return array(
     'WCML_Products_UI' => $baseDir . '/inc/template-classes/class-wcml-products-ui.php',
     'WCML_REST_API_Support' => $baseDir . '/inc/rest-api-support/class-wcml-rest-api-support.php',
     'WCML_REST_API_Support_V1' => $baseDir . '/inc/rest-api-support/class-wcml-rest-api-support-v1.php',
+    'WCML_Relevanssi' => $baseDir . '/compatibility/class-wcml-relevanssi.php',
     'WCML_Removed_Cart_Items_UI' => $baseDir . '/inc/template-classes/class-wcml-removed-cart-items-ui.php',
     'WCML_Reports' => $baseDir . '/inc/class-wcml-reports.php',
     'WCML_Requests' => $baseDir . '/inc/class-wcml-requests.php',

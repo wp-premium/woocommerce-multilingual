@@ -281,14 +281,6 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 						$composite_data[ $component_id ][ 'assigned_ids' ][ $key ] = $assigned_id_current_language;
 					}
 				}
-				//sync default
-				if( $component[ 'default_id' ] ){
-					$trnsl_default_id = apply_filters( 'translate_object_id', $component[ 'default_id' ], get_post_type( $component[ 'default_id' ] ), false, $language );
-					if( $trnsl_default_id ){
-						$composite_data[ $component_id ][ 'default_id' ] = $trnsl_default_id;
-					}
-				}
-
 			}elseif( $component[ 'query_type' ] == 'category_ids' ){
 				foreach( $component[ 'assigned_category_ids' ] as $key => $assigned_id ){
 					$trsl_term_id = apply_filters( 'translate_object_id', $assigned_id, 'product_cat', false, $language );
@@ -296,14 +288,16 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 						$composite_data[ $component_id ][ 'assigned_category_ids' ][ $key ] = $trsl_term_id;
 					}
 				}
-				//sync default
-				if( $component[ 'default_id' ] ){
-					$trnsl_default_id = apply_filters( 'translate_object_id', $component[ 'default_id' ], 'product_cat', false, $language );
-					if( $trnsl_default_id ){
-						$composite_data[ $component_id ][ 'default_id' ] = $trnsl_default_id;
-					}
+			}
+
+			//sync default
+			if( $component[ 'default_id' ] ){
+				$trnsl_default_id = apply_filters( 'translate_object_id', $component[ 'default_id' ], get_post_type( $component[ 'default_id' ] ), false, $language );
+				if( $trnsl_default_id ){
+					$composite_data[ $component_id ][ 'default_id' ] = $trnsl_default_id;
 				}
 			}
+
 		}
 
 		update_post_meta( $product_id, '_bto_data', $composite_data );

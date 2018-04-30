@@ -110,7 +110,7 @@ class WCML_Coupons {
 
 		$translated_product_id = apply_filters( 'translate_object_id', $product_id, 'product', false, $this->sitepress->get_current_language() );
 
-		if ( $product_id !== $translated_product_id ) {
+		if ( $translated_product_id && $product_id !== $translated_product_id ) {
 
 			remove_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
 

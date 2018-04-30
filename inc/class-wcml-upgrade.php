@@ -21,7 +21,8 @@ class WCML_Upgrade{
         '4.1.0',
         '4.2.0',
 	    '4.2.2',
-	    '4.2.7'
+	    '4.2.7',
+        '4.2.10'
     );
     
     function __construct(){
@@ -626,6 +627,28 @@ class WCML_Upgrade{
 			$wcml_settings['multi_currency']['exchange_rates']['service'] = 'fixierio';
 			update_option( '_wcml_settings', $wcml_settings );
         }
+
+	}
+
+	private function upgrade_4_2_10(){
+
+		// #wcml-2307
+		global $wpdb;
+
+		if ( defined( 'WC_BOOKINGS_VERSION' ) && version_compare(WC_BOOKINGS_VERSION, '1.10.9', '>=' ) ) {
+
+			$results = $wpdb->get_results( "
+                        SELECT *
+                        FROM {$wpdb->postmeta}
+                        WHERE meta_key LIKE '\\_wc_booking_base_cost\\_%' )
+                    " );
+
+			foreach ( $results as $price ) {
+				$base_cost_price      = $price->meta_value;
+				$block_cost_field_key = str_replace( 'base', 'block', $price->meta_key );
+				update_post_meta( $price->post_id, $block_cost_field_key, $base_cost_price );
+			}
+		}
 
 	}
 

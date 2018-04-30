@@ -123,7 +123,8 @@ class WCML_Ajax_Setup{
 				array(
 					'wcml_product_data',
 					'wpml_translation_dialog_save_job',
-					'edit-theme-plugin-file'
+					'edit-theme-plugin-file',
+					'search-install-plugins'
 				),
 				true );
 		if ( $action && ( $is_ajax_action || ! apply_filters( 'wcml_is_localize_woocommerce_on_ajax', true, $action ) ) ) {

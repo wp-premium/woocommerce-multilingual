@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit04e97305d0c987e2e8eafee869450c7e
+class ComposerStaticInit9222072d16310fd8875b75abebc0359a
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -414,6 +414,7 @@ class ComposerStaticInit04e97305d0c987e2e8eafee869450c7e
         'WCML_Products_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-products-ui.php',
         'WCML_REST_API_Support' => __DIR__ . '/../..' . '/inc/rest-api-support/class-wcml-rest-api-support.php',
         'WCML_REST_API_Support_V1' => __DIR__ . '/../..' . '/inc/rest-api-support/class-wcml-rest-api-support-v1.php',
+        'WCML_Relevanssi' => __DIR__ . '/../..' . '/compatibility/class-wcml-relevanssi.php',
         'WCML_Removed_Cart_Items_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-removed-cart-items-ui.php',
         'WCML_Reports' => __DIR__ . '/../..' . '/inc/class-wcml-reports.php',
         'WCML_Requests' => __DIR__ . '/../..' . '/inc/class-wcml-requests.php',
@@ -483,10 +484,10 @@ class ComposerStaticInit04e97305d0c987e2e8eafee869450c7e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit04e97305d0c987e2e8eafee869450c7e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit04e97305d0c987e2e8eafee869450c7e::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit04e97305d0c987e2e8eafee869450c7e::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit04e97305d0c987e2e8eafee869450c7e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9222072d16310fd8875b75abebc0359a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9222072d16310fd8875b75abebc0359a::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9222072d16310fd8875b75abebc0359a::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit9222072d16310fd8875b75abebc0359a::$classMap;
 
         }, null, ClassLoader::class);
     }

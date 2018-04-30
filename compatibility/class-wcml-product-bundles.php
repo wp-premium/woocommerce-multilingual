@@ -494,7 +494,7 @@ class WCML_Product_Bundles {
 		$bundle_data = $this->get_product_bundle_data( $bundle_id );
 		if ( $bundle_data ) {
 			$lang                   = $this->sitepress->get_language_for_element( $translated_bundle_id, 'post_product' );
-			$translated_bundle_data = $this->get_product_bundle_data( $translated_bundle_id );
+			$translated_bundle_data_before_update = $this->get_product_bundle_data( $translated_bundle_id );
 
 			foreach ( $bundle_data as $item_id => $product_data ) {
 
@@ -521,32 +521,38 @@ class WCML_Product_Bundles {
 						$this->set_translated_item_id_relationship( $item_id, $translated_item_id, $lang );
 					}
 
-					$translated_bundle_data[ $translated_item_id ]               = $product_data;
+					$translated_bundle_data[ $translated_item_id ] = $product_data;
 					$translated_bundle_data[ $translated_item_id ]['product_id'] = $translated_product_id;
 
-					if ( isset( $bundle_data['title'] ) ) {
-						if ( $bundle_data['override_title'] != 'yes' ) {
+					if ( isset( $product_data['title'] ) ) {
+						if ( $product_data['override_title'] != 'yes' ) {
 							$translated_bundle_data[ $translated_item_id ]['title'] = get_the_title( $translated_product_id );
+						}else{
+							$translated_bundle_data[ $translated_item_id ]['title'] = isset( $translated_bundle_data_before_update[ $translated_item_id ] ) ? $translated_bundle_data_before_update[ $translated_item_id ]['title'] : '';
 						}
 					}
 
-					if ( isset( $bundle_data['title'] ) ) {
-						if ( $bundle_data['override_description'] != 'yes' ) {
+					if ( isset( $product_data['title'] ) ) {
+						if ( $product_data['override_description'] != 'yes' ) {
 							$translated_bundle_data[ $translated_item_id ]['description'] = get_the_title( $translated_product_id );
+						}else{
+							$translated_bundle_data[ $translated_item_id ]['description'] = isset( $translated_bundle_data_before_update[ $translated_item_id ] ) ? $translated_bundle_data_before_update[ $translated_item_id ]['description'] : '';
 						}
 					}
 
-					if ( isset( $bundle_data['filter_variations'] ) && $bundle_data['filter_variations'] == 'yes' ) {
-						$allowed_var = $bundle_data['allowed_variations'];
+					if ( isset( $product_data['filter_variations'] ) && $product_data['filter_variations'] == 'yes' ) {
+						$allowed_var = maybe_unserialize( $product_data['allowed_variations'] );
+						$translated_bundle_data[ $translated_item_id ]['allowed_variations'] = maybe_unserialize( $translated_bundle_data[ $translated_item_id ]['allowed_variations'] );
 						foreach ( $allowed_var as $key => $var_id ) {
 							$translated_var_id                                                           = apply_filters( 'translate_object_id', $var_id, get_post_type( $var_id ), true, $lang );
 							$translated_bundle_data[ $translated_item_id ]['allowed_variations'][ $key ] = $translated_var_id;
 						}
+						$translated_bundle_data[ $translated_item_id ]['allowed_variations'] = maybe_serialize( $translated_bundle_data[ $translated_item_id ]['allowed_variations'] );
 					}
 
-
-					if ( isset( $bundle_data['bundle_defaults'] ) && ! empty( $bundle_data['bundle_defaults'] ) ) {
-						foreach ( $bundle_data['bundle_defaults'] as $tax => $term_slug ) {
+					if ( isset( $product_data['bundle_defaults'] ) && ! empty( $product_data['bundle_defaults'] ) ) {
+						$translated_bundle_data[ $translated_item_id ]['bundle_defaults'] = maybe_unserialize( $translated_bundle_data[ $translated_item_id ]['bundle_defaults'] );
+						foreach ( maybe_unserialize( $product_data['bundle_defaults'] ) as $tax => $term_slug ) {
 
 							$term_id = $this->woocommerce_wpml->terms->wcml_get_term_id_by_slug( $tax, $term_slug );
 							if ( $term_id ) {
@@ -570,11 +576,10 @@ class WCML_Product_Bundles {
 								endwhile;
 							}
 						}
+						$translated_bundle_data[ $translated_item_id ]['bundle_defaults'] = maybe_serialize( $translated_bundle_data[ $translated_item_id ]['bundle_defaults'] );
 					}
 
 				}
-
-
 			}
 
 			$this->save_product_bundle_data( $translated_bundle_id, $translated_bundle_data );

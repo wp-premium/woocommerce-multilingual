@@ -36,10 +36,10 @@ class WCML_Compatibility {
 
 	function init() {
 		//hardcoded list of extensions and check which ones the user has and then include the corresponding file from the ‘compatibility’ folder
+		global $woocommerce;
 
 		//WooCommerce Tab Manager plugin
 		if ( class_exists( 'WC_Tab_Manager' ) ) {
-			global $woocommerce;
 			$this->tab_manager = new WCML_Tab_Manager( $this->sitepress, $woocommerce, $this->woocommerce_wpml, $this->wpdb, $this->tp );
 			$this->tab_manager->add_hooks();
 		}
@@ -121,7 +121,7 @@ class WCML_Compatibility {
 
 		// WooCommerce Bookings
 		if ( defined( 'WC_BOOKINGS_VERSION' ) && version_compare( WC_BOOKINGS_VERSION, '1.7.8', '>=' ) ) {
-			$this->bookings = new WCML_Bookings( $this->sitepress, $this->woocommerce_wpml, $this->wpdb, $this->tp );
+			$this->bookings = new WCML_Bookings( $this->sitepress, $this->woocommerce_wpml, $woocommerce, $this->wpdb, $this->tp );
 			$this->bookings->add_hooks();
 
 			// WooCommerce Accommodation Bookings
@@ -239,6 +239,12 @@ class WCML_Compatibility {
 		if ( defined( 'WPB_VC_VERSION') ) {
 			$this->wpb_vc= new WCML_Wpb_Vc();
 			$this->wpb_vc->add_hooks();
+		}
+
+		// Relevanssi plugin
+		if ( function_exists( 'relevanssi_insert_edit' ) ) {
+			$this->relevanssi = new WCML_Relevanssi();
+			$this->relevanssi->add_hooks();
 		}
 
 	}

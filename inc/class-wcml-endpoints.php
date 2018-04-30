@@ -26,6 +26,8 @@ class WCML_Endpoints{
         add_filter( 'woocommerce_get_endpoint_url', array( $this, 'filter_get_endpoint_url' ), 10, 4 );
 
         add_filter( 'woocommerce_settings_saved', array( $this, 'update_original_endpoints_strings') );
+
+	    add_filter( 'option_rewrite_rules', array( $this, 'translate_endpoints_in_rewrite_rules' ), 0, 1 ); // high priority
     }
 
 	public function reserved_requests( $requests, SitePress $sitepress ) {
@@ -161,7 +163,9 @@ class WCML_Endpoints{
             WC()->query->query_vars = apply_filters( 'wcml_flush_rules_query_vars', WC()->query->query_vars, $this );
 
 	        remove_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
-            flush_rewrite_rules( false );
+	        if ( (int) get_option( 'page_on_front' ) !== wc_get_page_id( 'myaccount' ) ) {
+		        flush_rewrite_rules( false );
+	        }
 	        add_filter( 'gettext_with_context', array( $this->woocommerce_wpml->strings, 'category_base_in_strings_language' ), 99, 3 );
             delete_option( 'flush_rules_for_endpoints_translations' );
         }
@@ -286,7 +290,11 @@ class WCML_Endpoints{
             $endpoints['shipping'] = urldecode(  $this->get_translated_edit_address_slug( 'shipping' ) );
             $endpoints['billing'] = urldecode(  $this->get_translated_edit_address_slug( 'billing' )  );
 
-            if( urldecode( $q->query['pagename'] ) != $endpoint_in_url && !in_array( $endpoint_in_url,$endpoints ) && is_numeric( $endpoint_in_url ) && !in_array( urldecode( prev( $uri_vars ) ) ,$q->query_vars ) ){
+            $endpoint_not_pagename = isset( $q->query['pagename'] ) && urldecode( $q->query['pagename'] ) != $endpoint_in_url;
+            $endpoint_url_not_in_endpoints = !in_array( $endpoint_in_url,$endpoints );
+            $uri_vars_not_in_query_vars = !in_array( urldecode( prev( $uri_vars ) ) ,$q->query_vars );
+
+            if( $endpoint_not_pagename && $endpoint_url_not_in_endpoints && is_numeric( $endpoint_in_url ) && $uri_vars_not_in_query_vars ){
                 $wp_query->set_404();
                 status_header(404);
                 include( get_query_template( '404' ) );
@@ -352,6 +360,28 @@ class WCML_Endpoints{
         }
 
     }
+
+	public function translate_endpoints_in_rewrite_rules( $value ) {
+
+		if ( ! empty( $value ) ) {
+
+			foreach ( WC()->query->query_vars as $endpoint_key => $endpoint_translation ) {
+				if ( $endpoint_key == $endpoint_translation ) {
+					continue;
+				}
+
+				$buff_value = array();
+
+				foreach ( $value as $k => $v ) {
+					$k = preg_replace( '/(\/)?' . $endpoint_key . '(\/)?(\(\/\(\.\*\)\)\?\/\?\$)/', '$1' . $endpoint_translation . '$2$3', $k );
+					$buff_value[ $k ] = $v;
+				}
+				$value = $buff_value;
+			}
+		}
+
+		return $value;
+	}
 
 
 }

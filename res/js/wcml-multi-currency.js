@@ -40,7 +40,7 @@ function wcml_load_currency( currency, force_switch ){
             }else{
 
                 var target_location = window.location.href;
-                if(-1 !== target_location.indexOf('#') || wcml_mc_settings.w3tc ){
+                if(-1 !== target_location.indexOf('#') || wcml_mc_settings.w3tc || wcml_mc_settings.sg_cachepress ){
 
                     var url_dehash = target_location.split('#');
                     var hash = url_dehash.length > 1 ? '#' + url_dehash[1] : '';
@@ -53,6 +53,9 @@ function wcml_load_currency( currency, force_switch ){
                     target_location += url_glue + 'wcmlc=' + currency + hash;
 
                 }
+
+                wcml_reset_cart_fragments();
+
                 window.location = target_location;
 
             }
