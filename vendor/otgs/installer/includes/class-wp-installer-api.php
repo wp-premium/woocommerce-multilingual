@@ -129,6 +129,4 @@ class WP_Installer_API{
 
 		return $user_id;
 	}
-
-
 }

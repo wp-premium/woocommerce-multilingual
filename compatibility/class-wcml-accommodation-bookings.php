@@ -37,11 +37,11 @@ class WCML_Accommodation_Bookings{
 
         $product_terms = wp_get_post_terms( $post_id, 'product_type', array( "fields" => "names" ) );
 
-        if(
-            in_array( 'accommodation-booking', $product_terms ) &&
-            $this->woocommerce_wpml->products->is_original_product( $post_id ) &&
-            $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT
-        ){
+	    if(
+		    in_array( 'accommodation-booking', $product_terms )&&
+		    $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+		    $this->woocommerce_wpml->products->is_original_product( $post_id )
+	    ){
 
             $custom_costs_status = get_post_meta( $post_id, '_wcml_custom_costs_status', true );
 
@@ -66,7 +66,10 @@ class WCML_Accommodation_Bookings{
 
     function echo_wcml_price_field( $post_id, $field, $pricing = false, $check = true, $resource_id = false ){
 
-        if( ( !$check || $this->woocommerce_wpml->products->is_original_product( $post_id ) ) && $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
+	    if(
+		    $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+		    ( !$check || $this->woocommerce_wpml->products->is_original_product( $post_id ) )
+	    ){
 
             $currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
 
@@ -155,13 +158,13 @@ class WCML_Accommodation_Bookings{
 
     function product_price_filter( $value, $object_id, $meta_key, $single ){
 
-        if(
-            get_post_type( $object_id ) == 'product' &&
-            $meta_key == '_price' &&
-            $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
-            !is_admin() &&
-            ( $currency = $this->woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
-        ) {
+	    if(
+		    $meta_key == '_price' &&
+		    $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+		    !is_admin() &&
+		    get_post_type( $object_id ) == 'product' &&
+		    ( $currency = $this->woocommerce_wpml->multi_currency->get_client_currency() ) != get_option( 'woocommerce_currency' )
+	    ) {
 
             remove_filter( 'get_post_metadata', array( $this, 'product_price_filter' ), 9, 4 );
 

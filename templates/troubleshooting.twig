@@ -23,16 +23,6 @@
                 </label>
 
             </li>
-            {% if media_def %}
-                <li>
-                    <label>
-                        <input type="checkbox" id="wcml_sync_gallery_images" />
-                        {{ strings.sync_gallery }}
-                        <span class="gallery_status">{{ prod_count }}</span>&nbsp;
-                        <span>{{ strings.left }}</span>
-                    </label>
-                </li>
-            {% endif %}
             <li>
                 <label>
                     <input type="checkbox" id="wcml_sync_categories" />
@@ -88,7 +78,6 @@
                 <span class="spinner"></span>
                 {{ nonces.trbl_update_count|raw }}
                 {{ nonces.trbl_sync_variations|raw }}
-                {{ nonces.trbl_gallery_images|raw }}
                 {{ nonces.trbl_sync_categories|raw }}
                 {{ nonces.trbl_duplicate_terms|raw }}
                 {{ nonces.trbl_sync_stock|raw }}

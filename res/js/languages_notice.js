@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
 
         jQuery('#icl_avail_languages_picker li input').each( function(){
             if( jQuery(this).is(':checked') ){
-                jQuery('<p class="icl_ajx_response" style="display: block">'+wcml_settings.warn+'</p>').insertBefore('#icl_ajx_response');
+                jQuery('<p class="icl_ajx_response" style="display: block">'+wcml_language_upgrade_notices.dont_close+'</p>').insertBefore('#icl_ajx_response');
                 return false;
             }
         });

@@ -51,7 +51,7 @@ class WCML_Currency_Switcher_Options_Dialog extends WPML_Templates_Factory {
                     'label'             => __( 'Template for currency switcher', 'woocommerce-multilingual' ),
                     'parameters'        => __( 'Available parameters', 'woocommerce-multilingual' ),
                     'template_tip'      => __( 'Default: %name% (%symbol%) - %code%', 'woocommerce-multilingual' ),
-                    'parameters_list'   => '%code%, %symbol%, %name%, %subtotal%'
+                    'parameters_list'   => '%code%, %symbol%, %name%'
                 ),
                 'colors'    => array(
                     'label'                 => __( 'Currency switcher colors', 'woocommerce-multilingual' ),

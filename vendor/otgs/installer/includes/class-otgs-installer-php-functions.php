@@ -26,4 +26,8 @@ class OTGS_Installer_PHP_Functions {
 	public function time() {
 		return time();
 	}
+
+	public function phpversion() {
+		return phpversion();
+	}
 }

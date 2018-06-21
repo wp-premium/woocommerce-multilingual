@@ -138,5 +138,7 @@
 		<key name="woocommerce_price_display_suffix" />
 		<key name="woocommerce_email_from_name"/>
 		<key name="woocommerce_email_from_address" />
+		<key name="woocommerce_registration_privacy_policy_text" />
+		<key name="woocommerce_checkout_privacy_policy_text" />
 	</admin-texts>
 </wpml-config>

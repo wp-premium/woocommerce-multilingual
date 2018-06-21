@@ -312,20 +312,23 @@ class WCML_Product_Addons {
 
 	public function set_global_ids_in_query_args( $args ) {
 
-		remove_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
-		remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
-		remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
+		if ( is_product() ) {
 
-		$matched_addons_ids = wp_list_pluck( get_posts( $args ), 'ID' );
+			remove_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
+			remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
+			remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
 
-		if ( $matched_addons_ids ) {
-			$args['include'] = $matched_addons_ids;
-			unset( $args['tax_query'] );
+			$matched_addons_ids = wp_list_pluck( get_posts( $args ), 'ID' );
+
+			if ( $matched_addons_ids ) {
+				$args['include'] = $matched_addons_ids;
+				unset( $args['tax_query'] );
+			}
+
+			add_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
+			add_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
+			add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
 		}
-
-		add_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
-		add_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );
-		add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
 
 		return $args;
 	}

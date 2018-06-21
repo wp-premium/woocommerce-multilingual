@@ -119,18 +119,14 @@ class WCML_Switch_Lang_Request{
      */
     public function get_server_host_name() {
         $host = isset( $_SERVER[ 'HTTP_HOST' ] ) ? $_SERVER[ 'HTTP_HOST' ] : null;
-        $host = $host !== null
-            ? $host
-            : ( isset( $_SERVER[ 'SERVER_NAME' ] )
-                ? $_SERVER[ 'SERVER_NAME' ]
-                . ( isset( $_SERVER[ 'SERVER_PORT' ] ) && ! in_array( $_SERVER[ 'SERVER_PORT' ], array( 80, 443 ) )
-                    ? ':' . $_SERVER[ 'SERVER_PORT' ] : '' )
-                : '' );
-
-        //Removes standard ports 443 (80 should be already omitted in all cases)
-        $result = preg_replace( "@:[443]+([/]?)@", '$1', $host );
-
-        return $result;
+	    if ( ! $host ) {
+		    $host        = isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : null;
+		    $server_port = isset( $_SERVER['SERVER_PORT'] ) ? $_SERVER['SERVER_PORT'] : null;
+		    if ( $host && $server_port && ! in_array( $server_port, array( 80, 443 ), false ) ) {
+			    $host = $host . ':' . $server_port;
+		    }
+	    }
+	    return preg_replace( '@:[443]+([/]?)@', '$1', $host );
     }
 
     /**
@@ -141,7 +137,6 @@ class WCML_Switch_Lang_Request{
     }
 
     public function get_requested_lang() {
-
         return $this->is_comments_post_page() ? $this->get_cookie_lang() : $this->get_request_uri_lang();
     }
 
@@ -157,12 +152,12 @@ class WCML_Switch_Lang_Request{
      * @return string|false language code that can be determined from the currently requested URI.
      */
     public function get_request_uri_lang() {
+	    /** @var WPML_URL_Converter $wpml_url_converter */
         global $wpml_url_converter;
 
-        $req_url = isset($_SERVER[ 'HTTP_HOST' ])
-            ? untrailingslashit($_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ] ) : "";
+	    $req_url = isset( $_SERVER['HTTP_HOST'] ) ? untrailingslashit( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '';
 
-        return $wpml_url_converter->get_language_from_url ( $req_url );
+	    return $wpml_url_converter->get_language_from_url( $req_url );
     }
 
 }

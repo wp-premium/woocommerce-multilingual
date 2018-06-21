@@ -14,7 +14,6 @@ class WCML_Status_Status_UI extends WPML_Templates_Factory {
 
         $model = array(
             'icl_version' => defined( 'ICL_SITEPRESS_VERSION' ),
-            'media_version' => defined( 'WPML_MEDIA_VERSION' ),
             'tm_version' => defined( 'WPML_TM_VERSION' ),
             'st_version' => defined( 'WPML_ST_VERSION' ),
             'wc' => class_exists( 'WooCommerce' ),
@@ -25,7 +24,6 @@ class WCML_Status_Status_UI extends WPML_Templates_Factory {
                 'is_setup' => __( '%s is set up.', 'woocommerce-multilingual' ),
                 'not_setup' => __( '%s is not set up.', 'woocommerce-multilingual' ),
                 'wpml' => '<strong>WPML</strong>',
-                'media' => '<strong>WPML Media</strong>',
                 'tm' => '<strong>WPML Translation Management</strong>',
                 'st' => '<strong>WPML String Translation</strong>',
                 'wc' => '<strong>WooCommerce</strong>',

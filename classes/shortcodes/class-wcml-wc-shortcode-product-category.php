@@ -31,7 +31,7 @@ class WCML_WC_Shortcode_Product_Category {
 	 *
 	 * @return array
 	 */
-	public function translate_category( $args, $atts ) {
+	public function translate_category( $args, $atts = null ) {
 
 		if( $this->sitepress->get_default_language() !== $this->sitepress->get_current_language() ) {
 

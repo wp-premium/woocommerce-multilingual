@@ -2350,8 +2350,8 @@ class WCML_Bookings {
 	public function filter_translatable_documents( $icl_post_types ){
 
 		if(
-			( isset( $_GET[ 'post' ] ) && get_post_type( $_GET[ 'post' ] ) == 'wc_booking' ) ||
-			( isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'wc_booking' )
+			( isset( $_GET[ 'post_type' ] ) && 'wc_booking' === $_GET[ 'post_type' ] ) ||
+			( isset( $_GET[ 'post' ] ) && 'wc_booking' === get_post_type( $_GET[ 'post' ] ) )
 		){
 			unset( $icl_post_types[ 'wc_booking' ] );
 		}

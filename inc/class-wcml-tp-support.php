@@ -230,7 +230,6 @@ class WCML_TP_Support {
         if ( $post->post_type == 'product' ) {
 
             $product_images   = $this->woocommerce_wpml->media->product_images_ids( $post->ID );
-            $product_images   = $this->woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $post->ID );
             foreach ( $product_images as $image_id ) {
                 $attachment_data = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT post_title,post_excerpt,post_content FROM {$this->wpdb->posts} WHERE ID = %d", $image_id ) );
                 if ( ! $attachment_data ) {

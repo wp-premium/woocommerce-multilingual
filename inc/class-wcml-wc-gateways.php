@@ -151,7 +151,7 @@ class WCML_WC_Gateways{
 
     function register_and_set_gateway_strings_language(){
 
-	    foreach( $_POST as $key => $language ){
+	    foreach( $_POST as $key => $value ){
 
 		    if( '_enabled' === substr( $key, -8 ) ){
 			    $gateway = str_replace( '_enabled', '',  $key );
@@ -165,17 +165,20 @@ class WCML_WC_Gateways{
 		    foreach ( $text_keys as $text_key ) {
 			    $gateway_string_name = str_replace( 'woocommerce_', '', $gateway ) . '_gateway_' . $text_key;
 			    $gateway_key         = $gateway . '_' . $text_key;
+			    $context = 'woocommerce';
 
 			    $string_value     = isset( $_POST[ $gateway_key ] ) ? $_POST[ $gateway_key ] : '';
 			    $opt_string_value = isset( $gateway_settings[ $text_key ] ) ? $gateway_settings[ $text_key ] : $string_value;
 
-			    $context = 'woocommerce';
+			    $language_key = 'wcml_lang-' . $gateway . '_settings-' . $text_key;
+			    $language     = isset( $_POST[ $language_key ] ) ? $_POST[ $language_key ] : $this->woocommerce_wpml->strings->get_string_language( $opt_string_value, $context );
 
-			    do_action( 'wpml_register_single_string', $context, $gateway_string_name, $string_value, false, $this->woocommerce_wpml->strings->get_string_language( $opt_string_value, $context ) );
+			    do_action( 'wpml_register_single_string', $context, $gateway_string_name, $string_value, false, $language );
 
 			    $this->woocommerce_wpml->strings->set_string_language( $string_value, $context, $gateway_string_name, $language );
 		    }
 	    }
+
     }
 
     public function get_gateway_text_keys_to_translate(){

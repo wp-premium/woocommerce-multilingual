@@ -5,10 +5,10 @@ class WCML_Setup_Introduction_UI extends WPML_Templates_Factory {
     private $woocommerce_wpml;
     private $next_step_url;
 
-    function __construct( &$woocommerce_wpml, $next_step_url ){
+    public function __construct( $woocommerce_wpml, $next_step_url ){
         parent::__construct();
 
-        $this->woocommerce_wpml = &$woocommerce_wpml;
+        $this->woocommerce_wpml = $woocommerce_wpml;
         $this->next_step_url = $next_step_url;
 
     }

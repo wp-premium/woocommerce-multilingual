@@ -745,39 +745,6 @@ class WCML_Multi_Currency_Prices {
 	}
 
 	/**
-	 * @param woocommerce_wpml $woocommerce_wpml
-	 * @param string $currency
-	 *
-	 * @return string
-	 */
-	public function get_cart_subtotal_in_given_currency( woocommerce_wpml $woocommerce_wpml, $currency ) {
-		$multi_currency       = $woocommerce_wpml->multi_currency;
-		$client_currency      = $multi_currency->get_client_currency();
-		$woocommerce_currency = get_option( 'woocommerce_currency' );
-
-		$multi_currency->set_client_currency( $currency );
-
-		if ( $client_currency === $woocommerce_currency ) {
-			$cart_object = $woocommerce_wpml->cart;
-			$cart_object->woocommerce_calculate_totals( WC()->cart, $currency );
-
-			add_filter( 'raw_woocommerce_price', array( $this, 'convert_raw_woocommerce_price' ) );
-			add_filter( 'woocommerce_currency', array( $multi_currency, 'get_client_currency' ) );
-			$cart_subtotal = WC()->cart->get_cart_subtotal();
-			remove_filter( 'raw_woocommerce_price', array( $this, 'convert_raw_woocommerce_price' ) );
-			remove_filter( 'woocommerce_currency', array( $multi_currency, 'get_client_currency' ) );
-		} else {
-			add_filter( 'woocommerce_product_get_price', array( $this, 'get_original_product_price' ), 10, 2 );
-			$cart_subtotal = WC()->cart->get_cart_subtotal();
-			remove_filter( 'woocommerce_product_get_price', array( $this, 'get_original_product_price' ), 10, 2 );
-		}
-
-		$multi_currency->set_client_currency( $client_currency );
-
-		return $cart_subtotal;
-	}
-
-	/**
 	 * @param float $value
 	 * @param WC_Product $product
 	 *
