@@ -62,7 +62,7 @@ class WCML_Compatibility {
 		}
 
 		//Product Bundle
-		if ( class_exists( 'WC_Product_Bundle' ) ) {
+		if ( class_exists( 'WC_Product_Bundle' ) && function_exists( 'WC_PB' ) ) {
 			if ( version_compare( WC_PB()->version, '5.0.0', '<' ) ) {
 				$this->product_bundles = new WCML_Product_Bundles_Legacy( $this->sitepress, $this->woocommerce_wpml, $this->tp );
 				$this->product_bundles->add_hooks();
@@ -103,7 +103,7 @@ class WCML_Compatibility {
 			$this->sensei = new WCML_Sensei(
 				$this->sitepress,
 				$this->wpdb,
-				new WPML_Custom_Columns( $this->wpdb, $this->sitepress )
+				new WPML_Custom_Columns( $this->sitepress )
 			);
 			$this->sensei->add_hooks();
 		}

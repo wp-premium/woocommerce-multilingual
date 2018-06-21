@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.9.5
-Stable tag: 4.2.10
+Tested up to: 4.9.6
+Stable tag: 4.3.2
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -57,7 +57,6 @@ WooCommerce Multilingual checks that the following versions of WPML and their co
 * WPML Multilingual CMS       - 3.4
 * WPML String Translation     - 2.0
 * WPML Translation Management - 2.2
-* WPML Media                  - 2.1
 
 Without having all these running, WooCommerce Multilingual will not be able to run.
 
@@ -73,7 +72,6 @@ Without having all these running, WooCommerce Multilingual will not be able to r
 * WPML Multilingual CMS 3.4 or later
 * WPML String Translation 2.0 or later
 * WPML Translation Management 2.2 or later
-* WPML Media 2.1 or later
 
 = WordPress automatic installation =
 In your WordPress dashboard, go to the Plugins section and click 'Add new'.
@@ -141,6 +139,34 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.3.2 =
+* Fixed an error when adding a product to cart in specific situations
+* Error while adding product to cart wit WC < 3.4.0
+* Fixed issue with product images not showing in translations
+* SW Product bundles error while activating
+
+= 4.3.1 =
+* Error in WCML_Currency_Switcher_Templates while activating
+* Fix an issue where New order admin email subject and heading were overwrites with wrong data
+* Fixed the missing duplicated images when translating a product.
+
+= 4.3.0 =
+* Added ability to filtering comments by language
+* Use display-as-translated for product images and product galleries
+* Fixed issue when deleting a currency in Safari
+* Fixed issue causing fatal error when activating WCML and WPML String Translation
+* Changes in the Fixer.io API
+* Added a fix where in some situation the product slug URL is not translated correctly
+* Variable product removed from cart when switching language on the cart page
+* Multicurrency in defaults not calculated correctly when creating manual order
+* Product Bundles - search products returned wrong values
+* Translating custom product category base leads to products returning error 404 when both bases contains the same string
+* Table Rate Shipping - products with different classes produce no shipping method on cart page
+* New order admin email subject and heading were overwrites with wrong data
+* Fix small issue in product stock sync
+* Refund and restock - not working properly when refunding the variation in second language
+* WooCommerce Product Bundles -> original overwrites translation (visible when using title/description override)
 
 = 4.2.10 =
 * Fix compatibility issues with PHP 7.1

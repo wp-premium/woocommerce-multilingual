@@ -126,9 +126,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
          * Images
          */
         $product_images = $this->woocommerce_wpml->media->product_images_ids( $this->product_id );
-        // Exclude not-duplicated attachments and featured
-        $product_images = $this->woocommerce_wpml->media->exclude_not_duplicated_attachments( $product_images, $this->product_id );
-        
+
 	    if ( count( $product_images ) ) {
 
             $images_section = new WPML_Editor_UI_Field_Section( __( 'Images', 'woocommerce-multilingual' ) );
@@ -713,17 +711,6 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
         $this->woocommerce_wpml->attributes->sync_default_product_attr( $this->product_id, $tr_product_id, $this->get_target_language() );
 
-        //sync media
-        if ( $this->woocommerce_wpml->media->settings[ 'duplicate_featured' ] ) {
-            //sync feature image
-            $this->woocommerce_wpml->media->sync_thumbnail_id( $this->product_id, $tr_product_id, $this->get_target_language() );
-        }
-
-        if ( $this->woocommerce_wpml->media->settings[ 'duplicate_media' ] ) {
-            //sync product gallery
-            $this->woocommerce_wpml->media->sync_product_gallery( $this->product_id );
-        }
-
         // synchronize post variations
         $this->woocommerce_wpml->sync_variations_data->sync_product_variations( $this->product_id, $tr_product_id, $this->get_target_language(), $translations, true );
 
@@ -734,16 +721,22 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         if ( $product_images ) {
             foreach ( $product_images as $image_id ) {
                 $trnsl_prod_image = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $this->get_target_language() );
-                //update image texts
-                $this->wpdb->update(
-                    $this->wpdb->posts,
-                    array(
-                        'post_title' => $translations[ md5( 'image-id-' . $image_id . '-title' ) ],
-                        'post_content' => $translations[ md5( 'image-id-' . $image_id . '-description' ) ],
-                        'post_excerpt' => $translations[ md5( 'image-id-' . $image_id . '-caption' ) ]
-                    ),
-                    array( 'id' => $trnsl_prod_image )
-                );
+
+                if ( ! $trnsl_prod_image ) {
+	                $trnsl_prod_image = $this->create_base_media_translation( $image_id, $this->get_target_language() );
+                }
+
+	            //update image texts
+	            $this->wpdb->update(
+	            	$this->wpdb->posts,
+		            array(
+			            'post_title'   => $translations[ md5( 'image-id-' . $image_id . '-title' ) ],
+			            'post_content' => $translations[ md5( 'image-id-' . $image_id . '-description' ) ],
+			            'post_excerpt' => $translations[ md5( 'image-id-' . $image_id . '-caption' ) ]
+		            ),
+		            array( 'id' => $trnsl_prod_image )
+	            );
+
 				if ( isset( $translations[ md5( 'image-id-' . $image_id . '-alt-text' ) ] ) ) {
 					update_post_meta( $trnsl_prod_image, '_wp_attachment_image_alt', $translations[ md5( 'image-id-' . $image_id . '-alt-text' ) ] );
 				}
@@ -906,7 +899,16 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         }
     }
 
+	private function create_base_media_translation( $attachment_id, $target_lang ) {
+		$duplicate_id = $this->sitepress->make_duplicate( $attachment_id, $target_lang );
+		delete_post_meta( $duplicate_id, '_icl_lang_duplicate_of' );
 
+		foreach ( array( '_wp_attachment_metadata', '_wp_attached_file' ) as $attachment_meta_key ) {
+			update_post_meta( $duplicate_id, $attachment_meta_key, get_post_meta( $attachment_id, $attachment_meta_key, true ) );
+		}
+
+		return $duplicate_id;
+	}
 
 	public function requires_translation_complete_for_each_field() {
 		return false;

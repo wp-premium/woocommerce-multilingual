@@ -59,6 +59,7 @@ class WCML_Exchange_Rates_UI extends WPML_Templates_Factory {
                 'monthly'           => __( 'Monthly on the', 'woocommerce-multilingual' ),
                 'key_placeholder'   => __( 'Enter API key', 'woocommerce-multilingual' ),
                 'key_required'      => __( 'API key (required)', 'woocommerce-multilingual' ),
+                'fixerio_warning'   => __( 'WARNING! Minor limitations include 1000 requests/month limit and EUR being the only available base currency for customers using a free account. If you need more than 1000 requests per month or want to use all 170 available base currencies, you’ll need to choose one of the paid plans starting at only $10 per month.', 'woocommerce-multilingual' ),
                 'nonce'             => wp_create_nonce( 'update-exchange-rates' ),
                 'updated_time'      => sprintf(
                                         __('Last updated: %s', 'woocommerce-multilingual' ),

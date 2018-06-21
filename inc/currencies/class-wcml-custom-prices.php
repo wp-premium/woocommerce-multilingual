@@ -289,9 +289,11 @@ class WCML_Custom_Prices{
     //set variations without custom prices to not visible when "Show only products with custom prices in secondary currencies" is enabled
     public function filter_product_variations_with_custom_prices( $is_visible, $variation_id ){
 
-        if( is_product() && $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
-            isset($this->woocommerce_wpml->settings['display_custom_prices']) &&
-            $this->woocommerce_wpml->settings['display_custom_prices'] ){
+	    if( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
+	        isset($this->woocommerce_wpml->settings['display_custom_prices']) &&
+	        $this->woocommerce_wpml->settings['display_custom_prices'] &&
+	        is_product() )
+	    {
 
             $orig_child_id = $this->woocommerce_wpml->products->get_original_product_id( $variation_id );
 

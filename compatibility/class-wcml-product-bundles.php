@@ -57,6 +57,7 @@ class WCML_Product_Bundles {
 
 			add_action( 'wp_insert_post', array( $this, 'sync_product_bundle_meta_with_translations' ), 10 );
 
+			add_filter( 'woocommerce_json_search_found_products', array( $this, 'woocommerce_json_search_filter_found_products' ) );
 		}
 
 		// product bundle using separate custom fields for prices
@@ -820,6 +821,17 @@ class WCML_Product_Bundles {
 			add_option( 'wcml_upgrade_bundles_items_relationships', true );
 
 		}
+	}
+
+	public function woocommerce_json_search_filter_found_products( $found_products ) {
+
+		foreach ( $found_products as $id => $product_name ) {
+			if ( $this->sitepress->get_language_for_element( $id, 'post_' . get_post_type( $id ) ) != $this->sitepress->get_current_language() ) {
+				unset( $found_products[ $id ] );
+			}
+		}
+
+		return $found_products;
 	}
 
 }

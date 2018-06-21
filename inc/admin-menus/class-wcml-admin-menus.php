@@ -2,17 +2,14 @@
 
 class WCML_Admin_Menus{
 
-	/** @var woocommerce_wpml */
     private static $woocommerce_wpml;
-	/** @var SitePress */
     private static $sitepress;
-	/** @var SitePress */
     private static $wpdb;
 
-    public static function set_up_menus( woocommerce_wpml $woocommerce_wpml, $sitepress, wpdb $wpdb, $check_dependencies ){
-	    self::$woocommerce_wpml = $woocommerce_wpml;
-	    self::$sitepress        = $sitepress;
-	    self::$wpdb             = $wpdb;
+    public static function set_up_menus( &$woocommerce_wpml, &$sitepress, &$wpdb, $check_dependencies ){
+        self::$woocommerce_wpml =& $woocommerce_wpml;
+        self::$sitepress =& $sitepress;
+        self::$wpdb =& $wpdb;
 
         if( self::is_page_without_admin_language_switcher() ){
             self::remove_wpml_admin_language_switcher();
@@ -50,9 +47,15 @@ class WCML_Admin_Menus{
                 //force add translations-queue page for shop manager
                 $wp_api = self::$sitepress->get_wp_api();
                 if (!$wp_api->current_user_can('wpml_manage_translation_management')) {
-                    $wp_api->add_submenu_page(null,
-                        __( 'Translations', 'woocommerce-multilingual' ), __( 'Translations', 'woocommerce-multilingual' ),
-                        'wpml_operate_woocommerce_multilingual', WPML_TM_FOLDER . '/menu/translations-queue.php', array($WPML_Translation_Management, 'translation_queue_page'));
+	                $menu               = array();
+	                $menu['order']      = 400;
+	                $menu['page_title'] = __( 'Translations', 'wpml-translation-management' );
+	                $menu['menu_title'] = __( 'Translations', 'wpml-translation-management' );
+	                $menu['capability'] = 'wpml_operate_woocommerce_multilingual';
+	                $menu['menu_slug']  = WPML_TM_FOLDER . '/menu/translations-queue.php';
+	                $menu['function']   = array( $WPML_Translation_Management, 'translation_queue_page' );
+	                $menu['icon_url']   = ICL_PLUGIN_URL . '/res/img/icon16.png';
+	                do_action( 'wpml_admin_menu_register_item', $menu );
                 }
             }
         } else {
@@ -121,6 +124,8 @@ class WCML_Admin_Menus{
         if ( is_null( $post ) )
             return;
 
+	    $tracking_link = new WCML_Tracking_Link();
+
         $get_post_type = get_post_type( $post->ID );
 
         if ( $get_post_type == 'product' && $pagenow == 'edit.php' ) {
@@ -150,12 +155,24 @@ class WCML_Admin_Menus{
             <?php
         }
 
+        $template = '
+            <span class="button" style="padding:4px;margin-top:0px; float: left;">
+                <img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon16.png" width="16" height="16" style="margin-bottom:-4px" /> 
+                <a href="%1$s" target="_blank" style="text-decoration: none;">%2$s</a>
+            </span><br /><br />
+        ';
+
         if ( isset($_GET['taxonomy']) ) {
             $pos = strpos( $_GET['taxonomy'], 'pa_' );
 
             if ( $pos !== false && $pagenow == 'edit-tags.php' ) {
-                $prot_link = '<span class="button" style="padding:4px;margin-top:0px; float: left;"><img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon16.png" width="16" height="16" style="margin-bottom:-4px" /> <a href="' . WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/', 'woocommerce-multilingual', 'documentation', '#3' ) . '" target="_blank" style="text-decoration: none;">' .
-                    __( 'How to translate attributes', 'woocommerce-multilingual' ) . '<\/a>' . '<\/span><br \/><br \/>';
+	            $href = $tracking_link->generate(
+		            'https://wpml.org/documentation/related-projects/woocommerce-multilingual/',
+		            'woocommerce-multilingual',
+		            'documentation',
+		            '#3'
+	            );
+	            $prot_link = sprintf( $template, $href, __( 'How to translate attributes', 'woocommerce-multilingual' ) );
                 ?>
                 <script type="text/javascript">
                     jQuery("table.widefat").before('<?php echo $prot_link ?>');
@@ -165,9 +182,13 @@ class WCML_Admin_Menus{
         }
 
         if ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'product_cat' ) {
-
-            $prot_link = '<span class="button" style="padding:4px;margin-top:0px; float: left;"><img align="baseline" src="' . ICL_PLUGIN_URL . '/res/img/icon16.png" width="16" height="16" style="margin-bottom:-4px" /> <a href="' . WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/', 'woocommerce-multilingual', 'documentation', '#3' ) . '" target="_blank" style="text-decoration: none;">' .
-                __( 'How to translate product categories', 'woocommerce-multilingual' ) . '<\/a>' . '<\/span><br \/><br \/>';
+	        $href = $tracking_link->generate(
+		        'https://wpml.org/documentation/related-projects/woocommerce-multilingual/',
+		        'woocommerce-multilingual',
+		        'documentation',
+		        '#3'
+	        );
+	        $prot_link = sprintf( $template, $href, __( 'How to translate product categories', 'woocommerce-multilingual' ) );
             ?>
             <script type="text/javascript">
                 jQuery("table.widefat").before('<?php echo $prot_link ?>');
@@ -181,36 +202,43 @@ class WCML_Admin_Menus{
         remove_meta_box('icl_div_config', convert_to_screen('shop_coupon'), 'normal');
     }
 
-    public static function restrict_admin_with_redirect() {
-	    global $pagenow;
+	public static function restrict_admin_with_redirect() {
+		global $pagenow;
 
-	    $is_post_product_translation = isset( $_GET['post'] ) && 'product' === get_post_type( $_GET['post'] ) && ! self::$woocommerce_wpml->products->is_original_product( $_GET['post'] );
+		if ( self::$woocommerce_wpml->settings['trnsl_interface'] ) {
 
-	    if ( self::$woocommerce_wpml->settings['trnsl_interface'] ) {
+			if (
+				'post.php' === $pagenow &&
+				! is_ajax() &&
+				self::is_post_product_translation_screen() &&
+				self::is_post_action_needs_redirect()
+			) {
+				$prid = (int) $_GET['post'];
+				wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
+				exit;
 
-		    $is_admin_duplicate_page_action = 'admin.php' === $pagenow && isset( $_GET['action'] ) && 'duplicate_product' === $_GET['action'];
-		    $is_post_action_needs_redirect = ! isset( $_GET['action'] ) || ( isset( $_GET['action'] ) && ! in_array( $_GET['action'], array( 'trash', 'delete', 'untrash' ) ) );
+			} elseif ( self::is_admin_duplicate_page_action( $pagenow ) && self::is_post_product_translation_screen() ) {
 
-		    if (
-			    'post.php' === $pagenow &&
-			    ! is_ajax() &&
-			    $is_post_product_translation &&
-			    $is_post_action_needs_redirect
-		    ) {
-			    $prid = (int) $_GET['post'];
-			    wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
-			    exit;
+				wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products' ) );
+				exit;
+			}
 
-		    } elseif ( $is_admin_duplicate_page_action && $is_post_product_translation ) {
+		} elseif ( 'post.php' === $pagenow && self::is_post_product_translation_screen() ) {
+			add_action( 'admin_notices', array( __CLASS__, 'inf_editing_product_in_non_default_lang' ) );
+		}
 
-			    wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products' ) );
-			    exit;
-		    }
+	}
 
-	    } elseif ( 'post.php' === $pagenow && $is_post_product_translation ) {
-		    add_action( 'admin_notices', array( __CLASS__, 'inf_editing_product_in_non_default_lang' ) );
-	    }
+	private static function is_post_product_translation_screen(){
+        return isset( $_GET['post'] ) && 'product' === get_post_type( $_GET['post'] ) && ! self::$woocommerce_wpml->products->is_original_product( $_GET['post'] );
+    }
 
+	private static function is_post_action_needs_redirect(){
+        return ! isset( $_GET['action'] ) || ( isset( $_GET['action'] ) && ! in_array( $_GET['action'], array( 'trash', 'delete', 'untrash' ) ) );
+    }
+
+	private static function is_admin_duplicate_page_action( $pagenow ){
+        return 'admin.php' === $pagenow && isset( $_GET['action'] ) && 'duplicate_product' === $_GET['action'];
     }
 
     public static function inf_editing_product_in_non_default_lang(){
@@ -273,5 +301,7 @@ class WCML_Admin_Menus{
             }
         }
     }
+
+
 
 }

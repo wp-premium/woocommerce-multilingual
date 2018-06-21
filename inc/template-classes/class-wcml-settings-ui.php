@@ -106,7 +106,7 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
 
             'troubleshooting' => array(
                 'url'   => admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ),
-                'label' => __( 'Troubleshooting page', 'woocommerce-multilingual' )
+                'label' => __( 'Troubleshooting', 'woocommerce-multilingual' )
             )
         );
 

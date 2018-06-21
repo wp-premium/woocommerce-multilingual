@@ -1,25 +1,23 @@
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
 
-    jQuery(document).on( 'click', '.wcml_currency_switcher a', function( event ){
-        event.preventDefault();
-        if( jQuery(this).is(':disabled') || jQuery(this).parent().hasClass('wcml-cs-active-currency') || jQuery(this).hasClass('wcml-cs-active-currency')){
-            return false;
-        }else{
-            jQuery( this ).off( event );
-        }
+    jQuery(document).on('click', '.wcml_currency_switcher a', wcml_switch_currency_handler );
 
-        wcml_load_currency( jQuery(this).attr('rel') );
-    });
-
-    if( typeof woocommerce_price_slider_params !== 'undefined' ){
-        woocommerce_price_slider_params.currency_symbol = wcml_mc_settings.current_currency.symbol;
-    }
 });
 
+var wcml_switch_currency_handler = function( event ){
+    event.preventDefault();
+    if( jQuery(this).is(':disabled') || jQuery(this).parent().hasClass('wcml-cs-active-currency') || jQuery(this).hasClass('wcml-cs-active-currency')){
+        return false;
+    }else{
+        jQuery( this ).off( event );
+    }
+
+    wcml_load_currency( jQuery(this).attr('rel') );
+}
+
 function wcml_load_currency( currency, force_switch ){
-    var ajax_loader = jQuery('<img style=\"margin-left:10px;\" width=\"16\" heigth=\"16\" src=\"' + wcml_mc_settings.wcml_spinner +'\" />')
-    jQuery('.wcml_currency_switcher').after();
-    ajax_loader.insertAfter(jQuery('.wcml_currency_switcher'));
+    var ajax_loader = jQuery('<img class=\"wcml-spinner\" width=\"16\" heigth=\"16\" src=\"' + wcml_mc_settings.wcml_spinner +'\" />');
+    jQuery('.wcml_currency_switcher').append(ajax_loader);
 
     if ( typeof force_switch === 'undefined') force_switch = 0;
 
@@ -40,7 +38,7 @@ function wcml_load_currency( currency, force_switch ){
             }else{
 
                 var target_location = window.location.href;
-                if(-1 !== target_location.indexOf('#') || wcml_mc_settings.w3tc || wcml_mc_settings.sg_cachepress ){
+                if( -1 !== target_location.indexOf('#') || !jQuery.isEmptyObject( wcml_mc_settings ) ){
 
                     var url_dehash = target_location.split('#');
                     var hash = url_dehash.length > 1 ? '#' + url_dehash[1] : '';
@@ -57,7 +55,6 @@ function wcml_load_currency( currency, force_switch ){
                 wcml_reset_cart_fragments();
 
                 window.location = target_location;
-
             }
         }
     });

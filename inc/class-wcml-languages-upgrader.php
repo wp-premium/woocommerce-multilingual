@@ -290,9 +290,9 @@ class WCML_Languages_Upgrader{
         wp_register_script( 'wcml-lang-notice', WCML_PLUGIN_URL . '/res/js/languages_notice' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION );
         wp_enqueue_script( 'wcml-lang-notice');
 
-        wp_localize_script( 'wcml-lang-notice', 'wcml_settings',
+        wp_localize_script( 'wcml-lang-notice', 'wcml_language_upgrade_notices',
             array(
-                'warn' => esc_html__( "Downloading translations... Please don't close this page.", 'woocommerce-multilingual' )
+                'dont_close' => esc_html__( "Downloading translations... Please don't close this page.", 'woocommerce-multilingual' )
             )
         );
 

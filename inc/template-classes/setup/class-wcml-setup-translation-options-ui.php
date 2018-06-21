@@ -30,7 +30,7 @@ class WCML_Setup_Translation_Options_UI extends WPML_Templates_Factory {
                     '<a target="blank" href="https://wpml.org/documentation/related-projects/woocommerce-multilingual/displaying-untranslated-products-in-secondary-languages/">', '</a>'
                 ),
                 'label_translated'        => __( 'No - only display products on other languages once they are translated', 'woocommerce-multilingual' ),
-                'description_footer'        => __( 'Note, to change this later, go to %sWPML &raquo; Translation Management &raquo; Multilingual Content Setup.%s', 'woocommerce-multilingual' ),
+                'description_footer'        => __( 'Note, to change this later, go to %sWPML &raquo; Settings &raquo; Post Types Translation.%s', 'woocommerce-multilingual' ),
                 'continue'         => __( 'Continue', 'woocommerce-multilingual' ),
             ),
             'is_display_as_translated_checked' => $is_display_as_translated_checked,

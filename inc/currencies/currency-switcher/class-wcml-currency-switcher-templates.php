@@ -236,7 +236,10 @@ class WCML_Currency_Switcher_Templates {
 	private function are_template_paths_valid( $templates ) {
 		$paths_are_valid = true;
 		foreach ( $templates as $template ) {
-			if ( ! $template->is_path_valid() ) {
+			if (
+				$template instanceof WCML_Currency_Switcher_Template &&
+				! $template->is_path_valid()
+			) {
 				$paths_are_valid = false;
 				break;
 			}

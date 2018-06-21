@@ -23,6 +23,9 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
      */
     private $wc_currency;
 
+	/** @var WCML_Tracking_Link */
+	private $tracking_link;
+
     function __construct( &$woocommerce_wpml, &$sitepress ){
 
         $functions = array(
@@ -46,6 +49,7 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
         $this->load_custom_currency_option_boxes();
         $this->load_curency_switcher_option_boxes();
 
+        $this->tracking_link = new WCML_Tracking_Link();
     }
 
     public function get_model(){
@@ -100,7 +104,7 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
                 'multi_currency_option'     => WCML_MULTI_CURRENCIES_INDEPENDENT,
                 'mco_disabled'              => empty($wc_currency),
                 'label_mco'                 => __( "Enable the multi-currency mode", 'woocommerce-multilingual' ),
-                'label_mco_learn_url'       => WCML_Links::generate_tracking_link( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/multi-currency-support-woocommerce/', 'multi-currency-support-woocommerce', 'documentation' ),
+                'label_mco_learn_url'       => $this->tracking_link->generate( 'https://wpml.org/documentation/related-projects/woocommerce-multilingual/multi-currency-support-woocommerce/', 'multi-currency-support-woocommerce', 'documentation' ),
                 'label_mco_learn_txt'       => __( 'Learn more', 'woocommerce-multilingual' ),
                 'update_currency_lang_nonce'=> wp_create_nonce( 'wcml_update_currency_lang' ),
                 'wpdate_default_cur_nonce'  => wp_create_nonce( 'wcml_update_default_currency' ),

@@ -41,10 +41,7 @@ class WCML_WC_Strings{
         //translate attribute label
         add_filter('woocommerce_attribute_label',array($this,'translated_attribute_label'),10,3);
         add_filter('woocommerce_checkout_product_title',array($this,'translated_checkout_product_title'),10,2);
-
-        if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.0.0', '<' ) ) {
-            add_filter( 'woocommerce_cart_item_name', array( $this, 'translated_cart_item_name' ), 10, 3 );
-        }
+        add_filter( 'woocommerce_cart_item_name', array( $this, 'translated_cart_item_name' ), 10, 2 );
 
         if( is_admin() && $pagenow == 'options-permalink.php' ){
             add_filter( 'gettext_with_context', array( $this, 'category_base_in_strings_language' ), 99, 3 );
@@ -124,29 +121,30 @@ class WCML_WC_Strings{
         return $label;
     }
 
-    function translated_cart_item_name( $title, $values, $cart_item_key ){
+	/**
+	 * @param string $title
+	 * @param array $values
+	 *
+	 * @return string
+	 */
+	function translated_cart_item_name( $title, array $values ) {
 
-        if( $values ){
-            $parent = wp_get_post_parent_id( $values['product_id'] );
-            $tr_product_id = apply_filters( 'translate_object_id', $values[ 'product_id' ], 'product', true );
-            $trnsl_title = get_the_title( $tr_product_id );
-            
-            if( $parent ){
-                $tr_parent = apply_filters( 'translate_object_id', $parent, 'product', true );
-                $trnsl_title = get_the_title( $tr_parent ) . ' &rarr; ' . $trnsl_title;
-            }
+		if ( $values ) {
 
-            if( strstr( $title,'</a>' ) ){
-                $trnsl_title = sprintf( '<a href="%s">%s</a>', $values['data']->get_permalink(), $trnsl_title );
-            }else{
-                $trnsl_title = $trnsl_title. '&nbsp;';
-            }
+			$product_id = $values['variation_id'] ? $values['variation_id'] : $values['product_id'];
 
-              $title = $trnsl_title;
-        }
+			$translated_product_id = apply_filters( 'translate_object_id', $product_id, 'product', true );
+			$translated_title   = get_the_title( $translated_product_id );
 
-        return $title;
-    }
+			if ( strstr( $title, '</a>' ) ) {
+				$title = sprintf( '<a href="%s">%s</a>', $values['data']->get_permalink(), $translated_title );
+			} else {
+				$title = $translated_title . '&nbsp;';
+			}
+		}
+
+		return $title;
+	}
 
     function translated_checkout_product_title( $title, $product ){
 

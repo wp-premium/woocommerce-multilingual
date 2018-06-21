@@ -131,10 +131,10 @@ class WCML_Ajax_Setup{
 			return;
 		}
 
-		$current_language = $this->sitepress->get_current_language();
+        $current_language = $this->sitepress->get_current_language();
 
-		$this->sitepress->switch_lang( $current_language, true );
-	}
+	    $this->sitepress->switch_lang($current_language, true);
+    }
 
 	/**
 	 * @param $endpoint string
