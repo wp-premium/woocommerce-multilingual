@@ -58,44 +58,11 @@ class WCML_Currency_Switcher_Template extends WPML_Templates_Factory {
         $wcml_settings  =  $this->woocommerce_wpml->get_settings();
         $multi_currency = $this->woocommerce_wpml->multi_currency;
 
-        if( preg_match( '#%subtotal%#', $format ) ) { // include cart total
-            if( !is_admin() ){
-	            $cart_subtotal = $multi_currency->prices->get_cart_subtotal_in_given_currency( $this->woocommerce_wpml, $currency );
-            }else{
-                switch( $wcml_settings['currency_options'][$currency]['position'] ){
-                    case 'left' :
-                        $price_format = '%1$s%2$s';
-                        break;
-                    case 'right' :
-                        $price_format = '%2$s%1$s';
-                        break;
-                    case 'left_space' :
-                        $price_format = '%1$s&nbsp;%2$s';
-                        break;
-                    case 'right_space' :
-                        $price_format = '%2$s&nbsp;%1$s';
-                        break;
-                }
-                $cart_subtotal = wc_price('1234.56',
-                    array(
-                        'currency' => $currency,
-                        'decimal_separator' => $wcml_settings['currency_options'][$currency]['decimal_sep'],
-                        'thousand_separator' => $wcml_settings['currency_options'][$currency]['thousand_sep'],
-                        'decimals' => $wcml_settings['currency_options'][$currency]['num_decimals'],
-                        'price_format' => $price_format
-                    )
-                );
-            }
-        }else{
-            $cart_subtotal = false;
-        }
-
-        $currency_format = preg_replace( array('#%name%#', '#%symbol%#', '#%code%#', '#%subtotal%#'),
+        $currency_format = preg_replace( array('#%name%#', '#%symbol%#', '#%code%#' ),
             array(
                 $wc_currencies[$currency],
                 get_woocommerce_currency_symbol( $currency ),
-                $currency,
-                $cart_subtotal
+                $currency
 
             ), $format );
 

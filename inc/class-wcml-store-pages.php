@@ -405,7 +405,7 @@ class WCML_Store_Pages{
 		    $is_mo_loading_disabled = WPML_Theme_Localization_Type::USE_ST_AND_NO_MO_FILES === $this->sitepress->get_setting('theme_localization_type' );
 	    }
 
-    	if( $st_prior_2_6 || !isset($is_mo_loading_disabled)  ){
+    	if( $st_prior_2_6 || !$is_mo_loading_disabled  ){
 		    $this->woocommerce_wpml->locale->switch_locale( $lang_code );
 	    }else{
 		    $this->sitepress->switch_lang( $lang_code );

@@ -208,7 +208,11 @@ class WCML_Currency_Switcher{
 	public function show_currency_switcher() {
 		$settings = $this->woocommerce_wpml->get_settings();
 
-		if ( is_product() && isset($settings['currency_switcher_product_visibility']) && $settings['currency_switcher_product_visibility'] === 1 ) {
+		if (
+			isset($settings['currency_switcher_product_visibility']) &&
+			$settings['currency_switcher_product_visibility'] === 1 &&
+			is_product()
+		) {
 			echo( do_shortcode( '[currency_switcher]' ) );
 		}
 	}

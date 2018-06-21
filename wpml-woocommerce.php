@@ -7,17 +7,17 @@
   Author URI: http://www.onthegosystems.com/
   Text Domain: woocommerce-multilingual
   Requires at least: 3.9
-  Tested up to: 4.9.5
-  Version: 4.2.10
+  Tested up to: 4.9.6
+  Version: 4.3.2
   WC requires at least: 2.1.0
-  WC tested up to: 3.3.5
+  WC tested up to: 3.4.2
 */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.2.10' );
+define( 'WCML_VERSION', '4.3.2' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -26,7 +26,6 @@ define( 'WCML_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 include WCML_PLUGIN_PATH . '/inc/constants.php';
 require WCML_PLUGIN_PATH . '/inc/missing-php-functions.php';
-require WCML_PLUGIN_PATH . '/inc/woocommerce-functions-wrapper.php';
 include WCML_PLUGIN_PATH . '/inc/installer-loader.php';
 include WCML_PLUGIN_PATH . '/inc/wcml-core-functions.php';
 include WCML_PLUGIN_PATH . '/inc/wcml-switch-lang-request.php';
@@ -49,12 +48,33 @@ if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists
 }
 
 // Load WooCommerce Multilingual when WPML is active
-add_action( 'wpml_loaded', array( 'woocommerce_wpml', 'instance' ) );
+global $woocommerce_wpml;
+$woocommerce_wpml = new woocommerce_wpml();
+$woocommerce_wpml->add_hooks();
 
-if( WCML_REST_API_Support::is_rest_api_request() ){
-	add_action( 'wpml_before_init', array( 'WCML_REST_API_Support', 'remove_wpml_global_url_filters' ), 0 );
+add_action( 'wpml_loaded', 'wcml_loader' );
+/**
+ * Load WooCommerce Multilingual after WPML is loaded
+ */
+function wcml_loader(){
+	$xdomain_data = new WCML_xDomain_Data( new WPML_Cookie() );
+	$xdomain_data->add_hooks();
+
+	$loaders = array(
+		'WCML_Product_Gallery_Filter_Factory',
+		'WCML_Update_Product_Gallery_Translation_Factory',
+		'WCML_Append_Gallery_To_Post_Media_Ids_Factory',
+		'WCML_Privacy_Content_Factory',
+	);
+
+	$action_filter_loader = new WPML_Action_Filter_Loader();
+	$action_filter_loader->load( $loaders );
 }
 
+$WCML_REST_API = new WCML_REST_API();
+if( $WCML_REST_API->is_rest_api_request() ){
+	add_action( 'wpml_before_init', array( $WCML_REST_API, 'remove_wpml_global_url_filters' ), 0 );
+}
 
 // Load WooCommerce Multilingual when WPML is NOT active
 add_action( 'plugins_loaded', 'load_wcml_without_wpml', 10000 );
@@ -64,3 +84,4 @@ function load_wcml_without_wpml() {
 		$woocommerce_wpml = new woocommerce_wpml();
 	}
 }
+

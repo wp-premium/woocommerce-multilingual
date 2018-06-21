@@ -27,9 +27,8 @@ class WCML_Multi_Currency_Resources{
 
         wp_register_script('wcml-mc-scripts', WCML_PLUGIN_URL . '/res/js/wcml-multi-currency' . WCML_JS_MIN . '.js', array('jquery'), WCML_VERSION, true);
 
-        wp_enqueue_script('wcml-mc-scripts');
 
-        $script_vars['wcml_spinner']    = WCML_PLUGIN_URL . '/res/images/ajax-loader.gif';
+        $script_vars['wcml_spinner']    =  ICL_PLUGIN_URL . '/res/img/ajax-loader.gif';
         $script_vars['current_currency']= array(
             'code'  => self::$multi_currency->get_client_currency(),
             'symbol'=> get_woocommerce_currency_symbol( self::$multi_currency->get_client_currency() )
@@ -37,21 +36,29 @@ class WCML_Multi_Currency_Resources{
 
 	    $script_vars = self::set_cache_compatibility_variables( $script_vars );
 
-        wp_localize_script('wcml-mc-scripts', 'wcml_mc_settings', $script_vars );
+	    wp_localize_script('wcml-mc-scripts', 'wcml_mc_settings', $script_vars );
+
+	    wp_enqueue_script('wcml-mc-scripts');
 
     }
 
-    private static function set_cache_compatibility_variables( $script_vars ){
+	private static function set_cache_compatibility_variables( $script_vars ) {
 
-    	$script_vars['w3tc'] = (int) ! empty( self::$multi_currency->W3TC )
-	                           || ( function_exists( 'wp_cache_is_enabled' ) && wp_cache_is_enabled() );
+		if (
+			(int) ! empty( self::$multi_currency->W3TC ) ||
+			( function_exists( 'wp_cache_is_enabled' ) && wp_cache_is_enabled() )
+		) {
+			$script_vars['w3tc'] = true;
+		}
 
-	    global $sg_cachepress_environment;
-	    if( $sg_cachepress_environment ){
-		    $script_vars['sg_cachepress'] = $sg_cachepress_environment->cache_is_enabled();
-	    }
+		global $sg_cachepress_environment;
+		if ( $sg_cachepress_environment && $sg_cachepress_environment->cache_is_enabled() ) {
+			$script_vars['sg_cachepress'] = true;
+		}
 
-    	return $script_vars;
-    }
+		$script_vars = apply_filters( 'wcml_cache_compatibility_variables', $script_vars );
+
+		return $script_vars;
+	}
 
 }

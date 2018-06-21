@@ -56,39 +56,41 @@
     show_error: function(repo, text){
         jQuery('#installer_repo_' + repo).find('.installer-error-box').html(text).show();
     },
-    
-    show_site_key_form: function(){
 
-        if( jQuery(this).hasClass('disabled') ) {
-            alert( jQuery(this).attr('title') );
+    show_site_key_form: function () {
+
+        var button = jQuery(this);
+
+        if (button.attr('disabled')) {
+            alert(button.attr('title'));
             return false;
         }
 
         otgs_wp_installer.reset_errors();
-        
-        var form = jQuery(this).parent().find('form.otgsi_site_key_form');
-        jQuery(this).prev().hide();
-        jQuery(this).hide();
-        form.css('display', 'inline');    
+
+        var form = button.closest('td').find('form.otgsi_site_key_form');
+        button.parent('p').hide();
+
+        form.show();
         form.find('input[name^=site_key_]').focus().val('');
-        form.find('input').removeAttr('disabled');        
-        
+        form.find('input').removeAttr('disabled');
+
         form.closest('.otgsi_register_product_wrap').addClass('otgsi_yellow_bg');
-        
+
         return false;
+
     },
-    
-    hide_site_key_form: function(){
-        var form = jQuery(this).closest('form');        
+
+    hide_site_key_form: function () {
+        var button = jQuery(this);
+        var form = button.closest('td').find('form');
         form.hide();
-        form.parent().find('.enter_site_key_js').show();
-        form.parent().find('.enter_site_key_js').prev().show();
-        
-        form.closest('.otgsi_register_product_wrap').removeClass('otgsi_yellow_bg');
+
+        form.closest('.otgsi_register_product_wrap').removeClass('otgsi_yellow_bg').find('.enter_site_key_wrap_js').show();
         otgs_wp_installer.reset_errors();
         return false;
     },
-    
+
     save_site_key: function(){
         
         var thisf = jQuery(this);
@@ -96,7 +98,7 @@
         jQuery(this).find('input').attr('disabled', 'disabled');        
         
         var spinner = jQuery('<span class="spinner"></span>');
-        spinner.css({display: 'inline-block', float: 'none'}).prependTo(jQuery(this));
+        spinner.css({display: 'inline-block', float: 'right', visibility: 'visible'}).prependTo(jQuery(this));
         
         otgs_wp_installer.reset_errors();
         

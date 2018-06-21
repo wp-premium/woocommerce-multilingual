@@ -54,6 +54,9 @@ class WCML_Terms{
 
 		if ( is_admin() ) {
 			add_action( 'admin_menu', array( $this, 'admin_menu_setup' ) );
+
+			add_filter( 'pre_option_default_product_cat', array( $this, 'pre_option_default_product_cat' ) );
+			add_filter( 'update_option_default_product_cat', array( $this, 'update_option_default_product_cat' ), 1, 2 );
 		}
 
 		add_action( 'delete_term', array( $this, 'wcml_delete_term' ), 10, 4 );
@@ -776,18 +779,14 @@ class WCML_Terms{
         return $filtered_terms;
     }
 
-
-
-
-    function set_flag_to_sync( $taxonomy, $el_id, $language_code ){
-
-        $elem_details = $this->sitepress->get_element_language_details( $el_id, 'tax_'.$taxonomy );
-        if( is_null( $elem_details->source_language_code ) )
-            return;
-
-        $this->check_if_sync_term_translation_needed( $el_id, $taxonomy );
-
-    }
+	function set_flag_to_sync( $taxonomy, $el_id, $language_code ) {
+		if ( $el_id ) {
+			$elem_details = $this->sitepress->get_element_language_details( $el_id, 'tax_' . $taxonomy );
+			if ( null !== $elem_details->source_language_code ) {
+				$this->check_if_sync_term_translation_needed( $el_id, $taxonomy );
+			}
+		}
+	}
 
     function check_if_sync_terms_needed(){
 
@@ -980,6 +979,41 @@ class WCML_Terms{
 		}
 
 		return true;
+	}
+
+	function pre_option_default_product_cat( ) {
+
+		$lang = $this->sitepress->get_current_language();
+
+		$lang          = $lang === 'all' ? $this->sitepress->get_default_language() : $lang;
+		$wcml_settings = $this->woocommerce_wpml->get_settings();
+		$ttid          = isset( $wcml_settings['default_categories'][ $lang ] ) ? (int) $wcml_settings['default_categories'][ $lang ] : 0;
+
+		return $ttid === 0
+			? false : $this->wpdb->get_var(
+				$this->wpdb->prepare(
+					"SELECT term_id
+		                     FROM {$this->wpdb->term_taxonomy}
+		                     WHERE term_taxonomy_id= %d
+		                     AND taxonomy='product_cat'",
+					$ttid
+				)
+			);
+	}
+
+	function update_option_default_product_cat( $oldvalue, $new_value ) {
+		$new_value     = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT term_taxonomy_id FROM {$this->wpdb->term_taxonomy} WHERE taxonomy='product_cat' AND term_id=%d", $new_value ) );
+		$translations  = $this->sitepress->get_element_translations( $this->sitepress->get_element_trid( $new_value, 'tax_product_cat' ) );
+		$wcml_settings = $this->woocommerce_wpml->get_settings();
+
+		if ( ! empty( $translations ) ) {
+			foreach ( $translations as $t ) {
+				$wcml_settings['default_categories'][ $t->language_code ] = $t->element_id;
+			}
+			if ( isset( $wcml_settings ) ) {
+				$this->woocommerce_wpml->update_settings( $wcml_settings );
+			}
+		}
 	}
 
 }

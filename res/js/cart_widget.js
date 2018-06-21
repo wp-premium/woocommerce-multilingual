@@ -8,8 +8,10 @@ jQuery(document).ready(function ($) {
 
 function wcml_reset_cart_fragments(){
     try {
-        jQuery( document.body ).trigger( 'wc_fragment_refresh' );
-        //backward compatibility for WC < 3.0
-        sessionStorage.removeItem( 'wc_fragments' );
+        jQuery(document).ready(function () {
+            jQuery(document.body).trigger('wc_fragment_refresh');
+            //backward compatibility for WC < 3.0
+            sessionStorage.removeItem('wc_fragments');
+        });
     } catch(err){}
 }

@@ -82,35 +82,6 @@ jQuery( function($) {
             });
         },
 
-        sync_product_gallery: function(){
-            jQuery.ajax({
-                type : "post",
-                url : ajaxurl,
-                data : {
-                    action: "trbl_gallery_images",
-                    wcml_nonce: jQuery('#trbl_gallery_images_nonce').val(),
-                    page: jQuery('#sync_galerry_page').val()
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if(jQuery('#count_galleries').val() == 0){
-                        WCML_Troubleshooting.run_next_troubleshooting_action();
-                        jQuery('.gallery_status').html(0);
-                    }else{
-                        var left = jQuery('#count_galleries').val()-5;
-                        if(left < 0 ){
-                            left = 0;
-                        }else{
-                            jQuery('#sync_galerry_page').val(parseInt(jQuery('#sync_galerry_page').val())+1)
-                        }
-                        jQuery('.gallery_status').html(left);
-                        jQuery('#count_galleries').val(left);
-                        WCML_Troubleshooting.sync_product_gallery();
-                    }
-                }
-            });
-        },
-
         sync_product_categories: function(){
             jQuery.ajax({
                 type : "post",
@@ -208,8 +179,6 @@ jQuery( function($) {
         run_next_troubleshooting_action: function(){
            if(jQuery('#wcml_sync_product_variations').is(':checked') && parseInt( jQuery('#count_prod_variat').val() ) !== 0 ){
                 WCML_Troubleshooting.sync_variations();
-            }else if(jQuery('#wcml_sync_gallery_images').is(':checked') && parseInt( jQuery('#count_galleries').val() ) !== 0 ){
-                WCML_Troubleshooting.sync_product_gallery();
             }else if(jQuery('#wcml_sync_categories').is(':checked') && parseInt( jQuery('#count_categories').val() ) !== 0 ){
                 WCML_Troubleshooting.sync_product_categories();
             }else if(jQuery('#wcml_duplicate_terms').is(':checked') && parseInt( jQuery('#count_terms').val() ) !== 0 ){

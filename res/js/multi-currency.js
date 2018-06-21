@@ -323,7 +323,7 @@ jQuery( function($){
             var elem = $( '#currency-lang-table a.otgs-ico-yes[data-language="'+lang+'"]' );
 
             if( currency ){
-                elem = $( '#currency-lang-table a.otgs-ico-yes[data-language="'+lang+'"]:not([data-currency="'+currency+'"])' );
+                elem = $( '#currency-lang-table a.otgs-ico-yes[data-language="'+lang+'"]' ).not( $( '[data-currency="'+currency+'"]' ) );
             }
 
             if( elem.length == 0 ){

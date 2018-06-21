@@ -43,7 +43,11 @@ class WCML_Status_Taxonomies_UI extends WPML_Templates_Factory {
         $taxonomies_data = array();
 
         foreach ( $taxonomies as $key => $taxonomy ) {
-	        if ( ! is_taxonomy_translated( $taxonomy ) || $this->sitepress->is_display_as_translated_taxonomy( $taxonomy ) ) {
+	        if (
+	        	'translation_priority' === $taxonomy ||
+	        	! is_taxonomy_translated( $taxonomy ) ||
+		        $this->sitepress->is_display_as_translated_taxonomy( $taxonomy )
+	        ) {
 		        continue;
 	        }
             $taxonomies_data[$key]['tax'] = $taxonomy;

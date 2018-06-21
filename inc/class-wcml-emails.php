@@ -298,19 +298,25 @@ class WCML_Emails{
     }
 
     public function new_order_email_heading( $heading ){
-        $heading = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading;
+	    $translated_heading = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading;
+	    if( !is_null( $translated_heading ) ){
+		    $heading = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->format_string( $translated_heading );
+	    }
 
         return $heading;
     }
 
     public function new_order_email_subject( $subject ){
-	    $subject = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject;
+	    $translated_subject = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject;
+	    if( !is_null( $translated_subject ) ){
+		    $subject = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->format_string( $translated_subject );
+	    }
 
 	    return $subject;
     }
 
     public function backend_new_order_admin_email( $order_id ){
-        if( isset( $_POST[ 'wc_order_action' ] ) && $_POST[ 'wc_order_action' ] == 'send_email_new_order' ){
+        if( isset( $_POST[ 'wc_order_action' ] ) && in_array( $_POST[ 'wc_order_action' ], array( 'send_email_new_order', 'send_order_details_admin' ) ) ){
             $this->new_order_admin_email( $order_id );
         }
     }

@@ -32,6 +32,7 @@ class WCML_Table_Rate_Shipping {
 
 		if ( ! is_admin() ) {
 			add_filter( 'get_the_terms', array( $this, 'shipping_class_id_in_default_language' ), 10, 3 );
+			add_filter( 'woocommerce_shipping_table_rate_is_available', array( $this, 'shipping_table_rate_is_available' ), 10, 3 );
 		}
 
 		if ( wcml_is_multi_currency_on() ) {
@@ -64,7 +65,7 @@ class WCML_Table_Rate_Shipping {
 			$this->show_pointer_info();
 
 			if( isset( $_POST[ 'shipping_label' ] ) &&
-				isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
+			    isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
 				do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
 				if( version_compare( WC()->version, '3.0.0', '<' ) ){
 					$shipping_labels = array_map( 'woocommerce_clean', $_POST[ 'shipping_label' ] );
@@ -164,6 +165,53 @@ class WCML_Table_Rate_Shipping {
 		}
 
 		return $row_base_price;
+	}
+
+	/**
+	 * @param bool $available
+	 * @param array $package
+	 * @param WC_Shipping_Method $object
+	 *
+	 * @return bool
+	 */
+	public function shipping_table_rate_is_available( $available, $package, $object ) {
+
+		if ( ! $available ) {
+			add_filter( 'option_woocommerce_table_rate_priorities_' . $object->instance_id, array(
+				$this,
+				'filter_table_rate_priorities'
+			) );
+			remove_filter( 'woocommerce_shipping_table_rate_is_available', array(
+				$this,
+				'shipping_table_rate_is_available'
+			), 10, 3 );
+
+			$available = $object->is_available( $package );
+
+			add_filter( 'woocommerce_shipping_table_rate_is_available', array(
+				$this,
+				'shipping_table_rate_is_available'
+			), 10, 3 );
+		}
+
+		return $available;
+	}
+
+	/**
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	public function filter_table_rate_priorities( $values ) {
+
+		foreach ( $values as $slug => $value ) {
+
+			$shipping_class_term                  = get_term_by( 'slug', $slug, 'product_shipping_class' );
+			$values[ $shipping_class_term->slug ] = $value;
+			unset( $values[ $slug ] );
+		}
+
+		return $values;
 	}
 
 }

@@ -65,7 +65,7 @@ class WCML_Multi_Currency_Shipping{
     public function convert_shipping_method_cost_settings( $settings ){
 
         $has_free_shipping_coupon = false;
-        if ( $coupons = WC()->cart->get_coupons() ) {
+        if ( WC()->cart && $coupons = WC()->cart->get_coupons() ) {
             foreach ( $coupons as $code => $coupon ) {
 
                 if (

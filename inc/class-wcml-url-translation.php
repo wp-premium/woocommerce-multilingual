@@ -67,6 +67,7 @@ class WCML_Url_Translation {
 		add_filter( 'redirect_canonical', array( $this, 'check_wc_tax_url_on_redirect' ), 10, 2 );
 		add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
 		add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
+		add_action( 'switch_blog', array( $this, 'maybe_remove_query_vars_filter' ) );
 
 		add_filter( 'post_type_link', array( $this, 'translate_product_post_type_link' ), 10, 2 );
 
@@ -452,8 +453,8 @@ class WCML_Url_Translation {
 
 				foreach ( (array) $value as $k => $v ) {
 
-					if ( $slug_details['slug'] != $slug_details['translated_slug'] && preg_match( '#^[^/]*/?' . $slug_match . '/#', $k ) ) {
-						$k = preg_replace( '#^([^/]*)(/?)' . $slug_match . '/#', '$1$2' . $slug_translation_match . '/', $k );
+					if ( $slug_details['slug'] != $slug_details['translated_slug'] && preg_match( '#(^|^/)' . $slug_match . '/#', $k ) ) {
+						$k = preg_replace( '#(^|^/)' . $slug_match . '/#', '$1'. $slug_translation_match . '/', $k );
 					}
 
 					$buff_value[ $k ] = $v;
@@ -905,6 +906,12 @@ class WCML_Url_Translation {
 		}
 
 		return $public_query_vars;
+	}
+
+	public function maybe_remove_query_vars_filter() {
+		if ( !is_plugin_active( basename( $this->sitepress->get_wp_api()->constant( 'WPML_ST_PATH' ) ) . '/plugin.php' ) ) {
+			remove_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
+		}
 	}
 
 	public function get_translated_product_base_by_lang( $language = false, $product_slug = false ) {

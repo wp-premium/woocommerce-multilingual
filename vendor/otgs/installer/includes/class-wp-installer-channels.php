@@ -103,6 +103,17 @@ class WP_Installer_Channels{
 	}
 
 	/**
+	 * @param $repository_id
+	 *
+	 * @return bool
+	 */
+	private function get_no_prompt( $repository_id ) {
+		$settings  = WP_Installer()->settings;
+
+		return ! empty( $settings['repositories'][ $repository_id ]['no-prompt'] );
+	}
+
+	/**
 	 * @param string $repository_id
 	 * @param array $downloads
 	 */
@@ -116,7 +127,7 @@ class WP_Installer_Channels{
 				'channels'        => $available_channels,
 				'repository_id'   => $repository_id,
 				'current_channel' => $this->get_channel( $repository_id ),
-				'no_prompt'       => !empty( WP_Installer()->settings['repositories'][ $repository_id ]['no-prompt'] ),
+				'no_prompt'       => $this->get_no_prompt( $repository_id ),
 				'nonce'           => wp_create_nonce( 'installer_set_channel:' . $repository_id )
 			);
 			extract( $args );

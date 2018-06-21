@@ -56,6 +56,7 @@ class WCML_Cart {
 			add_action( 'woocommerce_get_cart_item_from_session', array( $this, 'translate_cart_contents' ) );
 			add_action( 'woocommerce_cart_loaded_from_session', array( $this, 'translate_cart_subtotal' ) );
 			add_action( 'woocommerce_before_checkout_process', array( $this, 'wcml_refresh_cart_total' ) );
+			add_filter( 'woocommerce_cart_item_data_to_validate', array( $this, 'validate_cart_item_data' ), 10, 2 );
 
 			add_filter( 'woocommerce_cart_item_permalink', array( $this, 'cart_item_permalink' ), 10, 2 );
 			add_filter( 'woocommerce_paypal_args', array( $this, 'filter_paypal_args' ) );
@@ -128,7 +129,7 @@ class WCML_Cart {
 	}
 
 	public function switching_currency_empty_cart_if_needed( $currency, $force_switch ) {
-		if ( $force_switch && $this->woocommerce_wpml->settings['cart_sync']['currency_switch'] == WCML_CART_CLEAR ) {
+		if ( $force_switch && $this->woocommerce_wpml->settings['cart_sync']['currency_switch'] == $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' ) ) {
 			$this->empty_cart_if_needed( 'currency_switch' );
 			$this->woocommerce->session->set( 'wcml_switched_type', 'currency' );
 		}
@@ -136,7 +137,7 @@ class WCML_Cart {
 
 	public function empty_cart_if_needed( $switching_type ) {
 
-		if ( $this->woocommerce_wpml->settings['cart_sync'][ $switching_type ] == WCML_CART_CLEAR ) {
+		if ( $this->woocommerce_wpml->settings['cart_sync'][ $switching_type ] == $this->sitepress->get_wp_api()->constant( 'WCML_CART_CLEAR' ) ) {
 			$removed_products = $this->woocommerce->session->get( 'wcml_removed_items' ) ? maybe_unserialize( $this->woocommerce->session->get( 'wcml_removed_items' ) ) : array();
 
 			foreach ( WC()->cart->get_cart_for_session() as $item_key => $cart ) {
@@ -190,8 +191,12 @@ class WCML_Cart {
 		return true;
 	}
 
-	public function cart_alert( $dialog_title, $confirmation_message, $switch_to, $stay_in, $switch_to_value, $stay_in_value = false, $language_switch = false ) {
-		?>
+    public function cart_alert( $dialog_title, $confirmation_message, $switch_to, $stay_in, $switch_to_value, $stay_in_value = false, $language_switch = false ){
+        if( apply_filters( 'wcml_hide_cart_alert_dialog', false ) ){
+            $switching_type = $language_switch ? 'lang_switch' : 'currency_switch';
+            $this->empty_cart_if_needed( $switching_type );
+            return false;
+        }?>
         <div id="wcml-cart-dialog-confirm" title="<?php echo esc_attr( $dialog_title ) ?>">
             <p><?php echo esc_html( $confirmation_message ); ?></p>
         </div>
@@ -233,9 +238,12 @@ class WCML_Cart {
 					      <?php if( $language_switch ): ?>
 						  window.location = '<?php echo esc_url( $stay_in_value, null, 'redirect' ); ?>';
 					      <?php else: ?>
-						  jQuery('.wcml_currency_switcher').parent().find('img').remove();
-						  jQuery('.wcml_currency_switcher').removeAttr('disabled');
-						  jQuery('.wcml_currency_switcher').val('<?php echo esc_js( $stay_in_value ); ?>');
+                          jQuery('.wcml_currency_switcher').each( function(){
+                              jQuery(this).parent().find('img').remove();
+                              jQuery(this).removeAttr('disabled');
+                              jQuery(this).val('<?php echo esc_js( $stay_in_value ); ?>');
+                          });
+                          jQuery(document).on('click', '.wcml_currency_switcher a', wcml_switch_currency_handler );
 					      <?php endif; ?>
 					  }
 				  }
@@ -312,6 +320,7 @@ class WCML_Cart {
 			$display_as_translated = apply_filters(  'wpml_is_display_as_translated_post_type', false, 'product' );
             if ( $cart_item['product_id'] == $tr_product_id || $display_as_translated ) {
 				$new_cart_data[ $key ] = apply_filters( 'wcml_cart_contents_not_changed', $cart->cart_contents[ $key ], $key, $current_language );
+	            $new_cart_data[ $key ][ 'data_hash' ]  = $this->get_data_cart_hash( $cart_item );
 				continue;
 			}
 
@@ -344,6 +353,7 @@ class WCML_Cart {
 				$new_key                   = $this->wcml_generate_cart_key( $cart->cart_contents, $key );
 				$cart->cart_contents       = apply_filters( 'wcml_update_cart_contents_lang_switch', $cart->cart_contents, $key, $new_key, $current_language );
 				$new_cart_data[ $new_key ] = $cart->cart_contents[ $key ];
+				$new_cart_data[ $new_key ][ 'data_hash' ]  = $this->get_data_cart_hash( $new_cart_data[ $new_key ] );
 
 				$new_cart_data = apply_filters( 'wcml_cart_contents', $new_cart_data, $cart->cart_contents, $key, $new_key );
 			}
@@ -353,6 +363,48 @@ class WCML_Cart {
 		$this->woocommerce->session->cart = $cart->cart_contents;
 
 		return $cart->cart_contents;
+	}
+
+	/**
+	 * @param $cart_item array
+	 *
+	 * @return string
+	 */
+	public function get_data_cart_hash( $cart_item ) {
+
+		$data_hash = '';
+
+		if ( function_exists( 'wc_get_cart_item_data_hash' ) ) {
+			$hash_product_object = wc_get_product( $cart_item['variation_id'] ? $cart_item['variation_id'] : $cart_item['product_id'] );
+			if( $hash_product_object ){
+				$data_hash = wc_get_cart_item_data_hash( $hash_product_object );
+			}
+		}
+
+		return $data_hash;
+	}
+
+	/**
+	 * @param array $item_data
+	 * @param WC_Product $product Product object
+	 *
+	 * @return array
+	 */
+	public function validate_cart_item_data( array $item_data, WC_Product $product ) {
+
+		if( $item_data['attributes'] ){
+
+			$product_id = $product->get_parent_id();
+			$product_language = $this->sitepress->get_language_for_element( $product_id, 'post_'.$item_data['type']);
+			$tr_product_id = apply_filters( 'translate_object_id', $product_id, 'product', false, $product_language );
+
+		    foreach ( $item_data['attributes'] as $key => $name ){
+		        $item_data['attributes'][$key] = $this->get_cart_attribute_translation( $key, $name, $product->get_id(), $product_language, $product_id, $tr_product_id );
+            }
+
+        }
+
+		return $item_data;
 	}
 
 	public function wcml_check_on_duplicate_products_in_cart( $cart_contents ) {
