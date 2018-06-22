@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit05f5b43addf06b2d78e3926664637a1a
+class ComposerStaticInit8f42e1912b73b45aa1e030d7895bd05b
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -420,6 +420,8 @@ class ComposerStaticInit05f5b43addf06b2d78e3926664637a1a
         'WCML_Product_Bundles_Legacy' => __DIR__ . '/../..' . '/compatibility/class-wcml-product-bundles-legacy.php',
         'WCML_Product_Gallery_Filter' => __DIR__ . '/../..' . '/classes/media/class-wcml-product-gallery-filter.php',
         'WCML_Product_Gallery_Filter_Factory' => __DIR__ . '/../..' . '/classes/media/class-wcml-product-gallery-filter-factory.php',
+        'WCML_Product_Image_Filter' => __DIR__ . '/../..' . '/classes/media/class-wcml-product-image-filter.php',
+        'WCML_Product_Image_Filter_Factory' => __DIR__ . '/../..' . '/classes/media/class-wcml-product-image-filter-factory.php',
         'WCML_Products' => __DIR__ . '/../..' . '/inc/class-wcml-products.php',
         'WCML_Products_Screen_Options' => __DIR__ . '/../..' . '/inc/class-wcml-products-screen-options.php',
         'WCML_Products_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-products-ui.php',
@@ -513,10 +515,10 @@ class ComposerStaticInit05f5b43addf06b2d78e3926664637a1a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit05f5b43addf06b2d78e3926664637a1a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit05f5b43addf06b2d78e3926664637a1a::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit05f5b43addf06b2d78e3926664637a1a::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit05f5b43addf06b2d78e3926664637a1a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8f42e1912b73b45aa1e030d7895bd05b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8f42e1912b73b45aa1e030d7895bd05b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8f42e1912b73b45aa1e030d7895bd05b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8f42e1912b73b45aa1e030d7895bd05b::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -38,7 +38,7 @@ function wcml_load_currency( currency, force_switch ){
             }else{
 
                 var target_location = window.location.href;
-                if( -1 !== target_location.indexOf('#') || !jQuery.isEmptyObject( wcml_mc_settings ) ){
+                if( -1 !== target_location.indexOf('#') || wcml_mc_settings.cache_enabled ){
 
                     var url_dehash = target_location.split('#');
                     var hash = url_dehash.length > 1 ? '#' + url_dehash[1] : '';
