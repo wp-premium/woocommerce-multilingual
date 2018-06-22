@@ -44,19 +44,21 @@ class WCML_Multi_Currency_Resources{
 
 	private static function set_cache_compatibility_variables( $script_vars ) {
 
+		$script_vars['cache_enabled'] = false;
+
 		if (
 			(int) ! empty( self::$multi_currency->W3TC ) ||
 			( function_exists( 'wp_cache_is_enabled' ) && wp_cache_is_enabled() )
 		) {
-			$script_vars['w3tc'] = true;
+			$script_vars['cache_enabled'] = true;
+		}else{
+			global $sg_cachepress_environment;
+			if ( $sg_cachepress_environment && $sg_cachepress_environment->cache_is_enabled() ) {
+				$script_vars['cache_enabled'] = true;
+			}
 		}
 
-		global $sg_cachepress_environment;
-		if ( $sg_cachepress_environment && $sg_cachepress_environment->cache_is_enabled() ) {
-			$script_vars['sg_cachepress'] = true;
-		}
-
-		$script_vars = apply_filters( 'wcml_cache_compatibility_variables', $script_vars );
+		$script_vars['cache_enabled'] = apply_filters( 'wcml_is_cache_enabled_for_switching_currency', $script_vars['cache_enabled'] );
 
 		return $script_vars;
 	}

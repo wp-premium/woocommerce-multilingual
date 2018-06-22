@@ -388,6 +388,8 @@ return array(
     'WCML_Product_Bundles_Legacy' => $baseDir . '/compatibility/class-wcml-product-bundles-legacy.php',
     'WCML_Product_Gallery_Filter' => $baseDir . '/classes/media/class-wcml-product-gallery-filter.php',
     'WCML_Product_Gallery_Filter_Factory' => $baseDir . '/classes/media/class-wcml-product-gallery-filter-factory.php',
+    'WCML_Product_Image_Filter' => $baseDir . '/classes/media/class-wcml-product-image-filter.php',
+    'WCML_Product_Image_Filter_Factory' => $baseDir . '/classes/media/class-wcml-product-image-filter-factory.php',
     'WCML_Products' => $baseDir . '/inc/class-wcml-products.php',
     'WCML_Products_Screen_Options' => $baseDir . '/inc/class-wcml-products-screen-options.php',
     'WCML_Products_UI' => $baseDir . '/inc/template-classes/class-wcml-products-ui.php',
