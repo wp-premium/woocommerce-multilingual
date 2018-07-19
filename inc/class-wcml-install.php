@@ -285,33 +285,33 @@ class WCML_Install{
 			}
 
 			$sitepress->switch_locale( $language['code'] );
-			$tr_cat  = __( 'Uncategorized', 'sitepress' );
-			$tr_cat  = $tr_cat === 'Uncategorized' && $language['code'] !== 'en' ? 'Uncategorized @' . $language['code'] : $tr_cat;
-			$tr_term = term_exists( $tr_cat, 'product_cat' );
+			$translated_cat_name  = __( 'Uncategorized', 'sitepress' );
+			$translated_cat_name  = $translated_cat_name === 'Uncategorized' && $language['code'] !== 'en' ? 'Uncategorized @' . $language['code'] : $translated_cat_name;
+			$translated_term = get_term_by( 'name', $translated_cat_name, 'product_cat', ARRAY_A );
 			$sitepress->switch_locale();
 
 			// check if the term already exists
-			if ( $tr_term ) {
-				$tmp = get_term( $tr_term['term_taxonomy_id'], 'product_cat', ARRAY_A );
-			} else {
-				$tmp = wp_insert_term( $tr_cat, 'product_cat' );
+			if ( !$translated_term ) {
+				$translated_term = wp_insert_term( $translated_cat_name, 'product_cat' );
 			}
 
-			// add it to settings
-			$settings['default_categories'][ $language['code'] ] = $tmp['term_taxonomy_id'];
+			if ( $translated_term && ! is_wp_error( $translated_term ) ) {
+				// add it to settings
+				$settings['default_categories'][ $language['code'] ] = $translated_term['term_taxonomy_id'];
 
-			//update translations table
-			$default_category_trid = $sitepress->get_element_trid(
-				get_option( 'default_product_cat' ),
-				'tax_product_cat'
-			);
-			$sitepress->set_element_language_details(
-				$tmp['term_taxonomy_id'],
-				'tax_product_cat',
-				$default_category_trid,
-				$language['code'],
-				$default_language
-			);
+				//update translations table
+				$default_category_trid = $sitepress->get_element_trid(
+					get_option( 'default_product_cat' ),
+					'tax_product_cat'
+				);
+				$sitepress->set_element_language_details(
+					$translated_term['term_taxonomy_id'],
+					'tax_product_cat',
+					$default_category_trid,
+					$language['code'],
+					$default_language
+				);
+			}
 
 		}
 

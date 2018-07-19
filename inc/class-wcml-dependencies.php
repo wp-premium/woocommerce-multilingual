@@ -5,7 +5,6 @@ class WCML_Dependencies {
 	const MIN_WPML = '3.4';
 	const MIN_WPML_TM = '1.9';
 	const MIN_WPML_ST = '2.0';
-	const MIN_WPML_MEDIA = '2.3';
 	const MIN_WOOCOMMERCE = '2.1';
 
 	private $missing = array();
@@ -132,14 +131,6 @@ class WCML_Dependencies {
 		<div class="message error">
 			<p><?php printf( __( 'WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML String Translation</a> versions prior %s.',
 					'woocommerce-multilingual' ), $this->tracking_link->generate( 'https://wpml.org/' ), self::MIN_WPML_ST ); ?></p>
-		</div>
-	<?php }
-
-	public function _old_wpml_media_warning() {
-		?>
-		<div class="message error">
-			<p><?php printf( __( 'WooCommerce Multilingual is enabled but not effective. It is not compatible with  <a href="%s">WPML Media</a> versions prior %s.',
-					'woocommerce-multilingual' ), $this->tracking_link->generate( 'https://wpml.org/' ), self::MIN_WPML_MEDIA ); ?></p>
 		</div>
 	<?php }
 

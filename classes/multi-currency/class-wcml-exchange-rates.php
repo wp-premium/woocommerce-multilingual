@@ -196,7 +196,7 @@ class WCML_Exchange_Rates {
 			if ( isset( $post_data['exchange-rates-service'] ) ) {
 
 				// clear errors for replaced service
-				if ( $post_data['exchange-rates-service'] !== $this->settings['service'] ) {
+				if ( isset( $this->services[ $this->settings['service'] ] ) && $post_data['exchange-rates-service'] !== $this->settings['service'] ) {
 					$this->services[ $this->settings['service'] ]->clear_last_error();
 				}
 

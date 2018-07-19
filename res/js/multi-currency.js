@@ -189,12 +189,15 @@ jQuery( function($){
 
                         $('#currency-table').find('tr.default_currency').before( tr );
 
-                        var tr = $('#currency-lang-table tr.wcml-row-currency-lang:last').clone();
+                        var tr = $('.empty-currency-language-row').clone();
                         tr.attr('id', 'currency_row_langs_' + currency);
                         $('#currency-lang-table').find('tr.default_currency').before( tr );
 
+                        tr.removeClass('hidden empty-currency-language-row');
                         tr.find('.on a').each( function(){
                             $(this).attr('data-currency', currency);
+                            $(this).attr('title', $(this).attr('title').replace('%code%', response.currency_name));
+                            $(this).attr('data-title-alt', $(this).attr('data-title-alt').replace('%code%', response.currency_name));
                         });
 
                         //add to default currency list

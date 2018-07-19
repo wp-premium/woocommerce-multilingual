@@ -38,6 +38,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 				'prod_var' => __( 'products with variations', 'woocommerce-multilingual' ),
 				'sync_var' => __( 'Sync products variations:', 'woocommerce-multilingual' ),
 				'left' => __( 'left', 'woocommerce-multilingual' ),
+				'sync_gallery' => __( 'Sync products "gallery images":', 'woocommerce-multilingual' ),
 				'sync_cat' => __( 'Sync products categories (display type, thumbnail):', 'woocommerce-multilingual' ),
 				'dup_terms' => __( 'Duplicate terms ( please select attribute ):', 'woocommerce-multilingual' ),
 				'none' => __( 'none', 'woocommerce-multilingual' ),
@@ -49,6 +50,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 			'nonces' => array(
 				'trbl_update_count' => wp_nonce_field('trbl_update_count', 'trbl_update_count_nonce'),
 				'trbl_sync_variations' => wp_nonce_field('trbl_sync_variations', 'trbl_sync_variations_nonce'),
+				'trbl_gallery_images' => wp_nonce_field('trbl_gallery_images', 'trbl_gallery_images_nonce'),
 				'trbl_sync_categories' => wp_nonce_field('trbl_sync_categories', 'trbl_sync_categories_nonce'),
 				'trbl_duplicate_terms' => wp_nonce_field('trbl_duplicate_terms', 'trbl_duplicate_terms_nonce'),
 				'trbl_product_type_terms' => wp_nonce_field('trbl_product_type_terms', 'trbl_product_type_terms_nonce'),
