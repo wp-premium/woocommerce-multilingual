@@ -167,6 +167,21 @@
                                     </tr>
                                     {% endfor %}
 
+                                    <tr class="wcml-row-currency-lang empty-currency-language-row hidden">
+                                        {% for language in active_languages %}
+                                            <td class="currency_languages">
+                                                <ul>
+                                                    <li class="on" data-lang="{{ language.code }}">
+                                                        <a class="otgs-ico-yes"
+                                                           data-language="{{ language.code }}" data-currency="" href="#"
+                                                           title="{{ strings.currencies_table.disable_for|format( '%code%', language.display_name ) }}"
+                                                           data-title-alt="{{ strings.currencies_table.enable_for|format( '%code%', language.display_name ) }}"></a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+
                                     <tr class="default_currency">
                                         {% for language in active_languages %}
                                         <td align="center">

@@ -319,13 +319,18 @@ class WCML_Bookings {
 						break;
 					case 'wcml_wc_booking_block_cost':
 					case 'wcml_wc_booking_base_cost':
+					    $block_cost_key = '_wc_booking_base_cost_';
+					    if ($field === 'wcml_wc_booking_block_cost' ){
+						    $block_cost_key = '_wc_booking_block_cost_';
+                        }
+                        $block_cost_key .= $currency_code;
 						woocommerce_wp_text_input( array(
 							'id'                => $field,
 							'class'             => 'wcml_bookings_custom_price',
 							'name'              => $field . '[' . $currency_code . ']',
 							'label'             => get_woocommerce_currency_symbol( $currency_code ),
 							'description'       => __( 'This is the cost per block booked. All other costs (for resources and persons) are added to this.', 'woocommerce-bookings' ),
-							'value'             => get_post_meta( $post_id, $field === 'wcml_wc_booking_block_cost' ? '_wc_booking_block_cost_' : '_wc_booking_base_cost_' . $currency_code, true ),
+							'value'             => get_post_meta( $post_id, $block_cost_key, true ),
 							'type'              => 'number',
 							'desc_tip'          => true,
 							'custom_attributes' => array(

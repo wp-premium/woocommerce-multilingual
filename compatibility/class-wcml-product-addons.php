@@ -312,7 +312,7 @@ class WCML_Product_Addons {
 
 	public function set_global_ids_in_query_args( $args ) {
 
-		if ( is_product() ) {
+		if ( !is_archive() ) {
 
 			remove_filter( 'get_terms_args', array( $this->sitepress, 'get_terms_args_filter' ), 10, 2 );
 			remove_filter( 'get_term', array( $this->sitepress, 'get_term_adjust_id' ), 1 );

@@ -714,16 +714,22 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         // synchronize post variations
         $this->woocommerce_wpml->sync_variations_data->sync_product_variations( $this->product_id, $tr_product_id, $this->get_target_language(), $translations, true );
 
-        $this->woocommerce_wpml->sync_product_data->sync_linked_products( $this->product_id, $tr_product_id, $this->get_target_language() );
-        //save images texts
-        $product_images = $this->woocommerce_wpml->media->product_images_ids( $this->product_id );
+	    $this->woocommerce_wpml->sync_product_data->sync_linked_products( $this->product_id, $tr_product_id, $this->get_target_language() );
+
+	    //sync feature image
+	    $this->woocommerce_wpml->media->sync_thumbnail_id( $this->product_id, $tr_product_id, $this->get_target_language() );
+	    //sync product gallery
+	    $this->woocommerce_wpml->media->sync_product_gallery( $this->product_id );
+
+	    //save images texts
+	    $product_images = $this->woocommerce_wpml->media->product_images_ids( $this->product_id );
 
         if ( $product_images ) {
             foreach ( $product_images as $image_id ) {
                 $trnsl_prod_image = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $this->get_target_language() );
 
                 if ( ! $trnsl_prod_image ) {
-	                $trnsl_prod_image = $this->create_base_media_translation( $image_id, $this->get_target_language() );
+	                $trnsl_prod_image = $this->woocommerce_wpml->media->create_base_media_translation( $image_id, $this->get_target_language() );
                 }
 
 	            //update image texts
@@ -898,17 +904,6 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
             return apply_filters( 'wcml_check_is_single', true, $product_id, $meta_key );
         }
     }
-
-	private function create_base_media_translation( $attachment_id, $target_lang ) {
-		$duplicate_id = $this->sitepress->make_duplicate( $attachment_id, $target_lang );
-		delete_post_meta( $duplicate_id, '_icl_lang_duplicate_of' );
-
-		foreach ( array( '_wp_attachment_metadata', '_wp_attached_file' ) as $attachment_meta_key ) {
-			update_post_meta( $duplicate_id, $attachment_meta_key, get_post_meta( $attachment_id, $attachment_meta_key, true ) );
-		}
-
-		return $duplicate_id;
-	}
 
 	public function requires_translation_complete_for_each_field() {
 		return false;
