@@ -8,16 +8,16 @@
   Text Domain: woocommerce-multilingual
   Requires at least: 3.9
   Tested up to: 4.9.6
-  Version: 4.3.2.1
+  Version: 4.3.3
   WC requires at least: 2.1.0
-  WC tested up to: 3.4.2
+  WC tested up to: 3.4.3
 */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.3.2.1' );
+define( 'WCML_VERSION', '4.3.3' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -61,12 +61,22 @@ function wcml_loader(){
 	$xdomain_data->add_hooks();
 
 	$loaders = array(
-		'WCML_Product_Image_Filter_Factory',
-		'WCML_Product_Gallery_Filter_Factory',
-		'WCML_Update_Product_Gallery_Translation_Factory',
-		'WCML_Append_Gallery_To_Post_Media_Ids_Factory',
-		'WCML_Privacy_Content_Factory',
+		'WCML_Privacy_Content_Factory'
 	);
+
+	if (
+		( defined( 'ICL_SITEPRESS_VERSION' ) && defined( 'WPML_MEDIA_VERSION' ) )
+		|| ( defined( 'ICL_SITEPRESS_VERSION' )
+		     && version_compare( ICL_SITEPRESS_VERSION, '4.0.0', '>=' )
+		     && version_compare( ICL_SITEPRESS_VERSION, '4.0.4', '<' )
+		     && ! defined( 'WPML_MEDIA_VERSION' )
+		)
+	) {
+		$loaders[] = 'WCML_Product_Image_Filter_Factory';
+		$loaders[] = 'WCML_Product_Gallery_Filter_Factory';
+		$loaders[] = 'WCML_Update_Product_Gallery_Translation_Factory';
+		$loaders[] = 'WCML_Append_Gallery_To_Post_Media_Ids_Factory';
+	}
 
 	$action_filter_loader = new WPML_Action_Filter_Loader();
 	$action_filter_loader->load( $loaders );

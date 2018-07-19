@@ -18,6 +18,7 @@ class WCML_Troubleshooting{
 
     function init(){
         add_action('wp_ajax_trbl_sync_variations', array($this,'trbl_sync_variations'));
+        add_action('wp_ajax_trbl_gallery_images', array($this,'trbl_gallery_images'));
         add_action('wp_ajax_trbl_update_count', array($this,'trbl_update_count'));
         add_action('wp_ajax_trbl_sync_categories', array($this,'trbl_sync_categories'));
         add_action('wp_ajax_trbl_duplicate_terms', array($this,'trbl_duplicate_terms'));
@@ -121,7 +122,24 @@ class WCML_Troubleshooting{
         wp_send_json_success();
     }
 
-    function get_products_needs_gallery_sync( $limit = false ){
+	function trbl_gallery_images(){
+		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if(!$nonce || !wp_verify_nonce($nonce, 'trbl_gallery_images')){
+			wp_send_json_error('Invalid nonce');
+		}
+
+		$all_products = $this->get_products_needs_gallery_sync( true );
+
+		foreach( $all_products as $product ){
+			$this->woocommerce_wpml->media->sync_product_gallery($product->ID);
+			add_post_meta($product->ID,'gallery_sync',true);
+		}
+
+		wp_send_json_success();
+
+	}
+
+	function get_products_needs_gallery_sync( $limit = false ){
 
         $sql = "SELECT p.ID FROM {$this->wpdb->posts} AS p
                  LEFT JOIN {$this->wpdb->prefix}icl_translations AS tr

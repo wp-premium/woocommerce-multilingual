@@ -37,33 +37,44 @@ class WCML_Products{
 
     }
 
-    public function add_hooks(){
+	public function add_hooks() {
 
-        if( is_admin() ){
+		if ( is_admin() ) {
 
-            add_filter( 'woocommerce_json_search_found_products', array( $this, 'woocommerce_json_search_found_products' ) );
+			add_filter( 'woocommerce_json_search_found_products', array(
+				$this,
+				'woocommerce_json_search_found_products'
+			) );
 
-            add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
+			add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
 
-            add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
+			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
 
-        }else{
-            add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
-            add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
-            add_filter( 'woocommerce_shortcode_products_query', array( $this, 'add_lang_to_shortcode_products_query' ) );
+		} else {
+			add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
+			add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
+			add_filter( 'woocommerce_shortcode_products_query', array(
+				$this,
+				'add_lang_to_shortcode_products_query'
+			) );
 
-            add_filter( 'woocommerce_product_file_download_path', array( $this, 'filter_file_download_path' ) );
-        }
+			add_filter( 'woocommerce_product_file_download_path', array( $this, 'filter_file_download_path' ) );
+		}
 
-        add_filter( 'woocommerce_upsell_crosssell_search_products', array( $this, 'filter_woocommerce_upsell_crosssell_posts_by_language' ) );
-        //update menu_order fro translations after ordering original products
-        add_action( 'woocommerce_after_product_ordering', array( $this, 'update_all_products_translations_ordering' ) );
-        //filter to copy excerpt value
-        add_filter( 'wpml_copy_from_original_custom_fields', array( $this, 'filter_excerpt_field_content_copy' ) );
+		add_filter( 'woocommerce_upsell_crosssell_search_products', array(
+			$this,
+			'filter_woocommerce_upsell_crosssell_posts_by_language'
+		) );
+		//update menu_order fro translations after ordering original products
+		add_action( 'woocommerce_after_product_ordering', array( $this, 'update_all_products_translations_ordering' ) );
+		//filter to copy excerpt value
+		add_filter( 'wpml_copy_from_original_custom_fields', array( $this, 'filter_excerpt_field_content_copy' ) );
 
-        add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
-        add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
-    }
+		add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
+		add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
+
+		add_filter( 'get_product_search_form', array( $this->sitepress, 'get_search_form_filter' ) );
+	}
 
     // Check if original product
     public function is_original_product( $product_id ){

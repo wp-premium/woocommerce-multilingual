@@ -47,17 +47,20 @@ class WCML_Update_Product_Gallery_Translation implements IWPML_Action {
 	 * @throws \InvalidArgumentException
 	 */
 	private function get_translated_gallery( $source_post_id, WPML_Post_Element $updated_attachment_element ) {
-		$original_gallery_meta = get_post_meta( $source_post_id, '_product_image_gallery', true );
-		$original_gallery      = explode( ',', $original_gallery_meta );
-
 		$meta_value = array();
-		foreach ( $original_gallery as $original_attachment_id ) {
-			$attachment_element    = $this->translation_element_factory->create( $original_attachment_id, 'post' );
-			$translated_attachment = $attachment_element->get_translation( $updated_attachment_element->get_language_code() );
-			if ( null !== $translated_attachment ) {
-				$meta_value[] = $translated_attachment->get_id();
-			} else {
-				$meta_value[] = $original_attachment_id;
+
+		$original_gallery_meta = get_post_meta( $source_post_id, '_product_image_gallery', true );
+		if ( '' !== $original_gallery_meta ) {
+			$original_gallery = explode( ',', $original_gallery_meta );
+
+			foreach ( $original_gallery as $original_attachment_id ) {
+				$attachment_element    = $this->translation_element_factory->create( $original_attachment_id, 'post' );
+				$translated_attachment = $attachment_element->get_translation( $updated_attachment_element->get_language_code() );
+				if ( null !== $translated_attachment ) {
+					$meta_value[] = $translated_attachment->get_id();
+				} else {
+					$meta_value[] = $original_attachment_id;
+				}
 			}
 		}
 

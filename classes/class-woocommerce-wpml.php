@@ -137,8 +137,6 @@ class woocommerce_wpml {
 
         $this->load_rest_api();
 
-        new WCML_Upgrade;
-
         $this->dependencies = new WCML_Dependencies;
         $this->check_dependencies = $this->dependencies->check();
 
@@ -154,6 +152,8 @@ class woocommerce_wpml {
             WCML_Resources::load_tooltip_resources();
             return false;
         }
+
+	    new WCML_Upgrade;
 
         $this->compatibility        = new WCML_Compatibility( $sitepress, $this, $wpdb, new WPML_Element_Translation_Package );
 
@@ -227,6 +227,7 @@ class woocommerce_wpml {
         $this->coupons->add_hooks();
         $this->locale               = new WCML_Locale( $this, $sitepress );
         $this->media                = new WCML_Media( $this, $sitepress, $wpdb );
+        $this->media->add_hooks();
         $this->downloadable         = new WCML_Downloadable_Products( $this, $sitepress );
         $this->downloadable->add_hooks();
         $this->page_builders        = new WCML_Page_Builders( $sitepress );

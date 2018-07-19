@@ -144,6 +144,10 @@ class WCML_Synchronize_Product_Data{
 
         $this->woocommerce_wpml->attributes->sync_product_attr( $original_product_id, $tr_product_id );
 
+        $this->woocommerce_wpml->media->sync_thumbnail_id( $original_product_id, $tr_product_id, $lang );
+
+        $this->woocommerce_wpml->media->sync_product_gallery( $original_product_id );
+
         $this->woocommerce_wpml->attributes->sync_default_product_attr( $original_product_id, $tr_product_id, $lang );
 
         //sync taxonomies
