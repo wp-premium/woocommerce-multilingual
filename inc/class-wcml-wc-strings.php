@@ -373,19 +373,21 @@ class WCML_WC_Strings{
 				    $i                = 0;
 				    foreach ( $breadcrumbs as $key => $breadcrumb ) {
 
-					    if ( ! in_array( $breadcrumb, $breadcrumbs_buff ) ) {
-						    $breadcrumbs_buff[ $i ] = $breadcrumb;
-					    }
-
+					    //Prepend the shop page to shop breadcrumbs
 					    if ( $key === 0 && $breadcrumbs[1][1] != get_post_type_archive_link( 'product' ) ) {
-						    $i ++;
 						    $breadcrumbs_buff[ $i ] = array(
 							    $shop_page->post_title,
 							    get_post_type_archive_link( 'product' )
 						    );
+						    $i ++;
+					    }
+
+					    if ( ! in_array( $breadcrumb, $breadcrumbs_buff ) ) {
+						    $breadcrumbs_buff[ $i ] = $breadcrumb;
 					    }
 					    $i ++;
 				    }
+
 				    $breadcrumbs = $breadcrumbs_buff;
 
 				    $breadcrumbs = array_values( $breadcrumbs );

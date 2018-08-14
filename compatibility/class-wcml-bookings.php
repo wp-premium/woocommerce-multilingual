@@ -81,7 +81,8 @@ class WCML_Bookings {
 
 		add_action( 'init', array( $this, 'load_assets' ) );
 
-		add_action( 'save_post', array( $this, 'save_custom_costs' ), 110, 1 );
+		add_action( 'save_post', array( $this, 'save_booking_action_handler' ), 110 );
+
 		add_action( 'wcml_before_sync_product_data', array( $this, 'sync_bookings' ), 10, 3 );
 		add_action( 'wcml_before_sync_product', array( $this, 'sync_booking_data' ), 10, 2 );
 
@@ -231,6 +232,13 @@ class WCML_Bookings {
 
 	}
 
+	public function save_booking_action_handler( $booking_id ) {
+
+		$this->maybe_set_booking_language( $booking_id );
+
+		$this->save_custom_costs( $booking_id );
+	}
+
 	function wcml_price_field_after_booking_base_cost( $post_id ) {
 
 		$this->echo_wcml_price_field( $post_id, 'wcml_wc_booking_cost' );
@@ -295,6 +303,10 @@ class WCML_Bookings {
 			$currencies = $this->woocommerce_wpml->multi_currency->get_currencies();
 
 			$wc_currencies = get_woocommerce_currencies();
+
+			if ( ! function_exists( 'woocommerce_wp_text_input' ) ) {
+				include_once dirname( WC_PLUGIN_FILE ) . 'includes/admin/wc-meta-box-functions.php';
+			}
 
 			echo '<div class="wcml_custom_cost_field" >';
 
@@ -1790,7 +1802,11 @@ class WCML_Bookings {
 
 	function delete_bookings( $booking_id ) {
 
-		if ( $booking_id > 0 && get_post_type( $booking_id ) == 'wc_booking' ) {
+		if (
+			! $this->is_delete_all_action()
+			&& $booking_id
+			&& get_post_type( $booking_id ) == 'wc_booking'
+		) {
 
 			$translated_bookings = $this->get_translated_bookings( $booking_id );
 
@@ -1813,7 +1829,10 @@ class WCML_Bookings {
 
 			add_action( 'before_delete_post', array( $this, 'delete_bookings' ) );
 		}
+	}
 
+	private function is_delete_all_action() {
+		return array_key_exists( 'delete_all', $_GET ) && $_GET['delete_all'];
 	}
 
 	function trash_bookings( $booking_id ) {
@@ -2461,7 +2480,9 @@ class WCML_Bookings {
 
 		if( class_exists( 'WC_Email_Booking_Confirmed' ) && isset( $this->woocommerce->mailer()->emails[ 'WC_Email_Booking_Confirmed' ] ) ){
 			$booking = get_wc_booking( $booking_id );
-			$this->translate_email_strings( 'WC_Email_Booking_Confirmed', 'woocommerce_booking_confirmed_settings', $booking->get_order()->get_id() );
+			if( $booking->get_order() ){
+				$this->translate_email_strings( 'WC_Email_Booking_Confirmed', 'woocommerce_booking_confirmed_settings', $booking->get_order()->get_id() );
+            }
 		}
 
 	}
@@ -2532,5 +2553,17 @@ class WCML_Bookings {
 		$this->woocommerce->mailer()->emails[$email_class]->heading = $this->woocommerce_wpml->emails->wcml_get_translated_email_string( 'admin_texts_'.$setting_slug, '['.$setting_slug.']heading', $order_id, $user_lang );
 		$this->woocommerce->mailer()->emails[$email_class]->subject = $this->woocommerce_wpml->emails->wcml_get_translated_email_string( 'admin_texts_'.$setting_slug, '['.$setting_slug.']subject', $order_id, $user_lang );
     }
+
+	public function maybe_set_booking_language( $booking_id ) {
+
+		if ( 'wc_booking' === get_post_type( $booking_id ) ) {
+			$language_details = $this->sitepress->get_element_language_details( $booking_id, 'post_wc_booking' );
+			if ( ! $language_details ) {
+				$current_language = $this->sitepress->get_current_language();
+				$this->sitepress->set_element_language_details( $booking_id, 'post_wc_booking', false, $current_language );
+			}
+		}
+
+	}
 
 }

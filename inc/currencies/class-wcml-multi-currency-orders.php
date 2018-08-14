@@ -282,8 +282,6 @@ class WCML_Multi_Currency_Orders {
 			$order_currency = $this->get_order_currency_cookie();
 		}
 
-		$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( sanitize_text_field( $_POST['item_to_add'][0] ) );
-
 		if ( ! isset( $this->multi_currency->prices ) ) {
 			$this->multi_currency->prices = new WCML_Multi_Currency_Prices( $this->multi_currency );
 			$this->multi_currency->prices->add_hooks();
@@ -291,6 +289,8 @@ class WCML_Multi_Currency_Orders {
 		}
 
 		if ( $item instanceof WC_Order_Item_Product ) {
+
+			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $item->get_product_id() );
 
 			if ( 'line_item' === $item->get_type() ) {
 
@@ -323,6 +323,8 @@ class WCML_Multi_Currency_Orders {
 				$item->save();
 			}
 		} else {
+
+			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $item[ 'product_id' ] );
 
 			$converted_price = $converted_subtotal_price = $converted_total_price = get_post_meta( $original_product_id, '_price_' . $order_currency, true );
 

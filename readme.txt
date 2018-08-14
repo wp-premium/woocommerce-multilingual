@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 3.9
-Tested up to: 4.9.6
-Stable tag: 4.3.3
+Tested up to: 4.9.8
+Stable tag: 4.3.4
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -139,6 +139,27 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.3.4 =
+* Fixed error: Cannot redeclare woocommerce_wp_text_input
+* Fixed error when creating booking from admin without creating order
+* Fixed Woocommerce Dynamic Price issue with Advanced category price in second language
+* Fix situation with filtering WC attributes calling by sku
+* Fix a problem that you cannot delete booking from trash
+* Fix prevent letters in multicurrency popup for number of decimals
+* Fix accept only symbols in decimal separator for multi currency
+* Resolved fatal error when a galler shortcode has a leading, trailing or extra comma
+* Fix issue in show comments in all languages functionality
+* Fixed displaying WYSIWYG fields from additional plugins as single line text
+* Fix small issue with order of breadcrumbs in second language
+* Fix default term value in product variation when using display as translated feature
+* Allow users to comment on product that they have bought, but in other languages
+* Fixed WooCommerce Dynamic Pricing compatibility -> filtering by role not applied for secondary currency
+* Added support for translating WooCommerce terms and conditions
+* Fixed totals in order if the product has custom price in second currency
+* Fix displaying email subject when you have 3rd party email  notification plugin
+* Fixed product view price when secondary currency have different range of dates for sale price
+* Fix small issue with creations of WooCommerce Booking in backend
 
 = 4.3.3 =
 * Fixed small issue in WC Bookings where block cost in other currencies is not saved correctly

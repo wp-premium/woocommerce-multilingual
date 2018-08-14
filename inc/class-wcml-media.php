@@ -11,6 +11,8 @@ class WCML_Media{
 
     public $settings = array();
 
+    private $products_being_synced = array();
+
     public function __construct( $woocommerce_wpml, $sitepress, $wpdb ){
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress        = $sitepress;
@@ -95,7 +97,7 @@ class WCML_Media{
 					if ( get_post( $image_id ) ) {
 						$duplicated_id = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $translation->language_code );
 						if ( is_null( $duplicated_id ) && $image_id ) {
-							$duplicated_id = $this->create_base_media_translation( $image_id, $translation->language_code );
+							$duplicated_id = $this->create_base_media_translation( $image_id, $translation->element_id, $translation->language_code );
 						}
 						$duplicated_ids .= $duplicated_id . ',';
 					}
@@ -106,24 +108,24 @@ class WCML_Media{
 		}
 	}
 
-	public function create_base_media_translation( $attachment_id, $target_lang ) {
-		$duplicate_id = $this->sitepress->make_duplicate( $attachment_id, $target_lang );
-		delete_post_meta( $duplicate_id, '_icl_lang_duplicate_of' );
+	public function create_base_media_translation( $attachment_id, $parent_id, $target_lang ) {
 
-		foreach ( array( '_wp_attachment_metadata', '_wp_attached_file' ) as $attachment_meta_key ) {
-			update_post_meta( $duplicate_id, $attachment_meta_key, get_post_meta( $attachment_id, $attachment_meta_key, true ) );
-		}
+		$factory = new WPML_Media_Attachments_Duplication_Factory();
+		$media_duplicate = $factory->create();
+		$duplicated_id = $media_duplicate->create_duplicate_attachment( $attachment_id, $parent_id, $target_lang );
 
-		return $duplicate_id;
+		return $duplicated_id;
 	}
 
 	public function sync_product_gallery_duplicate_attachment( $att_id, $dup_att_id ) {
 		$product_id = wp_get_post_parent_id( $att_id );
 		$post_type  = get_post_type( $product_id );
-		if ( $post_type != 'product' ) {
+		if ( $post_type != 'product' || array_key_exists( $product_id, $this->products_being_synced ) ) {
 			return;
 		}
+		$this->products_being_synced[ $product_id ] = 1;
 		$this->sync_product_gallery( $product_id );
+		unset( $this->products_being_synced[ $product_id ] );
 	}
 
 }

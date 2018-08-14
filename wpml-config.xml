@@ -140,5 +140,6 @@
 		<key name="woocommerce_email_from_address" />
 		<key name="woocommerce_registration_privacy_policy_text" />
 		<key name="woocommerce_checkout_privacy_policy_text" />
+		<key name="woocommerce_checkout_terms_and_conditions_checkbox_text" />
 	</admin-texts>
 </wpml-config>

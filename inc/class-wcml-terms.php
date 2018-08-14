@@ -740,44 +740,49 @@ class WCML_Terms{
 
     }
 
-    function get_product_terms_filter( $terms, $product_id, $taxonomy, $args ){
+	function get_product_terms_filter( $terms, $product_id, $taxonomy, $args ) {
 
-        $language = $this->sitepress->get_language_for_element( $product_id, 'post_'.get_post_type( $product_id ) );
+		$language = $this->sitepress->get_language_for_element( $product_id, 'post_' . get_post_type( $product_id ) );
 
-        $is_objects_array = is_object( current ( $terms ) );
+		$is_objects_array = is_object( current( $terms ) );
 
-        $filtered_terms = array();
+		$filtered_terms = array();
 
-        foreach( $terms as $term ){
+		foreach ( $terms as $term ) {
 
-            if( !$is_objects_array ){
-                $term_obj = get_term_by( 'name', $term, $taxonomy );
-                if( !$term_obj ){
-                    $term_obj = get_term_by( 'slug', $term, $taxonomy );
-                    $is_slug =  true;
-                }
-            }
+			if ( ! $is_objects_array ) {
+				$term_obj = get_term_by( 'name', $term, $taxonomy );
 
-            if( empty($term_obj) ){
-                $filtered_terms[] = $term;
-                continue;
-            }
+				$is_wc_filtering_by_slug = isset( $args['fields'] ) && 'id=>slug' === $args['fields'];
+				if ( $is_wc_filtering_by_slug || ! $term_obj ) {
+					$term_obj = get_term_by( 'slug', $term, $taxonomy );
+					$is_slug  = true;
+				}
+			}
 
-            $trnsl_term_id = apply_filters( 'translate_object_id', $term_obj->term_id, $taxonomy, true, $language );
+			if ( empty( $term_obj ) ) {
+				$filtered_terms[] = $term;
+				continue;
+			}
 
-            if( $is_objects_array ){
-                $filtered_terms[] = get_term( $trnsl_term_id, $taxonomy );
-            }else{
-                if( isset( $is_slug ) ){
-                    $filtered_terms[] = get_term( $trnsl_term_id, $taxonomy )->slug;
-                }else{
-                    $filtered_terms[] = ( is_ajax() && isset( $_POST['action'] ) && in_array( $_POST['action'], array( 'woocommerce_add_variation', 'woocommerce_link_all_variations') ) ) ? strtolower ( get_term( $trnsl_term_id, $taxonomy )->name ) : get_term( $trnsl_term_id, $taxonomy )->name;
-                }
-            }
-        }
+			$trnsl_term_id = apply_filters( 'translate_object_id', $term_obj->term_id, $taxonomy, true, $language );
 
-        return $filtered_terms;
-    }
+			if ( $is_objects_array ) {
+				$filtered_terms[] = get_term( $trnsl_term_id, $taxonomy );
+			} else {
+				if ( isset( $is_slug ) ) {
+					$filtered_terms[] = get_term( $trnsl_term_id, $taxonomy )->slug;
+				} else {
+					$filtered_terms[] = ( is_ajax() && isset( $_POST['action'] ) && in_array( $_POST['action'], array(
+							'woocommerce_add_variation',
+							'woocommerce_link_all_variations'
+						) ) ) ? strtolower( get_term( $trnsl_term_id, $taxonomy )->name ) : get_term( $trnsl_term_id, $taxonomy )->name;
+				}
+			}
+		}
+
+		return $filtered_terms;
+	}
 
 	function set_flag_to_sync( $taxonomy, $el_id, $language_code ) {
 		if ( $el_id ) {
