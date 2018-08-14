@@ -9,6 +9,10 @@ class WCML_Dynamic_Pricing {
 
 		if ( ! is_admin() ) {
 			add_filter( 'wc_dynamic_pricing_load_modules', array( $this, 'filter_price' ) );
+			add_action( 'woocommerce_dynamic_pricing_is_object_in_terms', array(
+				$this,
+				'is_object_in_translated_terms'
+			), 10, 3 );
 			add_filter( 'woocommerce_dynamic_pricing_is_applied_to', array(
 				$this,
 				'woocommerce_dynamic_pricing_is_applied_to'
@@ -34,21 +38,42 @@ class WCML_Dynamic_Pricing {
 		foreach ( $modules as $mod_key => $module ) {
 			if ( isset( $module->available_rulesets ) ) {
 				$available_rulesets = $module->available_rulesets;
+
 				foreach ( $available_rulesets as $rule_key => $available_ruleset ) {
-					$rules = $available_ruleset['rules'];
-					if ( $rules ) {
+
+					if ( isset( $available_ruleset['rules'] ) && is_array( $available_ruleset['rules'] ) ) {
+						$rules = $available_ruleset['rules'];
 						foreach ( $rules as $r_key => $rule ) {
 							if ( 'fixed_product' === $rule['type'] ) {
 								$rules[ $r_key ]['amount'] = apply_filters( 'wcml_raw_price_amount', $rule['amount'] );
 							}
 						}
 						$modules[ $mod_key ]->available_rulesets[ $rule_key ]['rules'] = $rules;
+
+					} elseif ( isset( $available_ruleset['type'] ) && 'fixed_product' === $available_ruleset['type'] ) {
+						$modules[ $mod_key ]->available_rulesets[ $rule_key ]['amount'] = apply_filters( 'wcml_raw_price_amount', $available_ruleset['amount'] );
 					}
 				}
 			}
 		}
 
 		return $modules;
+	}
+
+
+	/**
+	 * @param boolean $result
+	 * @param int     $product_id
+	 * @param array   $categories
+	 *
+	 * @return boolean
+	 */
+	function is_object_in_translated_terms( $result, $product_id, $categories ) {
+		foreach ($categories as &$cat_id ) {
+			$cat_id = apply_filters( 'translate_object_id', $cat_id, 'product_cat', true );
+		}
+
+		return is_object_in_term( $product_id, 'product_cat', $categories );
 	}
 
 

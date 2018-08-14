@@ -58,22 +58,24 @@
 
             <div class="wpml-form-row">
                 <label for="wcml_currency_options_thousand_{{ args.currency_code }}">{{ form.thousand_sep.label }}</label>
-                <input name="currency_options[thousand_sep]" type="text"
-                    class="currency_option_input currency_option_thousand_sep" value="{{ args.currency.thousand_sep }}"
-                    id="wcml_currency_options_thousand_{{ args.currency_code }}" />
+                <select class="currency_option_thousand_sep" name="currency_options[thousand_sep]" id="wcml_currency_options_thousand_{{ args.currency_code }}">
+                    <option value="." {% if args.currency.thousand_sep == '.' %}selected="selected"{% endif %}>.</option>
+                    <option value="," {% if args.currency.thousand_sep == ',' %}selected="selected"{% endif %}>,</option>
+                </select>
             </div>
 
             <div class="wpml-form-row">
                 <label for="wcml_currency_options_decimal_{{ args.currency_code }}">{{ form.decimal_sep.label }}</label>
-                <input name="currency_options[decimal_sep]" type="text"
-                    class="currency_option_input currency_option_decimal_sep" value="{{ args.currency.decimal_sep }}"
-                    id="wcml_currency_options_decimal_{{ args.currency_code }}" />
+                <select class="currency_option_decimal_sep" name="currency_options[decimal_sep]" id="wcml_currency_options_decimal_{{ args.currency_code }}">
+                    <option value="." {% if args.currency.decimal_sep == '.' %}selected="selected"{% endif %}>.</option>
+                    <option value="," {% if args.currency.decimal_sep == ',' %}selected="selected"{% endif %}>,</option>
+                </select>
             </div>
 
             <div class="wpml-form-row">
-                <label for="wcml_currency_options_decimals_{{ args.currency_code }}" id="wcml_currency_options_decimals_{{ args.currency_code }}">{{ form.num_decimals.label }}</label>
+                <label for="wcml_currency_options_decimals_{{ args.currency_code }}">{{ form.num_decimals.label }}</label>
                 <input name="currency_options[num_decimals]" type="number" class="currency_option_decimals"
-                    value="{{ args.currency.num_decimals }}" min="0" step="1" max="5" data-message="{{ form.num_decimals.only_numeric }}" />
+                    value="{{ args.currency.num_decimals }}" min="0" step="1" max="5" data-message="{{ form.num_decimals.only_numeric }}" id="wcml_currency_options_numbers_of_decimals_{{ args.currency_code }}"/>
             </div>
 
             <hr/>

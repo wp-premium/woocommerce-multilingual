@@ -157,7 +157,7 @@ class WCML_Comments {
 			$ids[] = $translation->element_id;
 		}
 
-		return implode( ',', $ids );
+		return implode( ',', array_filter( $ids ) );
 
 	}
 

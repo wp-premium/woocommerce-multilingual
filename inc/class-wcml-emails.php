@@ -299,7 +299,7 @@ class WCML_Emails{
 
     public function new_order_email_heading( $heading ){
 	    $translated_heading = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->heading;
-	    if( !is_null( $translated_heading ) ){
+	    if( $translated_heading ){
 		    $heading = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->format_string( $translated_heading );
 	    }
 
@@ -308,7 +308,7 @@ class WCML_Emails{
 
     public function new_order_email_subject( $subject ){
 	    $translated_subject = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->subject;
-	    if( !is_null( $translated_subject ) ){
+	    if( $translated_subject ){
 		    $subject = $this->woocommerce->mailer()->emails['WC_Email_New_Order']->format_string( $translated_subject );
 	    }
 

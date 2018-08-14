@@ -24,7 +24,8 @@ class WCML_Upgrade{
 	    '4.2.7',
         '4.2.10',
         '4.2.11',
-	    '4.3.0'
+	    '4.3.0',
+        '4.3.4'
     );
     
     function __construct(){
@@ -699,6 +700,16 @@ class WCML_Upgrade{
 			$wpml_admin_notices->add_notice( $notice );
 
 		}
+	}
+
+	private function upgrade_4_3_4() {
+		global $wpdb;
+
+		//delete wrong duplicated attachments
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}icl_translations WHERE `element_id` IN ( SELECT ID FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%' ) " );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}postmeta WHERE `post_id` IN ( SELECT ID FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%' ) " );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%'" );
+
 	}
 
 }

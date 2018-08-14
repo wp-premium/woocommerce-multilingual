@@ -32,6 +32,13 @@ jQuery( function($){
                 $(document).on('change','.currency_option_decimals', WCML_Multi_Currency.price_preview);
                 $(document).on('change','.currency_code select', WCML_Multi_Currency.price_preview);
 
+                $(document).on('keypress', '.currency_option_decimals', function (event) {
+                    // 8 for backspace, 0 for null values, 48-57 for 0-9 numbers
+                    if (event.which != 8 && event.which != 0 && event.which < 48 || event.which > 57) {
+                        event.preventDefault();
+                    }
+                });
+
                 $(document).on('keyup','.wcml-exchange-rate', WCML_Multi_Currency.exchange_rate_check);
 
                 if($('#wcml_mc_options').length){
@@ -148,11 +155,9 @@ jQuery( function($){
         save_currency: function(){
 
             var parent = $(this).closest('.wcml-dialog-container');
-
-            var chk_deci = WCML_Multi_Currency.check_on_numeric(parent,'.currency_option_decimals');
             var chk_autosub = WCML_Multi_Currency.check_on_numeric(parent,'.abstract_amount');
 
-            if( chk_deci || chk_autosub ){
+            if( chk_autosub ){
                 return false;
             }
 

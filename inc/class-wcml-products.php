@@ -74,6 +74,8 @@ class WCML_Products{
 		add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
 
 		add_filter( 'get_product_search_form', array( $this->sitepress, 'get_search_form_filter' ) );
+
+		add_filter( 'woocommerce_pre_customer_bought_product', array( $this, 'is_customer_bought_product' ), 10, 4 );
 	}
 
     // Check if original product
@@ -669,5 +671,19 @@ class WCML_Products{
 	public function is_product_display_as_translated_post_type() {
 		return apply_filters( 'wpml_is_display_as_translated_post_type', false, 'product' );
 	}
+
+
+	public function is_customer_bought_product( $value, $customer_email, $user_id, $product_id ){
+
+        if ( !$this->is_original_product( $product_id ) ){
+	        remove_filter( 'woocommerce_pre_customer_bought_product', array( $this, 'is_customer_bought_product' ), 10, 4 );
+
+	        $value = wc_customer_bought_product( $customer_email, $user_id, $this->get_original_product_id( $product_id ) );
+
+		    add_filter( 'woocommerce_pre_customer_bought_product', array( $this, 'is_customer_bought_product' ), 10, 4 );
+        }
+
+	    return $value;
+    }
 
 }
