@@ -52,6 +52,10 @@ class WCML_Attributes{
 			    $this,
 			    'filter_product_variation_post_meta_attribute_values_in_current_language'
 		    ), 10, 4 );
+		    add_filter( 'woocommerce_product_get_default_attributes', array(
+			    $this,
+			    'filter_product_variation_default_attributes'
+		    ) );
 	    }
     }
 
@@ -648,6 +652,27 @@ class WCML_Attributes{
 
 	}
 
+
+	/**
+	 * @param array $default_attributes
+	 *
+	 * @return array
+	 */
+	public function filter_product_variation_default_attributes( $default_attributes ){
+
+		if( $default_attributes ){
+
+			foreach( $default_attributes as $attribute_key => $attribute_value ){
+
+				$default_attributes[ $attribute_key ] = $this->get_attribute_term_translation_in_current_language( $attribute_key, $attribute_value );
+
+			}
+
+		}
+
+		return $default_attributes;
+	}
+
 	/**
 	 *
 	 * @param string $attribute_taxonomy
@@ -666,6 +691,5 @@ class WCML_Attributes{
 
 		return $attribute_value;
 	}
-
 
 }
