@@ -15,6 +15,7 @@ class WCML_Exchange_Rates {
 	private $wp_locale;
 
 	const CRONJOB_EVENT = 'wcml_exchange_rates_update';
+	const DIGITS_AFTER_DECIMAL_POINT = 6;
 
 	/**
 	 * WCML_Exchange_Rates constructor.
@@ -160,7 +161,7 @@ class WCML_Exchange_Rates {
 
 	public function apply_lifting_charge( &$rates ) {
 		foreach ( $rates as $k => $rate ) {
-			$rates[ $k ] = round( $rate * ( 1 + $this->settings['lifting_charge'] / 100 ), 4 );
+			$rates[ $k ] = round( $rate * ( 1 + $this->settings['lifting_charge'] / 100 ), self::DIGITS_AFTER_DECIMAL_POINT );
 		}
 	}
 

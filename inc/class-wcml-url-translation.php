@@ -515,8 +515,8 @@ class WCML_Url_Translation {
 					} elseif ( $attribute_slug_translation && $attribute_slug !== $attribute_slug_translation ) {
 
 						$slug_match  = addslashes( ltrim( $attribute_slug, '/' ) );
-						$pattern     = '#' . $slug_match . '/(.*)#';
-						$replacement = $attribute_slug_translation . '/$1';
+						$pattern     = "#(^|\/)" . $slug_match . "/(.*)#";
+						$replacement = '$1'.$attribute_slug_translation . '/$2';
 
 						$value = $this->replace_bases_in_rewrite_rules( $value, $pattern, $pattern, $replacement );
 

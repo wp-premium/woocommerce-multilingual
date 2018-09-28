@@ -367,7 +367,10 @@ class WCML_Multi_Currency{
         global $woocommerce, $sitepress, $wpdb;
 
 	    $WCML_REST_API = new WCML_REST_API();
-	    if( $WCML_REST_API->is_rest_api_request() ){
+	    if(
+	            $WCML_REST_API->is_rest_api_request() ||
+	            ! empty( $_REQUEST['woocommerce_quick_edit'] )
+        ){
 		    return get_option('woocommerce_currency');
 	    }
 

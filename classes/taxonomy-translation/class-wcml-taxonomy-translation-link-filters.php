@@ -13,6 +13,7 @@ class WCML_Taxonomy_Translation_Link_Filters{
 
 	public function add_filters(){
 		add_filter( 'wpml_notice_text', array( $this, 'override_translation_notice_text' ), 10, 2 );
+		add_filter( 'wpml_taxonomy_slug_translation_ui', array( $this, 'slug_translation_ui_class' ), 10, 2 );
 	}
 
 	/**
@@ -59,11 +60,7 @@ class WCML_Taxonomy_Translation_Link_Filters{
 			$args['tab'] = $taxonomy;
 		} else {
 
-			$attributes              = $this->wcml_attributes->get_translatable_attributes();
-			$translatable_attributes = array();
-			foreach ( $attributes as $attribute ) {
-				$translatable_attributes[] = 'pa_' . $attribute->attribute_name;
-			}
+			$translatable_attributes = $this->get_translatable_attributes();
 
 			if ( in_array( $taxonomy, $translatable_attributes, true ) ) {
 				$args['tab']      = 'product-attributes';
@@ -90,5 +87,26 @@ class WCML_Taxonomy_Translation_Link_Filters{
 		}
 
 		return $url;
+	}
+
+
+	private function get_translatable_attributes(){
+
+		$translatable_attributes = array();
+		foreach ( $this->wcml_attributes->get_translatable_attributes() as $attribute ) {
+			$translatable_attributes[] = 'pa_' . $attribute->attribute_name;
+		}
+
+		return $translatable_attributes;
+	}
+
+	public function slug_translation_ui_class( $ui_class, $taxonomy ){
+
+		if( in_array( $taxonomy, $this->get_translatable_attributes() ) ){
+
+			$ui_class = new WCML_St_Taxonomy_UI( get_taxonomy( $taxonomy ) );
+		}
+
+		return $ui_class;
 	}
 }

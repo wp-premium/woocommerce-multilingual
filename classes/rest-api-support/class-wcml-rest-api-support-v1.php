@@ -204,7 +204,7 @@ class WCML_REST_API_Support_V1{
 
 		$data = $request->get_params();
 
-		if( isset( $data['lang'] )){
+		if( isset( $data['lang'] ) && 'POST' === $request->get_method() ){
 			$active_languages = $this->sitepress->get_active_languages();
 			if( !isset( $active_languages[$data['lang']] ) ){
 				throw new WCML_REST_Invalid_Language_Exception( $data['lang'] );

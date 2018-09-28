@@ -60,7 +60,7 @@ class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service {
 		if ( isset( $json->quotes ) ) {
 			foreach ( $tos as $to ) {
 				if ( isset( $json->quotes->{$from . $to} ) ) {
-					$rates[ $to ] = round( $json->quotes->{$from . $to}, 4 );
+					$rates[ $to ] = round( $json->quotes->{$from . $to}, WCML_Exchange_Rates::DIGITS_AFTER_DECIMAL_POINT );
 				}
 			}
 		}

@@ -79,9 +79,27 @@ class WCML_Media{
     	if ( method_exists( 'WPML_Media_Attachments_Duplication', 'sync_post_thumbnail') ) {
 		    $factory = new WPML_Media_Attachments_Duplication_Factory();
 		    $media_duplicate = $factory->create();
-		    $media_duplicate->sync_post_thumbnail( $orig_post_id );
+		    if( $media_duplicate ){
+			    $media_duplicate->sync_post_thumbnail( $orig_post_id );
+		    }
 	    }
 	}
+
+	public function sync_variation_thumbnail_id( $variation_id, $translated_variation_id, $lang ){
+		$thumbnail_id = get_post_meta( $variation_id, '_thumbnail_id', true );
+		$translated_thumbnail = apply_filters( 'translate_object_id', $thumbnail_id, 'attachment', false, $lang );
+
+		if( is_null( $translated_thumbnail ) && $thumbnail_id ){
+			$factory = new WPML_Media_Attachments_Duplication_Factory();
+			$media_duplicate = $factory->create();
+			$translated_thumbnail = $media_duplicate->create_duplicate_attachment( $thumbnail_id, wp_get_post_parent_id( $thumbnail_id ), $lang );
+		}
+
+		update_post_meta( $translated_variation_id, '_thumbnail_id', $translated_thumbnail );
+		update_post_meta( $variation_id, '_wpml_media_duplicate', 1 );
+		update_post_meta( $variation_id, '_wpml_media_featured', 1 );
+	}
+
 
 	public function sync_product_gallery( $product_id ) {
 

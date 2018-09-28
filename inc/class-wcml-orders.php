@@ -1,9 +1,10 @@
 <?php
-class WCML_Orders{
+
+class WCML_Orders {
 
     private $woocommerce_wpml;
     private $sitepress;
-    
+
     private $standard_order_notes = array(
             'Order status changed from %s to %s.',
             'Order item stock reduced successfully.',
@@ -31,12 +32,12 @@ class WCML_Orders{
 
         add_action( 'wp_ajax_wcml_order_delete_items', array( $this, 'order_delete_items' ) );
     }
-    
+
     function init(){
-        
+
         add_action('woocommerce_shipping_update_ajax', array($this, 'fix_shipping_update'));
         add_action('woocommerce_checkout_update_order_meta', array($this, 'set_order_language'));
-        
+
         add_filter('icl_lang_sel_copy_parameters', array($this, 'append_query_parameters'));
 
         add_filter('the_comments', array($this, 'get_filtered_comments'));
@@ -111,7 +112,7 @@ class WCML_Orders{
 
         return $comments;
     }
-    
+
     function woocommerce_order_get_items( $items, $order ){
 
         if( isset( $_GET[ 'post' ] ) && get_post_type( $_GET[ 'post' ] ) == 'shop_order' ) {
@@ -186,10 +187,11 @@ class WCML_Orders{
                     }
                 }elseif( $item instanceof WC_Order_Item_Shipping ){
                     if( $item->get_method_id() ){
+	                    $shipping_id = $item->get_method_id() . $item->get_instance_id();
                         $item->set_method_title(
                                 $this->woocommerce_wpml->shipping->translate_shipping_method_title(
                                     $item->get_method_title(),
-                                    $item->get_method_id(),
+                                    $shipping_id,
                                     $language_to_filter
                                 )
                         );
@@ -262,40 +264,40 @@ class WCML_Orders{
             $wpdb->update( $wpdb->prefix.'woocommerce_order_itemmeta', array( 'meta_value' => $value ), array( 'order_item_id' => $item_id, 'meta_key' => $key ) );
         }
     }
-    
+
     // Fix for shipping update on the checkout page.
     function fix_shipping_update($amount){
         global $sitepress, $post;
-        
+
         if($sitepress->get_current_language() !== $sitepress->get_default_language() && $post->ID == $this->checkout_page_id()){
-        
+
             $_SESSION['icl_checkout_shipping_amount'] = $amount;
-            
+
             $amount = $_SESSION['icl_checkout_shipping_amount'];
-        
+
         }
-    
+
         return $amount;
     }
 
 
     /**
      * Adds language to order post type.
-     * 
+     *
      * Language was stored in the session created on checkout page.
      * See params().
-     * 
+     *
      * @param type $order_id
-     */ 
-    function set_order_language($order_id) { 
+     */
+    function set_order_language($order_id) {
         if(!get_post_meta($order_id, 'wpml_language')){
             $language = isset($_SESSION['wpml_globalcart_language']) ? $_SESSION['wpml_globalcart_language'] : ICL_LANGUAGE_CODE;
             update_post_meta($order_id, 'wpml_language', $language);
         }
     }
-    
+
     function append_query_parameters($parameters){
-        
+
         if(is_order_received_page() || is_checkout()){
             if(!in_array('order', $parameters)) $parameters[] = 'order';
             if(!in_array('key', $parameters)) $parameters[] = 'key';
@@ -367,7 +369,10 @@ class WCML_Orders{
             die();
         }
 
-        setcookie('_wcml_dashboard_order_language', filter_input( INPUT_POST, 'lang', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), time() + 86400, COOKIEPATH, COOKIE_DOMAIN);
+		$cookie_name = '_wcml_dashboard_order_language';
+		// @todo uncomment or delete when #wpmlcore-5796 is resolved
+		//do_action( 'wpsc_add_cookie', $cookie_name );
+		setcookie( $cookie_name, filter_input( INPUT_POST, 'lang', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
 
     }
 

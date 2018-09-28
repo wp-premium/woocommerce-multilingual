@@ -1235,7 +1235,8 @@ class WCML_Bookings {
 
 	function set_booking_currency( $currency_code = false ) {
 
-		if ( ! isset( $_COOKIE ['_wcml_booking_currency'] ) && ! headers_sent() ) {
+		$cookie_name = '_wcml_booking_currency';
+		if ( ! isset( $_COOKIE [ $cookie_name ] ) && ! headers_sent() ) {
 
 
 			$currency_code = get_woocommerce_currency();
@@ -1253,7 +1254,9 @@ class WCML_Bookings {
 		}
 
 		if ( $currency_code ) {
-			setcookie( '_wcml_booking_currency', $currency_code, time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
+			// @todo uncomment or delete when #wpmlcore-5796 is resolved
+			//do_action( 'wpsc_add_cookie', $cookie_name );
+			setcookie( $cookie_name, $currency_code, time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
 		}
 
 	}
