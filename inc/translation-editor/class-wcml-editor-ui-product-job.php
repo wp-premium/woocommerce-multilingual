@@ -144,7 +144,7 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
                 $group = new WPML_Editor_UI_Field_Group( '', true );
                 $attribute_field = new WPML_Editor_UI_Single_Line_Field( $attr_key . '_name', __( 'Name', 'woocommerce-multilingual' ), $this->data, false );
                 $group->add_field( $attribute_field );
-                $attribute_field = new WPML_Editor_UI_Single_Line_Field( $attr_key , __( 'Value(s)', 'woocommerce-multilingual' ), $this->data, false );
+                $attribute_field = new WPML_Editor_UI_TextArea_Field( $attr_key , __( 'Value(s)', 'woocommerce-multilingual' ), $this->data, false );
                 $group->add_field( $attribute_field );
                 $attributes_section->add_field( $group );
             }

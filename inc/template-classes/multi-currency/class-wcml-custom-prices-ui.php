@@ -32,7 +32,7 @@ class WCML_Custom_Prices_UI extends WPML_Templates_Factory {
 			'is_variation' => $this->is_variation,
 			'html_id' => $this->is_variation ? '['.$this->product_id.']' : '',
 			'strings' => apply_filters( 'wcml_custom_prices_strings', array(
-				'not_set' => sprintf( __( 'Multi-currency is enabled but no secondary currencies have been set. %sAdd secondary currencies%s.',
+				'not_set' => sprintf( __( 'Multi-currency is enabled, but no secondary currencies have been set. %sAdd secondary currency%s.',
 					'woocommerce-multilingual' ), '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=multi-currency') . '">', '</a>' ),
 				'calc_auto' => __( 'Calculate prices in other currencies automatically', 'woocommerce-multilingual' ),
 				'see_prices' => __( 'Click to see the prices in the other currencies as they are currently shown on the front end.', 'woocommerce-multilingual' ),

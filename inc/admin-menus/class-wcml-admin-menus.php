@@ -214,9 +214,10 @@ class WCML_Admin_Menus{
 				self::is_post_action_needs_redirect()
 			) {
 				$prid = (int) $_GET['post'];
-				wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
-				exit;
-
+				if( 'auto-draft' !== get_post_status( $prid ) ){
+					wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
+					exit;
+                }
 			} elseif ( self::is_admin_duplicate_page_action( $pagenow ) && self::is_post_product_translation_screen() ) {
 
 				wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products' ) );

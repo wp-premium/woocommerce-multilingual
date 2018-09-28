@@ -58,7 +58,7 @@ class WCML_xDomain_Data {
 		if ( has_filter( 'wpml_get_cross_domain_language_data' ) ) { // After WPML 3.2.7
 			$xdomain_data = apply_filters( 'wpml_get_cross_domain_language_data', array() );
 		} elseif ( isset( $_GET['xdomain_data'] ) ) {
-			$xdomain_data = json_decode( base64_decode( $_GET['xdomain_data'] ), JSON_OBJECT_AS_ARRAY );
+			$xdomain_data = json_decode( base64_decode( $_GET['xdomain_data'] ), true );
 		}
 
 		if ( isset( $xdomain_data['wcsid'] ) ) {

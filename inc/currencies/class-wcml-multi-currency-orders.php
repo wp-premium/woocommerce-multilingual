@@ -376,7 +376,10 @@ class WCML_Multi_Currency_Orders {
 		}
 		$currency = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-		setcookie( '_wcml_order_currency', $currency, time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
+		$cookie_name = '_wcml_order_currency';
+		// @todo uncomment or delete when #wpmlcore-5796 is resolved
+		//do_action( 'wpsc_add_cookie', $cookie_name );
+		setcookie( $cookie_name, $currency, time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
 
 		$return['currency'] = $currency;
 

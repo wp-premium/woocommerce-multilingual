@@ -91,7 +91,7 @@ class woocommerce_wpml {
 
 	    $WCML_REST_API = new WCML_REST_API();
 
-	    if ( class_exists( 'WooCommerce' ) && defined( 'WC_VERSION' ) && 'yes' == get_option( 'woocommerce_api_enabled' ) && ! is_null( $sitepress ) ) {
+	    if ( class_exists( 'WooCommerce' ) && defined( 'WC_VERSION' ) && ! is_null( $sitepress ) ) {
 		    if ( version_compare( WC_VERSION, '2.6', '>=' ) && $WCML_REST_API->is_rest_api_request() ) {
 			    $wcml_rest_api_query_filters_products = new WCML_REST_API_Query_Filters_Products( $wpml_query_filter );
 			    $wcml_rest_api_query_filters_orders   = new WCML_REST_API_Query_Filters_Orders( $wpdb );

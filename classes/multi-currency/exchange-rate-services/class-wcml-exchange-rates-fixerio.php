@@ -54,7 +54,7 @@ class WCML_Exchange_Rates_Fixerio extends WCML_Exchange_Rate_Service {
 		}
 
 		foreach ( $json->rates as $to => $rate ) {
-			$rates[ $to ] = round( $rate, 4 );
+			$rates[ $to ] = round( $rate, WCML_Exchange_Rates::DIGITS_AFTER_DECIMAL_POINT );
 		}
 
 		return $rates;
