@@ -620,12 +620,20 @@ class WCML_Attributes{
 	 */
 	public function filter_product_variation_post_meta_attribute_values_in_current_language( $value, $object_id, $meta_key, $single ) {
 
-		if ( 'product_variation' === get_post_type( $object_id ) && '' === $meta_key ) {
+		if ( '' === $meta_key && 'product_variation' === get_post_type( $object_id ) ) {
+
+			$cache_group  = 'wpml-all-meta-product-variation';
+			$cache_key     = $this->sitepress->get_current_language() . $object_id;
+			$cached_value = wp_cache_get( $cache_key, $cache_group );
+
+			if ( $cached_value ) {
+				return $cached_value;
+			}
 
 			remove_filter( 'get_post_metadata', array(
 				$this,
 				'filter_product_variation_post_meta_attribute_values_in_current_language'
-			), 10, 4 );
+			), 10 );
 
 			$all_meta = get_post_meta( $object_id );
 
@@ -642,6 +650,8 @@ class WCML_Attributes{
 						}
 					}
 				}
+
+				wp_cache_add( $cache_key, $all_meta, $cache_group );
 
 				return $all_meta;
 			}

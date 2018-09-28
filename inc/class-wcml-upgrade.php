@@ -25,7 +25,8 @@ class WCML_Upgrade{
         '4.2.10',
         '4.2.11',
 	    '4.3.0',
-        '4.3.4'
+        '4.3.4',
+        '4.3.5'
     );
     
     function __construct(){
@@ -99,7 +100,7 @@ class WCML_Upgrade{
         if(empty($version_in_db) && get_option('icl_is_wcml_installed')){
             $version_in_db = '2.3.2';
         }
-        
+
         $migration_ran = false;
 
 	    if ( $version_in_db && version_compare( $version_in_db, WCML_VERSION, '<' ) ) {
@@ -709,6 +710,20 @@ class WCML_Upgrade{
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}icl_translations WHERE `element_id` IN ( SELECT ID FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%' ) " );
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}postmeta WHERE `post_id` IN ( SELECT ID FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%' ) " );
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}posts WHERE `guid` LIKE '%attachment_id%'" );
+
+	}
+
+	private function upgrade_4_3_5() {
+
+		if ( class_exists( 'WC_Product_Bundle' ) && function_exists( 'WC_PB' ) ) {
+
+			global $wpdb;
+			//delete wrong bundle items
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}woocommerce_bundled_itemmeta WHERE `meta_key` LIKE 'translation_item_id_of_%' AND `meta_value` IN ( SELECT bundled_item_id FROM {$wpdb->prefix}woocommerce_bundled_items WHERE `product_id` = 0 AND `bundle_id` = 0 ) " );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}woocommerce_bundled_items WHERE `product_id` = 0 AND `bundle_id` = 0 " );
+			$not_existing_items = $wpdb->get_col( "SELECT m.`meta_id` FROM {$wpdb->prefix}woocommerce_bundled_itemmeta AS m LEFT JOIN {$wpdb->prefix}woocommerce_bundled_items as i ON m.meta_value = i.bundled_item_id WHERE m.`meta_key` LIKE 'translation_item_id_of_%' AND i.`bundled_item_id` IS NULL" );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_bundled_itemmeta WHERE `meta_id` IN ( %s )", join( ',', $not_existing_items ) ) );
+		}
 
 	}
 

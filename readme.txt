@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.9.8
-Stable tag: 4.3.4
+Stable tag: 4.3.6
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -140,10 +140,34 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
+= 4.3.6 =
+* Removed wpml_referer_url as it is no longer used
+* Fixed Fatal error on updating original, after setting attachments to "do not translate"
+* Changed currency services rate rounding precision limit to 6 digits
+* Fixed 404 error for translated attribute archive page
+* Fixed prepending shop page before home page in breadcrumbs
+
+= 4.3.5 =
+* Fix rest translation in products creation
+* Fixed incorrect translation matched for Table Rate Shipping title
+* Price is not saved correctly via "Quick Edit" if secondary currency is selected on front
+* Fixed a performance issue when a product has a lot of variations.
+* Fixed variation image synchronization
+* Lower priority of 'woocommerce_cart_item_name' hook for "WooCommerce Product Subtitle" and others to work
+* Fixed performance issues on product listing page with big amount of attributes
+* Fixed fatal error with WPML older than 3.9
+* Fix redirection to wcml dashboard in a specific case if you skip wizard
+* Fixed stock status when purchasing the last product in the second language which does not update status for original
+* WooCommerce Product Bundle synchronizations problems when re-creating bundle product translation
+* Fixed Woo Variations Table Compatibility issue with overwritten product title in specific scenario
+* Fix cosmetic issue with mutli-currency message in product post screen
+* Fixed infinite loop with large product numbers and languages
+
 = 4.3.4 =
 * Fixed error: Cannot redeclare woocommerce_wp_text_input
 * Fixed error when creating booking from admin without creating order
 * Fixed Woocommerce Dynamic Price issue with Advanced category price in second language
+* Fixed attachments duplication when synchronizing gallery
 * Fix situation with filtering WC attributes calling by sku
 * Fix a problem that you cannot delete booking from trash
 * Fix prevent letters in multicurrency popup for number of decimals

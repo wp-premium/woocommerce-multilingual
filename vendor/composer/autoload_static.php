@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959
+class ComposerStaticInitbdf1c79204b9b418eec52b67b5a7b62b
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -454,6 +454,7 @@ class ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959
         'WCML_Setup_Store_Pages_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-store-pages-ui.php',
         'WCML_Setup_Translation_Options_UI' => __DIR__ . '/../..' . '/inc/template-classes/setup/class-wcml-setup-translation-options-ui.php',
         'WCML_Setup_UI' => __DIR__ . '/../..' . '/classes/wcml-setup/class-wcml-setup-ui.php',
+        'WCML_St_Taxonomy_UI' => __DIR__ . '/../..' . '/inc/template-classes/class-wcml-st-taxonomy-ui.php',
         'WCML_Status_Config_Warnings_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-config-warnings-ui.php',
         'WCML_Status_Media_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-media-ui.php',
         'WCML_Status_Multi_Currencies_UI' => __DIR__ . '/../..' . '/inc/template-classes/status/class-wcml-status-multi-currencies-ui.php',
@@ -501,6 +502,7 @@ class ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959
         'WCML_WPSEO' => __DIR__ . '/../..' . '/compatibility/class-wcml-wpseo.php',
         'WCML_Widgets' => __DIR__ . '/../..' . '/inc/class-wcml-widgets.php',
         'WCML_WooCommerce_Rest_API_Support' => __DIR__ . '/../..' . '/inc/class-wcml-woocommerce-rest-api-support.php',
+        'WCML_Woo_Var_Table' => __DIR__ . '/../..' . '/compatibility/class-wcml-woo-var-table.php',
         'WCML_Wpb_Vc' => __DIR__ . '/../..' . '/compatibility/class-wcml-wpb-vc.php',
         'WCML_YITH_WCQV' => __DIR__ . '/../..' . '/compatibility/class-wcml-yith-wcqv.php',
         'WCML_gravityforms' => __DIR__ . '/../..' . '/compatibility/class-wcml-gravityforms.php',
@@ -515,10 +517,10 @@ class ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0e676152496e9f3b9d6510bdcac1d959::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbdf1c79204b9b418eec52b67b5a7b62b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbdf1c79204b9b418eec52b67b5a7b62b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbdf1c79204b9b418eec52b67b5a7b62b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitbdf1c79204b9b418eec52b67b5a7b62b::$classMap;
 
         }, null, ClassLoader::class);
     }

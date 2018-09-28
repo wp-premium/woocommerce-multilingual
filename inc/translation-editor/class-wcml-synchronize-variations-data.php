@@ -158,7 +158,7 @@ class WCML_Synchronize_Variations_Data{
                 }
 
 	            //sync media
-	            $this->woocommerce_wpml->media->sync_thumbnail_id( $original_variation_id, $variation_id, $lang );
+	            $this->woocommerce_wpml->media->sync_variation_thumbnail_id( $original_variation_id, $variation_id, $lang );
 
 	            //sync file_paths
                 $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_variation_id, $variation_id, $data );

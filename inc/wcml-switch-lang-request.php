@@ -36,19 +36,15 @@ class WCML_Switch_Lang_Request{
             $lang_to   = $this->get_requested_lang();
 
             if ( $lang_from && $lang_from !== $lang_to ) {
-                $referer_url = $this->get_referer_url_cookie();
-
                 /**
                  * Hook fired when the user changes the site language
                  *
                  * @param string $lang_from   the previous language
                  * @param string $lang_to     the new language
-                 * @param string $referer_url the previous URL
                  */
-                do_action( 'wcml_user_switch_language', $lang_from, $lang_to, $referer_url );
+                do_action( 'wcml_user_switch_language', $lang_from, $lang_to );
             }
 
-            $this->set_referer_url_cookie();
         }
 
     }
@@ -73,43 +69,11 @@ class WCML_Switch_Lang_Request{
     }
 
     /**
-     * @return string
-     */
-    public function get_referer_url_cookie() {
-        return urldecode( $this->cookie->get_cookie( $this->get_referer_url_cookie_name() ) );
-    }
-
-
-    public function set_referer_url_cookie() {
-        if ( ! $this->cookie->headers_sent() ) {
-
-            $this->cookie->set_cookie(
-                $this->get_referer_url_cookie_name(),
-                $this->get_request_url(),
-                time() + DAY_IN_SECONDS,
-                defined( 'COOKIEPATH' ) ? COOKIEPATH : '/',
-                $this->get_cookie_domain()
-            );
-        }
-    }
-
-    /**
      * @return bool|string
      */
     public function get_cookie_domain() {
 
         return defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : $this->get_server_host_name();
-    }
-
-    /**
-     * @return string
-     */
-    public function get_request_url() {
-        $scheme = isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host   = $this->get_server_host_name();
-        $uri    = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-
-        return $scheme . '://' . $host . $uri;
     }
 
     /**
@@ -127,13 +91,6 @@ class WCML_Switch_Lang_Request{
 		    }
 	    }
 	    return preg_replace( '@:[443]+([/]?)@', '$1', $host );
-    }
-
-    /**
-     * @return string
-     */
-    public function get_referer_url_cookie_name() {
-        return 'wpml_referer_url';
     }
 
     public function get_requested_lang() {
