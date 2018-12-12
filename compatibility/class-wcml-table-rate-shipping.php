@@ -198,20 +198,22 @@ class WCML_Table_Rate_Shipping {
 	}
 
 	/**
-	 * @param array $values
+	 * @param array $priorities
 	 *
 	 * @return array
 	 */
-	public function filter_table_rate_priorities( $values ) {
+	public function filter_table_rate_priorities( $priorities ) {
 
-		foreach ( $values as $slug => $value ) {
+		foreach ( $priorities as $slug => $priority ) {
 
-			$shipping_class_term                  = get_term_by( 'slug', $slug, 'product_shipping_class' );
-			$values[ $shipping_class_term->slug ] = $value;
-			unset( $values[ $slug ] );
+			$shipping_class_term = get_term_by( 'slug', $slug, 'product_shipping_class' );
+			if ( $shipping_class_term->slug !== $slug ) {
+				unset( $priorities[ $slug ] );
+				$priorities[ $shipping_class_term->slug ] = $priority;
+			}
 		}
 
-		return $values;
+		return $priorities;
 	}
 
 }

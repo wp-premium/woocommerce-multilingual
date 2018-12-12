@@ -1,9 +1,9 @@
 jQuery(document).ready(function($){
 
-    $('.wcml_schedule_input').each(function(){
-        if($(this).is(':checked') && $(this).val() == 1){
-            $(this).parent().find('.block_actions').show();
-        }
+    maybe_show_wcml_shedule_link();
+
+    $(document).on('click','.woocommerce_variations h3', function( e ){
+        maybe_show_wcml_shedule_link();
     });
 
     $(document).on('change','.wcml_custom_prices_input', function(){
@@ -148,6 +148,14 @@ jQuery(document).ready(function($){
             $(this).closest('p').find('.wcml_price_error').remove();
         }
     });
+
+    function maybe_show_wcml_shedule_link(){
+        $('.wcml_schedule_input').each(function(){
+            if($(this).is(':checked') && $(this).val() == 1){
+                $(this).parent().find('.block_actions').show();
+            }
+        });
+    }
 
     function datepick(){
     var date_img = '';
