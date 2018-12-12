@@ -57,6 +57,7 @@ class WCML_Attributes{
 			    'filter_product_variation_default_attributes'
 		    ) );
 	    }
+	    add_action( 'update_post_meta', array( $this, 'set_translation_status_as_needs_update' ), 10, 3 );
     }
 
     public function init(){
@@ -273,11 +274,15 @@ class WCML_Attributes{
                     $trnsl_labels[ $language ][ $key_to_save ] = '';
                 }
             }elseif( !$orig_product_attr[ 'is_taxonomy' ] ){
-                if( isset( $trnsl_product_attrs[ $key ] ) ){
-                    $orig_product_attrs[ $key_to_save ][ 'value' ] = $trnsl_product_attrs[ $key ][ 'value' ];
-                }elseif( !empty( $trnsl_product_attrs ) ){
-                    unset ( $orig_product_attrs[ $key_to_save ] );
-                }
+	            $duplicate_of = get_post_meta( $tr_product_id, '_icl_lang_duplicate_of', true );
+
+	            if( !$duplicate_of ){
+		            if( isset( $trnsl_product_attrs[ $key ] ) ){
+			            $orig_product_attrs[ $key_to_save ][ 'value' ] = $trnsl_product_attrs[ $key ][ 'value' ];
+		            }elseif( !empty( $trnsl_product_attrs ) ){
+			            unset ( $orig_product_attrs[ $key_to_save ] );
+		            }
+	            }
             }
         }
 
@@ -700,6 +705,28 @@ class WCML_Attributes{
 		}
 
 		return $attribute_value;
+	}
+
+	/**
+	 * @param int $meta_id
+	 * @param int $object_id
+	 * @param string $meta_key
+	 */
+	public function set_translation_status_as_needs_update( $meta_id, $object_id, $meta_key ) {
+		if ( $meta_key === '_product_attributes' ) {
+
+			$status_helper               = wpml_get_post_status_helper();
+			$translation_element_factory = new WPML_Translation_Element_Factory( $this->sitepress );
+			$post_element                = $translation_element_factory->create_post( $object_id );
+
+			if ( null === $post_element->get_source_language_code() ) {
+				foreach ( $post_element->get_translations() as $translation ) {
+					if ( null !== $translation->get_source_language_code() ) {
+						$status_helper->set_update_status( $translation->get_id(), 1 );
+					}
+				}
+			}
+		}
 	}
 
 }

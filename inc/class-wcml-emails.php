@@ -363,6 +363,10 @@ class WCML_Emails{
 
     function change_email_language( $lang ) {
 
+        if ( isset( $_POST['post_type'] ) && 'shop_order' === $_POST['post_type'] ) {
+            return;
+        }
+
         $this->sitepress->switch_lang( $lang, true );
         $this->locale = $this->sitepress->get_locale( $lang );
         unload_textdomain( 'woocommerce' );

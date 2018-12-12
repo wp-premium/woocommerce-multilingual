@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 3.9
 Tested up to: 4.9.8
-Stable tag: 4.3.6
+Stable tag: 4.3.7
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -139,6 +139,16 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.3.7 =
+* Fix broken logic with Table Rate Shipping when product uses class with "break and abort" rule
+* Custom attributes terms not copied to diplicated translation after update values in original
+* Fixed issue which was changing the current language of the site when saving an order
+* Better compatibility class for LiteSpeed Cache that doesn't require changing the URL
+* Fixed issue with serialized data in term meta table
+* Fix price with schedule sale dates in multicurrency
+* Add compatibility class for LiteSpeed Cache plugin
+* Fixed issue with problem in downloadable products in secondary language with different domain per language is enabled
 
 = 4.3.6 =
 * Removed wpml_referer_url as it is no longer used
@@ -336,12 +346,11 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * Fatal error while custom call not active currency switcher template
 * Duplicating from WooCommerce resulted in losing language data for the original product
 * PHP errors were shown on the admin dashboard when no orders existed and displaying errors was on
-* Fixed issue with problem in downloadable products in secondary language with different domain per language is enabled
 * A fatal error (undefiend get_current_screen) was occurring in some conditions on the WP admin side
 * Cart widget shows wrong product names
 * Fixed a small but that defualt currency template didn't load correctly in new installation
 * Added compatibility for grouped products
-* Fixed an issue in lost password endpoint when edit it
+* Fixed an issue in lost password endpoint when editing it
 * The cart total in a secondary currencies could have been added a previously removed shipping tax
 * Post translation won't save when Product Bundles plugin is active
 * Fixed comp issue with dynamic price with translated variations don't work in secondary language

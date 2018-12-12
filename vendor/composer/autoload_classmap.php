@@ -354,6 +354,7 @@ return array(
     'WCML_Klarna_Gateway' => $baseDir . '/compatibility/class-wcml-klarna-gateway.php',
     'WCML_Languages_Upgrade_Notice' => $baseDir . '/inc/template-classes/class-wcml-languages-upgrade-notice.php',
     'WCML_Languages_Upgrader' => $baseDir . '/inc/class-wcml-languages-upgrader.php',
+    'WCML_LiteSpeed_Cache' => $baseDir . '/compatibility/class-wcml-litespeed-cache.php',
     'WCML_Locale' => $baseDir . '/inc/class-wcml-locale.php',
     'WCML_MaxStore' => $baseDir . '/compatibility/class-wcml-maxstore.php',
     'WCML_Media' => $baseDir . '/inc/class-wcml-media.php',

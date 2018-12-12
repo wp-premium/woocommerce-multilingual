@@ -66,7 +66,7 @@ class WCML_Custom_Prices{
 
         $custom_prices = false;
 
-        if(!empty($product_meta['_wcml_custom_prices_status'][0])){
+        if( !empty( $product_meta['_wcml_custom_prices_status'][0] ) ){
 
             $prices_keys = apply_filters( 'wcml_price_custom_fields_filtered', array(
                 '_price', '_regular_price', '_sale_price',
@@ -82,6 +82,10 @@ class WCML_Custom_Prices{
 
             }
 
+            if( $this->is_date_range_set( $product_meta, $currency ) && !$this->is_on_sale_date_range( $product_meta, $currency ) ){
+	            $custom_prices[ '_sale_price' ] = '';
+            }
+
         }
 
         if(!isset($custom_prices['_price'])) return false;
@@ -92,8 +96,8 @@ class WCML_Custom_Prices{
         if(isset($custom_prices['_sale_price']) && is_numeric($custom_prices['_sale_price']) ){
             if(!empty($product_meta['_wcml_schedule_' . $currency][0])){
                 // custom dates
-                if(!empty($product_meta['_sale_price_dates_from_' . $currency][0]) && !empty($product_meta['_sale_price_dates_to_' . $currency][0])){
-                    if(current_time('timestamp') > $product_meta['_sale_price_dates_from_' . $currency][0] && current_time('timestamp') < $product_meta['_sale_price_dates_to_' . $currency][0]){
+                if( $this->is_date_range_set( $product_meta, $currency ) ){
+                    if( $this->is_on_sale_date_range( $product_meta, $currency ) ){
                         $custom_prices['_price'] = $custom_prices['_sale_price'];
                     }else{
                         $custom_prices['_price'] = $custom_prices['_regular_price'];
@@ -105,7 +109,7 @@ class WCML_Custom_Prices{
             }else{
                 // inherit
                 if(!empty($product_meta['_sale_price_dates_from'][0]) && !empty($product_meta['_sale_price_dates_to'][0])){
-                    if(current_time('timestamp') > $product_meta['_sale_price_dates_from'][0] && current_time('timestamp') < $product_meta['_sale_price_dates_to'][0]){
+                    if( current_time('timestamp') > $product_meta['_sale_price_dates_from'][0] && current_time('timestamp') < $product_meta['_sale_price_dates_to'][0] ){
                         $custom_prices['_price'] = $custom_prices['_sale_price'];
                     }else{
                         $custom_prices['_price'] = $custom_prices['_regular_price'];
@@ -245,6 +249,27 @@ class WCML_Custom_Prices{
 
         return $custom_prices;
     }
+
+	private function is_date_range_set( $product_meta, $currency ) {
+
+		return isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
+		       $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
+		       isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
+		       $product_meta[ '_sale_price_dates_to_' . $currency ][0];
+    }
+
+	private function is_on_sale_date_range( $product_meta, $currency ) {
+		if (
+			isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
+			current_time( 'timestamp' ) > $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
+			isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
+			current_time( 'timestamp' ) < $product_meta[ '_sale_price_dates_to_' . $currency ][0]
+		) {
+			return true;
+		}
+
+		return false;
+	}
 
     public function woocommerce_product_options_custom_pricing(){
         global $pagenow;
@@ -459,10 +484,11 @@ class WCML_Custom_Prices{
                         $date_from = strtotime( $_POST[ '_custom_variation_sale_price_dates_from' ][ $code ][ $product_id ] );
                         $date_to = strtotime( $_POST[ '_custom_variation_sale_price_dates_to' ][ $code ][ $product_id ] );
                         $schedule = $_POST[ '_wcml_schedule' ][ $code ][ $product_id ];
+
                         $custom_prices = apply_filters( 'wcml_update_custom_prices_values',
                             array( '_regular_price' => $regular_price,
                                 '_sale_price' => $sale_price,
-                                '_wcml_schedule_' => $schedule,
+                                '_wcml_schedule' => $schedule,
                                 '_sale_price_dates_from' => $date_from,
                                 '_sale_price_dates_to' => $date_to ),
                             $code,
