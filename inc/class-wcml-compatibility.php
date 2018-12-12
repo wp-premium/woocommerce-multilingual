@@ -253,6 +253,12 @@ class WCML_Compatibility {
 			$this->wpb_woo_var_table->add_hooks();
 		}
 
+		// LiteSpeed Cache
+		if ( class_exists( 'LiteSpeed_Cache' ) ) {
+			$this->litespeed_cache = new WCML_LiteSpeed_Cache();
+			$this->litespeed_cache->add_hooks();
+		}
+
 	}
 
 }

@@ -99,9 +99,9 @@ class WCML_Terms{
         // End of backwards compatibility - before the termmeta table was added
         }else{
 
-            $term_wc_meta = get_term_meta($original_tax->term_id, false, 1);
+            $term_wc_meta = get_term_meta( $original_tax->term_id, false, true );
             foreach ( $term_wc_meta as $key => $values ) {
-                update_term_meta( $result['term_id'], $key, array_pop( $values ) );
+                update_term_meta( $result['term_id'], $key, maybe_unserialize( array_pop( $values ) ) );
             }
 
         }
