@@ -148,7 +148,7 @@ class WCML_Multi_Currency{
     private function _load_filters(){
         $load = false;
 
-        if(!is_admin() && $this->get_client_currency() != get_option('woocommerce_currency')){
+        if(( !is_admin() || ( defined('DOING_AJAX') && DOING_AJAX ) ) && $this->get_client_currency() != get_option('woocommerce_currency')){
             $load = true;
         }else{
             if(is_ajax() && $this->get_client_currency() != get_option('woocommerce_currency')){
