@@ -7,6 +7,7 @@ jQuery(document).ready(function($){
         '_backorders',
         '_manage_stock',
         '_stock',
+        '_low_stock_amount',
         '_stock_status',
         '_sold_individually',
         'comment_status',
@@ -167,6 +168,7 @@ var wcml_lock_variation_fields = function( file_path_sync ){
         '_sale_price_dates_from',
         '_sale_price_dates_to',
         '_stock',
+        '_low_stock_amount',
         '_download_limit',
         '_download_expiry'
     ];

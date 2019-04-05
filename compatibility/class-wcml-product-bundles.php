@@ -62,9 +62,9 @@ class WCML_Product_Bundles {
 			add_action( 'woocommerce_before_delete_bundled_item', array( $this, 'delete_bundled_item_relationship' ) );
 		}
 
-		// product bundle using separate custom fields for prices
+		// product bundle using separate custom fields for prices.
 		if ( wcml_is_multi_currency_on() ) {
-			add_filter( 'wcml_price_custom_fields_filtered', array( $this, 'get_price_custom_fields' ) );
+			add_filter( 'wcml_price_custom_fields_filtered', array( $this, 'get_price_custom_fields' ), 10, 2 );
 			add_filter( 'wcml_update_custom_prices_values', array( $this, 'update_bundles_custom_prices_values' ), 10, 2 );
 			add_filter( 'wcml_after_save_custom_prices', array( $this, 'update_bundles_base_price' ), 10, 4 );
 		}
@@ -777,7 +777,10 @@ class WCML_Product_Bundles {
 	}
 
 	public function is_bundle_product( $product_id ){
-		if ( 'bundle' === WooCommerce_Functions_Wrapper::get_product_type( $product_id ) ) {
+
+		$product = wc_get_product( $product_id );
+
+		if ( $product && 'bundle' === $product->get_type() ) {
 			return true;
 		}
 
@@ -787,7 +790,9 @@ class WCML_Product_Bundles {
 	// #wcml-2241
 	public function upgrade_bundles_items_relationships() {
 
-		if ( ! get_option( 'wcml_upgrade_bundles_items_relationships' ) ) {
+		$table_exists = $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->prefix}woocommerce_bundled_items'" );
+
+		if ( $table_exists && ! get_option( 'wcml_upgrade_bundles_items_relationships' ) ) {
 
 			$bundled_items    = $this->wpdb->get_results( "SELECT bundled_item_id, bundle_id, product_id FROM {$this->wpdb->prefix}woocommerce_bundled_items" );
 			$active_languages = $this->sitepress->get_active_languages();
