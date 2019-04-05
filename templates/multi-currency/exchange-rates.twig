@@ -49,15 +49,12 @@
                         </a>
                         <div class="service-details-wrap" {% if exchange_rates.settings.service != id %} style="display: none;"{% endif %} >
 
-                            {% if service.requires_key %}
-
                             {{ exchange_rates.strings.key_required }}
                             <input type="text" name="services[{{ id }}][api-key]"
                                    value="{{ service.api_key }}"
                                    placeholder="{{ exchange_rates.strings.key_placeholder }}"
                                    size="40" />
 
-                            {% endif %}
                             <p class="notice inline notice-error" {% if 'fixerio' != id %}style="display:none"{% endif %}>
                                 {{ exchange_rates.strings.fixerio_warning }}
                             </p>

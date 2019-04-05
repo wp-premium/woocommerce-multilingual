@@ -170,6 +170,8 @@ class WCML_Synchronize_Variations_Data{
 
                 $this->delete_removed_variation_attributes( $product_id, $variation_id );
 
+	            $this->woocommerce_wpml->sync_product_data->sync_product_stock( wc_get_product( $original_variation_id ), wc_get_product( $variation_id ) );
+
                 //refresh parent-children transients
                 delete_transient( 'wc_product_children_' . $tr_product_id );
                 delete_transient( '_transient_wc_product_children_ids_' . $tr_product_id );
@@ -202,7 +204,7 @@ class WCML_Synchronize_Variations_Data{
 
     public function sync_variations_taxonomies( $original_variation_id, $tr_variation_id, $lang ){
 
-       remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
+       remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );
 
        if( $this->woocommerce_wpml->sync_product_data->check_if_product_fields_sync_needed( $original_variation_id, $tr_variation_id, 'taxonomies' ) ){
 
@@ -239,7 +241,7 @@ class WCML_Synchronize_Variations_Data{
             }
         }
 
-        add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 4 );
+        add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 3 );
     }
 
     public function duplicate_variation_data( $original_variation_id, $variation_id, $data, $lang, $trbl ){

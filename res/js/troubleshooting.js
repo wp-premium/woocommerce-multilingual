@@ -184,6 +184,36 @@ jQuery( function($) {
             });
         },
 
+        fix_translated_variations_relationships: function(){
+            jQuery.ajax({
+                type : "post",
+                url : ajaxurl,
+                data : {
+                    action: "fix_translated_variations_relationships",
+                    wcml_nonce: jQuery('#fix_relationships_nonce').val()
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    var count_input = jQuery('#count_relationships');
+
+                    if( count_input.val() == 0 ){
+                        WCML_Troubleshooting.run_next_troubleshooting_action();
+                        jQuery('.relationships_status').html(0);
+                    }else{
+                        var left = count_input.val()-5;
+                        if(left < 0 ){
+                            left = 0;
+                        }
+                        jQuery('.relationships_status').html(left);
+                        count_input.val(left);
+
+                        WCML_Troubleshooting.fix_translated_variations_relationships();
+                    }
+                }
+            });
+        },
+
         fix_product_type_terms: function(){
             jQuery.ajax({
                 type : "post",
@@ -216,6 +246,8 @@ jQuery( function($) {
                 WCML_Troubleshooting.duplicate_terms();
             }else if(jQuery('#wcml_sync_stock').is(':checked') && parseInt( jQuery('#count_stock').val() ) !== 0 ){
                 WCML_Troubleshooting.sync_stock();
+            }else if(jQuery('#wcml_fix_relationships').is(':checked') && parseInt( jQuery('#count_relationships').val() ) !== 0 ){
+                WCML_Troubleshooting.fix_translated_variations_relationships();
             }else{
                 jQuery('#wcml_trbl').removeAttr('disabled');
                 jQuery('.spinner').hide();

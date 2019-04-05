@@ -94,10 +94,11 @@ class WCML_Media{
 			$media_duplicate = $factory->create();
 			$translated_thumbnail = $media_duplicate->create_duplicate_attachment( $thumbnail_id, wp_get_post_parent_id( $thumbnail_id ), $lang );
 		}
-
-		update_post_meta( $translated_variation_id, '_thumbnail_id', $translated_thumbnail );
-		update_post_meta( $variation_id, '_wpml_media_duplicate', 1 );
-		update_post_meta( $variation_id, '_wpml_media_featured', 1 );
+		if( $translated_thumbnail ) {
+			update_post_meta( $translated_variation_id, '_thumbnail_id', $translated_thumbnail );
+			update_post_meta( $variation_id, '_wpml_media_duplicate', 1 );
+			update_post_meta( $variation_id, '_wpml_media_featured', 1 );
+		}
 	}
 
 

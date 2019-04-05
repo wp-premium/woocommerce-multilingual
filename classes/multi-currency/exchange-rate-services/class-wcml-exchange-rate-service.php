@@ -36,10 +36,7 @@ abstract class WCML_Exchange_Rate_Service {
 
 		$this->settings = get_option( 'wcml_exchange_rate_service_' . $this->id, array() );
 
-		if ( $this->is_key_required() ) {
-			$this->api_key = $this->get_setting( 'api-key' );
-		}
-
+		$this->api_key = $this->get_setting( 'api-key' );
 	}
 
 	/**
@@ -91,13 +88,6 @@ abstract class WCML_Exchange_Rate_Service {
 	public function save_setting( $key, $value ) {
 		$this->settings[ $key ] = $value;
 		$this->save_settings();
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function is_key_required() {
-		return $this->requires_key;
 	}
 
 	/**

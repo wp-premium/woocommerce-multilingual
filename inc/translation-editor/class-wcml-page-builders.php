@@ -56,9 +56,11 @@ class WCML_Page_Builders {
 		foreach ( $string_packages as $string_package ) {
 			$strings_section = new WPML_Editor_UI_Field_Section( $string_package['title'] );
 
-			foreach ( $string_package['strings'] as $string ) {
-				$field_label = apply_filters( 'wpml_string_title_from_id', false, $string->id );
-				$strings_section->add_field( new WCML_Editor_UI_WYSIWYG_Field( $string->name, $field_label, $data, true ) );
+			if( isset( $string_package['strings'] ) ) {
+				foreach ( $string_package['strings'] as $string ) {
+					$field_label = apply_filters( 'wpml_string_title_from_id', false, $string->id );
+					$strings_section->add_field( new WCML_Editor_UI_WYSIWYG_Field( $string->name, $field_label, $data, true ) );
+				}
 			}
 		}
 
@@ -71,10 +73,12 @@ class WCML_Page_Builders {
 
 		foreach ( $string_packages as $string_package ) {
 
-			foreach ( $string_package['strings'] as $string ) {
-				$element_data[ $string->name ] = array( 'original' => $string->value );
-				if ( isset( $string->translated_value ) ) {
-					$element_data[ $string->name ]['translation'] = $string->translated_value;
+			if( isset( $string_package['strings'] ) ){
+				foreach ( $string_package['strings'] as $string ) {
+					$element_data[ $string->name ] = array( 'original' => $string->value );
+					if ( isset( $string->translated_value ) ) {
+						$element_data[ $string->name ]['translation'] = $string->translated_value;
+					}
 				}
 			}
 		}
@@ -88,16 +92,18 @@ class WCML_Page_Builders {
 
 		foreach ( $string_packages as $string_package ) {
 
-			foreach ( $string_package['strings'] as $string ) {
+			if( isset( $string_package['strings'] ) ) {
+				foreach ( $string_package['strings'] as $string ) {
 
-				do_action(
-					'wpml_add_string_translation',
-					$string->id,
-					$target_language,
-					$translations[ md5( $string->name ) ],
-					$this->sitepress->get_wp_api()->constant( 'ICL_TM_COMPLETE' )
-				);
+					do_action(
+						'wpml_add_string_translation',
+						$string->id,
+						$target_language,
+						$translations[ md5( $string->name ) ],
+						$this->sitepress->get_wp_api()->constant( 'ICL_TM_COMPLETE' )
+					);
 
+				}
 			}
 		}
 	}
