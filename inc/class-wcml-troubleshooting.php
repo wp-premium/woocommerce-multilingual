@@ -2,6 +2,8 @@
 
 class WCML_Troubleshooting{
 
+	const ITEMS_PER_AJAX = 5;
+
     private $woocommerce_wpml;
     private $sitepress;
     private $wpdb;
@@ -24,7 +26,7 @@ class WCML_Troubleshooting{
         add_action('wp_ajax_trbl_duplicate_terms', array($this,'trbl_duplicate_terms'));
         add_action('wp_ajax_trbl_fix_product_type_terms', array($this,'trbl_fix_product_type_terms'));
         add_action( 'wp_ajax_trbl_sync_stock', array( $this, 'trbl_sync_stock' ) );
-
+        add_action( 'wp_ajax_fix_translated_variations_relationships', array( $this, 'fix_translated_variations_relationships' ) );
     }
 
     function wcml_count_products_with_variations(){
@@ -148,7 +150,7 @@ class WCML_Troubleshooting{
                  AND ( SELECT COUNT( pm.meta_key ) FROM {$this->wpdb->postmeta} AS pm WHERE pm.post_id = p.ID AND pm.meta_key = 'gallery_sync' ) = 0 ";
 
         if( $limit ){
-            $sql .= "ORDER BY p.ID LIMIT 5";
+            $sql .= "ORDER BY p.ID LIMIT ".self::ITEMS_PER_AJAX;
         }
 
         $all_products = $this->wpdb->get_results( $sql );
@@ -192,7 +194,7 @@ class WCML_Troubleshooting{
                  AND ( SELECT COUNT( option_id ) FROM {$this->wpdb->options} WHERE option_name = CONCAT( 'wcml_sync_category_',t.term_taxonomy_id ) ) = 0 ";
 
         if( $limit ){
-            $sql .= "ORDER BY t.term_taxonomy_id LIMIT 5";
+            $sql .= "ORDER BY t.term_taxonomy_id LIMIT ".self::ITEMS_PER_AJAX;
         }
 
         $all_categories = $this->wpdb->get_results( $sql );
@@ -209,40 +211,42 @@ class WCML_Troubleshooting{
 
         $attr = isset($_POST['attr'])?$_POST['attr']:false;
 
-        $terms = get_terms($attr,'hide_empty=0');
-        $i = 0;
-        $languages = $this->sitepress->get_active_languages();
-        foreach($terms as $term){
-            foreach($languages as $language){
-                $tr_id = apply_filters( 'translate_object_id',$term->term_id, $attr, false, $language['code']);
+	    if ( $attr ) {
+		    $terms     = get_terms( $attr, 'hide_empty=0' );
+		    $i         = 0;
+		    $languages = $this->sitepress->get_active_languages();
+		    foreach ( $terms as $term ) {
+			    foreach ( $languages as $language ) {
+				    $tr_id = apply_filters( 'translate_object_id', $term->term_id, $attr, false, $language['code'] );
 
-                if(is_null($tr_id)){
-                    $term_args = array();
-                    // hierarchy - parents
-                    if ( is_taxonomy_hierarchical( $attr ) ) {
-                        // fix hierarchy
-                        if ( $term->parent ) {
-                            $original_parent_translated = apply_filters( 'translate_object_id', $term->parent, $attr, false, $language['code'] );
-                            if ( $original_parent_translated ) {
-                                $term_args[ 'parent' ] = $original_parent_translated;
-                            }
-                        }
-                    }
+				    if ( is_null( $tr_id ) ) {
+					    $term_args = array();
+					    // hierarchy - parents
+					    if ( is_taxonomy_hierarchical( $attr ) ) {
+						    // fix hierarchy
+						    if ( $term->parent ) {
+							    $original_parent_translated = apply_filters( 'translate_object_id', $term->parent, $attr, false, $language['code'] );
+							    if ( $original_parent_translated ) {
+								    $term_args['parent'] = $original_parent_translated;
+							    }
+						    }
+					    }
 
-                    $term_name = $term->name;
-                    $slug = $term->name.'-'.$language['code'];
-                    $slug = WPML_Terms_Translations::term_unique_slug( $slug, $attr, $language['code'] );
-                    $term_args[ 'slug' ] = $slug;
+					    $term_name         = $term->name;
+					    $slug              = $term->name . '-' . $language['code'];
+					    $slug              = WPML_Terms_Translations::term_unique_slug( $slug, $attr, $language['code'] );
+					    $term_args['slug'] = $slug;
 
-                    $new_term = wp_insert_term( $term_name , $attr, $term_args );
-                    if ( $new_term && !is_wp_error( $new_term ) ) {
-                        $tt_id = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_' . $attr );
-                        $this->sitepress->set_element_language_details( $new_term[ 'term_taxonomy_id' ], 'tax_' . $attr, $tt_id, $language['code'] );
-                    }
-                }
-            }
+					    $new_term = wp_insert_term( $term_name, $attr, $term_args );
+					    if ( $new_term && ! is_wp_error( $new_term ) ) {
+						    $tt_id = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_' . $attr );
+						    $this->sitepress->set_element_language_details( $new_term['term_taxonomy_id'], 'tax_' . $attr, $tt_id, $language['code'] );
+					    }
+				    }
+			    }
 
-        }
+		    }
+	    }
 
         wp_send_json_success();
     }
@@ -303,17 +307,116 @@ class WCML_Troubleshooting{
         wp_send_json_success();
     }
 
-    function get_products_needs_stock_sync(){
+	function get_products_needs_stock_sync(){
 
-        $results = $this->wpdb->get_results("
+		$results = $this->wpdb->get_results("
                         SELECT p.ID, t.trid, t.element_type
                         FROM {$this->wpdb->posts} p
                         JOIN {$this->wpdb->prefix}icl_translations t ON t.element_id = p.ID AND t.element_type IN ('post_product', 'post_product_variation')
                         WHERE p.post_type in ('product', 'product_variation') AND t.source_language_code IS NULL
                     ");
 
-        return $results;
+		return $results;
+	}
+
+	public function fix_translated_variations_relationships(){
+
+		$nonce = array_key_exists( 'wcml_nonce', $_POST ) ? sanitize_text_field( $_POST['wcml_nonce'] ) : false;
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'fix_relationships' ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Access error' );
+		}
+
+		$translated_variations = get_option( 'wcml_trbl_translated_variations' );
+
+		if( !$translated_variations ){
+			$translated_variations = $this->get_products_variations_needs_fix_relationships();
+		}
+
+		foreach ( array_slice( $translated_variations, 0, self::ITEMS_PER_AJAX, true ) as $key => $translated_variation ) {
+			//delete broken variations
+			if ( ! get_post_meta( $translated_variation->post_id, '_stock', true ) ) {
+				wp_delete_post( $translated_variation->post_id );
+				continue;
+			}
+
+			//check relationships
+			$tr_info_for_original_variation = $this->get_translation_info_for_element( $translated_variation->meta_value, 'post_product_variation' );
+
+			$language = $this->sitepress->get_language_for_element( wp_get_post_parent_id( $translated_variation->meta_value ), 'post_product' );
+
+			$language_current = $this->sitepress->get_language_for_element( wp_get_post_parent_id( $translated_variation->post_id ), 'post_product' );
+
+			$tr_info_for_current_variation = $this->get_translation_info_for_element( $translated_variation->post_id, 'post_product_variation' );
+
+			//delete wrong element_type for exists variations
+			if ( ! $tr_info_for_current_variation ) {
+				$tr_info_for_current_variation = $this->get_translation_info_for_element( $translated_variation->post_id, 'post_product' );
+				if ( $tr_info_for_current_variation ) {
+					$this->wpdb->update( $this->wpdb->prefix . 'icl_translations', array( 'element_type' => 'post_product_variation' ), array( 'translation_id' => $tr_info_for_current_variation->translation_id ) );
+				}
+			}
+
+			$check_duplicated_post_type = $this->get_translation_info_for_element( $translated_variation->post_id, 'post_product' );
+			if ( $check_duplicated_post_type ) {
+				$this->wpdb->delete( $this->wpdb->prefix . 'icl_translations', array( 'translation_id' => $check_duplicated_post_type->translation_id ) );
+			}
+
+
+			//set language info for variation if not exists
+			if ( ! $tr_info_for_original_variation ) {
+
+				$tr_info_for_original_variation = $this->get_translation_info_for_element(  $translated_variation->meta_value, 'post_product' );
+				if ( $tr_info_for_original_variation ) {
+					$this->wpdb->update( $this->wpdb->prefix . 'icl_translations', array( 'element_type' => 'post_product_variation' ), array( 'translation_id' => $tr_info_for_original_variation->translation_id ) );
+				} else {
+					$this->sitepress->set_element_language_details( $translated_variation->meta_value, 'post_product_variation', $tr_info_for_current_variation->trid, $language );
+					$tr_info_for_original_variation = $this->get_translation_info_for_element(  $translated_variation->meta_value, 'post_product' );
+				}
+
+				$this->wpdb->update( $this->wpdb->prefix . 'icl_translations', array( 'source_language_code' => $language ), array( 'translation_id' => $tr_info_for_current_variation->translation_id ) );
+			}
+
+			if ( $tr_info_for_original_variation->trid != $tr_info_for_current_variation->trid ) {
+
+				$this->wpdb->update( $this->wpdb->prefix . 'icl_translations', array(
+					'trid'                 => $tr_info_for_original_variation->trid,
+					'language_code'        => $language_current,
+					'source_language_code' => $language
+				), array( 'translation_id' => $tr_info_for_current_variation->translation_id ) );
+
+			}
+
+			unset( $translated_variations[ $key ] );
+		}
+
+		update_option( 'wcml_trbl_translated_variations', $translated_variations );
+
+        wp_send_json_success();
     }
 
+	/**
+	 * @param int $element_id
+	 * @param string $element_type
+	 *
+	 * @return object|null
+	 */
+    private function get_translation_info_for_element( $element_id, $element_type ){
+	    return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT trid, translation_id FROM {$this->wpdb->prefix}icl_translations WHERE element_id = %d AND element_type = %s", $element_id, $element_type ) );
+    }
+
+    private function get_products_variations_needs_fix_relationships(){
+	    return $this->wpdb->get_results( "SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key ='_wcml_duplicate_of_variation'" );
+    }
+
+    public function wcml_count_product_fix_relationships(){
+
+	    $results = $this->get_products_variations_needs_fix_relationships();
+
+	    return count( $results );
+    }
 
 }

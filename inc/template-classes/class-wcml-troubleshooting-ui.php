@@ -27,6 +27,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 			'prod_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_for_gallery_sync(),
 			'prod_categories_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_categories(),
 			'sync_stock_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_stock_sync(),
+			'fix_relationships_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_fix_relationships(),
 			'all_products_taxonomies' => $this->get_all_products_taxonomies(),
 			'product_type_sync_needed' => !empty( $translated_product_type_terms ) ? true : false,
 			'media_def' => defined('WPML_MEDIA_VERSION'),
@@ -45,6 +46,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 				'start' => __( 'Start', 'woocommerce-multilingual' ),
 				'delete_terms' => __( 'Fix product_type taxonomy terms', 'woocommerce-multilingual' ),
 				'sync_stock' => __( 'Sync product stock quantity and status ( synchronizing min stock between translations )', 'woocommerce-multilingual' ),
+				'sync_relationships' => __( 'Fix translated variations relationships', 'woocommerce-multilingual' ),
 				'product_type_fix_done' => __( 'Done!', 'woocommerce-multilingual' )
 			),
 			'nonces' => array(
@@ -55,6 +57,7 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 				'trbl_duplicate_terms' => wp_nonce_field('trbl_duplicate_terms', 'trbl_duplicate_terms_nonce'),
 				'trbl_product_type_terms' => wp_nonce_field('trbl_product_type_terms', 'trbl_product_type_terms_nonce'),
 				'trbl_sync_stock' => wp_nonce_field('trbl_sync_stock', 'trbl_sync_stock_nonce'),
+				'fix_relationships' => wp_nonce_field( 'fix_relationships', 'fix_relationships_nonce' ),
 			)
 		);
 
@@ -71,8 +74,12 @@ class WCML_Troubleshooting_UI extends WPML_Templates_Factory {
 		);
 
 		foreach( $all_products_taxonomies as $key => $taxonomy ){
-			$all_products_taxonomies[ $key ]->terms_count = wp_count_terms( $key );
-			$all_products_taxonomies[ $key ]->tax_key = $key;
+			if( is_taxonomy_translated( $key ) ) {
+				$all_products_taxonomies[ $key ]->terms_count = wp_count_terms( $key );
+				$all_products_taxonomies[ $key ]->tax_key     = $key;
+			}else{
+				unset( $all_products_taxonomies[$key]);
+			}
 		}
 
 		return $all_products_taxonomies;

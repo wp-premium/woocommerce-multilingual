@@ -66,10 +66,11 @@ class WCML_Multi_Currency_Orders {
 		$currencies = array();
 
 		$results = $wpdb->get_results( "
-            SELECT m.meta_value AS currency, COUNT(m.post_id) AS c
-            FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} m ON p.ID = m.post_id
-            WHERE meta_key='_order_currency' AND p.post_type='shop_order'
-            GROUP BY meta_value
+            SELECT LEFT(m.meta_value, 3) AS currency, COUNT(*) AS c
+            FROM {$wpdb->postmeta} m
+            INNER JOIN {$wpdb->posts} p on p.ID = m.post_id
+            WHERE m.meta_key='_order_currency' AND p.post_type='shop_order'
+            GROUP BY currency
         " );
 
 		foreach ( $results as $row ) {
@@ -79,7 +80,6 @@ class WCML_Multi_Currency_Orders {
 		wp_cache_set( $cache_key, $currencies );
 
 		return $currencies;
-
 	}
 
 	public function show_orders_currencies_selector() {
@@ -139,7 +139,7 @@ class WCML_Multi_Currency_Orders {
 
 			$the_order = new WC_Order( get_the_ID() );
 			if ( $the_order ) {
-				$order_currency = WooCommerce_Functions_Wrapper::get_order_currency( $the_order );
+				$order_currency = $the_order->get_currency();
 
 				if ( ! $order_currency && isset( $_COOKIE['_wcml_order_currency'] ) ) {
 					$order_currency = $_COOKIE['_wcml_order_currency'];
@@ -256,8 +256,7 @@ class WCML_Multi_Currency_Orders {
 
 	public function set_totals_for_order_items( $items ) {
 
-		if ( isset( $_POST['action'] ) && 'woocommerce_add_order_item' === $_POST['action'] ) {
-
+		if ( isset( $_POST['action'] ) &&  in_array( $_POST['action'], array( 'woocommerce_add_order_item', 'woocommerce_save_order_items' ), true ) ) {
 			foreach ( $items as $item ) {
 				$this->set_converted_totals_for_item( $item );
 			}
@@ -270,6 +269,7 @@ class WCML_Multi_Currency_Orders {
 
 		$itemmeta[] = '_wcml_converted_subtotal';
 		$itemmeta[] = '_wcml_converted_total';
+		$itemmeta[] = '_wcml_total_qty';
 
 		return $itemmeta;
 	}
@@ -280,6 +280,10 @@ class WCML_Multi_Currency_Orders {
 
 		if ( ! $order_currency ) {
 			$order_currency = $this->get_order_currency_cookie();
+
+			if ( in_array( $_POST['action'], array( 'woocommerce_add_order_item', 'woocommerce_save_order_items' ), true ) ) {
+				update_post_meta( $_POST['order_id'], '_order_currency', $order_currency );
+			}
 		}
 
 		if ( ! isset( $this->multi_currency->prices ) ) {
@@ -290,41 +294,56 @@ class WCML_Multi_Currency_Orders {
 
 		if ( $item instanceof WC_Order_Item_Product ) {
 
-			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $item->get_product_id() );
-
 			if ( 'line_item' === $item->get_type() ) {
 
+				$product_id          = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+				$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $product_id );
+
 				$converted_price = get_post_meta( $original_product_id, '_price_' . $order_currency, true );
+				$converted_totals = array( 'subtotal' => 0, 'total' => 0 );
 
 				if ( ! $converted_price ) {
-					if( $item->meta_exists( '_wcml_converted_subtotal' ) ){
-						$converted_subtotal_price = $item->get_meta( '_wcml_converted_subtotal' ) * $item->get_quantity();
-					}else{
-						$converted_subtotal_price = $this->multi_currency->prices->raw_price_filter( $item->get_subtotal(), $order_currency );
-						$item->add_meta_data('_wcml_converted_subtotal', $converted_subtotal_price );
+
+					foreach( array_keys( $converted_totals ) as $key ) {
+						$meta_key = '_wcml_converted_' . $key;
+						if ( $item->meta_exists( $meta_key ) ) {
+							$converted_totals[ $key ] = $item->get_meta( $meta_key );
+						} else {
+							$converted_totals[ $key ] = $this->multi_currency->prices->raw_price_filter( call_user_func_array( array( $item, 'get_' . $key ), array() ), $order_currency );
+							$item->add_meta_data( $meta_key, $converted_totals[ $key ] );
+						}
 					}
 
-					if( $item->meta_exists( '_wcml_converted_total' ) ){
-						$converted_total_price = $item->get_meta( '_wcml_converted_total' ) * $item->get_quantity();
-					}else{
-						$converted_total_price = $this->multi_currency->prices->raw_price_filter( $item->get_total(), $order_currency );
-						$item->add_meta_data('_wcml_converted_total', $converted_total_price );
+					//re-calculate only new added items for performance reason
+					if ( $item->meta_exists( '_wcml_total_qty' ) && $item->get_quantity() !== (int)$item->get_meta( '_wcml_total_qty' ) ) {
+
+						$new_total = $item->get_quantity() * $this->multi_currency->prices->raw_price_filter( $item->get_product()->get_price(), $order_currency );
+
+						foreach( array_keys( $converted_totals ) as $key ) {
+							$converted_totals[ $key ] = $new_total;
+							$item->update_meta_data( '_wcml_converted_' . $key, $new_total );
+						}
 					}
+
+					$item->update_meta_data( '_wcml_total_qty', $item->get_quantity() );
 				}else{
 
 					$converted_price = wc_get_price_excluding_tax( $item->get_product(), array( 'price' => $converted_price, 'qty' => $item->get_quantity() ) );
-
-					$converted_subtotal_price = $converted_price;
-					$converted_total_price    = $converted_price;
+					foreach( array_keys( $converted_totals ) as $key ) {
+						$converted_totals[ $key ] = $converted_price;
+					}
                 }
 
-				$item->set_subtotal( $converted_subtotal_price );
-				$item->set_total( $converted_total_price );
+				foreach( array_keys( $converted_totals ) as $key ) {
+					call_user_func_array( array( $item, 'set_' . $key ), array( $converted_totals[ $key ] ) );
+				}
+
 				$item->save();
 			}
 		} else {
 
-			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $item[ 'product_id' ] );
+			$product_id          = $item['variation_id'] ? $item['variation_id'] : $item['product_id'];
+			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $product_id );
 
 			$converted_price = $converted_subtotal_price = $converted_total_price = get_post_meta( $original_product_id, '_price_' . $order_currency, true );
 
@@ -421,7 +440,7 @@ class WCML_Multi_Currency_Orders {
 	// handle currency in order emails before handled in woocommerce
 	public function fix_currency_before_order_email( $order ) {
 
-		$order_currency = WooCommerce_Functions_Wrapper::get_order_currency( $order );
+		$order_currency = $order->get_currency();
 
 		if ( ! $order_currency ) {
 			return;

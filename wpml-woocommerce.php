@@ -7,17 +7,17 @@
   Author URI: http://www.onthegosystems.com/
   Text Domain: woocommerce-multilingual
   Requires at least: 3.9
-  Tested up to: 4.9.8
-  Version: 4.3.7
-  WC requires at least: 2.1.0
-  WC tested up to: 3.5
+  Tested up to: 5.1.1
+  Version: 4.5.0
+  WC requires at least: 3.3.0
+  WC tested up to: 3.5.7
 */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.3.7' );
+define( 'WCML_VERSION', '4.5.0' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -47,12 +47,14 @@ if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists
 	$wcml_cart_switch_lang_functions->add_actions();
 }
 
-// Load WooCommerce Multilingual when WPML is active
-global $woocommerce_wpml;
-$woocommerce_wpml = new woocommerce_wpml();
-$woocommerce_wpml->add_hooks();
+if ( WPML_Core_Version_Check::is_ok( WCML_PLUGIN_PATH . '/wpml-dependencies.json' ) ) {
+	global $woocommerce_wpml;
+	$woocommerce_wpml = new woocommerce_wpml();
+	$woocommerce_wpml->add_hooks();
 
-add_action( 'wpml_loaded', 'wcml_loader' );
+	add_action( 'wpml_loaded', 'wcml_loader' );
+}
+
 /**
  * Load WooCommerce Multilingual after WPML is loaded
  */
@@ -61,7 +63,8 @@ function wcml_loader(){
 	$xdomain_data->add_hooks();
 
 	$loaders = array(
-		'WCML_Privacy_Content_Factory'
+		'WCML_Privacy_Content_Factory',
+		'WCML_ATE_Activate_Synchronization',
 	);
 
 	if (
@@ -78,10 +81,8 @@ function wcml_loader(){
 		$loaders[] = 'WCML_Append_Gallery_To_Post_Media_Ids_Factory';
 	}
 
-	if( version_compare( ICL_SITEPRESS_VERSION, '3.9.0', '>=' ) ){
-		$action_filter_loader = new WPML_Action_Filter_Loader();
-		$action_filter_loader->load( $loaders );
-	}
+	$action_filter_loader = new WPML_Action_Filter_Loader();
+	$action_filter_loader->load( $loaders );
 }
 
 $WCML_REST_API = new WCML_REST_API();
