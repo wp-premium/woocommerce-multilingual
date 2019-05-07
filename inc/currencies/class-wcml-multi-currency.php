@@ -95,7 +95,7 @@ class WCML_Multi_Currency{
      * WCML_Multi_Currency constructor.
      */
     public function __construct(){
-        global $woocommerce_wpml, $sitepress, $wpdb, $wp_locale;
+        global $woocommerce_wpml, $sitepress, $wpdb, $wp_locale, $wp;
 
         $this->woocommerce_wpml =& $woocommerce_wpml;
 
@@ -116,7 +116,7 @@ class WCML_Multi_Currency{
         }
         $this->reports                  = new WCML_Multi_Currency_Reports( $woocommerce_wpml, $sitepress, $wpdb );
         $this->reports->add_hooks();
-        $this->orders                   = new WCML_Multi_Currency_Orders( $this, $woocommerce_wpml );
+        $this->orders                   = new WCML_Multi_Currency_Orders( $this, $woocommerce_wpml, $wp );
 	    $this->admin_currency_selector  = new WCML_Admin_Currency_Selector(
 		    $woocommerce_wpml,
 		    new WCML_Admin_Cookie( '_wcml_dashboard_currency' )
@@ -169,7 +169,8 @@ class WCML_Multi_Currency{
                         'woocommerce_add_to_cart',
                         'woocommerce_update_shipping_method',
 	                    'woocommerce_json_search_products_and_variations',
-	                    'woocommerce_add_coupon_discount'
+	                    'woocommerce_add_coupon_discount',
+
                     )
                 );
 

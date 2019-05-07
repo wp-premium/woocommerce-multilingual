@@ -118,12 +118,12 @@ class WCML_Terms{
             //if ($tax != 'pa_frame') continue;
             $terms = get_terms($tax);
             if ($terms)foreach ($terms as $term) {
-                $term_order = get_woocommerce_term_meta($term->term_id,$meta_key);
+                $term_order = get_term_meta( $term->term_id, $meta_key, true );
                 $trid = $this->sitepress->get_element_trid($term->term_taxonomy_id,'tax_'.$tax);
                 $translations = $this->sitepress->get_element_translations($trid,'tax_' . $tax);
                 if ($translations) foreach ($translations as $trans) {
                     if ($trans->language_code != $lang) {
-                        update_woocommerce_term_meta( $trans->term_id, $meta_key, $term_order);
+	                    update_term_meta( $trans->term_id, $meta_key, $term_order );
                     }
                 }
             }
@@ -132,12 +132,12 @@ class WCML_Terms{
         //sync product categories ordering
         $terms = get_terms('product_cat');
         if ($terms) foreach($terms as $term) {
-            $term_order = get_woocommerce_term_meta($term->term_id,'order');
+            $term_order = get_term_meta( $term->term_id, 'order', true );
             $trid = $this->sitepress->get_element_trid($term->term_taxonomy_id,'tax_product_cat');
             $translations = $this->sitepress->get_element_translations($trid,'tax_product_cat');
             if ($translations) foreach ($translations as $trans) {
                 if ($trans->language_code != $lang) {
-                    update_woocommerce_term_meta( $trans->term_id, 'order', $term_order);
+	                update_term_meta( $trans->term_id, 'order', $term_order );
                 }
             }
         }
@@ -147,7 +147,7 @@ class WCML_Terms{
         $this->woocommerce_wpml->settings['is_term_order_synced'] = 'yes';
         $this->woocommerce_wpml->update_settings();
         
-    }    
+    }
     
     function sync_term_order($meta_id, $object_id, $meta_key, $meta_value) {
 
@@ -192,9 +192,9 @@ class WCML_Terms{
                 foreach($translations as $translation){
                     if(!$translation->original){
                         if(isset($_POST['display_type'])){
-                            update_woocommerce_term_meta( $translation->term_id, 'display_type', esc_attr( $_POST['display_type'] ) );
+	                        update_term_meta( $translation->term_id, 'display_type', esc_attr( $_POST['display_type'] ) );
                         }
-                        update_woocommerce_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id',esc_attr( $_POST['product_cat_thumbnail_id'] ),'attachment',true,$translation->language_code));
+	                    update_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id', esc_attr( $_POST['product_cat_thumbnail_id'] ), 'attachment', true, $translation->language_code ) );
                     }
                 }
             }
@@ -1004,7 +1004,7 @@ class WCML_Terms{
 
 			foreach ( $translations as $translation ) {
 				if ( $translation->element_id !== $object_id ) {
-					update_term_meta( $translation->element_id, $meta_key, $meta_value, '' );
+					update_term_meta( $translation->element_id, $meta_key, $meta_value );
 				}
 			}
 

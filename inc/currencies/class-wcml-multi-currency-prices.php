@@ -588,6 +588,7 @@ class WCML_Multi_Currency_Prices {
 
 		$actions              = array(
 			'woocommerce_add_order_item',
+			'woocommerce_remove_order_item',
 			'woocommerce_save_order_items',
 			'woocommerce_calc_line_taxes'
 		);

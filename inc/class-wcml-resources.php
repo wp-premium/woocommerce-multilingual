@@ -10,7 +10,12 @@ class WCML_Resources {
     private static $woocommerce_wpml;
     private static $sitepress;
 
-    public static function set_up_resources( &$woocommerce_wpml, &$sitepress ) {
+	public static function add_hooks(){
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'front_scripts' ) );
+	}
+
+	public static function set_up_resources( &$woocommerce_wpml, &$sitepress ) {
         global $pagenow;
 
         self::$woocommerce_wpml =& $woocommerce_wpml;
@@ -22,7 +27,6 @@ class WCML_Resources {
         self::$pagenow = $pagenow;
 
         self::load_css();
-        self::load_common_scripts();
 
         $is_edit_product = self::$pagenow == 'post.php' && isset($_GET['post']) && get_post_type( $_GET['post'] ) == 'product';
         $is_original_product = isset( $_GET['post'] ) && !is_array( $_GET['post'] ) && self::$woocommerce_wpml->products->is_original_product( $_GET['post'] );
@@ -84,7 +88,7 @@ class WCML_Resources {
 	    wp_enqueue_script( 'wcml-taxonomy-translation-scripts' );
     }
 
-    private static function load_common_scripts() {
+    public static function admin_scripts() {
 
         if ( self::$is_wpml_wcml_page ) {
 
@@ -151,32 +155,16 @@ class WCML_Resources {
 		    wp_enqueue_script( 'custom-taxonomies' );
 	    }
 
-        if ( !is_admin() && self::$pagenow != 'wp-login.php' ) {
+        wp_enqueue_script(
+            'wcml-pointer',
+            WCML_PLUGIN_URL . '/res/js/pointer' . WCML_JS_MIN . '.js',
+            array( 'wp-pointer' ),
+            WCML_VERSION,
+            true
+        );
 
-			wp_register_script( 'wcml-front-scripts', WCML_PLUGIN_URL . '/res/js/front-scripts' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
-            wp_enqueue_script( 'wcml-front-scripts' );
-
-            $referer = isset( $_SERVER[ 'HTTP_REFERER' ] ) ? $_SERVER[ 'HTTP_REFERER' ] : '';
-
-			wp_register_script( 'cart-widget', WCML_PLUGIN_URL . '/res/js/cart_widget' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
-            wp_enqueue_script( 'cart-widget' );
-            wp_localize_script( 'cart-widget', 'actions', array(
-                'is_lang_switched' => self::$sitepress->get_language_from_url( $referer ) !=  self::$sitepress->get_current_language() ? 1 : 0,
-                'force_reset' => apply_filters( 'wcml_force_reset_cart_fragments', 0 )
-            ) );
-        } elseif( is_admin() ) {
-
-            wp_enqueue_script(
-                'wcml-pointer',
-                WCML_PLUGIN_URL . '/res/js/pointer' . WCML_JS_MIN . '.js',
-                array( 'wp-pointer' ),
-                WCML_VERSION,
-                true
-            );
-
-			wp_register_script( 'wcml-messages', WCML_PLUGIN_URL . '/res/js/wcml-messages' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
-            wp_enqueue_script( 'wcml-messages' );
-        }
+		wp_register_script( 'wcml-messages', WCML_PLUGIN_URL . '/res/js/wcml-messages' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
+        wp_enqueue_script( 'wcml-messages' );
 
         $is_attr_page = apply_filters( 'wcml_is_attributes_page', self::$page == 'product_attributes' && isset( $_GET[ 'post_type' ] ) && $_GET[ 'post_type' ] == 'product' );
 
@@ -209,6 +197,25 @@ class WCML_Resources {
             wp_localize_script( 'products-screen-options', 'products_screen_option', array( 'nonce' => wp_create_nonce( 'products-screen-option-action' ) ) );
         }
     }
+
+	public static function front_scripts() {
+
+		if ( self::$pagenow != 'wp-login.php' ) {
+
+			wp_register_script( 'wcml-front-scripts', WCML_PLUGIN_URL . '/res/js/front-scripts' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
+			wp_enqueue_script( 'wcml-front-scripts' );
+
+			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
+
+			wp_register_script( 'cart-widget', WCML_PLUGIN_URL . '/res/js/cart_widget' . WCML_JS_MIN . '.js', array( 'jquery' ), WCML_VERSION, true );
+			wp_enqueue_script( 'cart-widget' );
+			wp_localize_script( 'cart-widget', 'actions', array(
+				'is_lang_switched' => self::$sitepress->get_language_from_url( $referer ) != self::$sitepress->get_current_language() ? 1 : 0,
+				'force_reset'      => apply_filters( 'wcml_force_reset_cart_fragments', 0 )
+			) );
+		}
+
+	}
 
     public static function load_tooltip_resources() {
 

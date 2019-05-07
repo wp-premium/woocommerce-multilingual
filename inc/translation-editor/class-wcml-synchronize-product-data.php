@@ -53,8 +53,8 @@ class WCML_Synchronize_Product_Data{
 
 	    add_action( 'woocommerce_product_set_visibility', array( $this, 'sync_product_translations_visibility' ) );
 
-	    add_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock' ) );
-	    add_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock' ) );
+	    add_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock_hook' ) );
+	    add_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock_hook' ) );
 	    add_action( 'woocommerce_recorded_sales', array( $this, 'sync_product_total_sales' ) );
 
         add_action( 'woocommerce_product_set_stock_status', array($this, 'sync_stock_status_for_translations' ), 100, 2);
@@ -315,12 +315,11 @@ class WCML_Synchronize_Product_Data{
 	 * @param $translated_product
 	 */
 	public function sync_product_stock( $product, $translated_product = false ) {
-
 		$stock = $product->get_stock_quantity();
 		$product_id = $product->get_id();
 
-		remove_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock' ) );
-		remove_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock' ) );
+		remove_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock_hook' ) );
+		remove_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock_hook' ) );
 
 		if( $translated_product ){
 			wc_update_product_stock( $translated_product, $stock );
@@ -334,8 +333,30 @@ class WCML_Synchronize_Product_Data{
 			}
 		}
 
-		add_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock' ) );
-		add_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock' ) );
+		add_action( 'woocommerce_product_set_stock', array( $this, 'sync_product_stock_hook' ) );
+		add_action( 'woocommerce_variation_set_stock', array( $this, 'sync_product_stock_hook' ) );
+	}
+
+	/**
+	 * @param $product
+	 */
+	public function sync_product_stock_hook( $product ){
+		$is_posts_hook_removed = remove_action( 'save_post', array(
+			$this->post_translations,
+			'save_post_actions',
+			100
+		) );
+		$is_synchronize_products_hook_removed = remove_action( 'save_post', array( $this, 'synchronize_products' ), PHP_INT_MAX );
+
+		$this->sync_product_stock( $product );
+
+		if( $is_posts_hook_removed ){
+			add_action( 'save_post', array( $this->post_translations, 'save_post_actions' ), 100, 2 );
+		}
+
+		if( $is_synchronize_products_hook_removed ){
+			add_action( 'save_post', array( $this, 'synchronize_products' ), PHP_INT_MAX, 2 );
+		}
 	}
 
     /**

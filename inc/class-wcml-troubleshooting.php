@@ -170,12 +170,12 @@ class WCML_Troubleshooting{
             add_option('wcml_sync_category_'.$category->term_taxonomy_id,true);
             $trid = $this->sitepress->get_element_trid($category->term_taxonomy_id,'tax_product_cat');
             $translations = $this->sitepress->get_element_translations($trid,'tax_product_cat');
-            $type = get_woocommerce_term_meta( $category->term_id, 'display_type',true);
-            $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id',true);
+            $type = get_term_meta( $category->term_id, 'display_type',true );
+            $thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id',true );
             foreach($translations as $translation){
                 if($translation->language_code != $category->language_code ){
-                    update_woocommerce_term_meta( $translation->term_id, 'display_type', $type );
-                    update_woocommerce_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id',$thumbnail_id,'attachment',true,$translation->language_code) );
+	                update_term_meta( $translation->term_id, 'display_type', $type );
+	                update_term_meta( $translation->term_id, 'thumbnail_id', apply_filters( 'translate_object_id', $thumbnail_id, 'attachment', true, $translation->language_code ) );
                 }
             }
         }
