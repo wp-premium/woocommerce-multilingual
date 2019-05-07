@@ -3,9 +3,9 @@ Contributors: AmirHelzer, sergey.r, mihaimihai, EduardMaghakyan, andrewp-2
 Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilingual/
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
-Requires at least: 3.9
+Requires at least: 4.7
 Tested up to: 5.1.1
-Stable tag: 4.5.0
+Stable tag: 4.6.2.1
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -64,7 +64,7 @@ Without having all these running, WooCommerce Multilingual will not be able to r
 
 = Minimum Requirements =
 
-* WordPress 3.9 or later
+* WordPress 4.7 or later
 * PHP version 5.6 or later
 * MySQL version 5.6 or later
 
@@ -139,6 +139,30 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.6.2.1 =
+* Fix performance issues with WooCommerce 3.6.*
+
+= 4.6.2 =
+* Fix performance issue while saving product
+* Fix warning when _wc_rating_cout value is corrupted
+* Fix loop on original products without thumbnail set
+
+= 4.6.1 =
+* Fix product gallery images on default product with WC 3.6.0
+* Fix wrong Table Rate Shipping wrong rate prices calculation in secondary currency with WC 3.6.0
+
+= 4.6.0 =
+* Fix wrong currency code after removing item from manually created order
+* Replace *_woocommerce_term_meta functions on *_term_meta
+* Fix gallery images not showing up on translated product page
+* Fix double calculating order item price while manually adding it from admin to order with WooCommerce 3.6.0
+* Fix performance issues on checkout with manage stock products
+* Fix performance issue on shop page with WooCommerce 3.6
+* Fix loading scripts on admin pages
+* Fix coupon discount when editing order from admin
+* Fix wrong product price after adding another product to existing order from admin
+* Fix my-account page endpoints in secondary language with pages set to "Display as translated"
 
 = 4.5.0 =
 * Add "get_post_metadata" hook to filter Woocommerce product data
@@ -222,6 +246,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * WP Fastest Cache compatibility - fixed currency switcher problem
 * Added ability to set custom prices for secondary currencies in WC Product Add-Ons
 * Update minimum requirements
+* Added ability to add custom payment methods for each currency
 
 = 4.3.7 =
 * Fixed issue which was changing the current language of the site when saving an order
