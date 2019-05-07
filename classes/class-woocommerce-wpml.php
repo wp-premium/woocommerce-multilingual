@@ -247,7 +247,8 @@ class woocommerce_wpml {
 	    $wcml_ajax_setup->add_hooks();
         WCML_Install::initialize( $this, $sitepress );
 
-        WCML_Resources::set_up_resources( $this, $sitepress );
+	    WCML_Resources::set_up_resources( $this, $sitepress );
+        WCML_Resources::add_hooks();
 
 	    $url_filters_redirect_location = new WCML_Url_Filters_Redirect_Location( $wpml_url_converter );
 	    $url_filters_redirect_location->add_hooks();

@@ -71,7 +71,7 @@ class WCML_Comments {
 			$ratings      = get_post_meta( $translation, '_wc_rating_count', true );
 			$review_count = get_post_meta( $translation, self::WC_REVIEW_COUNT_KEY, true );
 
-			if ( $ratings ) {
+			if ( is_array( $ratings ) ) {
 				foreach ( $ratings as $rating => $count ) {
 					$average_ratings_sum += $rating * $count;
 					$average_ratings_count += $count;

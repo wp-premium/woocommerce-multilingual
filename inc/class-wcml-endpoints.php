@@ -119,15 +119,8 @@ class WCML_Endpoints {
 
 		$found             = null;
 		$reserved_requests = wp_cache_get( $cache_key, $cache_group, false, $found );
-		$is_page_display_as_translated = $this->sitepress->is_display_as_translated_post_type( 'page' );
 
-		if (
-			! $is_page_display_as_translated &&
-			(
-				! $found ||
-				! $reserved_requests
-			)
-		) {
+		if ( ! $found || ! $reserved_requests ) {
 			$reserved_requests = array();
 
 			$current_language = $this->sitepress->get_current_language();
@@ -145,12 +138,14 @@ class WCML_Endpoints {
 
 						$reserved_requests[] = $account_base;
 						$reserved_requests[] = '/^' . $account_base . '/'; // regex version
+						$is_page_display_as_translated = $this->sitepress->is_display_as_translated_post_type( 'page' );
 
-						foreach ( $this->woocommerce_wpml->get_wc_query_vars() as $key => $endpoint ) {
-
-							$translated_endpoint = $this->get_endpoint_translation( $endpoint, $language_code );
-
-							$reserved_requests[] = $account_base . '/' . $translated_endpoint;
+						if( ! $is_page_display_as_translated ){
+							$wc_query_vars = $this->woocommerce_wpml->get_wc_query_vars();
+							foreach ( $wc_query_vars as $key => $endpoint ) {
+								$translated_endpoint = $this->get_endpoint_translation( $endpoint, $language_code );
+								$reserved_requests[] = $account_base . '/' . $translated_endpoint;
+							}
 						}
 					}
 				}
