@@ -110,14 +110,17 @@ class WCML_Synchronize_Variations_Data{
                     //unset variation from array to delete variations that no longer exist
                     unset( $current_variations[ $key ] );
                     // Update variation
-                    wp_update_post( array(
-                        'ID' => $variation_id,
-                        'post_status' => $post_data->post_status,
-                        'post_modified' => $post_data->post_modified,
-                        'post_modified_gmt' => $post_data->post_modified_gmt,
-                        'post_parent' => $tr_product_id, // current post ID
-                        'menu_order' => $post_data->menu_order,
-                    ));
+	                $this->wpdb->update(
+		                $this->wpdb->posts,
+		                array(
+			                'post_status'       => $post_data->post_status,
+			                'post_modified'     => $post_data->post_modified,
+			                'post_modified_gmt' => $post_data->post_modified_gmt,
+			                'post_parent'       => $tr_product_id, // current post ID
+			                'menu_order'        => $post_data->menu_order
+		                ),
+		                array( 'ID' => $variation_id )
+	                );
                 } else {
                     // Add new variation
                     $guid = $post_data->guid;

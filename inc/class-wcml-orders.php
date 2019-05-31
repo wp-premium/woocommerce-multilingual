@@ -114,6 +114,10 @@ class WCML_Orders {
 
     function woocommerce_order_get_items( $items, $order ){
 
+	    if ( $this->is_order_saving_action() ) {
+		    return $items;
+	    }
+
         if( isset( $_GET[ 'post' ] ) && get_post_type( $_GET[ 'post' ] ) == 'shop_order' ) {
             // on order edit page use admin default language
             $language_to_filter = $this->sitepress->get_user_admin_language( get_current_user_id(), true );
@@ -206,6 +210,10 @@ class WCML_Orders {
 
         return $items;
 
+    }
+
+    private function is_order_saving_action(){
+	    return isset( $_POST['post_type'] ) && $_POST['post_type'] === 'shop_order' && isset( $_POST['wc_order_action'] );
     }
 
     public function backend_before_order_itemmeta( $item_id, $item, $product ){

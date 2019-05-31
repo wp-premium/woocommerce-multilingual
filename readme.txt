@@ -4,8 +4,8 @@ Donate link: http://wpml.org/documentation/related-projects/woocommerce-multilin
 Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multilingual, e-shop, shop
 License: GPLv2
 Requires at least: 4.7
-Tested up to: 5.1.1
-Stable tag: 4.6.2.1
+Tested up to: 5.2.1
+Stable tag: 4.6.3
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -139,6 +139,22 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.6.3 =
+* In some cases product translation can be converted to a simple product instead of correct type after saving
+* Fix not recalculated ratings after remove rating from admin
+* Fix no link to reviews in other languages if no reviews left in current one
+* Fix "set_product_language" REST API call not supported "PUT" method
+* Fix endpoints on My Account page when using a custom base permalink
+* Fix stock_status synchronization for variable products with stock management on product level
+* Fixed performance issues while translating Product via WPML Translation Editor with a lot of variations
+* Fixed overridden discounted item price when manually creating/editing order from the admin
+* Fixed customer email language when changing order from "On Hold" to "Processing"
+* Fixed product gallery being synchronized even if WPML media duplication option is disabled
+* Fixed custom "Sing-up Fee" price for variation Subscription not saved
+* Fixed variation not available in second language in some cases when original language is German or Danish
+* Fix mixed endpoint contexts/domains and their translations/language
+* Fixed inability to add reviews after bought product
 
 = 4.6.2.1 =
 * Fix performance issues with WooCommerce 3.6.*

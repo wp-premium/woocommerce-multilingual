@@ -104,25 +104,27 @@ class WCML_Media{
 
 	public function sync_product_gallery( $product_id ) {
 
-		$product_gallery = get_post_meta( $product_id, '_product_image_gallery', true );
-		$gallery_ids     = explode( ',', $product_gallery );
+		if( $this->is_media_duplication_enabled( $product_id ) ){
+			$product_gallery = get_post_meta( $product_id, '_product_image_gallery', true );
+			$gallery_ids     = explode( ',', $product_gallery );
 
-		$trid         = $this->sitepress->get_element_trid( $product_id, 'post_product' );
-		$translations = $this->sitepress->get_element_translations( $trid, 'post_product', true );
-		foreach ( $translations as $translation ) {
-			$duplicated_ids = '';
-			if ( ! $translation->original ) {
-				foreach ( $gallery_ids as $image_id ) {
-					if ( get_post( $image_id ) ) {
-						$duplicated_id = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $translation->language_code );
-						if ( is_null( $duplicated_id ) && $image_id ) {
-							$duplicated_id = $this->create_base_media_translation( $image_id, $translation->element_id, $translation->language_code );
+			$trid         = $this->sitepress->get_element_trid( $product_id, 'post_product' );
+			$translations = $this->sitepress->get_element_translations( $trid, 'post_product', true );
+			foreach ( $translations as $translation ) {
+				$duplicated_ids = '';
+				if ( ! $translation->original ) {
+					foreach ( $gallery_ids as $image_id ) {
+						if ( get_post( $image_id ) ) {
+							$duplicated_id = apply_filters( 'translate_object_id', $image_id, 'attachment', false, $translation->language_code );
+							if ( is_null( $duplicated_id ) && $image_id ) {
+								$duplicated_id = $this->create_base_media_translation( $image_id, $translation->element_id, $translation->language_code );
+							}
+							$duplicated_ids .= $duplicated_id . ',';
 						}
-						$duplicated_ids .= $duplicated_id . ',';
 					}
+					$duplicated_ids = substr( $duplicated_ids, 0, strlen( $duplicated_ids ) - 1 );
+					update_post_meta( $translation->element_id, '_product_image_gallery', $duplicated_ids );
 				}
-				$duplicated_ids = substr( $duplicated_ids, 0, strlen( $duplicated_ids ) - 1 );
-				update_post_meta( $translation->element_id, '_product_image_gallery', $duplicated_ids );
 			}
 		}
 	}
@@ -145,6 +147,24 @@ class WCML_Media{
 		$this->products_being_synced[ $product_id ] = 1;
 		$this->sync_product_gallery( $product_id );
 		unset( $this->products_being_synced[ $product_id ] );
+	}
+
+	public function is_media_duplication_enabled( $product_id ){
+
+		$setting_value = get_post_meta( $product_id, $this->sitepress->get_wp_api()->constant( 'WPML_Admin_Post_Actions::DUPLICATE_MEDIA_META_KEY' ), true );
+
+		if( '' === $setting_value ){
+			// fallback to global setting
+			$media_options = get_option( '_wpml_media', array() );
+
+			$global_setting_key = $this->sitepress->get_wp_api()->constant( 'WPML_Admin_Post_Actions::DUPLICATE_MEDIA_GLOBAL_KEY' );
+			if ( isset( $media_options['new_content_settings'][ $global_setting_key ] ) ) {
+				$setting_value = $media_options['new_content_settings'][ $global_setting_key ];
+			}
+		}
+
+		return (bool) $setting_value;
+
 	}
 
 }
