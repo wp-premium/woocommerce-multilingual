@@ -140,7 +140,7 @@ class WCML_WC_Subscriptions{
 		}
 
 		if( $variation_id && isset( $_POST[ '_custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ]  ) ){
-			$prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom__custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ] );
+			$prices[ '_subscription_sign_up_fee' ] = wc_format_decimal( $_POST[ '_custom_variation_subscription_sign_up_fee' ][ $code ][ $variation_id ] );
 		}
 
 		return $prices;

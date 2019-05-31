@@ -43,11 +43,17 @@ class WCML_Emails{
 
         add_action( 'wp_ajax_woocommerce_mark_order_status', array( $this, 'email_refresh_in_ajax' ), 9 );
 
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
-            $this,
-            'email_heading_processing'
-        ), 9 );
+	    foreach( array( 'pending', 'failed', 'cancelled', 'on-hold' ) as $state ) {
+		    add_action( 'woocommerce_order_status_' . $state . '_to_processing_notification', array(
+			    $this,
+			    'email_heading_processing'
+		    ), 9 );
 
+		    add_action( 'woocommerce_order_status_' . $state . '_to_processing_notification', array(
+			    $this,
+			    'refresh_email_lang'
+		    ), 9 );
+	    }
 
 	    foreach( array( 'pending', 'failed', 'cancelled' ) as $state ) {
 		    add_action( 'woocommerce_order_status_' . $state . '_to_on-hold_notification', array(
@@ -65,10 +71,7 @@ class WCML_Emails{
 
         //change order status
         add_action( 'woocommerce_order_status_completed', array( $this, 'refresh_email_lang_complete' ), 9 );
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array(
-            $this,
-            'refresh_email_lang'
-        ), 9 );
+
         add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array(
             $this,
             'refresh_email_lang'
@@ -129,6 +132,9 @@ class WCML_Emails{
 
 	    add_filter( 'woocommerce_email_heading_customer_on_hold_order',  array( $this, 'customer_on_hold_order_heading' ) );
 	    add_filter( 'woocommerce_email_subject_customer_on_hold_order',  array( $this, 'customer_on_hold_order_subject' ) );
+
+	    add_filter( 'woocommerce_email_heading_customer_processing_order',  array( $this, 'customer_processing_order_heading' ) );
+	    add_filter( 'woocommerce_email_subject_customer_processing_order',  array( $this, 'customer_processing_order_subject' ) );
     }
 
     function email_refresh_in_ajax() {
@@ -224,6 +230,15 @@ class WCML_Emails{
     function email_heading_processing($order_id){
 	    $this->translate_email_headings( $order_id, 'WC_Email_Customer_Processing_Order', 'woocommerce_customer_processing_order_settings' );
     }
+
+	public function customer_processing_order_heading( $heading ){
+		return $this->get_translated_order_strings( 'heading', $heading, 'WC_Email_Customer_Processing_Order' );
+	}
+
+	public function customer_processing_order_subject( $subject ){
+		return $this->get_translated_order_strings( 'subject', $subject, 'WC_Email_Customer_Processing_Order' );
+	}
+
 
     public function email_heading_on_hold( $order_id ){
         $this->translate_email_headings( $order_id, 'WC_Email_Customer_On_Hold_Order', 'woocommerce_customer_on_hold_order_settings' );

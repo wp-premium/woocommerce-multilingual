@@ -47,10 +47,11 @@ jQuery(document).ready(function($){
     buttons = buttons.concat( non_standard_fields.classes );
 
     if( unlock_fields.file_paths == 1 ){
-        buttons.push('upload_file_button');
-        buttons.push('insert');
-        buttons.push('delete');
-        $('.upload_file_button,.insert,.delete').bind({
+        buttons.push('downloadable_files .upload_file_button');
+        buttons.push('downloadable_files .insert');
+        buttons.push('downloadable_files .delete');
+
+        $('.downloadable_files .upload_file_button,.downloadable_files .insert,.downloadable_files .delete').bind({
             click: function(e) {
                 return false;
             }

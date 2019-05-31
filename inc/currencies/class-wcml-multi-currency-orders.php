@@ -337,27 +337,31 @@ class WCML_Multi_Currency_Orders {
 			$original_product_id = $this->woocommerce_wpml->products->get_original_product_id( $product_id );
 
 			$converted_price  = get_post_meta( $original_product_id, '_price_' . $order_currency, true );
-			$converted_totals = array( 'subtotal' => 0, 'total' => 0 );
+			$converted_totals = array( 'total' => 0, 'subtotal' => 0 );
 
 			foreach ( array_keys( $converted_totals ) as $key ) {
 
-				if ( ! $converted_price ) {
+				if ( 'total' === $key && $item->get_total() !== $item->get_subtotal() ) {
+					$converted_totals[ $key ] = $item->get_total();
+				}else{
+					if ( ! $converted_price ) {
 
-					$meta_key = '_wcml_converted_' . $key;
-					if (
-						! $item->meta_exists( $meta_key ) ||
-						( $item->meta_exists( '_wcml_total_qty' ) && $item->get_quantity() !== (int) $item->get_meta( '_wcml_total_qty' ) )
-					) {
-					    $item_price = $this->multi_currency->prices->raw_price_filter( $item->get_product()->get_price(), $order_currency );
-						$converted_totals[ $key ] = $this->get_converted_item_meta( $key, $item_price, false, $item, $order_currency, $coupons );
-						$item->update_meta_data( $meta_key, $converted_totals[ $key ] );
+						$meta_key = '_wcml_converted_' . $key;
+						if (
+							! $item->meta_exists( $meta_key ) ||
+							( $item->meta_exists( '_wcml_total_qty' ) && $item->get_quantity() !== (int) $item->get_meta( '_wcml_total_qty' ) )
+						) {
+							$item_price = $this->multi_currency->prices->raw_price_filter( $item->get_product()->get_price(), $order_currency );
+							$converted_totals[ $key ] = $this->get_converted_item_meta( $key, $item_price, false, $item, $order_currency, $coupons );
+							$item->update_meta_data( $meta_key, $converted_totals[ $key ] );
+						} else {
+							$converted_totals[ $key ] = $item->get_meta( $meta_key );
+						}
+
 					} else {
-						$converted_totals[ $key ] = $item->get_meta( $meta_key );
+						$converted_totals[ $key ] = $this->get_converted_item_meta( $key, $converted_price, true, $item, $order_currency, $coupons );
 					}
-
-				} else {
-					$converted_totals[ $key ] = $this->get_converted_item_meta( $key, $converted_price, true, $item, $order_currency, $coupons );
-				}
+                }
 
 				call_user_func_array( array( $item, 'set_' . $key ), array( $converted_totals[ $key ] ) );
 			}

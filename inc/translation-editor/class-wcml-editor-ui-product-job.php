@@ -206,14 +206,14 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         }
 
         if( $this->woocommerce_wpml->products->is_variable_product( $this->product_id ) ){
-            $variations = $this->product->get_available_variations();
+	        $variations = $this->woocommerce_wpml->sync_variations_data->get_product_variations( $this->product_id );
 
             if( !empty( $variations ) ){
                 $variations_data_section = new WPML_Editor_UI_Field_Section( __( 'Variations data', 'woocommerce-multilingual' ) );
                 foreach( $variations as $variation ){
-                    $var_custom_fields = $this->get_product_custom_fields_to_translate( $variation[ 'variation_id' ] );
+                    $var_custom_fields = $this->get_product_custom_fields_to_translate( $variation->ID );
                     if( $var_custom_fields ){
-                        $this->add_custom_fields_ui_section( $variations_data_section, $var_custom_fields, $variation[ 'variation_id' ] );
+                        $this->add_custom_fields_ui_section( $variations_data_section, $var_custom_fields, $variation->ID );
                     }
                 }
                 $this->add_field( $variations_data_section );
@@ -446,15 +446,15 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
         $element_data = $this->add_custom_field_to_element_data( $element_data, $this->product_id, isset( $translation->ID ) ? $translation->ID : false, false );
 
         if( $is_variable_product ){
-            $variations = $this->product->get_available_variations();
+	        $variations = $this->woocommerce_wpml->sync_variations_data->get_product_variations( $this->product_id );
 
             if( !empty( $variations ) ){
                 foreach( $variations as $variation ){
-                    $element_data[ '_variation_description'.$variation[ 'variation_id' ] ] = array( 'original' => strip_tags( $variation[ 'variation_description' ] ) );
-                    $translated_variation_id = apply_filters( 'translate_object_id', $variation[ 'variation_id' ], 'product_variation', false, $this->get_target_language() );
-                    $element_data[ '_variation_description'.$variation[ 'variation_id' ] ][ 'translation' ]  =   $translated_variation_id ? get_post_meta( $translated_variation_id, '_variation_description', true ) : '';
+                    $element_data[ '_variation_description'.$variation->ID ] = array( 'original' => strip_tags( get_post_meta( $variation->ID, '_variation_description', true ) ) );
+                    $translated_variation_id = apply_filters( 'translate_object_id', $variation->ID, 'product_variation', false, $this->get_target_language() );
+                    $element_data[ '_variation_description'.$variation->ID ][ 'translation' ]  =   $translated_variation_id ? get_post_meta( $translated_variation_id, '_variation_description', true ) : '';
 
-                    $element_data = $this->add_custom_field_to_element_data( $element_data, $variation[ 'variation_id' ], $translated_variation_id, true );
+                    $element_data = $this->add_custom_field_to_element_data( $element_data, $variation->ID, $translated_variation_id, true );
                 }
             }
         }

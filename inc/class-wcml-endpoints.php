@@ -132,12 +132,13 @@ class WCML_Endpoints {
 				$my_account_page_id = wc_get_page_id( 'myaccount' );
 
 				if ( $my_account_page_id ) {
-					$my_account_page = get_post( $my_account_page_id );
-					if ( $my_account_page ) {
-						$account_base = $my_account_page->post_name;
+
+					$account_base = get_page_uri( $my_account_page_id );
+
+					if ( $account_base ) {
 
 						$reserved_requests[] = $account_base;
-						$reserved_requests[] = '/^' . $account_base . '/'; // regex version
+						$reserved_requests[] = '/^' . str_replace( '/', "\/", $account_base ) . '/'; // regex version
 						$is_page_display_as_translated = $this->sitepress->is_display_as_translated_post_type( 'page' );
 
 						if( ! $is_page_display_as_translated ){

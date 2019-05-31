@@ -151,7 +151,7 @@ class WCML_TP_Support {
 
 	public function append_variation_descriptions_translation_package( $package, $post ) {
 
-		if ( $post->post_type == 'product' ) {
+		if ( 'product' === $post->post_type ) {
 
 			/** @var WC_Product_Variable $product */
 			$product = wc_get_product( $post->ID );
@@ -160,18 +160,18 @@ class WCML_TP_Support {
 
 			if ( ! empty( $product ) && in_array( $product->get_type(), $allowed_variations_types, true ) ) {
 
-				$variations = $product->get_available_variations();
+				$variations = $this->woocommerce_wpml->sync_variations_data->get_product_variations( $post->ID );
 
 				foreach ( $variations as $variation ) {
 
-					if ( ! empty( $variation['variation_description'] ) ) {
+					$description = get_post_meta( $variation->ID, '_variation_description', true );
 
-						$package['contents'][ 'wc_variation_description:' . $variation['variation_id'] ] = array(
+					if ( $description ) {
+						$package['contents'][ 'wc_variation_description:' . $variation->ID ] = array(
 							'translate' => 1,
-							'data'      => $this->tp->encode_field_data( get_post_meta( $variation['variation_id'], '_variation_description', true ), 'base64' ),
+							'data'      => $this->tp->encode_field_data( $description, 'base64' ),
 							'format'    => 'base64'
 						);
-
 					}
 
 				}
