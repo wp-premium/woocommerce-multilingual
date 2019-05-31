@@ -33,8 +33,12 @@ class WCML_Comments {
 
 		add_filter( 'get_post_metadata', array( $this, 'filter_average_rating' ), 10, 4 );
 		add_filter( 'comments_clauses', array( $this, 'comments_clauses' ), 10, 2 );
-		add_filter( 'woocommerce_product_review_list_args', array( $this, 'comments_link' ) );
+		add_action( 'comment_form_before', array( $this, 'comments_link' ) );
+
 		add_filter( 'wpml_is_comment_query_filtered', array( $this, 'is_comment_query_filtered' ), 10, 2 );
+		add_action( 'trashed_comment', array( $this, 'recalculate_average_rating_on_comment_hook' ), 10, 2 );
+		add_action( 'deleted_comment', array( $this, 'recalculate_average_rating_on_comment_hook' ), 10, 2 );
+		add_action( 'untrashed_comment', array( $this, 'recalculate_average_rating_on_comment_hook' ), 10, 2 );
 	}
 
 	/**
@@ -68,8 +72,10 @@ class WCML_Comments {
 		$reviews_count         = 0;
 
 		foreach ( $translations as $translation ) {
-			$ratings      = get_post_meta( $translation, '_wc_rating_count', true );
-			$review_count = get_post_meta( $translation, self::WC_REVIEW_COUNT_KEY, true );
+			$product =  wc_get_product( $translation );
+
+			$ratings      = WC_Comments::get_rating_counts_for_product( $product );
+			$review_count = WC_Comments::get_review_count_for_product( $product );
 
 			if ( is_array( $ratings ) ) {
 				foreach ( $ratings as $rating => $count ) {
@@ -80,6 +86,9 @@ class WCML_Comments {
 
 			if( $review_count ){
 				$reviews_count += $review_count;
+			}else{
+				update_post_meta( $translation, self::WCML_AVERAGE_RATING_KEY, null );
+				update_post_meta( $translation, self::WCML_REVIEW_COUNT_KEY, null );
 			}
 		}
 
@@ -162,36 +171,33 @@ class WCML_Comments {
 
 	/**
 	 * Display link to show rating in all/current language
-	 *
-	 * @param array $args
-	 * @return array
 	 */
-	public function comments_link( $args ) {
-		
-		$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		$current_language = $this->sitepress->get_current_language();
+	public function comments_link( ) {
 
-		if ( ! isset( $_GET['clang'] ) || $current_language === $_GET['clang'] ) {
-			$comments_link = add_query_arg( array( 'clang' => 'all' ), $current_url );
-			$all_languages_reviews_count = $this->get_reviews_count( 'all' );
-			$current_language_reviews_count = $this->get_reviews_count();
+		if( is_product() ){
+			$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$current_language = $this->sitepress->get_current_language();
 
-			if( $all_languages_reviews_count > $current_language_reviews_count ){
-				$comments_link_text = sprintf( __( 'Show reviews in all languages  (%s)', 'woocommerce-multilingual'), $all_languages_reviews_count);
+			if ( ! isset( $_GET['clang'] ) || $current_language === $_GET['clang'] ) {
+				$comments_link = add_query_arg( array( 'clang' => 'all' ), $current_url );
+				$all_languages_reviews_count = $this->get_reviews_count( 'all' );
+				$current_language_reviews_count = $this->get_reviews_count();
+
+				if( $all_languages_reviews_count > $current_language_reviews_count ){
+					$comments_link_text = sprintf( __( 'Show reviews in all languages  (%s)', 'woocommerce-multilingual'), $all_languages_reviews_count);
+				}
+			} elseif ( 'all' === $_GET['clang'] ) {
+
+				$current_language_reviews_count = $this->get_reviews_count();
+				$comments_link    = add_query_arg( array( 'clang' => $current_language ), $current_url );
+				$language_details = $this->sitepress->get_language_details( $current_language );
+				$comments_link_text = sprintf( __( 'Show only reviews in %s (%s)', 'woocommerce-multilingual'), $language_details['display_name'], $current_language_reviews_count );
 			}
-		} elseif ( 'all' === $_GET['clang'] ) {
 
-			$current_language_reviews_count = $this->get_reviews_count();
-			$comments_link    = add_query_arg( array( 'clang' => $current_language ), $current_url );
-			$language_details = $this->sitepress->get_language_details( $current_language );
-			$comments_link_text = sprintf( __( 'Show only reviews in %s (%s)', 'woocommerce-multilingual'), $language_details['display_name'], $current_language_reviews_count );
+			if( isset( $comments_link_text ) && $comments_link_text ){
+				echo '<p><a id="lang-comments-link" href="' . $comments_link . '">' . $comments_link_text . '</a></p>';
+			}
 		}
-
-		if( isset( $comments_link_text ) && $comments_link_text ){
-			echo '<p><a id="lang-comments-link" href="' . $comments_link . '">' . $comments_link_text . '</a></p>';
-		}
-
-		return $args;
 	}
 
 	/**
@@ -262,6 +268,21 @@ class WCML_Comments {
 		add_filter( 'get_post_metadata', array( $this, 'filter_average_rating' ), 10, 4 );
 
 		return $reviews_count;
+	}
+
+	/**
+	 * @param int $comment_id
+	 * @param WP_Comment|null $comment
+	 */
+	public function recalculate_average_rating_on_comment_hook( $comment_id, $comment ){
+
+		if( !$comment ){
+			$comment = get_comment( $comment_id );
+		}
+
+		if( in_array( get_post_type( $comment->comment_post_ID ), array( 'product', 'product_variation' ) ) ){
+			$this->recalculate_comment_rating( (int)$comment->comment_post_ID );
+		}
 	}
 
 }

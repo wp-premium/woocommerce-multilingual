@@ -41,6 +41,7 @@ class WCML_The_Events_Calendar{
 	    } else {
 		    add_action( 'event_tickets_rsvp_tickets_generated', array( $this, 'sync_rsvp_fields_on_attendee_created' ), 10, 3 );
 		    add_filter( 'tribe_get_organizer_ids', array( $this, 'get_translated_organizer_ids' ), 10, 2 );
+		    add_filter( 'tribe_events_cost_unformatted', array( $this, 'convert_events_cost' ), 10, 1 );
 	    }
 
     }
@@ -488,5 +489,10 @@ class WCML_The_Events_Calendar{
 	    }
     	return $organizer_ids;
     }
+
+    public function convert_events_cost( $cost ) {
+		return apply_filters( 'wcml_raw_price_amount', $cost );
+    }
+
 }
 

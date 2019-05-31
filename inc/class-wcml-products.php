@@ -45,7 +45,7 @@ class WCML_Products{
 			add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
 
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
-
+			add_filter( 'woocommerce_product_type_query', array( $this, 'override_product_type_query' ), 10, 2 );
 		} else {
 			add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
 			add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
@@ -131,23 +131,16 @@ class WCML_Products{
 
     public function is_downloadable_product( $product ) {
 
-        $cache_key   = 'is_downloadable_product_'.$product->get_id();
+	    $product_id = $product->get_id();
+	    $cache_key  = 'is_downloadable_product_' . $product_id;
 
         $found           = false;
         $is_downloadable = $this->wpml_cache->get( $cache_key, $found );
         if ( ! $found ) {
             if ( $product->is_downloadable() ) {
                 $is_downloadable = true;
-            } elseif ( $this->is_variable_product( $product->get_id() ) ) {
-                $variations = $product->get_available_variations();
-                if ( ! empty( $variations ) ) {
-                    foreach ( $variations as $variation ) {
-                        if ( $variation['is_downloadable'] ) {
-                            $is_downloadable = true;
-                            break;
-                        }
-                    }
-                }
+            } elseif ( $this->is_variable_product( $product_id ) ) {
+	            $is_downloadable = $this->is_downloadable_variations( $this->woocommerce_wpml->sync_variations_data->get_product_variations( $product_id ) );
             }
             $this->wpml_cache->set( $cache_key, $is_downloadable );
         }
@@ -155,6 +148,17 @@ class WCML_Products{
         return $is_downloadable;
 
     }
+
+	private function is_downloadable_variations( $variations ) {
+		if ( $variations && is_array( $variations ) ) {
+			$variation_ids = wp_list_pluck( $variations, 'ID' );
+			$sql           = 'SELECT count(*) FROM ' . $this->wpdb->prefix . 'postmeta WHERE post_id IN (' . wpml_prepare_in( $variation_ids, '%d' ) . ') AND meta_key = %s AND meta_value = %s ';
+
+			return (bool) $this->wpdb->get_var( $this->wpdb->prepare( $sql, '_downloadable', 'yes' ) );
+		}
+
+		return false;
+	}
 
     public function is_grouped_product($product_id){
         $get_variation_term_taxonomy_id = $this->wpdb->get_var( "SELECT tt.term_taxonomy_id FROM {$this->wpdb->terms} AS t LEFT JOIN {$this->wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id WHERE t.name = 'grouped'" );
@@ -660,16 +664,33 @@ class WCML_Products{
 
 	public function is_customer_bought_product( $value, $customer_email, $user_id, $product_id ){
 
-        if ( !$this->is_original_product( $product_id ) ){
-	        remove_filter( 'woocommerce_pre_customer_bought_product', array( $this, 'is_customer_bought_product' ), 10, 4 );
-
-	        $value = wc_customer_bought_product( $customer_email, $user_id, $this->get_original_product_id( $product_id ) );
-
-		    add_filter( 'woocommerce_pre_customer_bought_product', array( $this, 'is_customer_bought_product' ), 10, 4 );
+	    if( $this->is_customer_bought_original( $customer_email, $user_id, $product_id ) ){
+	        return true;
         }
 
 	    return $value;
     }
+
+	private function is_customer_bought_original( $customer_email, $user_id, $product_id ) {
+
+		if ( ! $this->is_original_product( $product_id ) ) {
+			remove_filter( 'woocommerce_pre_customer_bought_product', array(
+				$this,
+				'is_customer_bought_product'
+			), 10, 4 );
+
+			$bought_original = wc_customer_bought_product( $customer_email, $user_id, $this->get_original_product_id( $product_id ) );
+
+			add_filter( 'woocommerce_pre_customer_bought_product', array(
+				$this,
+				'is_customer_bought_product'
+			), 10, 4 );
+
+			return (bool) $bought_original;
+        }
+
+		return false;
+	}
 
 	public function filter_product_data( $data, $product_id, $meta_key ) {
 
@@ -726,4 +747,24 @@ class WCML_Products{
 	    return $this->wpdb->get_var( $this->wpdb->prepare( "SELECT meta_value FROM {$this->wpdb->postmeta} WHERE `meta_key` = '_price' AND post_id = %d ", $product_id ) );
     }
 
+	/**
+	 * return not cached value for product
+	 *
+	 * @param bool $product_type
+	 * @param int $product_id
+	 *
+	 * @return bool|string
+	 */
+	public function override_product_type_query( $product_type, $product_id ) {
+
+		if ( 'product' === get_post_type( $product_id ) ) {
+			$product_type = 'simple';
+			$terms        = get_the_terms( $product_id, 'product_type' );
+			if ( $terms ) {
+				$product_type = sanitize_title( current( $terms )->name );
+			}
+		}
+
+		return $product_type;
+	}
 }

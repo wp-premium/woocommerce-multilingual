@@ -537,7 +537,7 @@ class WCML_Attributes{
      */
     function filter_attribute_name( $attribute_name, $product_id, $return_sanitized = false ) {
 
-        if ( ! is_admin() && $product_id ) {
+        if ( !is_admin() && $product_id ) {
             $orig_lang = $this->woocommerce_wpml->products->get_original_product_language( $product_id );
             $current_language = $this->sitepress->get_current_language();
 
@@ -554,18 +554,27 @@ class WCML_Attributes{
         return $attribute_name;
     }
 
-    function filter_adding_to_cart_product_attributes_names( $attributes ){
+	public function filter_adding_to_cart_product_attributes_names( $attributes ) {
 
-        if( !is_admin() && isset( $_REQUEST['add-to-cart'] ) ){
+		if (
+			( isset( $_REQUEST['add-to-cart'] ) ) ||
+			( isset( $_REQUEST['wc-ajax'] ) && 'get_variation' === $_REQUEST['wc-ajax'] && isset( $_REQUEST['product_id'] ) )
+		) {
 
-            foreach( $attributes as $key => $attribute ){
-                $attributes[ $key ]['name'] = $this->filter_attribute_name( $attributes[ $key ]['name'], $_REQUEST['add-to-cart'] );
-            }
+			if ( isset( $_REQUEST['add-to-cart'] ) ) {
+				$product_id = $_REQUEST['add-to-cart'];
+			} else {
+				$product_id = $_REQUEST['product_id'];
+			}
 
-        }
+			foreach ( $attributes as $key => $attribute ) {
+				$attributes[ $key ]['name'] = $this->filter_attribute_name( $attributes[ $key ]['name'], $product_id );
+			}
 
-        return $attributes;
-    }
+		}
+
+		return $attributes;
+	}
 
     public function is_a_taxonomy( $attribute ){
 
