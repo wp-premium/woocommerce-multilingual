@@ -37,17 +37,13 @@ class WCML_Products{
 
 		if ( is_admin() ) {
 
-			add_filter( 'woocommerce_json_search_found_products', array(
-				$this,
-				'woocommerce_json_search_found_products'
-			) );
-
+			add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_wc_searched_products_on_admin' ) );
 			add_filter( 'post_row_actions', array( $this, 'filter_product_actions' ), 10, 2 );
 
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'switch_product_variations_language' ), 9 );
 			add_filter( 'woocommerce_product_type_query', array( $this, 'override_product_type_query' ), 10, 2 );
 		} else {
-			add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_found_products_by_language' ) );
+			add_filter( 'woocommerce_json_search_found_products', array( $this, 'filter_wc_searched_products_on_front' ) );
 			add_filter( 'woocommerce_related_products_args', array( $this, 'filter_related_products_args' ) );
 			add_filter( 'woocommerce_product_related_posts_query', array( $this, 'filter_related_products_query' ) );
 			add_filter( 'woocommerce_shortcode_products_query', array(
@@ -76,6 +72,7 @@ class WCML_Products{
 
 		if ( $this->sitepress->get_wp_api()->version_compare( $this->sitepress->get_wp_api()->constant( 'WC_VERSION' ), '3.6.0', '>=' ) ) {
 			add_filter( 'get_post_metadata', array( $this, 'filter_product_data' ), 10, 3 );
+			add_filter( 'woocommerce_can_reduce_order_stock', array( $this, 'remove_post_meta_data_filter_on_checkout_stock_update' ) );
 		}
 	}
 
@@ -321,30 +318,6 @@ class WCML_Products{
     }
 
     /**
-     * Filters upsell/crosell products in the correct language.
-     */
-    public function filter_found_products_by_language( $found_products ){
-        $current_page_language = $this->sitepress->get_current_language();
-
-        foreach( $found_products as $product_id => $output_v ){
-            $post_data = $this->wpdb->get_row(
-                            $this->wpdb->prepare(
-                                "SELECT * FROM {$this->wpdb->prefix}icl_translations
-                                WHERE element_id = %d AND element_type LIKE 'post_%'", $product_id
-                            )
-                        );
-
-            $product_language = $post_data->language_code;
-
-            if( $product_language !== $current_page_language ){
-                unset( $found_products[ $product_id ] );
-            }
-        }
-
-        return $found_products;
-    }
-
-    /**
      * Takes off translated products from the Up-sells/Cross-sells tab.
      */
     public function filter_woocommerce_upsell_crosssell_posts_by_language( $posts ){
@@ -365,26 +338,54 @@ class WCML_Products{
         return $posts;
     }
 
-    public function woocommerce_json_search_found_products( $found_products ){
 
-        foreach( $found_products as $post => $formatted_product_name ) {
-            $parent = wp_get_post_parent_id( $post );
-            if( ( isset( $_COOKIE [ '_wcml_dashboard_order_language' ] )
-                    && ( ( !$parent && $this->post_translations->get_element_lang_code( $post ) == $_COOKIE [ '_wcml_dashboard_order_language' ] )
-                        || ( $parent && $this->post_translations->get_element_lang_code( $parent ) == $_COOKIE [ '_wcml_dashboard_order_language' ] ) )
-                )
-                ||
-                ( ! isset( $_COOKIE [ '_wcml_dashboard_order_language' ] )
-                    && ( ( !$parent && $this->is_original_product($post) )
-                        || ( $parent && $this->is_original_product($parent) ) )
-                )
-            ) {
+	/**
+	 * Filters products by language
+	 *
+	 * @param array $found_products
+	 * @param bool $language
+	 *
+	 * @return array
+	 */
+	private function filter_found_products_by_language( $found_products, $language = false ){
 
-                $new_found_products[$post] = $formatted_product_name;
-            }
+		if( !$language ){
+			$language = $this->sitepress->get_current_language();
+		}
+
+		foreach( $found_products as $product_id => $product_name ){
+
+			if( $this->post_translations->get_element_lang_code( $product_id ) !== $language ){
+				unset( $found_products[ $product_id ] );
+			}
+		}
+
+		return $found_products;
+	}
+
+	/**
+	 * @param array $found_products
+	 *
+	 * @return array
+	 */
+    public function filter_wc_searched_products_on_front( $found_products ){
+        return $this->filter_found_products_by_language( $found_products );
+    }
+
+	/**
+	 * @param array $found_products
+	 *
+	 * @return array
+	 */
+    public function filter_wc_searched_products_on_admin( $found_products ){
+
+	    if ( isset( $_COOKIE['_wcml_dashboard_order_language'] ) ) {
+		    $found_products = $this->filter_found_products_by_language( $found_products, $_COOKIE['_wcml_dashboard_order_language'] );
+	    }else{
+		    $found_products = $this->filter_found_products_by_language( $found_products );
         }
 
-        return isset ( $new_found_products ) ? $new_found_products : $found_products ;
+        return $found_products;
     }
 
     //update menu_order fro translations after ordering original products
@@ -766,5 +767,17 @@ class WCML_Products{
 		}
 
 		return $product_type;
+	}
+
+	/**
+	 * @param bool $reduce_stock
+	 *
+	 * @return bool
+	 */
+	public function remove_post_meta_data_filter_on_checkout_stock_update( $reduce_stock ){
+		if( isset( $_GET['wc-ajax'] ) && 'checkout' === $_GET['wc-ajax'] ){
+			remove_filter( 'get_post_metadata', array( $this, 'filter_product_data' ), 10, 3 );
+		}
+		return $reduce_stock;
 	}
 }
