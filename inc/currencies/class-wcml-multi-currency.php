@@ -123,6 +123,7 @@ class WCML_Multi_Currency{
 	    );
 	    $this->admin_currency_selector->add_hooks();
         $this->custom_prices            = new WCML_Custom_Prices( $woocommerce_wpml );
+	    $this->custom_prices->add_hooks();
         $this->currency_switcher        = new WCML_Currency_Switcher( $woocommerce_wpml, $sitepress );
         $this->currency_switcher->add_hooks();
         $this->currency_switcher_ajax   = new WCML_Currency_Switcher_Ajax( $woocommerce_wpml );

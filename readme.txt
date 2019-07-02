@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 4.7
 Tested up to: 5.2.1
-Stable tag: 4.6.3
+Stable tag: 4.6.5
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
 
@@ -139,6 +139,17 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 6. Shop URLs translation screen
 
 == Changelog ==
+
+= 4.6.5 =
+* The Events Calendar: convert currency for event_cost.
+* Wrong product price set after purchase in combination with custom prices for secondary currency and enabled stock
+* Translated attributes not saving if original one contains umlauts and original product language is German or Danish
+* Price not auto-calculated if you selected using custom prices and don't set a price
+* After quick edit variable product variations incremented their IDs
+* Added new wcml_translate_shipping_method_in_package filter
+* Products not filtered by current language while search Upsells/Cross-sells on product edit screen
+* Use default language if admin user not exists while sending "New Order" email to admins
+* Variation description not saved on installs with 300+ variations for product
 
 = 4.6.3 =
 * In some cases product translation can be converted to a simple product instead of correct type after saving

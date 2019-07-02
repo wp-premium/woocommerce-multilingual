@@ -2,11 +2,15 @@
 
 class WCML_Custom_Prices{
 
+	/** @var woocommerce_wpml */
     private $woocommerce_wpml;
 
-    public function __construct( &$woocommerce_wpml ){
-        add_filter( 'init', array( $this, 'custom_prices_init' ) );
+    public function __construct( woocommerce_wpml $woocommerce_wpml ){
         $this->woocommerce_wpml = $woocommerce_wpml;
+    }
+
+    public function add_hooks(){
+	    add_filter( 'init', array( $this, 'custom_prices_init' ) );
     }
 
     public function custom_prices_init(){
@@ -411,50 +415,69 @@ class WCML_Custom_Prices{
         }
     }
 
-    public function update_custom_prices( $post_id, $custom_prices, $code ){
-        $price = '';
+	public function update_custom_prices( $post_id, $custom_prices, $code ) {
+		$price = null;
 
-        // initialization
-        $keys = array(
-            '_sale_price_dates_to', '_sale_price_dates_from',
-            '_sale_price', '_sale_price_dates_to', '_sale_price_dates_from',
+		$defaults = array(
+			'_sale_price_dates_to'   => '',
+			'_sale_price_dates_from' => '',
+			'_sale_price'            => ''
+		);
 
-        );
-        foreach( $keys as $key ){
-            if( !isset( $custom_prices[$key] ) ){ $custom_prices[$key] = ''; }
-        }
+		$custom_prices = array_merge( $defaults, $custom_prices );
 
-        foreach( $custom_prices as $custom_price_key => $custom_price_value ){
-            update_post_meta( $post_id, $custom_price_key.'_'.$code, $custom_price_value );
-        }
-        if ( $custom_prices[ '_sale_price_dates_to' ]  && ! $custom_prices[ '_sale_price_dates_from' ] ) {
-            update_post_meta($post_id, '_sale_price_dates_from_' . $code, strtotime( 'NOW', current_time( 'timestamp' ) ) );
-        }
-        // Update price if on sale
-        if ( $custom_prices[ '_sale_price' ] != '' && $custom_prices[ '_sale_price_dates_to' ] == '' && $custom_prices[ '_sale_price_dates_from' ] == '' ){
-            $price = stripslashes( $custom_prices[ '_sale_price' ] );
-            update_post_meta( $post_id, '_price_'.$code, stripslashes( $custom_prices[ '_sale_price' ] ) );
-        }else{
-            $price = stripslashes( $custom_prices[ '_regular_price' ] );
-            update_post_meta( $post_id, '_price_'.$code, stripslashes( $custom_prices[ '_regular_price' ] ) );
-        }
 
-        if ( $custom_prices[ '_sale_price' ] != '' && $custom_prices[ '_sale_price_dates_from' ] < strtotime( 'NOW', current_time( 'timestamp' ) ) ){
-            update_post_meta( $post_id, '_price_'.$code, stripslashes( $custom_prices[ '_sale_price' ] ) );
-            $price = stripslashes( $custom_prices[ '_sale_price' ] );
-        }
+		foreach ( $custom_prices as $custom_price_key => $custom_price_value ) {
+			update_post_meta( $post_id, $custom_price_key . '_' . $code, $custom_price_value );
+		}
 
-        if ( $custom_prices[ '_sale_price_dates_to' ] && $custom_prices[ '_sale_price_dates_to' ] < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-            update_post_meta( $post_id, '_price_'.$code, stripslashes( $custom_prices[ '_regular_price' ] ) );
-            $price = stripslashes( $custom_prices[ '_regular_price' ] );
-            update_post_meta( $post_id, '_sale_price_dates_from_'.$code, '' );
-            update_post_meta( $post_id, '_sale_price_dates_to_'.$code, '' );
-        }
+		if ( $this->is_sale_price_valid( $custom_prices ) ){
+			$price = stripslashes( $custom_prices['_sale_price'] );
+		} else {
+			$price = stripslashes( $custom_prices['_regular_price'] );
+			$this->validate_and_update_sale_price_dates( $post_id, $code, $custom_prices );
+		}
 
-        return $price;
-    }
+		update_post_meta( $post_id, '_price_' . $code, $price ? $price : null );
 
-    public function sync_product_variations_custom_prices( $product_id ){
+		return $price;
+	}
+
+	/**
+	 * @param int    $post_id
+	 * @param string $code
+	 * @param array  $custom_prices
+	 */
+	private function validate_and_update_sale_price_dates( $post_id, $code, array $custom_prices ) {
+		$date_from = $custom_prices['_sale_price_dates_from'];
+		$date_to   = $custom_prices['_sale_price_dates_to'];
+		if ( $date_to ) {
+			if ( $date_to < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+				update_post_meta( $post_id, '_sale_price_dates_from_' . $code, '' );
+				update_post_meta( $post_id, '_sale_price_dates_to_' . $code, '' );
+			} elseif ( ! $date_from ) {
+				update_post_meta( $post_id,
+					'_sale_price_dates_from_' . $code,
+					strtotime( 'NOW', current_time( 'timestamp' ) ) );
+			}
+		}
+	}
+
+	/**
+	 * @param array  $custom_prices
+	 *
+	 * @return bool
+	 */
+	protected function is_sale_price_valid( array $custom_prices ) {
+		$sale_price_dates_from = $custom_prices['_sale_price_dates_from'];
+		$sale_price_dates_to   = $custom_prices['_sale_price_dates_to'];
+		$not_depend_on_date    = $sale_price_dates_to === '' && $sale_price_dates_from === '';
+		$valid_sale_date       = $sale_price_dates_from < strtotime( 'NOW', current_time( 'timestamp' ) );
+
+		return $custom_prices['_sale_price'] !== '' && ( $not_depend_on_date || $valid_sale_date );
+	}
+
+	public function sync_product_variations_custom_prices( $product_id ){
 
         if( isset( $_POST[ '_wcml_custom_prices' ][ $product_id ] ) ){
 
