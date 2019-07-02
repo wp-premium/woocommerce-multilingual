@@ -498,11 +498,11 @@ class WCML_Synchronize_Product_Data{
 
 	    if ( $translations ) {
 		    foreach ( $translations as $translation ) {
-			    if ( $is_original && $product_id !== $translation ) {
+			    if ( $is_original && $product_id !== (int) $translation ) {
 				    $language_code = $this->post_translations->get_element_lang_code( $translation );
 				    $this->sync_product_data( $product_id, $translation, $language_code );
 				    $this->sync_date_and_parent( $product_id, $translation, $language_code );
-			    } elseif ( $original_product_id === $translation ) {
+			    } elseif ( ! $is_original && $original_product_id === (int) $translation ) {
 				    $language_code = $this->post_translations->get_element_lang_code( $product_id );
 				    $this->sync_product_data( $translation, $product_id, $language_code );
 				    $this->sync_date_and_parent( $translation, $product_id, $language_code );

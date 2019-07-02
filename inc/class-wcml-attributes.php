@@ -235,7 +235,7 @@ class WCML_Attributes{
         $trnsl_labels = $this->get_attr_label_translations( $tr_product_id );
 
         foreach ( $orig_product_attrs as $key => $orig_product_attr ) {
-            $sanitized_key = sanitize_title( $orig_product_attr[ 'name' ] );
+            $sanitized_key = $this->filter_attribute_name( $orig_product_attr[ 'name' ],  $original_product_id, true );
             if( $sanitized_key != $key ) {
                 $orig_product_attrs_buff = $orig_product_attrs[ $key ];
                 unset( $orig_product_attrs[ $key ] );
@@ -537,7 +537,7 @@ class WCML_Attributes{
      */
     function filter_attribute_name( $attribute_name, $product_id, $return_sanitized = false ) {
 
-        if ( !is_admin() && $product_id ) {
+        if ( $product_id ) {
             $orig_lang = $this->woocommerce_wpml->products->get_original_product_language( $product_id );
             $current_language = $this->sitepress->get_current_language();
 

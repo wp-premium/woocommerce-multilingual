@@ -308,7 +308,7 @@ class WCML_Emails{
                 if($user){
                     $user_lang = $this->sitepress->get_user_admin_language($user->ID, true );
                 }else{
-                    $user_lang = get_post_meta($order_id, 'wpml_language', true );
+                    $user_lang = $this->sitepress->get_default_language();
                 }
 
                 $this->change_email_language( $user_lang );

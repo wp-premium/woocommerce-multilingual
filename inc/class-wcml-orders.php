@@ -2,6 +2,9 @@
 
 class WCML_Orders {
 
+    const DASHBOARD_COOKIE_NAME = '_wcml_dashboard_order_language';
+    const COOKIE_TTL = 86400;
+
     private $woocommerce_wpml;
     private $sitepress;
 
@@ -305,7 +308,7 @@ class WCML_Orders {
     function order_language_dropdown( $order_id ){
         if( !get_post_meta( $order_id, '_order_currency') ) {
             $languages = apply_filters( 'wpml_active_languages', array(), array( 'skip_missing' => 0, 'orderby' => 'code' ) );
-            $selected_lang =  isset( $_COOKIE [ '_wcml_dashboard_order_language' ] ) ?  $_COOKIE [ '_wcml_dashboard_order_language' ] : $this->sitepress->get_default_language();
+            $selected_lang =  isset( $_COOKIE [ self::DASHBOARD_COOKIE_NAME ] ) ?  $_COOKIE [ self::DASHBOARD_COOKIE_NAME  ] : $this->sitepress->get_default_language();
             ?>
             <li class="wide">
                 <label><?php _e('Order language:'); ?></label>
@@ -351,6 +354,8 @@ class WCML_Orders {
                 });
 
             ");
+        }else{
+            $this->remove_dashboard_order_language_cookie();
         }
     }
 
@@ -361,11 +366,11 @@ class WCML_Orders {
             die();
         }
 
-		$cookie_name = '_wcml_dashboard_order_language';
-		// @todo uncomment or delete when #wpmlcore-5796 is resolved
-		//do_action( 'wpsc_add_cookie', $cookie_name );
-		setcookie( $cookie_name, filter_input( INPUT_POST, 'lang', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( self::DASHBOARD_COOKIE_NAME, filter_input( INPUT_POST, 'lang', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), time() + self::COOKIE_TTL, COOKIEPATH, COOKIE_DOMAIN );
+    }
 
+    private function remove_dashboard_order_language_cookie(){
+	    setcookie( self::DASHBOARD_COOKIE_NAME, '', time() - self::COOKIE_TTL, COOKIEPATH, COOKIE_DOMAIN );
     }
 
     function set_order_language_backend( $post_id, $post ){
