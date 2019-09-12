@@ -3,7 +3,7 @@
 /**
  * Created by OnTheGo Systems
  */
-class WCML_Not_Translatable_Attributes extends WPML_Templates_Factory {
+class WCML_Not_Translatable_Attributes extends WCML_Templates_Factory {
 
 	private $attr_id;
 	private $woocommerce_wpml;

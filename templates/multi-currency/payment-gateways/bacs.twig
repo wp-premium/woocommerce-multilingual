@@ -1,7 +1,7 @@
 <label class="label-header"><strong>{{ gateway_title }}</strong> <i class="wcml-tip otgs-ico-help" data-tip="{{ strings.tooltip }}"></i></label>
 <div class="wpml-form-row">
     <label>{{ strings.currency_label }}</label>
-    <select name="currency_options[gateways_settings][{{ gateway_id }}][currency]">
+    <select name="currency_options[gateways_settings][{{ gateway_id }}][currency]" {% if default_currency == current_currency %}disabled="disabled"{% endif %}>
         {% for code, currency in active_currencies %}
             <option value="{{ code }}" {% if ( gateway_settings and code == gateway_settings.currency ) or ( gateway_settings is empty and code == current_currency ) %}selected="selected"{% endif %} >{{ code }}</option>
         {% endfor %}

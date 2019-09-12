@@ -49,6 +49,7 @@ class OTGS_Installer_Site_Key_Ajax {
 				$repository = $this->repositories->get( $repository );
 				$repository->set_subscription( $subscription_data );
 				$this->repositories->save_subscription( $repository );
+				$this->clean_plugins_update_cache();
 			} else {
 				$error = __( 'Invalid site key for the current site.', 'installer' ) . '<br /><div class="installer-footnote">' . __( 'Please note that the site key is case sensitive.', 'installer' ) . '</div>';
 			}
@@ -75,6 +76,7 @@ class OTGS_Installer_Site_Key_Ajax {
 			$repository = $this->repositories->get( $repository );
 			$repository->set_subscription( null );
 			$this->repositories->save_subscription( $repository );
+			$this->clean_plugins_update_cache();
 		}
 
 		wp_send_json_success();
@@ -109,6 +111,7 @@ class OTGS_Installer_Site_Key_Ajax {
 
 					$this->repositories->save_subscription( $repository_data );
 					$this->repositories->refresh();
+					$this->clean_plugins_update_cache();
 				} catch ( OTGS_Installer_Site_Key_Exception $e ) {
 					$error = $this->get_error_message( $e, $repository_data );
 				}
@@ -129,5 +132,9 @@ class OTGS_Installer_Site_Key_Ajax {
 		}
 
 		return $error;
+	}
+
+	private function clean_plugins_update_cache() {
+		do_action( 'otgs_installer_clean_plugins_update_cache' );
 	}
 }

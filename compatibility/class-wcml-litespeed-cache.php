@@ -17,7 +17,7 @@ class WCML_LiteSpeed_Cache {
 	}
 
 	function apply_client_currency( $currency ) {
-		LiteSpeed_Cache_API::vary( 'wcml_currency', $currency, get_option( 'woocommerce_currency' ) );
+		LiteSpeed_Cache_API::vary( 'wcml_currency', $currency, wcml_get_woocommerce_currency_option() );
 
 		return $currency;
 	}

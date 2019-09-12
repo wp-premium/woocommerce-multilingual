@@ -60,7 +60,7 @@ class WCML_Multi_Currency_Configuration
 					'woocommerce_price_num_decimals' => 'num_decimals'
 				);
 
-				$woocommerce_currency = get_option('woocommerce_currency', true);
+				$woocommerce_currency = wcml_get_woocommerce_currency_option();
 
 				foreach ($options as $wc_key => $key) {
 					$wcml_settings['currency_options'][$woocommerce_currency][$key] = get_option($wc_key, true);
@@ -142,7 +142,7 @@ class WCML_Multi_Currency_Configuration
 		$settings['currency_options'][$currency_code]['rate'] = (double)filter_input(INPUT_POST, 'currency_value', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 		$settings['currency_options'][$currency_code]['updated'] = date('Y-m-d H:i:s');
 
-		$wc_currency = get_option('woocommerce_currency');
+		$wc_currency = wcml_get_woocommerce_currency_option();
 		if (!isset($settings['currencies_order']))
 			$settings['currencies_order'][] = $wc_currency;
 
@@ -160,14 +160,12 @@ class WCML_Multi_Currency_Configuration
 			die('Invalid nonce');
 		}
 
+		$wc_currency = wcml_get_woocommerce_currency_option();
+		$wc_currencies = get_woocommerce_currencies();
+
 		$options = $_POST['currency_options'];
 
-		$options['thousand_sep'] = wc_format_option_price_separators(null, null, $options['thousand_sep']);
-		$options['decimal_sep'] = wc_format_option_price_separators(null, null, $options['decimal_sep']);
-
 		$currency_code = $options['code'];
-
-		self::$multi_currency->currencies_payment_gateways->set_enabled( $currency_code, isset( $options['gateways_enabled'] ) ? true : false );
 
 		if ( isset( $options['gateways_settings'] ) ) {
 
@@ -178,60 +176,64 @@ class WCML_Multi_Currency_Configuration
 					$payment_gateways[ $code ]->save_setting( $currency_code, $gateways_settings );
 				}
 			}
+
+			self::$multi_currency->currencies_payment_gateways->set_enabled( $currency_code, isset( $options['gateways_enabled'] ) ? true : false );
 		}
 
-		if (!isset(self::$multi_currency->currencies[$currency_code])) {
-			self::add_currency($currency_code);
-		}
+		if( $wc_currency !== $currency_code ){
+			$options['thousand_sep'] = wc_format_option_price_separators(null, null, $options['thousand_sep']);
+			$options['decimal_sep'] = wc_format_option_price_separators(null, null, $options['decimal_sep']);
 
-		$changed = false;
-		$rate_changed = false;
-		foreach (self::$multi_currency->currencies[$currency_code] as $key => $value) {
+			if (!isset(self::$multi_currency->currencies[$currency_code])) {
+				self::add_currency($currency_code);
+			}
 
-			if (isset($options[$key]) && $options[$key] != $value) {
-				if ($key == 'rate') {
-					$previous_rate = self::$multi_currency->currencies[$currency_code][$key];
-					$rate_changed = true;
+			$changed = false;
+			$rate_changed = false;
+			foreach (self::$multi_currency->currencies[$currency_code] as $key => $value) {
+
+				if (isset($options[$key]) && $options[$key] != $value) {
+					if ($key == 'rate') {
+						$previous_rate = self::$multi_currency->currencies[$currency_code][$key];
+						$rate_changed = true;
+					}
+					self::$multi_currency->currencies[$currency_code][$key] = $options[$key];
+					$changed = true;
 				}
-				self::$multi_currency->currencies[$currency_code][$key] = $options[$key];
-				$changed = true;
+
 			}
 
-		}
-
-		if ($changed) {
-			if ($rate_changed) {
-				self::$multi_currency->currencies[$currency_code]['previous_rate'] = $previous_rate;
-				self::$multi_currency->currencies[$currency_code]['updated'] = date('Y-m-d H:i:s');
+			if ($changed) {
+				if ($rate_changed) {
+					self::$multi_currency->currencies[$currency_code]['previous_rate'] = $previous_rate;
+					self::$multi_currency->currencies[$currency_code]['updated'] = date('Y-m-d H:i:s');
+				}
+				self::$woocommerce_wpml->settings['currency_options'] = self::$multi_currency->currencies;
+				self::$woocommerce_wpml->update_settings();
 			}
-			self::$woocommerce_wpml->settings['currency_options'] = self::$multi_currency->currencies;
-			self::$woocommerce_wpml->update_settings();
+
+			switch (self::$multi_currency->currencies[$currency_code]['position']) {
+				case 'left':
+					$price = sprintf('%s99.99', get_woocommerce_currency_symbol($currency_code));
+					break;
+				case 'right':
+					$price = sprintf('99.99%s', get_woocommerce_currency_symbol($currency_code));
+					break;
+				case 'left_space':
+					$price = sprintf('%s 99.99', get_woocommerce_currency_symbol($currency_code));
+					break;
+				case 'right_space':
+					$price = sprintf('99.99 %s', get_woocommerce_currency_symbol($currency_code));
+					break;
+			}
+
+			$return['currency_name_formatted'] = sprintf('<span class="truncate">%s</span> <small>(%s)</small>', $wc_currencies[$currency_code], $price);
+
+			$return['currency_meta_info'] = sprintf('1 %s = %s %s', $wc_currency, self::$multi_currency->currencies[$currency_code]['rate'], $currency_code);
 		}
-
-		$wc_currency = get_option('woocommerce_currency');
-		$wc_currencies = get_woocommerce_currencies();
-
-		switch (self::$multi_currency->currencies[$currency_code]['position']) {
-			case 'left':
-				$price = sprintf('%s99.99', get_woocommerce_currency_symbol($currency_code));
-				break;
-			case 'right':
-				$price = sprintf('99.99%s', get_woocommerce_currency_symbol($currency_code));
-				break;
-			case 'left_space':
-				$price = sprintf('%s 99.99', get_woocommerce_currency_symbol($currency_code));
-				break;
-			case 'right_space':
-				$price = sprintf('99.99 %s', get_woocommerce_currency_symbol($currency_code));
-				break;
-		}
-
-		$return['currency_name_formatted'] = sprintf('<span class="truncate">%s</span> <small>(%s)</small>', $wc_currencies[$currency_code], $price);
-
-		$return['currency_meta_info'] = sprintf('1 %s = %s %s', $wc_currency, self::$multi_currency->currencies[$currency_code]['rate'], $currency_code);
 
 		$args = array();
-		$args['default_currency'] = get_woocommerce_currency();
+		$args['default_currency'] = $wc_currency;
 		$args['currencies'] = self::$multi_currency->currencies;
 		$args['wc_currencies'] = $wc_currencies;
 		$args['currency_code'] = $currency_code;

@@ -1,6 +1,8 @@
 <?php
 
-class WCML_Settings_UI extends WPML_Templates_Factory {
+use WCML\Twig_SimpleFunction;
+
+class WCML_Settings_UI extends WCML_Templates_Factory {
 
     /** @var woocommerce_wpml */
     private $woocommerce_wpml;
@@ -14,12 +16,20 @@ class WCML_Settings_UI extends WPML_Templates_Factory {
      * @param SitePress $sitepress
      */
     function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ){
-        parent::__construct();
+
+	    $functions = array(
+		    new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) )
+	    );
+
+	    parent::__construct( $functions );
 
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress        = $sitepress;
-
     }
+
+	public function wp_do_action( $hook ){
+		do_action( $hook );
+	}
 
     public function get_model(){
 

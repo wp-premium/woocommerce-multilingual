@@ -48,12 +48,14 @@
     {{ content|raw }}
     </div>
 
-    <div class="wcml-wrap wcml-notice otgs-is-dismissible">
-        <p>{{ rate.message|raw }}</p>
-        <button class="notice-dismiss hide-rate-block" data-setting="rate-block">
-                <span class="screen-reader-text">{{ rate.hide_text }}</span>
-        </button>
-        {{ rate.nonce|raw }}
-    </div>
+    {% if rate.on %}
+        <div class="wcml-wrap wcml-notice otgs-is-dismissible">
+            <p>{{ rate.message|raw }}</p>
+            <button class="notice-dismiss hide-rate-block" data-setting="rate-block">
+                    <span class="screen-reader-text">{{ rate.hide_text }}</span>
+            </button>
+            {{ rate.nonce|raw }}
+        </div>
+    {% endif %}
 
 </div>

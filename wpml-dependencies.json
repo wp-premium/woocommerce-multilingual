@@ -1,6 +1,6 @@
 {
-  "sitepress-multilingual-cms":   "4.0.0",
-  "wpml-translation-management":  "2.6.0",
-  "wpml-string-translation":      "2.8.0",
-  "woocommerce-multilingual":     "4.4.0"
+  "sitepress-multilingual-cms":   "4.2.8",
+  "wpml-string-translation":      "2.10.6",
+  "wpml-translation-management":  "2.8.7",
+  "woocommerce-multilingual":     "4.6.7"
 }

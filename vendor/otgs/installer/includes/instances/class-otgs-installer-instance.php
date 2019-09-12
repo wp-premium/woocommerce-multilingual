@@ -5,50 +5,22 @@ class OTGS_Installer_Instance {
 	/**
 	 * @var string
 	 */
-	private $bootfile;
+	public $bootfile;
 
 	/**
 	 * @var string
 	 */
-	private $version;
+	public $version;
 
 	/**
 	 * @var string
 	 */
-	private $high_priority;
+	public $high_priority;
 
 	/**
 	 * @var bool
 	 */
-	private $delegated;
-
-	/**
-	 * @return string
-	 */
-	public function get_bootfile() {
-		return $this->bootfile;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function is_delegated() {
-		return $this->delegated;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function get_high_priority() {
-		return $this->high_priority;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function get_version() {
-		return $this->version;
-	}
+	public $delegated;
 
 	/**
 	 * @param string $bootfile

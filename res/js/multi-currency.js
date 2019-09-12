@@ -165,11 +165,6 @@ jQuery( function($){
         save_currency: function(){
 
             var parent = $(this).closest('.wcml-dialog-container');
-            var chk_autosub = WCML_Multi_Currency.check_on_numeric(parent,'.abstract_amount');
-
-            if( chk_autosub ){
-                return false;
-            }
 
             $('.wcml-currency-options-dialog :submit, .wcml-currency-options-dialog :button').prop('disabled', true);
             var currency = parent.find('[name="currency_options[code]"]').val();
@@ -179,6 +174,7 @@ jQuery( function($){
             ajaxLoader.show();
             $(this).parent().prepend(ajaxLoader);
 
+            parent.find('select[name="currency_options[gateways_settings][bacs][currency]"]').removeAttr('disabled');
             $.ajax({
                 url: ajaxurl,
                 type: 'POST',

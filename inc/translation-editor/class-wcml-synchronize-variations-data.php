@@ -18,6 +18,7 @@ class WCML_Synchronize_Variations_Data{
     public function add_hooks(){
 
 	    add_action( 'woocommerce_ajax_save_product_variations', array( $this, 'sync_product_variations_action' ), 11 );
+	    add_action( 'woocommerce_bulk_edit_variations', array( $this, 'sync_product_variations_on_bulk_edit' ), 10, 3 );
 	    add_action( 'wp_ajax_woocommerce_remove_variations', array( $this, 'remove_translations_for_variations' ), 9 );
 
 	    //save taxonomy in WPML interface
@@ -26,6 +27,15 @@ class WCML_Synchronize_Variations_Data{
 	    add_action( 'wp_ajax_woocommerce_remove_variation', array( $this, 'remove_variation_ajax' ), 9 );
 
     }
+
+	/**
+	 * @param string $bulk_action
+	 * @param array $data
+	 * @param int $product_id
+	 */
+	public function sync_product_variations_on_bulk_edit( $bulk_action, $data, $product_id ) {
+		$this->sync_product_variations_action( $product_id );
+	}
 
     public function sync_product_variations_action( $product_id ){
 

@@ -421,8 +421,8 @@ class WCML_Cart {
 		$attr_translation = $attribute;
 
 		if ( ! empty( $attribute ) ) {
-			//delete 'attribute_' at the beginning
-			$taxonomy = substr( $attr_key, 10, strlen( $attr_key ) - 1 );
+
+			$taxonomy = $this->remove_attribute_prefix( $attr_key );
 
 			if ( taxonomy_exists( $taxonomy ) ) {
 				if ( $this->woocommerce_wpml->attributes->is_translatable_attribute( $taxonomy ) ) {
@@ -444,6 +444,22 @@ class WCML_Cart {
 		}
 
 		return $attr_translation;
+	}
+
+	/**
+	 * @param string $attr_key
+	 *
+	 * @return string
+	 */
+	protected function remove_attribute_prefix( $attr_key ) {
+		$taxonomy = $attr_key;
+
+		$attribute_prefix = 'attribute_';
+		if ( strpos( $attr_key, $attribute_prefix ) === 0 ) {
+			$taxonomy = substr( $attr_key, strlen( $attribute_prefix ) );
+		}
+
+		return $taxonomy;
 	}
 
 	public function wcml_generate_cart_key( $cart_contents, $key ) {

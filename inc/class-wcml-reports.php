@@ -81,7 +81,7 @@ class WCML_Reports{
                         $product_ids[] = $translation->element_id;
                     }
                         
-                    $query[ 'where' ] = str_replace("order_item_meta__product_id.meta_value = '{$product_id}'", "order_item_meta__product_id.meta_value IN(" . join(',', $product_ids) . ")", $query[ 'where' ]);
+                    $query[ 'where' ] = str_replace("order_item_meta__product_id.meta_value = '{$product_id}'", "order_item_meta__product_id.meta_value IN(" . join(',', array_filter( $product_ids ) ) . ")", $query[ 'where' ]);
                     
                 }
 
@@ -93,8 +93,7 @@ class WCML_Reports{
                 $query[ 'select' ] == 'SELECT SUM( order_item_meta__qty.meta_value) as order_item_count, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' || //Get orders and dates in range - main chart: order_item_counts
                 $query[ 'select' ] == 'SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' //Get orders and dates in range - main chart: order_item_amounts
                 
-            ){ 
-                
+            ){
                 preg_match("#order_item_meta__product_id_array\.meta_value IN \(([^\)]+)\)#", $query[ 'where' ], $matches);
                 $product_ids = array();
                 $exp = array_map('trim', explode(',', $matches[1]));
@@ -111,7 +110,7 @@ class WCML_Reports{
                     }
                 }
                 
-                $query[ 'where' ] = preg_replace("#order_item_meta__product_id_array\.meta_value IN \(([^\)]+)\)#", "order_item_meta__product_id_array.meta_value IN (" . join(',', $all_product_ids) . ")", $query[ 'where' ]);
+                $query[ 'where' ] = preg_replace("#order_item_meta__product_id_array\.meta_value IN \(([^\)]+)\)#", "order_item_meta__product_id_array.meta_value IN (" . join(',', array_filter( $all_product_ids ) ) . ")", $query[ 'where' ]);
             
                 
             }

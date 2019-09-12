@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Pointer_UI extends WPML_Templates_Factory {
+class WCML_Pointer_UI extends WCML_Templates_Factory {
 
     private $content;
     private $doc_link;

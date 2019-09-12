@@ -26,7 +26,7 @@ class WCML_gravityforms{
     
     function wcml_convert_price($formatted, $unformatted){
         if ( ! is_admin() ) {
-        	$currency = apply_filters('wcml_price_currency', get_woocommerce_currency());
+        	$currency = apply_filters('wcml_price_currency', wcml_get_woocommerce_currency_option());
         	$formatted = strip_tags(wc_price(apply_filters('wcml_raw_price_amount', $unformatted), array('currency'=>$currency)));
         }
         return $formatted;    

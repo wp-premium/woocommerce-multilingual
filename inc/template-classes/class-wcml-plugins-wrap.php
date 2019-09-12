@@ -1,5 +1,8 @@
 <?php
 
+use WCML\Twig_Loader_Filesystem;
+use WCML\Twig_Environment;
+
 class WCML_Plugins_Wrap {
 
     private $woocommerce_wpml;
@@ -31,7 +34,7 @@ class WCML_Plugins_Wrap {
             'icl_version' => defined('ICL_SITEPRESS_VERSION'),
             'icl_setup' => $this->sitepress ? $this->sitepress->setup() : false,
             'tm_version' => defined( 'WPML_TM_VERSION' ),
-            'st_version' => defined( 'WPML_ST_VERSION' ),
+            'st_version' => defined( 'WPML_ST_VERSION' ) && function_exists( 'icl_get_string_id' ),
             'wc' => class_exists('WooCommerce') ,
             'old_wc' => class_exists('WooCommerce') && version_compare( WC_VERSION, '3.3.0', '<'),
             'wc_link' => 'http://wordpress.org/extend/plugins/woocommerce/',
