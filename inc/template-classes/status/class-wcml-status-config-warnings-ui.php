@@ -1,6 +1,8 @@
 <?php
 
-class WCML_Status_Config_Warnings_UI extends WPML_Templates_Factory {
+use WCML\Twig_SimpleFunction;
+
+class WCML_Status_Config_Warnings_UI extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
     private $sitepress;

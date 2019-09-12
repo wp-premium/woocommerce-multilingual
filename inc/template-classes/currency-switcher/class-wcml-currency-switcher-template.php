@@ -1,6 +1,8 @@
 <?php
 
-class WCML_Currency_Switcher_Template extends WPML_Templates_Factory {
+use WCML\Twig_SimpleFunction;
+
+class WCML_Currency_Switcher_Template extends WCML_Templates_Factory {
 
     const FILENAME = 'template.twig';
 

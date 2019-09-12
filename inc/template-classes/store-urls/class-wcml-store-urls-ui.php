@@ -3,7 +3,7 @@
 /**
  * Created by OnTheGo Systems
  */
-class WCML_Store_URLs_UI extends WPML_Templates_Factory {
+class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 
 	private $woocommerce_wpml;
 	private $sitepress;

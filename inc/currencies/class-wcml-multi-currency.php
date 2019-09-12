@@ -122,7 +122,7 @@ class WCML_Multi_Currency{
 		    new WCML_Admin_Cookie( '_wcml_dashboard_currency' )
 	    );
 	    $this->admin_currency_selector->add_hooks();
-        $this->custom_prices            = new WCML_Custom_Prices( $woocommerce_wpml );
+        $this->custom_prices            = new WCML_Custom_Prices( $woocommerce_wpml, $wpdb );
 	    $this->custom_prices->add_hooks();
         $this->currency_switcher        = new WCML_Currency_Switcher( $woocommerce_wpml, $sitepress );
         $this->currency_switcher->add_hooks();
@@ -156,10 +156,10 @@ class WCML_Multi_Currency{
     private function _load_filters(){
         $load = false;
 
-        if(!is_admin() && $this->get_client_currency() != get_option('woocommerce_currency')){
+        if(!is_admin() && $this->get_client_currency() !== wcml_get_woocommerce_currency_option() ){
             $load = true;
         }else{
-            if(is_ajax() && $this->get_client_currency() != get_option('woocommerce_currency')){
+            if(is_ajax() && $this->get_client_currency() !== wcml_get_woocommerce_currency_option() ){
 
                 $ajax_actions = apply_filters( 'wcml_multi_currency_ajax_actions',
                     array(
@@ -214,7 +214,7 @@ class WCML_Multi_Currency{
     public function init_currencies(){
         global $sitepress;
 
-        $this->default_currency = get_option( 'woocommerce_currency' );
+        $this->default_currency = wcml_get_woocommerce_currency_option();
         $this->currencies =& $this->woocommerce_wpml->settings['currency_options'];
 
 	    // Add default currency if missing (set when MC is off)
@@ -311,7 +311,7 @@ class WCML_Multi_Currency{
 
         // by default, exclude default currency
         $currencies = array();
-        $default_currency = get_option('woocommerce_currency');
+        $default_currency = wcml_get_woocommerce_currency_option();
 
         foreach($this->currencies as $key => $value){
             if( $default_currency != $key || $include_default ){
@@ -358,7 +358,7 @@ class WCML_Multi_Currency{
 
         if(empty($this->exchange_rates)){
 
-            $this->exchange_rates = array(get_option('woocommerce_currency') => 1);
+            $this->exchange_rates = array( wcml_get_woocommerce_currency_option() => 1);
             $woo_currencies = get_woocommerce_currencies();
 
             $currencies = $this->get_currencies();
@@ -380,7 +380,7 @@ class WCML_Multi_Currency{
 	            $WCML_REST_API->is_rest_api_request() ||
 	            ! empty( $_REQUEST['woocommerce_quick_edit'] )
         ){
-		    return get_option('woocommerce_currency');
+		    return wcml_get_woocommerce_currency_option();
 	    }
 
         $default_currencies   = $this->woocommerce_wpml->settings['default_currencies'];
@@ -410,7 +410,7 @@ class WCML_Multi_Currency{
             }
 
             if( $default ){
-                $this->client_currency = get_option('woocommerce_currency');
+                $this->client_currency = wcml_get_woocommerce_currency_option();
             }
 
 
@@ -484,7 +484,7 @@ class WCML_Multi_Currency{
         }
 
         if( is_null( $this->client_currency ) ){
-            $woocommerce_currency = get_option('woocommerce_currency');
+            $woocommerce_currency = wcml_get_woocommerce_currency_option();
 
             // fall on WC currency if enabled for this language
             if(!empty($this->currencies[$woocommerce_currency]['languages'][$current_language])){

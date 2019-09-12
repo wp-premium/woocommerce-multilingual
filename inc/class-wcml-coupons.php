@@ -20,69 +20,48 @@ class WCML_Coupons {
 		add_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
 	}
 
-	public function wcml_coupon_loaded( $coupons_data ) {
-
-		$wc_27_coupons = method_exists( 'WC_Coupon', 'get_amount' );
-
-		$coupon_product_ids                 = $wc_27_coupons ? $coupons_data->get_product_ids() : $coupons_data->product_ids;
-		$coupon_excluded_product_ids        = $wc_27_coupons ? $coupons_data->get_excluded_product_ids() : $coupons_data->exclude_product_ids;
-		$coupon_product_categories          = $wc_27_coupons ? $coupons_data->get_product_categories() : $coupons_data->product_categories;
-		$coupon_excluded_product_categories = $wc_27_coupons ? $coupons_data->get_excluded_product_categories() : $coupons_data->exclude_product_categories;
-
-		$product_ids                    = array();
-		$exclude_product_ids            = array();
-		$product_categories_ids         = array();
-		$exclude_product_categories_ids = array();
-
-		foreach ( $coupon_product_ids as $prod_id ) {
-			$post_type    = get_post_field( 'post_type', $prod_id );
-			$trid         = $this->sitepress->get_element_trid( $prod_id, 'post_' . $post_type );
-			$translations = $this->sitepress->get_element_translations( $trid, 'post_' . $post_type );
-			foreach ( $translations as $translation ) {
-				$product_ids[] = $translation->element_id;
-			}
-		}
-		foreach ( $coupon_excluded_product_ids as $prod_id ) {
-			$post_type    = get_post_field( 'post_type', $prod_id );
-			$trid         = $this->sitepress->get_element_trid( $prod_id, 'post_' . $post_type );
-			$translations = $this->sitepress->get_element_translations( $trid, 'post_' . $post_type );
-			foreach ( $translations as $translation ) {
-				$exclude_product_ids[] = $translation->element_id;
-			}
+	private function apply_translated_product_ids( array $product_ids, WC_Coupon $coupon, $coupon_setter_method ) {
+		if ( ! method_exists( $coupon, $coupon_setter_method ) ) {
+			return;
 		}
 
-		foreach ( $coupon_product_categories as $cat_id ) {
-			$term         = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $cat_id, 'product_cat' );
-			$trid         = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_product_cat' );
-			$translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat' );
+		$translated_product_ids = wpml_collect( $product_ids )
+			->map( function ( $product_id ) {
+				return $this->sitepress->get_object_id( $product_id, get_post_type( $product_id ) );
+			} )
+			->filter();
 
-			foreach ( $translations as $translation ) {
-				$product_categories_ids[] = $translation->term_id;
-			}
+		if ( $translated_product_ids->count() ) {
+			$coupon->$coupon_setter_method( $translated_product_ids->toArray() );
+		}
+	}
+
+	private function apply_translated_product_category_ids( array $category_ids, WC_Coupon $coupon, $coupon_setter_method ) {
+		if ( ! method_exists( $coupon, $coupon_setter_method ) ) {
+			return;
 		}
 
-		foreach ( $coupon_excluded_product_categories as $cat_id ) {
-			$term         = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $cat_id, 'product_cat' );
-			$trid         = $this->sitepress->get_element_trid( $term->term_taxonomy_id, 'tax_product_cat' );
-			$translations = $this->sitepress->get_element_translations( $trid, 'tax_product_cat' );
-			foreach ( $translations as $translation ) {
-				$exclude_product_categories_ids[] = $translation->term_id;
-			}
-		}
+		$translated_category_ids = wpml_collect( $category_ids )
+			->map( function ( $category_id ) {
+				return $this->sitepress->get_object_id( $category_id, 'product_cat' );
+			} )
+			->filter();
 
-		if ( $wc_27_coupons ) {
-			$coupons_data->set_product_ids( $product_ids );
-			$coupons_data->set_excluded_product_ids( $exclude_product_ids );
-			$coupons_data->set_product_categories( $product_categories_ids );
-			$coupons_data->set_excluded_product_categories( $exclude_product_categories_ids );
-		} else {
-			$coupons_data->product_ids                = $product_ids;
-			$coupons_data->exclude_product_ids        = $exclude_product_ids;
-			$coupons_data->product_categories         = $product_categories_ids;
-			$coupons_data->exclude_product_categories = $exclude_product_categories_ids;
+		if ( $translated_category_ids->count() ) {
+			$coupon->$coupon_setter_method( $translated_category_ids->toArray() );
 		}
+	}
 
-		return $coupons_data;
+	/**
+	 * @param WC_Coupon $coupon Coupon object.
+	 */
+	public function wcml_coupon_loaded( WC_Coupon $coupon ) {
+
+		$this->apply_translated_product_ids( $coupon->get_product_ids(), $coupon, 'set_product_ids' );
+		$this->apply_translated_product_ids( $coupon->get_excluded_product_ids(), $coupon, 'set_excluded_product_ids' );
+
+		$this->apply_translated_product_category_ids( $coupon->get_product_categories(), $coupon, 'set_product_categories' );
+		$this->apply_translated_product_category_ids( $coupon->get_excluded_product_categories(), $coupon, 'set_excluded_product_categories' );
 	}
 
 	public function icl_adjust_terms_filtering() {
@@ -91,7 +70,7 @@ class WCML_Coupons {
 			$icl_adjust_id_url_filter_off = true;
 		}
 	}
-	
+
 	/**
 	 * @param bool $valid
 	 * @param WC_Product $product
@@ -107,7 +86,7 @@ class WCML_Coupons {
 
 		if ( $translated_product_id && $product_id !== $translated_product_id ) {
 
-			remove_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10, 4 );
+			remove_filter( 'woocommerce_coupon_is_valid_for_product', array( $this, 'is_valid_for_product' ), 10 );
 
 			$valid = $object->is_valid_for_product( wc_get_product( $translated_product_id ), $values );
 

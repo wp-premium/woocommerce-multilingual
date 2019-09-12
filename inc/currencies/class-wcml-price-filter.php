@@ -41,7 +41,7 @@ class WCML_Price_Filter {
 
 		$multi_currency = $this->woocommerce_wpml->multi_currency;
 
-		if ( $multi_currency->get_client_currency() !== get_option( 'woocommerce_currency' ) ) {
+		if ( $multi_currency->get_client_currency() !== wcml_get_woocommerce_currency_option() ) {
 			if ( isset( $meta_query['price_filter'] ) && isset($meta_query['price_filter']['key']) && $meta_query['price_filter']['key'] === '_price' ) {
 				$meta_query['price_filter']['value'][0] = $multi_currency->prices->unconvert_price_amount( $meta_query['price_filter']['value'][0] );
 				$meta_query['price_filter']['value'][1] = $multi_currency->prices->unconvert_price_amount( $meta_query['price_filter']['value'][1] );

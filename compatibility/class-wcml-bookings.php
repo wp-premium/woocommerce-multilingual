@@ -816,7 +816,7 @@ class WCML_Bookings {
 
 				$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 
-				if ( $currency == get_option( 'woocommerce_currency' ) ) {
+				if ( $currency === wcml_get_woocommerce_currency_option() ) {
 					return $check;
 				}
 
@@ -1019,7 +1019,7 @@ class WCML_Bookings {
 
 			$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 
-			if ( $currency == get_option( 'woocommerce_currency' ) ) {
+			if ( $currency === wcml_get_woocommerce_currency_option() ) {
 				return $cost;
 			}
 
@@ -1235,7 +1235,7 @@ class WCML_Bookings {
 		if ( ! isset( $_COOKIE [ $cookie_name ] ) && ! headers_sent() ) {
 
 
-			$currency_code = get_woocommerce_currency();
+			$currency_code = wcml_get_woocommerce_currency_option();
 
 			if ( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ) {
 				$order_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
@@ -1262,7 +1262,7 @@ class WCML_Bookings {
 		if ( isset( $_COOKIE ['_wcml_booking_currency'] ) ) {
 			$currency = $_COOKIE['_wcml_booking_currency'];
 		} else {
-			$currency = get_woocommerce_currency();
+			$currency = wcml_get_woocommerce_currency_option();
 		}
 
 		return $currency;

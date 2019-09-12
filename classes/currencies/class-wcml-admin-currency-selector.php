@@ -113,7 +113,7 @@ class WCML_Admin_Currency_Selector {
 
 		if ( ! $currency_code && 'index.php' === $pagenow && ! headers_sent() ) {
 			$order_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
-			$currency_code    = get_woocommerce_currency();
+			$currency_code    = wcml_get_woocommerce_currency_option();
 			if ( ! isset( $order_currencies[ $currency_code ] ) ) {
 				$currency_code = key( $order_currencies );
 			}
@@ -133,7 +133,7 @@ class WCML_Admin_Currency_Selector {
 
 	    $currency = $this->currency_cookie->get_value();
 	    if( null === $currency ){
-		    $currency = get_woocommerce_currency();
+		    $currency = wcml_get_woocommerce_currency_option();
         }
 
 		return $currency;

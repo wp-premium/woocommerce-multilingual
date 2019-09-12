@@ -176,7 +176,7 @@ class WCML_REST_API_Support{
 
 			foreach( $this->woocommerce_wpml->settings['currencies_order'] as $currency ){
 
-				if( $currency != get_option('woocommerce_currency') ){
+				if( $currency !== wcml_get_woocommerce_currency_option() ){
 
 					if( $custom_prices_on ){
 

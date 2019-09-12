@@ -31,6 +31,10 @@ class WCML_Currencies_Payment_Gateways {
 
 		add_filter( 'woocommerce_gateway_description', array( $this, 'filter_gateway_description' ), 10, 2 );
 		add_filter( 'option_woocommerce_stripe_settings', array( 'WCML_Payment_Gateway_Stripe', 'filter_stripe_settings' ) );
+
+		if( !is_admin() ){
+			add_filter( 'woocommerce_paypal_supported_currencies', array( 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ) );
+		}
 	}
 
 	/**
@@ -112,6 +116,12 @@ class WCML_Currencies_Payment_Gateways {
 		if ( in_array( $id, array_keys( $this->supported_gateways ), true ) ) {
 
 			$client_currency   = $this->woocommerce_wpml->multi_currency->get_client_currency();
+			$default_currency  = wcml_get_woocommerce_currency_option();
+
+			if( $client_currency === $default_currency ){
+				return $description;
+			}
+
 			$gateway_setting   = $this->payment_gateways[ $id ]->get_setting( $client_currency );
 			$active_currencies = $this->woocommerce_wpml->multi_currency->get_currency_codes();
 

@@ -6,8 +6,43 @@
 class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 
 	const TEMPLATE = 'paypal.twig';
+	const ID = 'paypal';
+	const SUPPORTED_CURRENCIES = array(
+		'AUD',
+		'BRL',
+		'CAD',
+		'MXN',
+		'NZD',
+		'HKD',
+		'SGD',
+		'USD',
+		'EUR',
+		'JPY',
+		'TRY',
+		'NOK',
+		'CZK',
+		'DKK',
+		'HUF',
+		'ILS',
+		'MYR',
+		'PHP',
+		'PLN',
+		'SEK',
+		'CHF',
+		'TWD',
+		'THB',
+		'GBP',
+		'RMB',
+		'RUB',
+		'INR'
+	);
 
 	protected function get_output_model() {
+
+		if( $this->is_current_currency_default() ){
+			return array();
+		}
+
 		$currencies_details = $this->get_currencies_details();
 
 		return array(
@@ -36,14 +71,23 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 	 * @return bool
 	 */
 	public function is_valid_for_use( $currency ) {
-		return in_array(
+
+		$filter_removed = remove_filter( 'woocommerce_paypal_supported_currencies', array( 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ) );
+
+		$is_valid = in_array(
 			$currency,
 			apply_filters(
 				'woocommerce_paypal_supported_currencies',
-				array( 'AUD', 'BRL', 'CAD', 'MXN', 'NZD', 'HKD', 'SGD', 'USD', 'EUR', 'JPY', 'TRY', 'NOK', 'CZK', 'DKK', 'HUF', 'ILS', 'MYR', 'PHP', 'PLN', 'SEK', 'CHF', 'TWD', 'THB', 'GBP', 'RMB', 'RUB', 'INR' )
+				self::SUPPORTED_CURRENCIES
 			),
 			true
 		);
+
+		if( $filter_removed ){
+			add_filter( 'woocommerce_paypal_supported_currencies', array( 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ) );
+		}
+
+		return $is_valid;
 	}
 
 	/**
@@ -54,7 +98,7 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 	public function get_currencies_details(){
 
 		$currencies_details = array();
-		$default_currency   = get_option( 'woocommerce_currency' );
+		$default_currency   = wcml_get_woocommerce_currency_option();
 		$woocommerce_currencies = get_woocommerce_currencies();
 
 		foreach ( $woocommerce_currencies as $code => $currency ) {
@@ -112,6 +156,32 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Filter PayPal supported currencies before WC initialized it
+	 *
+	 * @param array $supported_currencies
+	 *
+	 * @return array
+	 */
+	public static function filter_supported_currencies( $supported_currencies ) {
+		global $woocommerce_wpml;
+
+		$client_currency = $woocommerce_wpml->multi_currency->get_client_currency();
+
+		if ( ! in_array( $client_currency, self::SUPPORTED_CURRENCIES, true ) ) {
+			$gateway_settings = get_option( self::OPTION_KEY . self::ID, array() );
+
+			if ( $gateway_settings && isset( $gateway_settings[ $client_currency ] ) ) {
+
+				if ( in_array( $gateway_settings[ $client_currency ]['currency'], self::SUPPORTED_CURRENCIES, true ) ) {
+					$supported_currencies[] = $client_currency;
+				}
+			}
+		}
+
+		return $supported_currencies;
 	}
 
 }

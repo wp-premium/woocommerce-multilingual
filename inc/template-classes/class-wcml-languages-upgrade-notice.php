@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Languages_Upgrade_Notice extends WPML_Templates_Factory {
+class WCML_Languages_Upgrade_Notice extends WCML_Templates_Factory {
 
     private $notices;
 

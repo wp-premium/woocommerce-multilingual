@@ -62,24 +62,21 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="wcml-row-currency">
-                                <td class="wcml-col-currency">
-                                    <span class="truncate">{{ attribute(wc_currencies, wc_currency)|raw }}</span>
-                                    <small>{{ positioned_price|raw }}</small>
-                                </td>
-                                <td class="wcml-col-rate"><span
-                                            class="truncate">{{ strings.currencies_table.default }}</span></td>
-                            </tr>
-
                             {% for code, currency in currencies %}
                                 <tr id="currency_row_{{ code }}" class="wcml-row-currency">
                                     <td class="wcml-col-currency">
                                         <span class="truncate">{{ attribute(wc_currencies, code)|raw }}</span>
                                         <small>{{ attribute( currencies_positions, code )|raw }}</small>
                                     </td>
-                                    <td class="wcml-col-rate">
-                                        1 {{ wc_currency }} = <span class="rate">{{ currency.rate }}</span> {{ code }}
-                                    </td>
+                                    {% if wc_currency == code %}
+                                        <td class="wcml-col-rate">
+                                            <span class="truncate">{{ strings.currencies_table.default }}</span>
+                                        </td>
+                                    {% else %}
+                                        <td class="wcml-col-rate">
+                                            1 {{ wc_currency }} = <span class="rate">{{ currency.rate }}</span> {{ code }}
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
 
@@ -110,27 +107,6 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="wcml-row-currency-lang">
-                                        {% for language in active_languages %}
-                                            <td class="currency_languages">
-                                                <ul>
-                                                    {% set title_yes = strings.currencies_table.disable_for|format( get_currency_name(wc_currency), language.display_name ) %}
-                                                    {% set title_no  = strings.currencies_table.enable_for|format( get_currency_name(wc_currency), language.display_name ) %}
-                                                    <li class="on" data-lang="{{ language.code }}">
-                                                        <a class="{% if is_currency_on(wc_currency, language.code) %}otgs-ico-yes{% else %} otgs-ico-no{% endif %}"
-                                                           data-language="{{ language.code }}"
-                                                           data-currency="{{ wc_currency }}" href="#"
-                                                                {% if is_currency_on(wc_currency, language.code) %}
-                                                                    title="{{ title_yes }}" data-title-alt="{{ title_no }}"
-                                                                {% else %}
-                                                                    title="{{ title_no }}" data-title-alt="{{ title_yes }}"
-                                                                {% endif %}
-                                                        ></a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        {% endfor %}
-                                    </tr>
 
                                     {% for code, currency in currencies %}
                                         <tr id="currency_row_langs_{{ code }}" class="wcml-row-currency-lang">
@@ -208,21 +184,6 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="currency_default wcml-row-currencies-actions">
-                                <td class="wcml-col-edit">
-                                    <a href="#" title="{{ strings.currencies_table.edit }}"
-                                       class="edit_currency js-wcml-dialog-trigger hidden" data-height="530"
-                                       data-width="480">
-                                        <i class="otgs-ico-edit" title="{{ strings.currencies_table.edit }}"></i>
-                                    </a>
-
-                                </td>
-                                <td class="wcml-col-delete">
-                                    <a title="{{ strings.currencies_table.delete }}" class="delete_currency hidden">
-                                        <i class="otgs-ico-delete" title="{{ strings.currencies_table.delete }}"></i>
-                                    </a>
-                                </td>
-                            </tr>
 
                             {% for code, currency in currencies %}
                                 <tr id="wcml-row-currency-actions-{{ code }}" class="wcml-row-currencies-actions">
@@ -235,15 +196,17 @@
                                             <i class="otgs-ico-edit" title="{{ strings.currencies_table.edit }}"></i>
                                         </a>
                                     </td>
-                                    <td class="wcml-col-delete">
-                                        <a title="{{ strings.currencies_table.delete }}" class="delete_currency"
-                                           data-currency_name="{{ attribute(wc_currencies, code) }}"
-                                           data-currency_symbol="{{ get_currency_symbol(code) }}"
-                                           data-currency="{{ code }}" href="#">
-                                            <i class="otgs-ico-delete"
-                                               title="{{ strings.currencies_table.delete }}"></i>
-                                        </a>
-                                    </td>
+                                    {% if wc_currency != code %}
+                                        <td class="wcml-col-delete">
+                                            <a title="{{ strings.currencies_table.delete }}" class="delete_currency"
+                                               data-currency_name="{{ attribute(wc_currencies, code) }}"
+                                               data-currency_symbol="{{ get_currency_symbol(code) }}"
+                                               data-currency="{{ code }}" href="#">
+                                                <i class="otgs-ico-delete"
+                                                   title="{{ strings.currencies_table.delete }}"></i>
+                                            </a>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
 

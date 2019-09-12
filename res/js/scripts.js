@@ -124,7 +124,7 @@ jQuery(document).ready(function ($) {
             data: {
                 action: 'wcml_update_setting_ajx',
                 setting: setting,
-                value: 1,
+                value: 0,
                 nonce: $('#wcml_settings_nonce').val()
             },
             success: function (response) {

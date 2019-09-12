@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Setup_Notice_UI extends WPML_Templates_Factory {
+class WCML_Setup_Notice_UI extends WCML_Templates_Factory {
 
 	public function __construct() {
 		parent::__construct();

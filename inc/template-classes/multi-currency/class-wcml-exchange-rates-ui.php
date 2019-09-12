@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Exchange_Rates_UI extends WPML_Templates_Factory {
+class WCML_Exchange_Rates_UI extends WCML_Templates_Factory {
 
     /**
      * @var woocommerce_wpml
@@ -26,6 +26,7 @@ class WCML_Exchange_Rates_UI extends WPML_Templates_Factory {
             $this->services[ $id ] = array(
                 'name'          => $service->get_name(),
                 'url'           => $service->get_url(),
+                'requires_key'  => $service->is_key_required(),
                 'api_key'       => $service->get_setting( 'api-key' ),
                 'last_error'    => $service->get_last_error()
             );

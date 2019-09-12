@@ -56,7 +56,12 @@ class OTGS_Installer_Upgrade_Response {
 			$response->url            = $plugin->get_url();
 
 			if ( $subscription->get_site_key() ) {
-				$response->package = $this->append_site_key_to_download_url( $plugin->get_url(), $subscription->get_site_key(), $repository->get_id(), $subscription->get_site_url() );
+				$response->package = $this->append_site_key_to_download_url(
+					$plugin->get_url(),
+					$subscription->get_site_key(),
+					$repository->get_id(),
+					WP_Installer()->get_installer_site_url()
+				);
 			}
 
 			$response = apply_filters( 'otgs_installer_upgrade_check_response', $response, $plugin->get_name(), $repository->get_id() );

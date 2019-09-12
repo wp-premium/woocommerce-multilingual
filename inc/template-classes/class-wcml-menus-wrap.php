@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Menus_Wrap extends WPML_Templates_Factory {
+class WCML_Menus_Wrap extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
 
@@ -157,7 +157,7 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
             'can_manage_options' => current_user_can('wpml_manage_woocommerce_multilingual'),
             'can_operate_options' => current_user_can('wpml_operate_woocommerce_multilingual'),
             'rate' => array(
-                'on'        => !isset( $this->woocommerce_wpml->settings['rate-block'] ),
+                'on'        => $this->woocommerce_wpml->get_setting( 'rate-block', true ),
                 'message'   => sprintf(__('Thank you for using %sWooCommerce Multilingual%s! You can express your love and
                                     support by %s rating our plugin and saying that %sit works%s for you.', 'woocommerce-multilingual' ),
                     '<strong>',
@@ -174,7 +174,6 @@ class WCML_Menus_Wrap extends WPML_Templates_Factory {
         );
 
         return $model;
-
     }
 
     protected function init_template_base_dir() {

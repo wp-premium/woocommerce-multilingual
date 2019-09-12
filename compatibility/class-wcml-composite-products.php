@@ -514,7 +514,7 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 				
 				$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 
-				if ( $currency == get_option( 'woocommerce_currency' ) ) {
+				if ( $currency === wcml_get_woocommerce_currency_option() ) {
 					return $value;
 				}
 

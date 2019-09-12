@@ -135,7 +135,7 @@ class WCML_Resources {
             wp_register_script( 'multi-currency', WCML_PLUGIN_URL . '/res/js/multi-currency' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-sortable'), WCML_VERSION, true );
             wp_enqueue_script( 'multi-currency' );
 
-            wp_register_script( 'currency-switcher-settings', WCML_PLUGIN_URL . '/res/js/currency-switcher-settings' . WCML_JS_MIN . '.js', array('jquery', 'jquery-ui-sortable'), WCML_VERSION, true );
+            wp_register_script( 'currency-switcher-settings', WCML_PLUGIN_URL . '/res/js/currency-switcher-settings' . WCML_JS_MIN . '.js', array( 'jquery', 'jquery-ui-sortable', 'underscore' ), WCML_VERSION, true );
             wp_enqueue_script( 'currency-switcher-settings' );
             wp_localize_script( 'currency-switcher-settings', 'settings', array(
                 'pre_selected_colors' => WCML_Currency_Switcher_Options_Dialog::currency_switcher_pre_selected_colors()

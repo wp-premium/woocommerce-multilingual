@@ -209,7 +209,7 @@ class WCML_Setup {
 			}
 
 			$this->complete_setup();
-			remove_filter( 'admin_notices', array( $this, 'wizard_notice' ) );
+			remove_filter( 'admin_notices', array( $this->ui, 'wizard_notice' ) );
 
 			delete_transient( '_wcml_activation_redirect' );
 		}

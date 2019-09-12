@@ -65,3 +65,17 @@ if ( ! function_exists( 'wcml_price_custom_fields' ) ) {
 		return $filtered_keys;
 	}
 }
+
+
+if ( ! function_exists( 'wcml_get_woocommerce_currency_option' ) ) {
+	/**
+	 * It returns WooCommerce currency value from 'woocommerce_currency' option.
+	 *
+	 * @return mixed
+	 *
+	 * @since 4.6.6
+	 */
+	function wcml_get_woocommerce_currency_option() {
+		return get_option( 'woocommerce_currency' );
+	}
+}

@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Currency_Switcher_Options_Dialog extends WPML_Templates_Factory {
+class WCML_Currency_Switcher_Options_Dialog extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
     private $args;

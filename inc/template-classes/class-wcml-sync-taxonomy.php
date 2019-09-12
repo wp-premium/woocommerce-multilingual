@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Sync_Taxonomy extends WPML_Templates_Factory {
+class WCML_Sync_Taxonomy extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
     private $taxonomy;

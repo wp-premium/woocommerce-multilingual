@@ -587,7 +587,7 @@ class WCML_Product_Addons {
 			'option_id'         => isset( $product_addons[ $loop ]['options'] ) ? array_search( $option, $product_addons[ $loop ]['options'] ) : '',
 			'addon_id'          => $loop,
 			'option_details'    => $option,
-			'default_currency'  => get_option( 'woocommerce_currency' ),
+			'default_currency'  => wcml_get_woocommerce_currency_option(),
 			'active_currencies' => $this->woocommerce_wpml->multi_currency->get_currencies(),
 		);
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Status_Taxonomies_UI extends WPML_Templates_Factory {
+class WCML_Status_Taxonomies_UI extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
     private $sitepress;

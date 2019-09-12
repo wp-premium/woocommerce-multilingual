@@ -131,7 +131,7 @@ class WCML_Table_Rate_Shipping {
 	 */
 	public function filter_query_rates_args( $args ){
 
-		if( isset( $args['price'] ) && get_option( 'woocommerce_currency') != $this->woocommerce_wpml->multi_currency->get_client_currency() ){
+		if( isset( $args['price'] ) && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ){
 			$args['price'] = $this->woocommerce_wpml->multi_currency->prices->unconvert_price_amount( $args['price'] );
 		}
 
@@ -168,7 +168,7 @@ class WCML_Table_Rate_Shipping {
 	 */
 	public function filter_product_base_price( $row_base_price, $_product, $qty ){
 
-		if( $_product && get_option( 'woocommerce_currency') != $this->woocommerce_wpml->multi_currency->get_client_currency() ){
+		if( $_product && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ){
 			$row_base_price = $this->woocommerce_wpml->products->get_product_price_from_db( $_product->get_id() ) * $qty;
 		}
 
