@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Setup_Footer_UI extends WPML_Templates_Factory {
+class WCML_Setup_Footer_UI extends WCML_Templates_Factory {
 
 	/** @var bool */
 	private $has_handler;

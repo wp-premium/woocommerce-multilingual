@@ -8,7 +8,11 @@ class OTGS_Installer_Factory {
 	private $installer_php_functions;
 	private $local_components_ajax_setting;
 	private $settings;
-	private $template_service_loader;
+
+	/**
+	 * @var OTGS_Template_Service
+	 */
+	private $template_service;
 	private $wp_components_hooks;
 	private $wp_components_sender;
 	private $wp_components_storage;
@@ -94,8 +98,8 @@ class OTGS_Installer_Factory {
 	 * @return OTGS_Installer_WP_Share_Local_Components_Setting_Hooks
 	 */
 	public function create_settings_hooks() {
-		return new OTGS_Installer_WP_Share_Local_Components_Setting_Hooks( $this->create_template_service_loader()
-		                                                                        ->get_service(),
+		return new OTGS_Installer_WP_Share_Local_Components_Setting_Hooks(
+			$this->create_template_service(),
 			$this->create_settings() );
 	}
 
@@ -107,18 +111,18 @@ class OTGS_Installer_Factory {
 	}
 
 	/**
-	 * @return OTGS_Installer_Twig_Template_Service_Loader
+	 * @return OTGS_Template_Service
 	 */
-	private function create_template_service_loader() {
-		if ( ! $this->template_service_loader ) {
-			$this->template_service_loader = new OTGS_Installer_Twig_Template_Service_Loader( array(
+	private function create_template_service() {
+		if ( ! $this->template_service ) {
+			$this->template_service = OTGS_Template_Service_Factory::create(
 				$this->get_installer()
 				     ->plugin_path()
-				. '/templates/components-setting/'
-			) );
+				. '/templates/php/components-setting/'
+			);
 		}
 
-		return $this->template_service_loader;
+		return $this->template_service;
 	}
 
 	/**

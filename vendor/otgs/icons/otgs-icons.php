@@ -2,8 +2,7 @@
 /**
  * Include this file to use OTGS-Icons
  */
-
-if( !defined( 'OTGS_ICONS_ROOT_URL' ) )
+if( ! defined( 'OTGS_ICONS_ROOT_URL' ) )
 	return;
 
 if( !defined( 'OTGS_ICONS_VERSION' ) )
@@ -11,6 +10,9 @@ if( !defined( 'OTGS_ICONS_VERSION' ) )
 
 if( ! has_action( 'wp_enqueue_scripts', 'otgs_icons' ) )
 	add_action( 'wp_enqueue_scripts', 'otgs_icons' );
+
+if( ! has_action( 'admin_enqueue_scripts', 'otgs_icons' ) )
+	add_action( 'admin_enqueue_scripts', 'otgs_icons' );
 
 if( ! function_exists( 'otgs_icons' ) ) {
 	function otgs_icons() {

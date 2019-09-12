@@ -1,9 +1,11 @@
 <?php
 
+use WCML\Twig_SimpleFunction;
+
 /**
  * Created by OnTheGo Systems
  */
-class WCML_Store_URLs_Translation_Statuses_UI extends WPML_Templates_Factory {
+class WCML_Store_URLs_Translation_Statuses_UI extends WCML_Templates_Factory {
 
 	private $base;
 	private $active_languages;

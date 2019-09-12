@@ -6,7 +6,7 @@ class OTGS_Installer_WP_Share_Local_Components_Setting_Hooks {
 	const TEMPLATE_RADIO    = 'share-local-data-setting-radio';
 
 	/**
-	 * @var OTGS_Installer_Twig_Template_Service
+	 * @var OTGS_Template_Service
 	 */
 	private $template_service;
 
@@ -16,7 +16,7 @@ class OTGS_Installer_WP_Share_Local_Components_Setting_Hooks {
 	private $setting;
 
 	public function __construct(
-		OTGS_Installer_Twig_Template_Service $template_service,
+		OTGS_Template_Service $template_service,
 		OTGS_Installer_WP_Share_Local_Components_Setting $setting
 	) {
 		$this->template_service = $template_service;

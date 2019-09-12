@@ -4,10 +4,13 @@ class WCML_Custom_Prices{
 
 	/** @var woocommerce_wpml */
     private $woocommerce_wpml;
+	/** @var wpdb */
+	private $wpdb;
 
-    public function __construct( woocommerce_wpml $woocommerce_wpml ){
-        $this->woocommerce_wpml = $woocommerce_wpml;
-    }
+	public function __construct( woocommerce_wpml $woocommerce_wpml, wpdb $wpdb ) {
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->wpdb             = $wpdb;
+	}
 
     public function add_hooks(){
 	    add_filter( 'init', array( $this, 'custom_prices_init' ) );
@@ -39,13 +42,12 @@ class WCML_Custom_Prices{
     }
 
     public function get_product_custom_prices( $product_id, $currency = false ){
-        global $wpdb;
 
         if( empty( $currency ) ){
             $currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
         }
 
-        if( get_option('woocommerce_currency') == $currency ){
+        if( wcml_get_woocommerce_currency_option() === $currency ){
             return false;
         }
 
@@ -70,44 +72,16 @@ class WCML_Custom_Prices{
 
             }
 
-            if( $this->is_date_range_set( $product_meta, $currency ) && !$this->is_on_sale_date_range( $product_meta, $currency ) ){
-	            $custom_prices[ '_sale_price' ] = '';
-            }
-
         }
 
         if(!isset($custom_prices['_price'])) return false;
 
         $current__price_value = $custom_prices['_price'];
 
-        // update sale price
-        if(isset($custom_prices['_sale_price']) && is_numeric($custom_prices['_sale_price']) ){
-            if(!empty($product_meta['_wcml_schedule_' . $currency][0])){
-                // custom dates
-                if( $this->is_date_range_set( $product_meta, $currency ) ){
-                    if( $this->is_on_sale_date_range( $product_meta, $currency ) ){
-                        $custom_prices['_price'] = $custom_prices['_sale_price'];
-                    }else{
-                        $custom_prices['_price'] = $custom_prices['_regular_price'];
-                    }
-                }else{
-                    $custom_prices['_price'] = $custom_prices['_sale_price'];
-                }
-
-            }else{
-                // inherit
-                if(!empty($product_meta['_sale_price_dates_from'][0]) && !empty($product_meta['_sale_price_dates_to'][0])){
-                    if( current_time('timestamp') > $product_meta['_sale_price_dates_from'][0] && current_time('timestamp') < $product_meta['_sale_price_dates_to'][0] ){
-                        $custom_prices['_price'] = $custom_prices['_sale_price'];
-                    }else{
-                        $custom_prices['_price'] = $custom_prices['_regular_price'];
-                    }
-                }else{
-                    $custom_prices['_price'] = $custom_prices['_sale_price'];
-                }
-            }
-
-        }
+	    if ( $this->is_date_range_set( $product_meta, $currency ) && ! $this->is_on_sale_date_range( $product_meta, $currency ) ) {
+		    $custom_prices['_sale_price'] = '';
+		    $custom_prices['_price']      = $custom_prices['_regular_price'];
+	    }
 
         if($custom_prices['_price'] != $current__price_value){
             update_post_meta($product_id, '_price_' . $currency, $custom_prices['_price']);
@@ -121,23 +95,23 @@ class WCML_Custom_Prices{
             if(empty($product_min_max_prices[$product_id])){
 
                 // get variation ids
-                $variation_ids = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d", $product_id));
+                $variation_ids = $this->wpdb->get_col($this->wpdb->prepare("SELECT ID FROM {$this->wpdb->posts} WHERE post_parent = %d", $product_id));
 
                 // variations with custom prices
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_wcml_custom_prices_status'",join(',', $variation_ids)));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_wcml_custom_prices_status'",join(',', $variation_ids)));
                 foreach($res as $row){
                     $custom_prices_enabled[$row->post_id] = $row->meta_value;
                 }
 
                 // REGULAR PRICES
                 // get custom prices
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_regular_price_" . $currency . "'",join(',', $variation_ids)));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_regular_price_" . $currency . "'",join(',', $variation_ids)));
                 foreach($res as $row){
                     $regular_prices[$row->post_id] = $row->meta_value;
                 }
 
                 // get default prices (default currency)
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_regular_price'",join(',', $variation_ids)));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_regular_price'",join(',', $variation_ids)));
                 foreach($res as $row){
                     $default_regular_prices[$row->post_id] = $row->meta_value;
                 }
@@ -151,13 +125,13 @@ class WCML_Custom_Prices{
 
                 // SALE PRICES
                 // get custom prices
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key=%s",join(',', $variation_ids),'_sale_price_'.$currency));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key=%s",join(',', $variation_ids),'_sale_price_'.$currency));
                 foreach($res as $row){
                     $custom_sale_prices[$row->post_id] = $row->meta_value;
                 }
 
                 // get default prices (default currency)
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_sale_price' AND meta_value <> ''",join(',', $variation_ids)));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_sale_price' AND meta_value <> ''",join(',', $variation_ids)));
                 foreach($res as $row){
                     $default_sale_prices[$row->post_id] = $row->meta_value;
                 }
@@ -172,13 +146,13 @@ class WCML_Custom_Prices{
 
                 // PRICES
                 // get custom prices
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key=%s",join(',', $variation_ids),'_price_'.$currency));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key=%s",join(',', $variation_ids),'_price_'.$currency));
                 foreach($res as $row){
                     $custom_prices_prices[$row->post_id] = $row->meta_value;
                 }
 
                 // get default prices (default currency)
-                $res = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_price'",join(',', $variation_ids)));
+                $res = $this->wpdb->get_results($this->wpdb->prepare("SELECT post_id, meta_value FROM {$this->wpdb->postmeta} WHERE post_id IN(%s) AND meta_key='_price'",join(',', $variation_ids)));
                 foreach($res as $row){
                     $default_prices[$row->post_id] = $row->meta_value;
                 }
@@ -240,18 +214,40 @@ class WCML_Custom_Prices{
 
 	private function is_date_range_set( $product_meta, $currency ) {
 
-		return isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
-		       $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
-		       isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
-		       $product_meta[ '_sale_price_dates_to_' . $currency ][0];
-    }
+		$current_currency_schedule = isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
+		                             $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
+		                             isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
+		                             $product_meta[ '_sale_price_dates_to_' . $currency ][0];
+
+		$default_currency_schedule = isset( $product_meta['_sale_price_dates_from'] ) &&
+		                             $product_meta['_sale_price_dates_from'][0] &&
+		                             isset( $product_meta['_sale_price_dates_to'] ) &&
+		                             $product_meta['_sale_price_dates_to'][0];
+
+		return $current_currency_schedule || $default_currency_schedule;
+	}
 
 	private function is_on_sale_date_range( $product_meta, $currency ) {
+
 		if (
 			isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
-			current_time( 'timestamp' ) > $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
 			isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
-			current_time( 'timestamp' ) < $product_meta[ '_sale_price_dates_to_' . $currency ][0]
+			$product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
+			$product_meta[ '_sale_price_dates_to_' . $currency ][0]
+		) {
+
+			if (
+				current_time( 'timestamp' ) > $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
+				current_time( 'timestamp' ) < $product_meta[ '_sale_price_dates_to_' . $currency ][0]
+			) {
+				return true;
+			}
+
+		} elseif (
+			isset( $product_meta['_sale_price_dates_from'] ) &&
+			isset( $product_meta['_sale_price_dates_to'] ) &&
+			current_time( 'timestamp' ) > $product_meta['_sale_price_dates_from'][0] &&
+			current_time( 'timestamp' ) < $product_meta['_sale_price_dates_to'][0]
 		) {
 			return true;
 		}
@@ -331,22 +327,21 @@ class WCML_Custom_Prices{
 
     // display products with custom prices only if enabled "Show only products with custom prices in secondary currencies" option on settings page
     public function filter_products_with_custom_prices( $filtered_posts ) {
-        global $wpdb;
 
         if( $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
             isset( $this->woocommerce_wpml->settings[ 'display_custom_prices' ]  ) &&
             $this->woocommerce_wpml->settings[ 'display_custom_prices' ] ){
 
             $client_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
-            $woocommerce_currency = get_option( 'woocommerce_currency' );
+            $woocommerce_currency = wcml_get_woocommerce_currency_option();
 
             if( $client_currency == $woocommerce_currency ){
                 return $filtered_posts;
             }
             $matched_products = array();
-            $matched_products_query = $wpdb->get_results( "
-	        	SELECT DISTINCT ID, post_parent, post_type FROM {$wpdb->posts}
-				INNER JOIN {$wpdb->postmeta} ON ID = post_id
+            $matched_products_query = $this->wpdb->get_results( "
+	        	SELECT DISTINCT ID, post_parent, post_type FROM {$this->wpdb->posts}
+				INNER JOIN {$this->wpdb->postmeta} ON ID = post_id
 				WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish' AND meta_key = '_wcml_custom_prices_status' AND meta_value = 1
 			", OBJECT_K );
 
@@ -392,9 +387,9 @@ class WCML_Custom_Prices{
                 foreach( $currencies as $code => $currency ){
                     $sale_price = wc_format_decimal( $_POST[ '_custom_sale_price' ][ $code ] );
                     $regular_price = wc_format_decimal( $_POST[ '_custom_regular_price' ][ $code ] );
-                    $date_from = isset( $_POST[ '_custom_sale_price_dates_from' ][ $code ] ) ? strtotime( $_POST[ '_custom_sale_price_dates_from' ][ $code ] ) : '';
-                    $date_to = isset( $_POST[ '_custom_sale_price_dates_to' ][ $code ] ) ? strtotime( $_POST[ '_custom_sale_price_dates_to' ][ $code ] ) : '';
-                    $schedule = $_POST[ '_wcml_schedule' ][ $code ];
+	                $schedule = $_POST[ '_wcml_schedule' ][ $code ];
+                    $date_from = $schedule && isset( $_POST[ '_custom_sale_price_dates_from' ][ $code ] ) ? strtotime( $_POST[ '_custom_sale_price_dates_from' ][ $code ] ) : '';
+                    $date_to = $schedule && isset( $_POST[ '_custom_sale_price_dates_to' ][ $code ] ) ? strtotime( $_POST[ '_custom_sale_price_dates_to' ][ $code ] ) : '';
 
 	                $custom_prices = apply_filters( 'wcml_update_custom_prices_values',
 		                array(

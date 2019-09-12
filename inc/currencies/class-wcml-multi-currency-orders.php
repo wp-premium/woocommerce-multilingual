@@ -411,7 +411,7 @@ class WCML_Multi_Currency_Orders {
 		if ( isset( $_COOKIE['_wcml_order_currency'] ) ) {
 			return $_COOKIE['_wcml_order_currency'];
 		} else {
-			return get_option( 'woocommerce_currency' );
+			return wcml_get_woocommerce_currency_option();
 		}
 
 	}

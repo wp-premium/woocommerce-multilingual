@@ -47,7 +47,7 @@ class WCML_Multi_Currency_Install {
 
 		$settings         = $this->woocommerce_wpml->get_settings();
 		$active_languages = $sitepress->get_active_languages();
-		$wc_currency      = $new_value ? $new_value : get_option( 'woocommerce_currency' );
+		$wc_currency      = $new_value ? $new_value : wcml_get_woocommerce_currency_option();
 
 		if ( $old_value !== $new_value ) {
 			$settings = WCML_Multi_Currency_Configuration::currency_options_update_default_currency( $settings, $old_value, $new_value );

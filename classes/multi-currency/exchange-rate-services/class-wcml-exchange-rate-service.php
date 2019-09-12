@@ -62,6 +62,13 @@ abstract class WCML_Exchange_Rate_Service {
 	public abstract function get_rates( $from, $to );
 
 	/**
+	 * @return bool
+	 */
+	public function is_key_required() {
+		return $this->requires_key;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function get_settings() {

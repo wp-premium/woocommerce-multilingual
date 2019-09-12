@@ -1,6 +1,8 @@
 <?php
 
-class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
+use WCML\Twig_SimpleFunction;
+
+class WCML_Multi_Currency_UI extends WCML_Templates_Factory {
 
     /**
      * @var woocommerce_wpml
@@ -42,9 +44,9 @@ class WCML_Multi_Currency_UI extends WPML_Templates_Factory {
         $this->woocommerce_wpml = $woocommerce_wpml;
         $this->sitepress = $sitepress;
 
-        $this->currencies       = $this->woocommerce_wpml->multi_currency->get_currencies();
+        $this->currencies       = $this->woocommerce_wpml->multi_currency->get_currencies( true );
         $this->wc_currencies    = get_woocommerce_currencies();
-        $this->wc_currency      = get_option( 'woocommerce_currency' );
+        $this->wc_currency      = wcml_get_woocommerce_currency_option();
 
         $this->load_custom_currency_option_boxes();
         $this->load_curency_switcher_option_boxes();

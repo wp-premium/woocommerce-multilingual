@@ -483,84 +483,86 @@ class WCML_Emails{
         return $locale;
     }
 
-    function show_language_links_for_wc_emails(){
+	function show_language_links_for_wc_emails() {
 
-        $emails_options = array(
-            'woocommerce_new_order_settings',
-            'woocommerce_cancelled_order_settings',
-            'woocommerce_failed_order_settings',
-            'woocommerce_customer_on_hold_order_settings',
-            'woocommerce_customer_processing_order_settings',
-            'woocommerce_customer_completed_order_settings',
-            'woocommerce_customer_refunded_order_settings',
-            'woocommerce_customer_invoice_settings',
-            'woocommerce_customer_note_settings',
-            'woocommerce_customer_reset_password_settings',
-            'woocommerce_customer_new_account_settings'
-        );
+		$emails_options = array(
+			'woocommerce_new_order_settings',
+			'woocommerce_cancelled_order_settings',
+			'woocommerce_failed_order_settings',
+			'woocommerce_customer_on_hold_order_settings',
+			'woocommerce_customer_processing_order_settings',
+			'woocommerce_customer_completed_order_settings',
+			'woocommerce_customer_refunded_order_settings',
+			'woocommerce_customer_invoice_settings',
+			'woocommerce_customer_note_settings',
+			'woocommerce_customer_reset_password_settings',
+			'woocommerce_customer_new_account_settings'
+		);
 
-	    $emails_options = apply_filters( 'wcml_emails_options_to_translate', $emails_options );
+		$emails_options = apply_filters( 'wcml_emails_options_to_translate', $emails_options );
 
-	    $text_keys = array(
-		    'subject',
-		    'heading',
-		    'subject_downloadable',
-		    'heading_downloadable',
-		    'subject_full',
-		    'subject_partial',
-		    'heading_full',
-		    'heading_partial',
-		    'subject_paid',
-		    'heading_paid'
-	    );
+		$text_keys = array(
+			'subject',
+			'heading',
+			'subject_downloadable',
+			'heading_downloadable',
+			'subject_full',
+			'subject_partial',
+			'heading_full',
+			'heading_partial',
+			'subject_paid',
+			'heading_paid'
+		);
 
-	    $text_keys = apply_filters( 'wcml_emails_text_keys_to_translate', $text_keys );
+		$text_keys = apply_filters( 'wcml_emails_text_keys_to_translate', $text_keys );
 
 
-        foreach( $emails_options as $emails_option ) {
+		foreach ( $emails_options as $emails_option ) {
 
-            $section_name = str_replace( 'woocommerce_', 'wc_email_', $emails_option );
-            $section_name = str_replace( '_settings', '', $section_name );
-            if( isset( $_GET['section'] ) && $_GET['section'] == $section_name ){
+			$section_prefix = apply_filters( 'wcml_emails_section_name_prefix', 'wc_email_', $emails_option );
 
-                $option_settings = get_option( $emails_option );
-                if( $option_settings ){
-	                foreach ($option_settings as $setting_key => $setting_value) {
-		                if ( in_array( $setting_key, $text_keys ) ) {
-			                $input_name = str_replace( '_settings', '', $emails_option ).'_'.$setting_key;
+			$section_name = str_replace( 'woocommerce_', $section_prefix, $emails_option );
+			$section_name = apply_filters( 'wcml_emails_section_name_to_translate', str_replace( '_settings', '', $section_name ) );
+			if ( isset( $_GET['section'] ) && $_GET['section'] == $section_name ) {
 
-			                $lang_selector = new WPML_Simple_Language_Selector($this->sitepress);
-			                $language = $this->woocommerce_wpml->strings->get_string_language( $setting_value, 'admin_texts_'.$emails_option, '['.$emails_option.']'.$setting_key );
-			                if( is_null( $language ) ) {
-				                $language = $this->sitepress->get_default_language();
-			                }
+				$option_settings = get_option( $emails_option );
+				if ( $option_settings ) {
+					foreach ( $option_settings as $setting_key => $setting_value ) {
+						if ( in_array( $setting_key, $text_keys ) ) {
+							$input_name = str_replace( '_settings', '', $emails_option ) . '_' . $setting_key;
 
-			                $lang_selector->render( array(
-					                'id' => $emails_option.'_'.$setting_key.'_language_selector',
-					                'name' => 'wcml_lang-'.$emails_option.'-'.$setting_key,
-					                'selected' => $language,
-					                'show_please_select' => false,
-					                'echo' => true,
-					                'style' => 'width: 18%;float: left'
-				                )
-			                );
+							$lang_selector = new WPML_Simple_Language_Selector( $this->sitepress );
+							$language      = $this->woocommerce_wpml->strings->get_string_language( $setting_value, 'admin_texts_' . $emails_option, '[' . $emails_option . ']' . $setting_key );
+							if ( is_null( $language ) ) {
+								$language = $this->sitepress->get_default_language();
+							}
 
-			                $st_page = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=admin_texts_'.$emails_option.'&search='.$setting_value );
-			                ?>
+							$lang_selector->render( array(
+									'id'                 => $emails_option . '_' . $setting_key . '_language_selector',
+									'name'               => 'wcml_lang-' . $emails_option . '-' . $setting_key,
+									'selected'           => $language,
+									'show_please_select' => false,
+									'echo'               => true,
+									'style'              => 'width: 18%;float: left'
+								)
+							);
+
+							$st_page = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=admin_texts_' . $emails_option . '&search=' . $setting_value );
+							?>
                             <script>
                                 var input = jQuery('input[name="<?php echo $input_name  ?>"]');
                                 if (input.length) {
                                     input.parent().append('<div class="translation_controls"></div>');
-                                    input.parent().find('.translation_controls').append('<a href="<?php echo $st_page ?>" style="margin-left: 10px"><?php _e('translations', 'woocommerce-multilingual') ?></a>');
-                                    jQuery('#<?php echo $emails_option.'_'.$setting_key.'_language_selector' ?>').prependTo(input.parent().find('.translation_controls'));
+                                    input.parent().find('.translation_controls').append('<a href="<?php echo $st_page ?>" style="margin-left: 10px"><?php _e( 'translations', 'woocommerce-multilingual' ) ?></a>');
+                                    jQuery('#<?php echo $emails_option . '_' . $setting_key . '_language_selector' ?>').prependTo(input.parent().find('.translation_controls'));
                                 }
                             </script>
-		                <?php }
-	                }
-                }
-            }
-        }
-    }
+						<?php }
+					}
+				}
+			}
+		}
+	}
 
     function set_emails_string_language(){
 

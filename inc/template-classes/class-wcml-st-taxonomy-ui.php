@@ -1,6 +1,6 @@
 <?php
 
-class WCML_St_Taxonomy_UI extends WPML_Templates_Factory {
+class WCML_St_Taxonomy_UI extends WCML_Templates_Factory {
 
     private $taxonomy_obj;
 

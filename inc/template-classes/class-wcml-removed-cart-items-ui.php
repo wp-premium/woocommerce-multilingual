@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Removed_Cart_Items_UI extends WPML_Templates_Factory {
+class WCML_Removed_Cart_Items_UI extends WCML_Templates_Factory {
 
     /**
      * @var woocommerce_wpml

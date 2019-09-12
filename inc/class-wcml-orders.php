@@ -384,7 +384,7 @@ class WCML_Orders {
     function update_order_currency( $meta_id, $object_id, $meta_key, $meta_value ){
 
         if( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT && get_post_type($object_id) == 'shop_order' && isset( $_GET['wc-ajax'] ) && $_GET['wc-ajax'] == 'checkout' ){
-            update_post_meta( $object_id, '_order_currency', get_woocommerce_currency() );
+            update_post_meta( $object_id, '_order_currency', wcml_get_woocommerce_currency_option() );
         }
 
     }

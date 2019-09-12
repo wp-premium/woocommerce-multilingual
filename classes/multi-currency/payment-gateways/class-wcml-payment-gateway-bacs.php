@@ -19,6 +19,7 @@ class WCML_Payment_Gateway_Bacs extends WCML_Payment_Gateway {
 			'gateway_id'        => $this->get_id(),
 			'gateway_title'     => $this->get_title(),
 			'current_currency'  => $this->current_currency,
+			'default_currency'  => $this->default_currency,
 			'gateway_settings'  => $this->get_setting( $this->current_currency ),
 			'active_currencies' => $this->get_active_currencies(),
 			'account_details'   => $this->get_gateway()->account_details,
@@ -38,10 +39,11 @@ class WCML_Payment_Gateway_Bacs extends WCML_Payment_Gateway {
 		$client_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 		$gateway_setting = $this->get_setting( $client_currency );
 
+		$allowed_accounts = array();
+
 		if ( $gateway_setting && 'all' !== $gateway_setting['value'] ) {
 
 			if( 'all_in' === $gateway_setting['value'] ){
-				$allowed_accounts = array();
 				$bacs_accounts_currencies = get_option( WCML_WC_Gateways::WCML_BACS_ACCOUNTS_CURRENCIES_OPTION, array() );
 				foreach ( $bacs_accounts_currencies as $account_key => $currency ){
 					if( $gateway_setting['currency'] === $currency ){

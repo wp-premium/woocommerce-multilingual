@@ -64,6 +64,7 @@ class WCML_Products{
 		add_filter( 'wpml_copy_from_original_custom_fields', array( $this, 'filter_excerpt_field_content_copy' ) );
 
 		add_filter( 'wpml_override_is_translator', array( $this, 'wcml_override_is_translator' ), 10, 3 );
+		add_filter( 'wpml_user_can_translate', array( $this, 'wcml_user_can_translate' ), 10, 2 );
 		add_filter( 'wc_product_has_unique_sku', array( $this, 'check_product_sku' ), 10, 3 );
 
 		add_filter( 'get_product_search_form', array( $this->sitepress, 'get_search_form_filter' ) );
@@ -137,25 +138,18 @@ class WCML_Products{
             if ( $product->is_downloadable() ) {
                 $is_downloadable = true;
             } elseif ( $this->is_variable_product( $product_id ) ) {
-	            $is_downloadable = $this->is_downloadable_variations( $this->woocommerce_wpml->sync_variations_data->get_product_variations( $product_id ) );
+                foreach( $product->get_available_variations() as $variation ){
+                    if( $variation['is_downloadable'] ){
+	                    $is_downloadable = true;
+	                    break;
+                    }
+                }
             }
             $this->wpml_cache->set( $cache_key, $is_downloadable );
         }
 
         return $is_downloadable;
-
     }
-
-	private function is_downloadable_variations( $variations ) {
-		if ( $variations && is_array( $variations ) ) {
-			$variation_ids = wp_list_pluck( $variations, 'ID' );
-			$sql           = 'SELECT count(*) FROM ' . $this->wpdb->prefix . 'postmeta WHERE post_id IN (' . wpml_prepare_in( $variation_ids, '%d' ) . ') AND meta_key = %s AND meta_value = %s ';
-
-			return (bool) $this->wpdb->get_var( $this->wpdb->prepare( $sql, '_downloadable', 'yes' ) );
-		}
-
-		return false;
-	}
 
     public function is_grouped_product($product_id){
         $get_variation_term_taxonomy_id = $this->wpdb->get_var( "SELECT tt.term_taxonomy_id FROM {$this->wpdb->terms} AS t LEFT JOIN {$this->wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id WHERE t.name = 'grouped'" );
@@ -286,14 +280,41 @@ class WCML_Products{
         <?php }
     }
 
-    public function wcml_override_is_translator( $is_translator, $user_id, $args ){
+	/**
+	 * @param bool  $is_translator
+	 * @param int   $user_id
+	 * @param array $args
+	 *
+	 * @return bool
+	 */
+	public function wcml_override_is_translator( $is_translator, $user_id, $args ) {
+		if ( current_user_can( 'wpml_operate_woocommerce_multilingual' ) ) {
+			if ( ! ( isset( $args['post_id'] ) && $args['post_id'] ) ) {
+				return true;
+			}
+			$wc_post_types = [ 'product', 'product_variation', 'shop_coupon', 'shop_order', 'shop_order_refund' ];
+			$post_type     = get_post_type( $args['post_id'] );
+			if ( in_array( $post_type, $wc_post_types, true ) ) {
+				return true;
+			}
+		}
 
-        if( current_user_can( 'wpml_operate_woocommerce_multilingual' ) ){
-            return true;
-        }
+		return $is_translator;
+	}
 
-        return $is_translator;
-    }
+	/**
+	 * @param bool    $user_can_translate
+	 * @param WP_User $user
+	 *
+	 * @return bool
+	 */
+	public function wcml_user_can_translate( $user_can_translate, $user ) {
+		if ( user_can( $user, 'wpml_operate_woocommerce_multilingual' ) ) {
+			return true;
+		}
+
+		return $user_can_translate;
+	}
 
     //product quickedit
     public function filter_product_actions( $actions, $post ){
@@ -456,7 +477,7 @@ class WCML_Products{
         {
 
             $client_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
-            $woocommerce_currency = get_option('woocommerce_currency');
+            $woocommerce_currency = wcml_get_woocommerce_currency_option();
 
             if( $client_currency != $woocommerce_currency ){
                 $args['meta_query'][] =  array(

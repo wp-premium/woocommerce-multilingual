@@ -2,7 +2,6 @@
 $baseDir = dirname( dirname( __FILE__ ) );
 
 return array(
-	'IOTGS_Installer_Template_Service'                       => $baseDir . '/includes/template-service/interface-iotgs-installer-template-service.php',
 	'Installer_Dependencies'                                 => $baseDir . '/includes/class-installer-dependencies.php',
 	'Installer_Theme_Class'                                  => $baseDir . '/includes/class-installer-theme.php',
 	'Installer_Upgrader_Skins'                               => $baseDir . '/includes/class-installer-upgrader-skins.php',
@@ -30,8 +29,12 @@ return array(
 	'OTGS_Installer_Source'                                  => $baseDir . '/includes/class-otgs-installer-source.php',
 	'OTGS_Installer_Source_Factory'                          => $baseDir . '/includes/class-otgs-installer-source-factory.php',
 	'OTGS_Installer_Subscription'                            => $baseDir . '/includes/class-otgs-installer-subscription.php',
-	'OTGS_Installer_Twig_Template_Service'                   => $baseDir . '/includes/template-service/class-otgs-installer-twig-template-service.php',
-	'OTGS_Installer_Twig_Template_Service_Loader'            => $baseDir . '/includes/template-service/class-otgs-installer-twig-template-service-loader.php',
+	'OTGS_Php_Template_Service_Loader'                       => $baseDir . '/includes/template-service/class-otgs-php-template-service-loader.php',
+	'OTGS_Template_Service_Factory'                          => $baseDir . '/includes/template-service/class-otgs-template-service-factory.php',
+	'OTGS_Php_Template_Service'                              => $baseDir . '/includes/template-service/class-otgs-php-template-service.php',
+	'OTGS_Template_Service'                                  => $baseDir . '/includes/template-service/interface-otgs-template-service.php',
+	'OTGS_Template_Service_Loader'                           => $baseDir . '/includes/template-service/interface-otgs-template-service-loader.php',
+	'OTGS_Template_Service_Php_Model'                        => $baseDir . '/includes/template-service/class-otgs-template-service-php-model.php',
 	'OTGS_Installer_Upgrade_Response'                        => $baseDir . '/includes/upgrade/class-otgs-installer-upgrade-response.php',
 	'OTGS_Installer_WP_Components_Hooks'                     => $baseDir . '/includes/class-otgs-installer-wp-components-hooks.php',
 	'OTGS_Installer_WP_Components_Sender'                    => $baseDir . '/includes/class-otgs-installer-wp-components-sender.php',
@@ -41,7 +44,6 @@ return array(
 	'OTGS_Installer_WP_Share_Local_Components_Setting'       => $baseDir . '/includes/class-otgs-installer-wp-share-local-components-setting.php',
 	'OTGS_Installer_WP_Share_Local_Components_Setting_Hooks' => $baseDir . '/includes/class-otgs-installer-wp-share-local-components-setting-hooks.php',
 	'OTGS_Installer_Subscription_Factory'                    => $baseDir . '/includes/class-otgs-installer-subscription-factory.php',
-	'OTGS_Twig_Autoloader'                                   => $baseDir . '/includes/class-otgs-twig-autoloader.php',
 	'Translation_Service_Info'                               => $baseDir . '/includes/class-translation-service-info.php',
 	'WP_Installer'                                           => $baseDir . '/includes/class-wp-installer.php',
 	'WP_Installer_API'                                       => $baseDir . '/includes/class-wp-installer-api.php',

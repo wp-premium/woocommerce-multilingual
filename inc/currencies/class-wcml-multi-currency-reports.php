@@ -104,7 +104,7 @@ class WCML_Multi_Currency_Reports {
                 });
             " );
 
-			$this->reports_currency = isset( $_COOKIE['_wcml_reports_currency'] ) ? $_COOKIE['_wcml_reports_currency'] : get_option( 'woocommerce_currency' );
+			$this->reports_currency = isset( $_COOKIE['_wcml_reports_currency'] ) ? $_COOKIE['_wcml_reports_currency'] : wcml_get_woocommerce_currency_option();
 			//validation
 			$orders_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
 			if ( ! isset( $orders_currencies[ $this->reports_currency ] ) ) {
@@ -191,39 +191,13 @@ class WCML_Multi_Currency_Reports {
 	* @return string
 	*/
 	public function filter_dashboard_status_widget_sales_query( $query ) {
-		$order_ids_list = $this->get_dashboard_currency_list_of_orders_ids();
-
-		if( $order_ids_list ){
-			$query['where'] .= " AND posts.ID IN (" . $order_ids_list . ") ";
-        }
-
-		return $query;
-	}
-
-	public function get_dashboard_currency_list_of_orders_ids() {
 
 		$currency = $this->woocommerce_wpml->multi_currency->admin_currency_selector->get_cookie_dashboard_currency();
 
-		$cache_key  = $currency . '_list_of_orders_ids';
-		$found      = false;
-		$orders_ids = $this->wpml_cache->get( $cache_key, $found );
+		$query['join'] .= " INNER JOIN {$this->wpdb->postmeta} AS currency_postmeta ON posts.ID = currency_postmeta.post_id";
+		$query['where'] .= $this->wpdb->prepare( " AND currency_postmeta.meta_key = '_order_currency' AND currency_postmeta.meta_value = %s", $currency );
 
-		if ( ! $found ) {
-			$order_ids_array = $this->wpdb->get_col(
-				$this->wpdb->prepare( "
-                        SELECT order_currency.post_id 
-                        FROM {$this->wpdb->postmeta} AS order_currency
-                        WHERE order_currency.meta_key = '_order_currency' 
-                            AND order_currency.meta_value = %s
-                    ", $currency
-				)
-			);
-			$orders_ids      = wpml_prepare_in( $order_ids_array, '%d' );
-
-			$this->wpml_cache->set( $cache_key, $orders_ids );
-		}
-
-		return $orders_ids;
+		return $query;
 	}
 
 }

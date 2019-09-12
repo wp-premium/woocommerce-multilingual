@@ -9,13 +9,13 @@ class OTGS_Installer_Plugins_Page_Notice {
 	private $plugins = array();
 
 	/**
-	 * @var OTGS_Installer_Twig_Template_Service
+	 * @var OTGS_Template_Service
 	 */
 	private $template_service;
 
 	private $plugin_finder;
 
-	public function __construct( OTGS_Installer_Twig_Template_Service $template_service, OTGS_Installer_Plugin_Finder $plugin_finder ) {
+	public function __construct( OTGS_Template_Service $template_service, OTGS_Installer_Plugin_Finder $plugin_finder ) {
 		$this->template_service = $template_service;
 		$this->plugin_finder = $plugin_finder;
 	}

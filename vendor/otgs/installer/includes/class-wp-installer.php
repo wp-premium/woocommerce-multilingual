@@ -52,10 +52,6 @@ class WP_Installer {
 
 	public function __construct() {
 
-		if ( ( ! is_admin() || ! is_user_logged_in() ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			return;
-		} //Only for admin
-
 		$this->settings = $this->get_settings();
 
 		add_action( 'admin_notices', array( $this, 'show_site_key_nags' ) );
@@ -121,7 +117,7 @@ class WP_Installer {
 		$this->_using_icl    = function_exists( 'wpml_site_uses_icl' ) && wpml_site_uses_icl();
 		$this->_wpml_version = defined( 'ICL_SITEPRESS_VERSION' ) ? ICL_SITEPRESS_VERSION : '';
 
-		if ( ! $this->is_installer_running_on_otgs_plugin() || ( $this->is_commercial_page() && $this->is_installer_running_on_otgs_plugin() ) ) {
+		if ( is_multisite() || ! $this->is_installer_running_on_otgs_plugin() || ( $this->is_commercial_page() && $this->is_installer_running_on_otgs_plugin() ) ) {
 			wp_enqueue_script( 'installer-admin', $this->res_url() . '/res/js/admin.js', array( 'jquery' ), $this->version() );
 			wp_enqueue_style( 'installer-admin', $this->res_url() . '/res/css/admin.css', array(), $this->version() );
 		}
@@ -741,7 +737,9 @@ class WP_Installer {
 
 		}
 
-		return apply_filters( 'otgs_installer_site_url', $site_url );
+		$filtered_site_url = filter_var( apply_filters( 'otgs_installer_site_url', $site_url ), FILTER_SANITIZE_URL );
+
+		return $filtered_site_url ? $filtered_site_url : $site_url;
 	}
 
 	/**
@@ -2299,11 +2297,13 @@ class WP_Installer {
 
 	public function setup_plugins_page_notices() {
 		$plugins                  = get_plugins();
-		$template_service         = new OTGS_Installer_Twig_Template_Service_Loader(
-			array( $this->plugin_path() . '/templates/components-setting/' )
+
+		$template_service = OTGS_Template_Service_Factory::create(
+			$this->plugin_path() . '/templates/php/components-setting/'
 		);
-		$local_components_setting = new OTGS_Installer_WP_Share_Local_Components_Setting();
-		$plugin_page_notice       = new OTGS_Installer_Plugins_Page_Notice( $template_service->get_service(), $this->get_plugin_finder() );
+
+
+		$plugin_page_notice       = new OTGS_Installer_Plugins_Page_Notice( $template_service, $this->get_plugin_finder() );
 
 		foreach ( $plugins as $plugin_id => $plugin ) {
 
@@ -2360,7 +2360,7 @@ class WP_Installer {
 										$display_subscription_notice = false;
 									}
 
-									if ( 'Toolset Types' === $name && $this->plugin_is_registered( 'wpml', $slug ) ) {
+									if ( in_array( $name, array( 'Toolset Types', 'Toolset Module Manager' ) ) && $this->plugin_is_registered( 'wpml', $slug ) ) {
 										$display_subscription_notice = false;
 									}
 								}

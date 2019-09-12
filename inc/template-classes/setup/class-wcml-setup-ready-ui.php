@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Setup_Ready_UI extends WPML_Templates_Factory {
+class WCML_Setup_Ready_UI extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
 
