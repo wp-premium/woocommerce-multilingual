@@ -7,9 +7,13 @@ class WCML_Page_Builders {
 	 */
 	private $sitepress;
 
-	function __construct( &$sitepress ) {
+	/**
+	 * WCML_Page_Builders constructor.
+	 *
+	 * @param SitePress $sitepress
+	 */
+	public function __construct( $sitepress ) {
 		$this->sitepress = $sitepress;
-
 	}
 
 	public function get_page_builders_string_packages( $product_id ) {

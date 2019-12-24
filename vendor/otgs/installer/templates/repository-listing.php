@@ -141,7 +141,7 @@
 
 	            <?php if(empty($expired)): ?>
 
-		            <div class="otgs-installer-registered clearfix">
+		            <div class="otgs-installer-registered wp-clearfix">
 									<span>
 				            <?php if($expires = $this->settings['repositories'][$repository_id]['subscription']['data']->expires): ?>
 					            <?php printf(__('%s is registered on this site. You will receive automatic updates until %s', 'installer'), $generic_product_name, date_i18n('F j, Y', strtotime($expires))); ?>

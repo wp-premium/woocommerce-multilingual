@@ -1,24 +1,31 @@
 <?php
 
-use WCML\Twig_SimpleFunction;
+use WPML\Core\Twig_SimpleFunction;
 
 class WCML_Custom_Currency_Options extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
     private $args;
 
-    function __construct( &$args, &$woocommerce_wpml ){
+	/**
+	 * WCML_Custom_Currency_Options constructor.
+	 *
+	 * @param array            $args
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $args, $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $functions = array(
-            new Twig_SimpleFunction( 'get_currency_symbol', array( $this, 'get_currency_symbol' ) ),
-        );
+		$functions = [
+			new Twig_SimpleFunction( 'get_currency_symbol', [ $this, 'get_currency_symbol' ] ),
+		];
 
-        parent::__construct( $functions );
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->args = $args;
+		parent::__construct( $functions );
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->args             = $args;
 
-        add_action( 'wcml_before_multi_currency_ui', array($this, 'render') );
-    }
+		add_action( 'wcml_before_multi_currency_ui', [ $this, 'render' ] );
+	}
 
     public function get_model(){
 
@@ -26,7 +33,7 @@ class WCML_Custom_Currency_Options extends WCML_Templates_Factory {
             array_keys( $this->args['currencies'] ), array( $this->args['default_currency'] ) );
         $current_currency = empty($this->args['currency_code']) ? current( $currencies_not_used ) : $this->args['currency_code'];
 
-        $exchange_rate_services =& $this->woocommerce_wpml->multi_currency->exchange_rate_services;
+        $exchange_rate_services = $this->woocommerce_wpml->multi_currency->exchange_rate_services;
         $exchange_rates_automatic = $exchange_rate_services->get_setting('automatic');
 
         if( $exchange_rates_automatic ){
@@ -145,7 +152,7 @@ class WCML_Custom_Currency_Options extends WCML_Templates_Factory {
 
         if( isset( $this->args['currencies'][$currency] ) ) {
 
-            $this->current_currency_for_preview =& $currency;
+            $this->current_currency_for_preview = $currency;
 
             add_filter( 'option_woocommerce_currency_pos', array($this, 'filter_currency_pos') );
 

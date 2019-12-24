@@ -1,12 +1,12 @@
 <?php
 
-use WCML\Twig_Environment;
-use WCML\Twig_Error_Syntax;
-use WCML\Twig_Error_Runtime;
-use WCML\Twig_Error_Loader;
-use WCML\Twig_LoaderInterface;
-use WCML\Twig_Loader_String;
-use WCML\Twig_Loader_Filesystem;
+use WPML\Core\Twig_Environment;
+use WPML\Core\Twig_Error_Syntax;
+use WPML\Core\Twig_Error_Runtime;
+use WPML\Core\Twig_Error_Loader;
+use WPML\Core\Twig_LoaderInterface;
+use WPML\Core\Twig_Loader_String;
+use WPML\Core\Twig_Loader_Filesystem;
 
 abstract class WCML_Templates_Factory extends WPML_Templates_Factory {
 

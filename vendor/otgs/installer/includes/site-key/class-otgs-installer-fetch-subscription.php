@@ -119,7 +119,12 @@ class OTGS_Installer_Fetch_Subscription {
 
 				do_action( 'installer_fetched_subscription_data', $data, $repository_id );
 			} else {
-				$this->store_log( $args, $api_url, $response->get_error_message() );
+				if ( is_wp_error( $response ) ) {
+					$response_message = $response->get_error_message();
+				} else {
+					$response_message = wp_remote_retrieve_response_message( $response );
+				}
+				$this->store_log( $args, $api_url, $response_message );
 				$this->logger->add_api_log( $body );
 			}
 

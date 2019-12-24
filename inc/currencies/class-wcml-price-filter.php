@@ -7,7 +7,12 @@ class WCML_Price_Filter {
 	 */
 	private $woocommerce_wpml;
 
-	public function __construct( woocommerce_wpml &$woocommerce_wpml ) {
+	/**
+	 * WCML_Price_Filter constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( woocommerce_wpml $woocommerce_wpml ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 	}
 

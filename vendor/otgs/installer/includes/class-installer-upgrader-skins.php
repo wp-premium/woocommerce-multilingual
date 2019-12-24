@@ -23,7 +23,7 @@ class Installer_Upgrader_Skins extends WP_Upgrader_Skin {
 
 	}
 
-	function feedback( $string ) {
+	function feedback( $string, ...$args ) {
 
 	}
 

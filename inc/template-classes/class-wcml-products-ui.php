@@ -8,11 +8,17 @@ class WCML_Products_UI extends WCML_Templates_Factory {
 	private $woocommerce_wpml;
 	private $sitepress;
 
-	function __construct( &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Products_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
+		$this->sitepress        = $sitepress;
 	}
 
 	public function get_model() {
@@ -202,7 +208,8 @@ class WCML_Products_UI extends WCML_Templates_Factory {
 			}else{
 				$products[ $key ]->formated_date = date(' Y/m/d', strtotime( $product->post_modified ) );
 			}
-
+			
+			$products[ $key ]->has_image = has_post_thumbnail($product->ID);
 		}
 
 		return array( 'products' => $products, 'products_count' => $products_info[ 'products_count' ] );

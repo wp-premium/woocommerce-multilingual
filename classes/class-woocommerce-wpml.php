@@ -39,7 +39,7 @@ class woocommerce_wpml {
 	public $coupons;
 	/** @var WCML_Locale */
 	public $locale;
-	/** @var WCML_Media */
+	/** @var WCML\Media\Wrapper\IMedia */
 	public $media;
 	/** @var WCML_Downloadable_Products */
 	public $downloadable;
@@ -160,7 +160,7 @@ class woocommerce_wpml {
 
 		new WCML_Upgrade();
 
-		$this->compatibility = new WCML_Compatibility( $sitepress, $this, $wpdb, new WPML_Element_Translation_Package() );
+		$this->compatibility = new WCML_Compatibility( $sitepress, $this, $wpdb, new WPML_Element_Translation_Package(), $wpml_post_translations );
 
 		$actions_that_need_mc = array(
 			'save-mc-options',
@@ -219,7 +219,7 @@ class woocommerce_wpml {
 		$this->store->add_hooks();
 		$this->strings = new WCML_WC_Strings( $this, $sitepress );
 		$this->strings->add_hooks();
-		$this->emails = new WCML_Emails( $this, $sitepress, $woocommerce, $wpdb );
+		$this->emails = new WCML_Emails( $this->strings, $sitepress, WC_Emails::instance(), $wpdb );
 		$this->emails->add_hooks();
 		$this->terms = new WCML_Terms( $this, $sitepress, $wpdb );
 		$this->terms->add_hooks();
@@ -240,7 +240,7 @@ class woocommerce_wpml {
 		$this->coupons = new WCML_Coupons( $this, $sitepress );
 		$this->coupons->add_hooks();
 		$this->locale = new WCML_Locale( $this, $sitepress );
-		$this->media  = new WCML_Media( $this, $sitepress, $wpdb );
+		$this->media  = WCML\Media\Wrapper\Factory::create( $this );
 		$this->media->add_hooks();
 		$this->downloadable = new WCML_Downloadable_Products( $this, $sitepress );
 		$this->downloadable->add_hooks();
@@ -323,7 +323,7 @@ class woocommerce_wpml {
 		if ( array_key_exists( $key, $this->settings ) ) {
 			return $this->settings[ $key ];
 		}
-		return $default;
+		return get_option( 'wcml_' . $key, $default );
 	}
 
 	/**
@@ -337,6 +337,21 @@ class woocommerce_wpml {
 		}
 		update_option( '_wcml_settings', $this->settings );
 	}
+
+	/**
+	 * @param string     $key
+	 * @param mixed      $value
+	 * @param bool|false $autoload It only applies to these settings stored as separate options.
+	 */
+	public function update_setting( $key, $value, $autoload = false ) {
+		if ( array_key_exists( $key, $this->settings ) ) {
+			$this->settings [ $key ] = $value;
+			$this->update_settings( $this->settings );
+		} else {
+			update_option( 'wcml_' . $key, $value, $autoload );
+		}
+	}
+
 
 	public function update_setting_ajx() {
 		$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );

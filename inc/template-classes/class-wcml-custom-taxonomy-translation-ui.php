@@ -10,7 +10,15 @@ class WCML_Custom_Taxonomy_Translation_UI extends WCML_Templates_Factory {
 	private $product_builtin_taxonomy_names = array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type', 'translation_priority' ); //'product_type' is used for tags (?)
 
 
-	public function __construct( &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Custom_Taxonomy_Translation_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
+
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;

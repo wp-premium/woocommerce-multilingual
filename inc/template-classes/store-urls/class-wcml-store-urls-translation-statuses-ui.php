@@ -1,6 +1,6 @@
 <?php
 
-use WCML\Twig_SimpleFunction;
+use WPML\Core\Twig_SimpleFunction;
 
 /**
  * Created by OnTheGo Systems
@@ -14,15 +14,25 @@ class WCML_Store_URLs_Translation_Statuses_UI extends WCML_Templates_Factory {
 	private $sitepress;
 
 
-	function __construct( $base, $active_languages, $value, &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Store_URLs_Translation_Statuses_UI constructor.
+	 *
+	 * @param string           $base
+	 * @param array            $active_languages
+	 * @param bool             $value
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $base, $active_languages, $value, $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
+
 		parent::__construct();
 
-		$this->base = $base;
+		$this->base             = $base;
 		$this->active_languages = $active_languages;
-		$this->value = $value;
+		$this->value            = $value;
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
-
+		$this->sitepress        = $sitepress;
 	}
 
 	public function init_twig_functions() {

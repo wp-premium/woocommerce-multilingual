@@ -15,25 +15,32 @@ class WCML_Exchange_Rates_UI extends WCML_Templates_Factory {
      */
     private $settings;
 
-    function __construct( $woocommerce_wpml ){
-        parent::__construct();
+	/**
+	 * WCML_Exchange_Rates_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml =& $woocommerce_wpml;
-        $services = $this->woocommerce_wpml->multi_currency->exchange_rate_services->get_services();
-        $this->settings = $this->woocommerce_wpml->multi_currency->exchange_rate_services->get_settings();
+		parent::__construct();
 
-        foreach( $services as $id => $service ){
-            $this->services[ $id ] = array(
-                'name'          => $service->get_name(),
-                'url'           => $service->get_url(),
-                'requires_key'  => $service->is_key_required(),
-                'api_key'       => $service->get_setting( 'api-key' ),
-                'last_error'    => $service->get_last_error()
-            );
-        }
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$services               = $this->woocommerce_wpml->multi_currency->exchange_rate_services->get_services();
+		$this->settings         = $this->woocommerce_wpml->multi_currency->exchange_rate_services->get_settings();
 
-    public function get_model(){
+		foreach ( $services as $id => $service ) {
+			$this->services[ $id ] = [
+				'name'         => $service->get_name(),
+				'url'          => $service->get_url(),
+				'requires_key' => $service->is_key_required(),
+				'api_key'      => $service->get_setting( 'api-key' ),
+				'last_error'   => $service->get_last_error(),
+			];
+		}
+	}
+
+	public function get_model(){
 
         $last_updated  = empty( $this->settings['last_updated'] ) ?
                             '<i>' . __( 'never', 'woocommerce-multilingual' ) . '</i>' :

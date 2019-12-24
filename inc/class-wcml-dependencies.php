@@ -2,9 +2,9 @@
 
 class WCML_Dependencies {
 
-	const MIN_WPML = '4.2.8';
-	const MIN_WPML_TM = '2.8.7';
-	const MIN_WPML_ST = '2.10.6';
+	const MIN_WPML = '4.3.5';
+	const MIN_WPML_TM = '2.9.1';
+	const MIN_WPML_ST = '3.0.5';
 	const MIN_WOOCOMMERCE = '3.3.0';
 
 	private $missing = array();
@@ -19,11 +19,6 @@ class WCML_Dependencies {
 	function __construct() {
 
 		if ( is_admin() ) {
-			add_action( 'wp_ajax_wcml_fix_strings_language', array(
-				$this,
-				'fix_strings_language'
-			) ); // TODO: remove after WPML release  with support strings in different languages
-
 			add_action( 'init', array( $this, 'check_wpml_config' ), 100 );
 		}
 
@@ -31,7 +26,7 @@ class WCML_Dependencies {
 	}
 
 	function check() {
-		global $woocommerce_wpml, $sitepress, $woocommerce;
+		global $sitepress, $woocommerce;
 
 		if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE || is_null( $sitepress ) || ! class_exists( 'SitePress' ) ) {
 			$this->missing['WPML'] = $this->tracking_link->generate( 'https://wpml.org/' );
@@ -57,7 +52,7 @@ class WCML_Dependencies {
 			$this->allok = false;
 		}
 
-		if ( ! defined( 'WPML_TM_VERSION' ) ) {
+		if ( ! defined( 'WPML_TM_VERSION' ) || ! has_action( 'wpml_loaded', 'wpml_tm_load' ) ) {
 			$this->missing['WPML Translation Management'] = $this->tracking_link->generate( 'https://wpml.org/' );
 			$this->allok                                  = false;
 		} elseif ( version_compare( WPML_TM_VERSION, self::MIN_WPML_TM, '<' ) ) {
@@ -83,9 +78,8 @@ class WCML_Dependencies {
 		}
 
 		if ( isset( $sitepress ) ) {
-			$this->allok = $this->allok & $sitepress->setup();
-		} else {
-			$this->load_twig_support();
+			// @todo Cover by tests, required for wcml-3037.
+			$this->allok = $this->allok && $sitepress->setup();
 		}
 
 		return $this->allok;
@@ -240,25 +234,6 @@ class WCML_Dependencies {
 		echo $this->err_message;
 	}
 
-	public function fix_strings_language() {
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_fix_strings_language' ) ) {
-			die( 'Invalid nonce' );
-		}
-
-		$ret = array();
-
-		$ret['_wpnonce'] = wp_create_nonce( 'icl_sw_form' );
-
-		$ret['success_1'] = '&nbsp;' . sprintf( __( 'Finished! You can visit the %sstrings translation%s screen to translate the strings now.', 'woocommerce-multilingual' ), '<a href="' . admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php' ) . '">', '</a>' );
-
-
-		echo json_encode( $ret );
-
-		exit;
-
-	}
-
 	public function check_wpml_config() {
 		global $sitepress_settings, $sitepress, $woocommerce_wpml;
 
@@ -377,17 +352,4 @@ class WCML_Dependencies {
 		return $url;
 	}
 
-	/**
-	 * The support for the Twig templates comes from WPML by default
-	 * When WPML is not active, WCML will load it
-	 */
-	private function load_twig_support() {
-
-		if ( ! class_exists( 'WCML\Twig_Autoloader' ) ) {
-			WCML\Twig_Autoloader::register();
-		}
-
-	}
-
 }
-  

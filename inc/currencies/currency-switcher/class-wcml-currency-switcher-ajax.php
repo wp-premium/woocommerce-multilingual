@@ -8,15 +8,18 @@ class WCML_Currency_Switcher_Ajax{
 
 	private $woocommerce_wpml;
 
-	public function __construct( &$woocommerce_wpml ) {
-
+	/**
+	 * WCML_Currency_Switcher_Ajax constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 
-		add_action( 'wp_ajax_wcml_currencies_order', array($this, 'wcml_currencies_order') );
-		add_action( 'wp_ajax_wcml_currencies_switcher_preview', array($this, 'wcml_currencies_switcher_preview') );
-		add_action( 'wp_ajax_wcml_currencies_switcher_save_settings', array($this, 'wcml_currencies_switcher_save_settings') );
-		add_action( 'wp_ajax_wcml_delete_currency_switcher', array($this, 'wcml_delete_currency_switcher') );
-
+		add_action( 'wp_ajax_wcml_currencies_order', [ $this, 'wcml_currencies_order' ] );
+		add_action( 'wp_ajax_wcml_currencies_switcher_preview', [ $this, 'wcml_currencies_switcher_preview' ] );
+		add_action( 'wp_ajax_wcml_currencies_switcher_save_settings', [ $this, 'wcml_currencies_switcher_save_settings' ] );
+		add_action( 'wp_ajax_wcml_delete_currency_switcher', [ $this, 'wcml_delete_currency_switcher' ] );
 	}
 
 	public function wcml_currencies_order() {
@@ -35,7 +38,7 @@ class WCML_Currency_Switcher_Ajax{
 		if ( !$nonce || !wp_verify_nonce( $nonce, 'wcml_currencies_switcher_save_settings' ) ) {
 			wp_send_json_error('Invalid nonce');
 		}
-		$wcml_settings =& $this->woocommerce_wpml->settings;
+		$wcml_settings     = $this->woocommerce_wpml->settings;
 		$switcher_settings = array();
 
 		// Allow some HTML in the currency switcher

@@ -29,15 +29,6 @@ class OTGS_Installer_Connection_Test {
 	}
 
 	/**
-	 * @param string $repo_id
-	 *
-	 * @return null|string
-	 */
-	public function get_products_status( $repo_id ) {
-		return $this->get_url_status( $this->repositories->get( $repo_id )->get_products_url() );
-	}
-
-	/**
 	 * @param string $plugin_id
 	 *
 	 * @return bool|string

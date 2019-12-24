@@ -2,7 +2,12 @@
 
 class WCML_Install{
 
-    public static function initialize( &$woocommerce_wpml, &$sitepress ) {
+	/**
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public static function initialize( $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
 
         if( is_admin() ) {
 
@@ -61,7 +66,6 @@ class WCML_Install{
 
                 $woocommerce_wpml->settings['set_up'] = 1;
                 $woocommerce_wpml->update_settings();
-
             }
 
             if ( empty( $woocommerce_wpml->settings['downloaded_translations_for_wc'] ) ) { //from 3.3.3
@@ -101,7 +105,10 @@ class WCML_Install{
 
     }
 
-    private static function set_language_information( &$sitepress ){
+	/**
+	 * @param SitePress $sitepress
+	 */
+	private static function set_language_information( $sitepress ) {
         global $wpdb;
 
         $def_lang = $sitepress->get_default_language();

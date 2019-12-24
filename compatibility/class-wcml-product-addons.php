@@ -171,38 +171,45 @@ class WCML_Product_Addons {
 
 		if ( $this->is_multi_currency_on() ) {
 
-			$client_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
-			$is_custom_prices_on = $this->is_product_custom_prices_on( $post_id );
-
 			foreach ( $addons as $add_id => $addon ) {
-
 				if ( isset( $addon['price'] ) && $addon['price'] ) {
-					if (
-						$is_custom_prices_on &&
-						isset( $addon[ 'price_' . $client_currency ] ) &&
-						$addon[ 'price_' . $client_currency ]
-					) {
-						$addons[ $add_id ]['price'] = $addon[ 'price_' . $client_currency ];
-					} else {
-						$addons[ $add_id ]['price'] = apply_filters( 'wcml_raw_price_amount', $addon['price'] );
-					}
+					$addons[ $add_id ]['price'] = $this->converted_addon_price( $addon, $post_id );
 				}
 
 				foreach ( $addon['options'] as $key => $option ) {
-					if (
-						$is_custom_prices_on &&
-						isset( $option[ 'price_' . $client_currency ] ) &&
-						$option[ 'price_' . $client_currency ]
-					) {
-						$addons[ $add_id ]['options'][ $key ]['price'] = $option[ 'price_' . $client_currency ];
-					} else {
-						$addons[ $add_id ]['options'][ $key ]['price'] = apply_filters( 'wcml_raw_price_amount', $option['price'] );
-					}
+					$addons[ $add_id ]['options'][ $key ]['price'] = $this->converted_addon_price( $option, $post_id );
 				}
 			}
 		}
 
 		return $addons;
+	}
+
+	/**
+	 * @param  array $addon
+	 * @param  int $post_id
+	 *
+	 * @return string
+	 */
+	private function converted_addon_price( $addon, $post_id ){
+
+		$addonData = wpml_collect( $addon );
+
+		$is_custom_prices_on = $this->is_product_custom_prices_on( $post_id );
+		$field = 'price_' . $this->woocommerce_wpml->multi_currency->get_client_currency();
+
+		if (
+			$is_custom_prices_on &&
+			$addonData->get( $field )
+		) {
+			return $addonData->get( $field );
+		}
+
+		if( wpml_collect( [ 'flat_fee', 'quantity_based' ] )->contains( $addonData->get( 'price_type' ) ) ) {
+			return apply_filters( 'wcml_raw_price_amount', $addonData->get( 'price' ) );
+		}
+
+		return $addonData->get( 'price' );
 	}
 
 	/**
@@ -401,7 +408,7 @@ class WCML_Product_Addons {
 	}
 
 	public function load_dialog_resources(){
-		wp_enqueue_script( 'wcml-dialogs', WCML_PLUGIN_URL . '/res/js/dialogs' . WCML_JS_MIN . '.js', array('jquery-ui-dialog'), WCML_VERSION );
+		wp_enqueue_script( 'wcml-dialogs', WCML_PLUGIN_URL . '/res/js/dialogs' . WCML_JS_MIN . '.js', array( 'jquery-ui-dialog', 'underscore' ), WCML_VERSION );
 	}
 
 	/**

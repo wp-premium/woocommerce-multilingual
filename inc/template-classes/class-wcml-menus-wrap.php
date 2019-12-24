@@ -14,10 +14,17 @@ class WCML_Menus_Wrap extends WCML_Templates_Factory {
     private $selected_attribute;
     private $selected_taxonomy;
 
-    function __construct( &$woocommerce_wpml ){
-        parent::__construct();
+	/**
+	 * WCML_Menus_Wrap constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml = &$woocommerce_wpml;
+		parent::__construct();
+
+		$this->woocommerce_wpml = $woocommerce_wpml;
 
         $this->product_attributes = $this->woocommerce_wpml->attributes->get_translatable_attributes();
         if( $this->product_attributes ){

@@ -79,3 +79,16 @@ if ( ! function_exists( 'wcml_get_woocommerce_currency_option' ) ) {
 		return get_option( 'woocommerce_currency' );
 	}
 }
+
+if ( ! function_exists( 'wcml_product_data_store_cpt' ) ) {
+	/**
+	 * It returns a single instance of the class.
+	 *
+	 * @return \WCML_Product_Data_Store_CPT
+	 *
+	 * @since 4.6.8
+	 */
+	function wcml_product_data_store_cpt() {
+		return new WCML_Product_Data_Store_CPT();
+	}
+}

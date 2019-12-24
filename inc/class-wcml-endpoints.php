@@ -85,7 +85,7 @@ class WCML_Endpoints {
 							icl_add_string_translation( $existing_string_id, $language_code, $translation_data['value'], ICL_STRING_TRANSLATION_COMPLETE );
 						}
 
-						wpml_unregister_string_multi( $existing_wcml_string_id );
+						wpml_unregister_string_multi( [ $existing_wcml_string_id ] );
 					}
 				}else{
 

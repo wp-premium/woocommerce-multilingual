@@ -193,12 +193,8 @@ class WCML_Store_Pages {
 			return;
 		}
 
-		//do not alter query_object and query_object_id (part 1 of 2)
-		global $wp_query;
-		$queried_object_original    = isset( $wp_query->queried_object ) ? $wp_query->queried_object : null;
-		$queried_object_id_original = isset( $wp_query->queried_object_id ) ? $wp_query->queried_object_id : null;
-
 		if (
+			current_theme_supports( 'woocommerce' ) &&
 			! empty( $this->shop_page ) &&
 			$this->shop_page->post_status == 'publish' &&
 			! empty( $this->front_page_id ) &&
@@ -206,11 +202,19 @@ class WCML_Store_Pages {
 			$q->get( 'page_id' ) !== $this->front_page_id &&
 			$this->shop_page_id == $q->get( 'page_id' )
 		) {
+			//do not alter query_object and query_object_id (part 1 of 2)
+			global $wp_query;
+			$queried_object_original    = isset( $wp_query->queried_object ) ? $wp_query->queried_object : null;
+			$queried_object_id_original = isset( $wp_query->queried_object_id ) ? $wp_query->queried_object_id : null;
+
 			$q->set( 'post_type', 'product' );
 			$q->set( 'page_id', '' );
 			if ( isset( $q->query['paged'] ) ) {
 				$q->set( 'paged', $q->query['paged'] );
 			}
+
+			// Define a variable so we know this is the front page shop later on.
+			wc_maybe_define_constant( 'SHOP_IS_ON_FRONT', true );
 
 			// Get the actual WP page to avoid errors
 			// This is hacky but works. Awaiting http://core.trac.wordpress.org/ticket/21096
@@ -221,25 +225,28 @@ class WCML_Store_Pages {
 			$wp_post_types['product']->ID         = $this->shop_page->ID;
 			$wp_post_types['product']->post_title = $this->shop_page->post_title;
 			$wp_post_types['product']->post_name  = $this->shop_page->post_name;
+			$wp_post_types['product']->post_type  = $this->shop_page->post_type;
+			$wp_post_types['product']->ancestors  = get_ancestors( $this->shop_page->ID, $this->shop_page->post_type );
 
 			// Fix conditional functions
 			$q->is_singular          = false;
 			$q->is_post_type_archive = true;
 			$q->is_archive           = true;
-		}
 
-		//do not alter query_object and query_object_id (part 2 of 2)
-		if ( is_null( $queried_object_original ) ) {
-			unset( $wp_query->queried_object );
-		} else {
-			$wp_query->queried_object = $queried_object_original;
-		}
-		if ( is_null( $queried_object_id_original ) ) {
-			unset( $wp_query->queried_object_id );
-		} else {
-			$wp_query->queried_object_id = $queried_object_id_original;
-		}
+			add_filter( 'post_type_archive_title', '__return_empty_string', 5 );
 
+			//do not alter query_object and query_object_id (part 2 of 2)
+			if ( is_null( $queried_object_original ) ) {
+				unset( $wp_query->queried_object );
+			} else {
+				$wp_query->queried_object = $queried_object_original;
+			}
+			if ( is_null( $queried_object_id_original ) ) {
+				unset( $wp_query->queried_object_id );
+			} else {
+				$wp_query->queried_object_id = $queried_object_id_original;
+			}
+		}
 	}
 
 

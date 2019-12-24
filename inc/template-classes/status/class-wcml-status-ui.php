@@ -10,13 +10,19 @@ class WCML_Status_UI extends WCML_Templates_Factory {
 	private $sitepress_settings;
 
 
-	function __construct( &$woocommerce_wpml, &$sitepress, $sitepress_settings ){
+	/**
+	 * WCML_Status_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 * @param array            $sitepress_settings
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress, $sitepress_settings ) {
 		parent::__construct();
 
-		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
+		$this->woocommerce_wpml   = $woocommerce_wpml;
+		$this->sitepress          = $sitepress;
 		$this->sitepress_settings = $sitepress_settings;
-
 	}
 
 	public function get_model() {

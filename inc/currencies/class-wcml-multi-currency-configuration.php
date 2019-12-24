@@ -40,12 +40,12 @@ class WCML_Multi_Currency_Configuration
 
 	}
 
-	public static function save_configuration()
-	{
+	public static function save_configuration() {
+		// @todo Cover by tests, required for wcml-3037.
 
 		if (check_admin_referer('wcml_mc_options', 'wcml_nonce')) {
 
-			$wcml_settings =& self::$woocommerce_wpml->settings;
+			$wcml_settings = self::$woocommerce_wpml->settings;
 
 			$wcml_settings['enable_multi_currency'] = isset($_POST['multi_currency']) ? intval($_POST['multi_currency']) : 0;
 			$wcml_settings['display_custom_prices'] = isset($_POST['display_custom_prices']) ? intval($_POST['display_custom_prices']) : 0;

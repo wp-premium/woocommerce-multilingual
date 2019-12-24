@@ -1,5 +1,7 @@
 <?php
 
+use WPML\Collect\Support\Collection;
+
 /**
  * Class WCML_WC_Shortcode_Product_Category
  * @since 4.2.2
@@ -38,33 +40,45 @@ class WCML_WC_Shortcode_Product_Category {
 			if ( isset( $args['product_cat'] ) ) {
 				$args = $this->translate_categories_using_simple_tax_query( $args );
 			} elseif ( ! empty( $atts['category'] ) && isset( $args['tax_query'] ) ) {
-
-				// Get translated category slugs, we need to remove WPML filter.
-				$filter_exists = remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );
-				$slugs = array_filter( explode(',', $atts['category'] ), 'trim' ) ;
-				$categories    = get_terms( array( 'slug' => $slugs, 'taxonomy' => 'product_cat' ) );
-
-				if ( $filter_exists ) {
-					add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 3 );
-				}
-
-				// Replace slugs in query arguments.
-				$terms = wp_list_pluck( $categories, 'slug' );
-
-				foreach ( $args['tax_query'] as $i => $tax_query ) {
-					$args['tax_query'][ $i ] = array();
-					if ( ! is_int( key( $tax_query ) ) ) {
-						$tax_query = array( $tax_query );
+				$getProductCategoryObject = function ( $slugOrId ) {
+					if ( is_numeric( $slugOrId ) ) {
+						return get_term( $slugOrId, 'product_cat' );
 					}
-					foreach ( $tax_query as $j => $condition ) {
-						if ( 'product_cat' === $condition['taxonomy'] ) {
-							$condition['terms'] = $terms;
-						}
-						$args['tax_query'][ $i ][] = $condition;
-					}
-				}
+
+					return get_term_by( 'slug', $slugOrId, 'product_cat' );
+				};
+
+				$categories = wpml_collect( explode( ',', $atts['category'] ) )
+					->map( function( $slugOrId ) { return trim( $slugOrId ); } )
+					->filter()
+					->map( $getProductCategoryObject );
+
+				$args = $this->replace_category_in_query_arguments( $args, $categories );
 			}
+		}
 
+		return $args;
+	}
+
+	/**
+	 * @param array      $args
+	 * @param Collection $terms
+	 *
+	 * @return array
+	 */
+	private function replace_category_in_query_arguments( array $args, Collection $terms ){
+
+		foreach ( $args['tax_query'] as $i => $tax_query ) {
+			$args['tax_query'][ $i ] = array();
+			if ( ! is_int( key( $tax_query ) ) ) {
+				$tax_query = array( $tax_query );
+			}
+			foreach ( $tax_query as $j => $condition ) {
+				if ( 'product_cat' === $condition['taxonomy'] ) {
+					$condition['terms'] = $terms->pluck( $condition['field'] )->toArray();
+				}
+				$args['tax_query'][ $i ][] = $condition;
+			}
 		}
 
 		return $args;

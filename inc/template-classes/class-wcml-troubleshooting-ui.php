@@ -8,7 +8,14 @@ class WCML_Troubleshooting_UI extends WCML_Templates_Factory {
 	private $woocommerce_wpml;
 
 
-	function __construct( &$woocommerce_wpml ){
+	/**
+	 * WCML_Troubleshooting_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
+
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
@@ -26,7 +33,7 @@ class WCML_Troubleshooting_UI extends WCML_Templates_Factory {
 			'prod_with_variations' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_with_variations(),
 			'prod_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_for_gallery_sync(),
 			'prod_categories_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_categories(),
-			'sync_stock_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_stock_sync(),
+			'product_and_variations_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_products_and_variations(),
 			'fix_relationships_count' => $this->woocommerce_wpml->troubleshooting->wcml_count_product_fix_relationships(),
 			'all_products_taxonomies' => $this->get_all_products_taxonomies(),
 			'product_type_sync_needed' => !empty( $translated_product_type_terms ) ? true : false,
@@ -47,6 +54,7 @@ class WCML_Troubleshooting_UI extends WCML_Templates_Factory {
 				'delete_terms' => __( 'Fix product_type taxonomy terms', 'woocommerce-multilingual' ),
 				'sync_stock' => __( 'Sync product stock quantity and status ( synchronizing min stock between translations )', 'woocommerce-multilingual' ),
 				'sync_relationships' => __( 'Fix translated variations relationships', 'woocommerce-multilingual' ),
+				'sync_deleted_meta' => __( 'Sync removed product meta from original products to translations', 'woocommerce-multilingual' ),
 				'product_type_fix_done' => __( 'Done!', 'woocommerce-multilingual' )
 			),
 			'nonces' => array(
@@ -58,6 +66,7 @@ class WCML_Troubleshooting_UI extends WCML_Templates_Factory {
 				'trbl_product_type_terms' => wp_nonce_field('trbl_product_type_terms', 'trbl_product_type_terms_nonce'),
 				'trbl_sync_stock' => wp_nonce_field('trbl_sync_stock', 'trbl_sync_stock_nonce'),
 				'fix_relationships' => wp_nonce_field( 'fix_relationships', 'fix_relationships_nonce' ),
+				'sync_deleted_meta' => wp_nonce_field( 'sync_deleted_meta', 'sync_deleted_meta_nonce' ),
 			)
 		);
 

@@ -74,14 +74,14 @@ class WCML_Admin_Currency_Selector {
 
 		$current_dashboard_currency = $this->get_cookie_dashboard_currency();
 
-		$wc_currencies = get_woocommerce_currencies();
-		$order_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
+		$wc_currencies  = get_woocommerce_currencies();
+		$currency_codes = $this->woocommerce_wpml->multi_currency->get_currency_codes();
 		?>
         <select id="dropdown_dashboard_currency" style="display: none; margin : 10px; ">
-			<?php if ( empty( $order_currencies ) ): ?>
+			<?php if ( empty( $currency_codes ) ): ?>
                 <option value=""><?php _e( 'Currency - no orders found', 'woocommerce-multilingual' ) ?></option>
 			<?php else: ?>
-				<?php foreach ( $order_currencies as $currency => $count ): ?>
+				<?php foreach ( $currency_codes as $currency ): ?>
 
                     <option value="<?php echo $currency ?>" <?php echo $current_dashboard_currency == $currency ? 'selected="selected"' : ''; ?>>
 						<?php echo $wc_currencies[ $currency ]; ?>
@@ -106,17 +106,14 @@ class WCML_Admin_Currency_Selector {
 
 	/**
 	 * Set dashboard currency cookie
+	 *
 	 * @param string $currency_code
 	 */
 	public function set_dashboard_currency( $currency_code = '' ) {
 		global $pagenow;
 
 		if ( ! $currency_code && 'index.php' === $pagenow && ! headers_sent() ) {
-			$order_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
-			$currency_code    = wcml_get_woocommerce_currency_option();
-			if ( ! isset( $order_currencies[ $currency_code ] ) ) {
-				$currency_code = key( $order_currencies );
-			}
+			$currency_code = $this->woocommerce_wpml->multi_currency->get_currency_code();
 		}
 
 		if ( $currency_code ) {

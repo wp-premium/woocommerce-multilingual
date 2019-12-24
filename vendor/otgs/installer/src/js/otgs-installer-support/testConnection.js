@@ -3,6 +3,7 @@
 class testConnection {
 
 	constructor( element ) {
+		this.element = element;
 		this.container = element.querySelector('.otgs-installer-support-test-connection');
 	}
 
@@ -22,7 +23,7 @@ class testConnection {
 		this.container.querySelectorAll( '.endpoint' ).forEach((el) => {
 
 			const status = el.querySelector('.status'),
-				nonce = this.container.querySelector('#otgs_installer_test_connection').value;
+				nonce = this.element.querySelector('#otgs_installer_test_connection').value;
 
 			this.resetStatus(status, cssClasses);
 

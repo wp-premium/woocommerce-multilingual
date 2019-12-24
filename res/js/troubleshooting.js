@@ -214,6 +214,33 @@ jQuery( function($) {
             });
         },
 
+        sync_deleted_meta: function(){
+            jQuery.ajax({
+                type : "post",
+                url : ajaxurl,
+                data : {
+                    action: "sync_deleted_meta",
+                    wcml_nonce: jQuery('#sync_deleted_meta_nonce').val()
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    var count_input = jQuery('#count_meta'),
+                        remaining = count_input.val();
+
+                    if( remaining == 0 ){
+                        WCML_Troubleshooting.run_next_troubleshooting_action();
+                        jQuery('.deleted_meta_status').html(0);
+                    }else{
+                        remaining = Math.max( remaining - 5, 0 );
+                        jQuery('.deleted_meta_status').html(remaining);
+                        count_input.val(remaining);
+                        WCML_Troubleshooting.sync_deleted_meta();
+                    }
+                }
+            });
+        },
+
         fix_product_type_terms: function(){
             jQuery.ajax({
                 type : "post",
@@ -248,6 +275,8 @@ jQuery( function($) {
                 WCML_Troubleshooting.sync_stock();
             }else if(jQuery('#wcml_fix_relationships').is(':checked') && parseInt( jQuery('#count_relationships').val() ) !== 0 ){
                 WCML_Troubleshooting.fix_translated_variations_relationships();
+            }else if(jQuery('#wcml_sync_deleted_meta').is(':checked') && parseInt( jQuery('#count_meta').val() ) !== 0 ){
+                WCML_Troubleshooting.sync_deleted_meta();
             }else{
                 jQuery('#wcml_trbl').removeAttr('disabled');
                 jQuery('.spinner').hide();

@@ -69,7 +69,7 @@
                 <label>
                     <input type="checkbox" id="wcml_sync_stock" />
                     {{ strings.sync_stock }}
-                    <span class="stock_status">{{ sync_stock_count }}</span>
+                    <span class="stock_status">{{ product_and_variations_count }}</span>
                     <span>{{ strings.left }}</span>
                 </label>
             </li>
@@ -82,13 +82,22 @@
                 </label>
             </li>
             <li>
+                <label>
+                    <input type="checkbox" id="wcml_sync_deleted_meta" />
+                    {{ strings.sync_deleted_meta }}
+                    <span class="deleted_meta_status">{{ product_and_variations_count }}</span>
+                    <span>{{ strings.left }}</span>
+                </label>
+            </li>
+            <li>
                 <button type="button" class="button-secondary" id="wcml_trbl">{{ strings.start }}</button>
                 <input id="count_prod_variat" type="hidden" value="{{ prod_with_variations }}"/>
                 <input id="count_prod" type="hidden" value="{{ prod_count }}"/>
                 <input id="count_galleries" type="hidden" value="{{ prod_count }}"/>
                 <input id="count_categories" type="hidden" value="{{ prod_categories_count }}"/>
                 <input id="count_terms" type="hidden" value="{{ terms_count }}"/>
-                <input id="count_stock" type="hidden" value="{{ sync_stock_count }}"/>
+                <input id="count_stock" type="hidden" value="{{ product_and_variations_count }}"/>
+                <input id="count_meta" type="hidden" value="{{ product_and_variations_count }}"/>
                 <input id="count_relationships" type="hidden" value="{{ fix_relationships_count }}"/>
                 <input id="sync_galerry_page" type="hidden" value="0"/>
                 <input id="sync_category_page" type="hidden" value="0"/>
@@ -100,6 +109,7 @@
                 {{ nonces.trbl_duplicate_terms|raw }}
                 {{ nonces.trbl_sync_stock|raw }}
                 {{ nonces.fix_relationships|raw }}
+                {{ nonces.sync_deleted_meta|raw }}
             </li>
         </ul>
         {% if product_type_sync_needed %}

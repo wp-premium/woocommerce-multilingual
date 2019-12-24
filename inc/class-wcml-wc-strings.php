@@ -480,7 +480,7 @@ class WCML_WC_Strings {
 				}
 
 				$mo->import_from_file( $mo_file );
-				$this->mo_files[ $language ] = &$mo->entries;
+				$this->mo_files[ $language ] = $mo->entries;
 			}
 
 			if ( in_array( $string, array( 'product', 'product-category', 'product-tag' ) ) ) {

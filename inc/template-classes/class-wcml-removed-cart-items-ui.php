@@ -19,9 +19,18 @@ class WCML_Removed_Cart_Items_UI extends WCML_Templates_Factory {
      */
     private $woocommerce;
 
-    function __construct( &$args, &$woocommerce_wpml, &$sitepress, $woocommerce ){
+	/**
+	 * WCML_Removed_Cart_Items_UI constructor.
+	 *
+	 * @param array            $args
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 * @param WooCommerce      $woocommerce
+	 */
+    public function __construct( $args, $woocommerce_wpml, $sitepress, $woocommerce ) {
+	    // @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml =& $woocommerce_wpml;
+	    $this->woocommerce_wpml = $woocommerce_wpml;
         $this->args             = $args;
         $this->sitepress        = $sitepress;
         $this->woocommerce      = $woocommerce;

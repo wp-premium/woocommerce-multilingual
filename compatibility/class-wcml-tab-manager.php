@@ -203,9 +203,7 @@ class WCML_Tab_Manager {
 	 * @param $lang
 	 */
 	function refresh_text_domain( $lang ) {
-		unload_textdomain( 'woocommerce' );
 		$this->sitepress->switch_lang( $lang );
-		$this->woocommerce->load_plugin_textdomain();
 	}
 
 	/**
@@ -403,9 +401,7 @@ class WCML_Tab_Manager {
 			$current_language = $this->sitepress->get_current_language();
 			foreach ( $orig_prod_tabs as $key => $prod_tab ) {
 				if ( 'core' === $prod_tab['type'] ) {
-					unload_textdomain( 'woocommerce' );
 					$this->sitepress->switch_lang( $lang );
-					$this->woocommerce->load_plugin_textdomain();
 					$title = __( $prod_tab['title'], 'woocommerce' );
 					if ( $prod_tab['title'] !== $title ) {
 						$data[ 'coretab_' . $prod_tab['id'] . '_title' ]['translation'] = $title;
@@ -420,9 +416,7 @@ class WCML_Tab_Manager {
 						}
 					}
 
-					unload_textdomain( 'woocommerce' );
 					$this->sitepress->switch_lang( $current_language );
-					$this->woocommerce->load_plugin_textdomain();
 				}
 			}
 		}

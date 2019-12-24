@@ -70,7 +70,7 @@ class WCML_Product_Gallery_Filter implements IWPML_Action {
 
 		}
 
-		return $image_ids ? $image_ids : $value;
+		return $image_ids ? [ $image_ids ] : $value;
 	}
 
 }
