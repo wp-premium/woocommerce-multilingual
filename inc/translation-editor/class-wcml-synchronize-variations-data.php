@@ -90,15 +90,21 @@ class WCML_Synchronize_Variations_Data{
         }
     }
 
-    /*
-    * sync product variations
-    * $product_id - original product id
-    * $tr_product_id - translated product id
-    * $lang - trnsl language
-    * $data - array of values (when we save original product this array is empty, but when we update translation in this array we have price values and etc.)     *
-    * */
-    public function sync_product_variations( $product_id, $tr_product_id, $lang, $data = false, $trbl = false ){
+	/**
+	 * @param int $product_id
+	 * @param int $tr_product_id
+	 * @param string $lang
+	 * @param array $args
+	 */
+    public function sync_product_variations( $product_id, $tr_product_id, $lang, $args = [] ){
         global $wpml_post_translations;
+
+	    $default_args = array(
+		    'editor_translations' => array(),
+		    'is_troubleshooting'  => false,
+		    'is_duplicate'        => false,
+	    );
+	    $args = wp_parse_args( $args, $default_args );
 
         $is_variable_product = $this->woocommerce_wpml->products->is_variable_product( $product_id );
 
@@ -166,20 +172,24 @@ class WCML_Synchronize_Variations_Data{
                 }
 
                 //sync description
-                if( isset( $data[ md5( '_variation_description'.$original_variation_id ) ] ) ){
-                    update_post_meta( $variation_id, '_variation_description', $data[ md5( '_variation_description'.$original_variation_id ) ] );
+	            if( $args['is_duplicate'] ){
+		            update_post_meta( $variation_id, '_variation_description', get_post_meta( $original_variation_id, '_variation_description', true ) );
+	            }
+
+                if( isset( $args['editor_translations'][ md5( '_variation_description'.$original_variation_id ) ] ) ){
+                    update_post_meta( $variation_id, '_variation_description', $args['editor_translations'][ md5( '_variation_description'.$original_variation_id ) ] );
                 }
 
 	            //sync media
 	            $this->woocommerce_wpml->media->sync_variation_thumbnail_id( $original_variation_id, $variation_id, $lang );
 
 	            //sync file_paths
-                $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_variation_id, $variation_id, $data );
+                $this->woocommerce_wpml->downloadable->sync_files_to_translations( $original_variation_id, $variation_id, $args['editor_translations'] );
 
                 //sync taxonomies
                 $this->sync_variations_taxonomies( $original_variation_id, $variation_id, $lang );
 
-                $this->duplicate_variation_data( $original_variation_id, $variation_id, $data, $lang, $trbl );
+                $this->duplicate_variation_data( $original_variation_id, $variation_id, $args['editor_translations'], $lang, $args['is_troubleshooting'] );
 
                 $this->delete_removed_variation_attributes( $product_id, $variation_id );
 
@@ -309,6 +319,8 @@ class WCML_Synchronize_Variations_Data{
                     }
                 }
             }
+	        $wcml_data_store = wcml_product_data_store_cpt();
+	        $wcml_data_store->update_lookup_table_data( $variation_id );
         }
     }
 

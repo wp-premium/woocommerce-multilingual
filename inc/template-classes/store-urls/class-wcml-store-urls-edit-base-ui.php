@@ -11,14 +11,23 @@ class WCML_Store_URLs_Edit_Base_UI extends WCML_Templates_Factory {
 	private $sitepress;
 
 
-	function __construct( $base, $language, &$woocommerce_wpml, &$sitepress){
+	/**
+	 * WCML_Store_URLs_Edit_Base_UI constructor.
+	 *
+	 * @param string           $base
+	 * @param string           $language
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $base, $language, $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
+
 		parent::__construct();
 
-		$this->base = $base;
-		$this->language = $language;
+		$this->base             = $base;
+		$this->language         = $language;
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
-
+		$this->sitepress        = $sitepress;
 	}
 
 	public function get_model() {

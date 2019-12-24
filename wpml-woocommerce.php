@@ -7,20 +7,33 @@
  * Author URI: http://www.onthegosystems.com/
  * Text Domain: woocommerce-multilingual
  * Requires at least: 4.7
- * Tested up to: 5.2.1
- * Version: 4.6.7
+ * Tested up to: 5.3
+ * Version: 4.7.6
  * Plugin Slug: woocommerce-multilingual
  * WC requires at least: 3.3.0
- * WC tested up to: 3.7.0
+ * WC tested up to: 3.8.0
  *
  * @package WCML
+ * @author  OnTheGoSystems
  */
 
 if ( defined( 'WCML_VERSION' ) ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.6.7' );
+require_once 'vendor/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-php-version-check.php'; // We cannot use composer here.
+
+$wpml_php_version_check = new WPML_PHP_Version_Check(
+	'5.6',
+	'WooCommerce Multilingual',
+	__FILE__,
+	'woocommerce-multilingual'
+);
+if ( ! $wpml_php_version_check->is_ok() ) {
+	return;
+}
+
+define( 'WCML_VERSION', '4.7.6' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -33,11 +46,7 @@ require WCML_PLUGIN_PATH . '/inc/installer-loader.php';
 require WCML_PLUGIN_PATH . '/inc/wcml-core-functions.php';
 require WCML_PLUGIN_PATH . '/inc/wcml-switch-lang-request.php';
 
-if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ) {
-	require WCML_PLUGIN_PATH . '/vendor/autoload.php';
-} else {
-	require WCML_PLUGIN_PATH . '/vendor/autoload_52.php';
-}
+require WCML_PLUGIN_PATH . '/vendor/autoload.php';
 
 if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists( 'SitePress' ) ) {
 	global $sitepress;
@@ -62,20 +71,25 @@ if ( WPML_Core_Version_Check::is_ok( WCML_PLUGIN_PATH . '/wpml-dependencies.json
  * Load WooCommerce Multilingual after WPML is loaded
  */
 function wcml_loader() {
+	\WPML\Container\share( \WCML\Container\Config::getSharedInstances() );
+
 	$xdomain_data = new WCML_xDomain_Data( new WPML_Cookie() );
 	$xdomain_data->add_hooks();
 
 	$loaders = array(
 		'WCML_Privacy_Content_Factory',
 		'WCML_ATE_Activate_Synchronization',
+		\WCML\RewriteRules\Hooks::class,
+		\WCML\Email\Settings\Hooks::class,
+		\WCML\Email\OrderItems\Hooks::class,
 	);
 
 	if (
 		( defined( 'ICL_SITEPRESS_VERSION' ) && defined( 'WPML_MEDIA_VERSION' ) )
 		|| ( defined( 'ICL_SITEPRESS_VERSION' )
-		     && version_compare( ICL_SITEPRESS_VERSION, '4.0.0', '>=' )
-		     && version_compare( ICL_SITEPRESS_VERSION, '4.0.4', '<' )
-		     && ! defined( 'WPML_MEDIA_VERSION' )
+			 && version_compare( ICL_SITEPRESS_VERSION, '4.0.0', '>=' )
+			 && version_compare( ICL_SITEPRESS_VERSION, '4.0.4', '<' )
+			 && ! defined( 'WPML_MEDIA_VERSION' )
 		)
 	) {
 		$loaders[] = 'WCML_Product_Image_Filter_Factory';
@@ -93,11 +107,16 @@ if ( $wcml_rest_api->is_rest_api_request() ) {
 	add_action( 'wpml_before_init', array( $wcml_rest_api, 'remove_wpml_global_url_filters' ), 0 );
 }
 
-// Load WooCommerce Multilingual when WPML is NOT active.
 add_action( 'plugins_loaded', 'load_wcml_without_wpml', 10000 );
+
+/**
+ * Load WooCommerce Multilingual when WPML is NOT active.
+ */
 function load_wcml_without_wpml() {
 	if ( ! did_action( 'wpml_loaded' ) ) {
 		global $woocommerce_wpml;
 		$woocommerce_wpml = new woocommerce_wpml();
 	}
 }
+
+add_action( 'plugins_loaded', 'load_wcml_without_wpml', 10000 );

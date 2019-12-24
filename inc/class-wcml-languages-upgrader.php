@@ -7,7 +7,6 @@ class WCML_Languages_Upgrader{
     function __construct(){
 
         add_action( 'icl_update_active_languages', array( $this, 'download_woocommerce_translations_for_active_languages' ) );
-        add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_for_update' ), 11 );
         add_filter( 'upgrader_pre_download', array( $this, 'version_update' ), 10, 2 );
         add_action( 'admin_notices', array( $this, 'translation_upgrade_notice' ) );
         add_action( 'wp_ajax_hide_wcml_translations_message', array($this, 'hide_wcml_translations_message') );
@@ -93,46 +92,6 @@ class WCML_Languages_Upgrader{
         }
 
     }
-
-
-    /*
-     * Check for WC language updates
-     *
-     * @param  object $data Transient update data
-     *
-     * @return object
-     */
-    function check_for_update( $data ){
-        global $sitepress;
-
-        $active_languages = $sitepress->get_active_languages();
-        $current_language = $sitepress->get_current_language();
-
-        foreach( $active_languages as $language ){
-            if( $language['code'] == 'en' )
-                continue;
-
-            $locale = $sitepress->get_locale( $language['code'] );
-
-            if ( $this->has_available_update( $locale ) && isset( $data->translations ) ) {
-
-                $data->translations[] = array(
-                    'type'       => 'plugin',
-                    'slug'       => 'woocommerce',
-                    'language'   => $locale,
-                    'version'    => WC_VERSION,
-                    'updated'    => date( 'Y-m-d H:i:s' ),
-                    'package'    => $this->get_language_pack_uri( $locale ),
-                    'autoupdate' => 1
-                );
-
-            }
-
-        }
-
-        return $data;
-    }
-
 
     function get_language_pack_uri( $locale, $version = false ){
 

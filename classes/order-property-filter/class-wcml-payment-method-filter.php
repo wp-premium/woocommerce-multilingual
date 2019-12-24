@@ -12,6 +12,7 @@ class WCML_Payment_Method_Filter {
 	}
 
 	public function payment_method_string( $title, $object_id, $meta_key ) {
+
 		if ( '_payment_method_title' === $meta_key && !empty( $title ) && $object_id && 'shop_order' === $this->get_post_type( $object_id ) ) {
 			$payment_gateway = $this->get_payment_gateway( $object_id );
 
@@ -23,7 +24,15 @@ class WCML_Payment_Method_Filter {
 			}
 
 			if( $payment_gateway ){
-				$title = icl_translate( 'woocommerce', $payment_gateway->id . '_gateway_title', $payment_gateway->title );
+				$title = icl_translate( 'admin_texts_woocommerce_gateways', $payment_gateway->id . '_gateway_title', $payment_gateway->title );
+
+				if( $title === $payment_gateway->title ){
+					$title = __( $payment_gateway->title, 'woocommerce' );
+
+					if ( 'cheque' === $payment_gateway->id && $title === $payment_gateway->title ) {
+						$translated_string = _x( $payment_gateway->title, 'Check payment method', 'woocommerce' );
+					}
+				}
 			}
 		}
 

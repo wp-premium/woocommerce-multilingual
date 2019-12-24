@@ -12,7 +12,7 @@
 
 	    <?php echo wp_kses_post( $model->tester->nonce ); ?>
 
-        <span class="clearfix"></span>
+        <span class="wp-clearfix"></span>
     </div>
 
     <hr>
@@ -27,9 +27,8 @@
                 <li><span class="dashicons  <?php echo esc_attr( $icon_class ); ?> status"></span> <?php echo wp_kses_post( $requirement->name ) ?></li>
 	        <?php } ?>
         </ul>
-	    <?php echo wp_kses_post( $model->tester->nonce ); ?>
 
-        <span class="clearfix"></span>
+        <span class="wp-clearfix"></span>
     </div>
 
     <hr>

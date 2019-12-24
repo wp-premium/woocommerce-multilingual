@@ -47,6 +47,7 @@ class OTGS_Installer_Plugin_Finder {
 						'repo'              => $repo_key,
 						'id'                => $plugin_id,
 						'channel'           => $plugin['channel'],
+						'tested'            => isset( $plugin['tested'] ) ? $plugin['tested'] : null,
 					) );
 				}
 			}

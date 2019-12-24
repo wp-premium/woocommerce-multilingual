@@ -152,7 +152,7 @@ class WCML_Product_Bundles {
 				}
 
 				if ( isset( $item_meta['default_variation_attributes'] ) ) {
-					$default_variation_attributes = $this->translate_default_variation_attributes( $item_meta['default_variation_attributes'], $target_lang );
+					$default_variation_attributes = $this->translate_default_variation_attributes( $item_meta['default_variation_attributes'], $target_lang, $item_meta['product_id'], $translated_product_id );
 					$this->product_bundles_items->update_item_meta( $translated_item, 'default_variation_attributes', $default_variation_attributes );
 				}
 
@@ -217,19 +217,25 @@ class WCML_Product_Bundles {
 	/**
 	 * @param array $original_default_variation_attributes
 	 * @param string $target_lang
+	 * @param int $product_id
+	 * @param int $translated_product_id
 	 *
 	 * @return array
 	 */
-	public function translate_default_variation_attributes( $original_default_variation_attributes, $target_lang ) {
+	public function translate_default_variation_attributes( $original_default_variation_attributes, $target_lang, $product_id, $translated_product_id ) {
 		$default_variation_attributes = array();
 
 		if ( is_array( $original_default_variation_attributes ) ) {
 			foreach ( $original_default_variation_attributes as $attribute_taxonomy => $attribute_slug ) {
-				$attribute_term_id            = $this->woocommerce_wpml->terms->wcml_get_term_id_by_slug( $attribute_taxonomy, $attribute_slug );
-				$translated_attribute_term_id = apply_filters( 'translate_object_id', $attribute_term_id, $attribute_taxonomy, true, $target_lang );
-				$translated_term              = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $translated_attribute_term_id, $attribute_taxonomy );
+				if ( 'pa_' === substr( $attribute_taxonomy, 0, 3 ) ) {
+					$attribute_term_id            = $this->woocommerce_wpml->terms->wcml_get_term_id_by_slug( $attribute_taxonomy, $attribute_slug );
+					$translated_attribute_term_id = apply_filters( 'translate_object_id', $attribute_term_id, $attribute_taxonomy, true, $target_lang );
+					$translated_term              = $this->woocommerce_wpml->terms->wcml_get_term_by_id( $translated_attribute_term_id, $attribute_taxonomy );
 
-				$default_variation_attributes[ $attribute_taxonomy ] = $translated_term->slug;
+					$default_variation_attributes[ $attribute_taxonomy ] = $translated_term->slug;
+				}else{
+					$default_variation_attributes[ $attribute_taxonomy ] = $this->woocommerce_wpml->attributes->get_custom_attr_translation( $product_id, $translated_product_id, $attribute_taxonomy, $attribute_slug );
+				}
 			}
 		}
 
@@ -659,7 +665,7 @@ class WCML_Product_Bundles {
 
 			$translated_bundle_data = $this->get_product_bundle_data( $translated_bundle_id );
 
-			$bundle_id =& $job->original_doc_id;
+			$bundle_id = $job->original_doc_id;
 
 			$bundle_data = $this->get_product_bundle_data( $bundle_id );
 

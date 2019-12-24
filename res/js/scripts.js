@@ -134,6 +134,24 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
+    /**
+     * Function to display larger image on hover while you are in product list.
+     **/
+
+    $(document).ready(function() {
+        $('.original-image').mousemove(function(e) {
+            $img = $("#" + $(this).data('image-id'));
+            $img.show(200);
+            $img.offset({
+                top: e.pageY - 100,
+                left: e.pageX + 15
+            });
+        }).mouseleave(function() {
+            $img = $("#" + $(this).data('image-id'));
+            $img.hide(200);
+        });
+    });
+
 
 });
 

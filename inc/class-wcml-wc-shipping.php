@@ -5,16 +5,19 @@ class WCML_WC_Shipping{
     private $current_language;
     private $sitepress;
 
-    function __construct( &$sitepress ){
+	/**
+	 * WCML_WC_Shipping constructor.
+	 *
+	 * @param SitePress $sitepress
+	 */
+	public function __construct( $sitepress ) {
+		$this->sitepress = $sitepress;
 
-        $this->sitepress = $sitepress;
-
-        $this->current_language = $this->sitepress->get_current_language();
-        if( $this->current_language == 'all' ){
-            $this->current_language = $this->sitepress->get_default_language();
-        }
-
-    }
+		$this->current_language = $this->sitepress->get_current_language();
+		if ( 'all' === $this->current_language ) {
+			$this->current_language = $this->sitepress->get_default_language();
+		}
+	}
 
     function add_hooks(){
 
@@ -27,6 +30,7 @@ class WCML_WC_Shipping{
         add_filter('woocommerce_rate_label',array($this,'translate_woocommerce_rate_label'));
         add_filter( 'pre_update_option_woocommerce_flat_rate_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
         add_filter( 'pre_update_option_woocommerce_international_delivery_settings', array( $this, 'update_woocommerce_shipping_settings_for_class_costs' ) );
+        add_filter( 'woocommerce_shipping_flat_rate_instance_option', array( $this, 'get_original_shipping_class_rate' ), 10, 3 );
 
         $this->shipping_methods_filters();
     }
@@ -98,6 +102,9 @@ class WCML_WC_Shipping{
     function translate_shipping_methods_in_package( $available_methods ){
 
         foreach($available_methods as $key => $method){
+			/**
+			 * @since 4.6.5
+			 */
         	if( apply_filters( 'wcml_translate_shipping_method_in_package', true, $key, $method ) ){
 		        $available_methods[$key]->label =  $this->translate_shipping_method_title( $method->label, $key );
 	        }
@@ -246,5 +253,23 @@ class WCML_WC_Shipping{
 
         return $inst_settings;
     }
+
+	/**
+	 * @param string $rate
+	 * @param string $class_name
+	 * @param WC_Shipping_Method $shipping_method
+	 *
+	 * @return string
+	 */
+	public function get_original_shipping_class_rate( $rate, $class_name, $shipping_method ){
+		if( !$rate && 'class_cost_' === substr( $class_name, 0, 11 ) ){
+			$original_class_id = $this->sitepress->term_translations()->get_original_element( substr( $class_name, 11 ) );
+			if( $original_class_id && isset( $shipping_method->instance_settings[ 'class_cost_'.$original_class_id ] ) ){
+				return $shipping_method->instance_settings[ 'class_cost_'.$original_class_id ];
+			}
+		}
+
+		return $rate;
+	}
 
 }

@@ -61,6 +61,29 @@
 
     </div>
 
+    <div class="wcml-section">
+
+        <div class="wcml-section-header">
+            <h3>
+                {{ form.media_synchronization.heading }}
+                <i class="otgs-ico-help wcml-tip" data-tip="{{ form.media_synchronization.tip }}"></i>
+            </h3>
+        </div>
+
+        <div class="wcml-section-content">
+
+            <ul>
+                <li>
+                    <input type="checkbox" name="sync_media" value="1"
+                            {% if form.media_synchronization.sync_media.value == 1 %} checked="checked"{% endif %} id="wcml_sync_media" />
+                    <label for="wcml_sync_media">{{ form.media_synchronization.sync_media.label }}</label>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
 
     <div class="wcml-section">
 

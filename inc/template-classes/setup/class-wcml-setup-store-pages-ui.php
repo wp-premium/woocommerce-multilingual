@@ -6,14 +6,22 @@ class WCML_Setup_Store_Pages_UI extends WCML_Templates_Factory {
     private $sitepress;
     private $next_step_url;
 
-    function __construct( &$woocommerce_wpml, &$sitepress, $next_step_url ){
-        parent::__construct();
+	/**
+	 * WCML_Setup_Store_Pages_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 * @param string           $next_step_url
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress, $next_step_url ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml = &$woocommerce_wpml;
-        $this->sitepress = &$sitepress;
-        $this->next_step_url = $next_step_url;
+		parent::__construct();
 
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+		$this->next_step_url    = $next_step_url;
+	}
 
     public function get_model(){
 

@@ -36,6 +36,9 @@ class WP_Installer {
 
 	private $components_setting;
 
+	/** @var bool $repositories_already_refreshed */
+	private $repositories_already_refreshed = false;
+
 	/**
 	 * @var OTGS_Installer_Logger_Storage
 	 */
@@ -195,11 +198,13 @@ class WP_Installer {
     }
 
 	public function log( $message ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		WP_Filesystem();
-		global $wp_filesystem;
-		if ( defined( 'WPML_INSTALLER_LOGGING' ) && WPML_INSTALLER_LOGGING ) {
-			$wp_filesystem->put_contents( $this->plugin_path() . '/installer.log', current_time( 'mysql' ) . "\t" . $message . "\n" );
+		if ( file_exists( ABSPATH . 'wp-admin/includes/file.php' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+			global $wp_filesystem;
+			if ( defined( 'WPML_INSTALLER_LOGGING' ) && WPML_INSTALLER_LOGGING ) {
+				$wp_filesystem->put_contents( $this->plugin_path() . '/installer.log', current_time( 'mysql' ) . "\t" . $message . "\n" );
+			}
 		}
 	}
 
@@ -539,7 +544,7 @@ class WP_Installer {
 		}
 		$_settings = base64_encode( $_settings );
 
-		update_option( 'wp_installer_settings', $_settings );
+		update_option( 'wp_installer_settings', $_settings, 'no' );
 
 		if ( is_multisite() && is_main_site() && isset( $this->settings['repositories'] ) ) {
 			$network_settings = array();
@@ -806,46 +811,58 @@ class WP_Installer {
 	}
 
 	public function load_repositories_list() {
-		global $wp_installer_instances;
+		$config_file = $this->get_xml_config_file();
 
-		foreach ( $wp_installer_instances as $instance ) {
+		if ( $config_file ) {
+			$repos = simplexml_load_file( $config_file );
 
-			if ( file_exists( dirname( $instance['bootfile'] ) . '/repositories.xml' ) ) {
-				$config_file = dirname( $instance['bootfile'] ) . '/repositories.xml';
+			if ( $repos ) {
+				foreach ( $repos as $repo ) {
+					$id = strval( $repo->id );
 
-				if ( file_exists( dirname( $instance['bootfile'] ) . '/repositories.sandbox.xml' ) ) {
-					$config_file = dirname( $instance['bootfile'] ) . '/repositories.sandbox.xml';
-					add_filter( 'https_ssl_verify', '__return_false' );
-				}
-
-				$repos = simplexml_load_file( $config_file );
-
-				if ( $repos ) {
-					foreach ( $repos as $repo ) {
-						$id = strval( $repo->id );
-
-						$data['api-url']  = strval( $repo->apiurl );
-						$data['products'] = strval( $repo->products );
-
-						// excludes rule;
-						if ( isset( $this->config['repositories_exclude'] ) && in_array( $id, $this->config['repositories_exclude'] ) ) {
-							continue;
-						}
-
-						// includes rule;
-						if ( isset( $this->config['repositories_include'] ) && ! in_array( $id, $this->config['repositories_include'] ) ) {
-							continue;
-						}
-
-						$this->repositories[ $id ] = $data;
-						$this->set_predefined_config( $id, 'api-url', 'API_URL' );
-						$this->set_predefined_config( $id, 'products', 'PRODUCTS' );
+					// excludes rule;
+					if ( isset( $this->config['repositories_exclude'] ) && in_array( $id, $this->config['repositories_exclude'] ) ) {
+						continue;
 					}
-				}
+					// includes rule;
+					if ( isset( $this->config['repositories_include'] ) && ! in_array( $id, $this->config['repositories_include'] ) ) {
+						continue;
+					}
 
+					$data['api-url']  = strval( $repo->apiurl );
+
+					$this->repositories[ $id ] = $data;
+					$this->set_predefined_config( $id, 'api-url', 'API_URL' );
+				}
 			}
 		}
+	}
 
+	/**
+	 * @return string|null
+	 */
+	public function get_xml_config_file() {
+		$file_name         = 'repositories.xml';
+		$sandbox_file_name = 'repositories.sandbox.xml';
+
+		if ( file_exists( $this->get_config_file_path( $sandbox_file_name ) ) ) {
+			add_filter( 'https_ssl_verify', '__return_false' );
+
+			return $this->get_config_file_path( $sandbox_file_name );
+		}
+
+		if ( file_exists( $this->get_config_file_path( $file_name ) ) ) {
+			return $this->get_config_file_path( $file_name );
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_config_file_path( $file_name ) {
+		return __DIR__ . '/../' . $file_name;
 	}
 
 	/**
@@ -880,16 +897,14 @@ class WP_Installer {
 
 	}
 
-	public function refresh_repositories_data() {
-		static $checked = false;
+	public function refresh_repositories_data( $bypass_bucket = false ) {
 
-		if ( defined( 'OTGS_DISABLE_AUTO_UPDATES' ) && OTGS_DISABLE_AUTO_UPDATES && empty( $_GET['force-check'] ) || $checked ) {
+		if ( defined( 'OTGS_DISABLE_AUTO_UPDATES' ) && OTGS_DISABLE_AUTO_UPDATES && empty( $_GET['force-check'] ) || $this->repositories_already_refreshed ) {
 
 			if ( empty( $this->settings['repositories'] ) && $this->is_repositories_page() ) {
 
 				foreach ( $this->repositories as $id => $data ) {
 					$repository_names[] = $id;
-
 				}
 
 				$error = sprintf( __( "Installer cannot display the products information because the automatic updating for %s was explicitly disabled with the configuration below (usually in wp-config.php):", 'installer' ), strtoupper( join( ', ', $repository_names ) ) );
@@ -897,33 +912,47 @@ class WP_Installer {
 				$error .= sprintf( __( "In order to see the products information, please run the %smanual updates check%s to initialize the products list or (temporarily) remove the above code.", 'installer' ), '<a href="' . admin_url( 'update-core.php' ) . '">', '</a>' );
 
 				$this->register_admin_message( $error, 'error' );
-
-
 			}
 
 			return;
 		}
 
-		$checked = true;
+		$this->repositories_already_refreshed = true;
+
+		try{
+			$repositories_config = new OTGS_Products_Config_Xml( $this->get_xml_config_file() );
+        } catch ( RuntimeException $exception ) {
+			// @TODO: Any exception to frontend.
+			return;
+        }
 
 		foreach ( $this->repositories as $id => $data ) {
+			$products_manager = OTGS_Products_Manager_Factory::create(
+				$repositories_config,
+                $this->get_logger_storage()
+            );
 
-			$response = wp_remote_get( $data['products'] );
+			$products_url = $products_manager->get_products_url(
+				$id,
+				$this->get_repository_site_key( $id ),
+				$this->get_installer_site_url( $id ),
+				$bypass_bucket
+			);
+
+			$response = wp_remote_get( $products_url );
 
 			if ( is_wp_error( $response ) ) {
 				// http fallback
-				$data['products'] = preg_replace( "@^https://@", 'http://', $data['products'] );
-				$response         = wp_remote_get( $data['products'] );
+				$products_url = preg_replace( "@^https://@", 'http://', $products_url );
+				$response         = wp_remote_get( $products_url );
 			}
 
 			if ( is_wp_error( $response ) ) {
 
 				$error = sprintf( __( "Installer cannot contact our updates server to get information about the available products and check for new versions. If you are seeing this message for the first time, you can ignore it, as it may be a temporary communication problem. If the problem persists and your WordPress admin is slowing down, you can disable automated version checks. Add the following line to your wp-config.php file:", 'installer' ), strtoupper( $id ) );
 				$error .= '<br /><br /><code>define("OTGS_DISABLE_AUTO_UPDATES", true);</code>';
-
 				$this->register_admin_message( $error, 'error' );
-
-				$this->store_log( $data['products'], null, OTGS_Installer_Logger_Storage::COMPONENT_REPOSITORIES, $error );
+				$this->store_log( $products_url, null, OTGS_Installer_Logger_Storage::COMPONENT_REPOSITORIES, $error );
 
 				continue;
 			}
@@ -941,12 +970,8 @@ class WP_Installer {
 						$this->_pre_1_8_backwards_compatibility( $this->settings );
 					}
 				}
-
 			}
-
-			$this->log( sprintf( "Checked for %s updates: %s", $id, $data['products'] ) );
-
-
+			$this->log( sprintf( "Checked for %s updates: %s", $id, $products_url ) );
 		}
 
 		// cleanup
@@ -959,10 +984,10 @@ class WP_Installer {
 			}
 		}
 
+		delete_site_transient( 'update_plugins' );
+
 		$this->settings['last_repositories_update'] = time();
-
 		$this->save_settings();
-
 	}
 
 	/**
@@ -2886,7 +2911,7 @@ class WP_Installer {
 
 		return $this->logger_storage;
 	}
-	
+
 	public function get_api_debug() {
 		return $this->api_debug;
 	}

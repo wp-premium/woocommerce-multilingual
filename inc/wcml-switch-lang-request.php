@@ -50,7 +50,7 @@ class WCML_Switch_Lang_Request{
     }
 
     /**
-     * @return string language code stored in the user's _icl_current_language cookie
+	 * @return string language code stored in the user's wp-wpml_current_language cookie
      */
     public function get_cookie_lang() {
         global $wpml_language_resolution;
@@ -65,7 +65,7 @@ class WCML_Switch_Lang_Request{
 
     public function get_cookie_name() {
 
-        return '_icl_current_language';
+		return 'wp-wpml_current_language';
     }
 
     /**

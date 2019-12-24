@@ -51,9 +51,15 @@
 					<tr>
 						<td class="thumb column-thumb">
 							<a href="{{ product.edit_post_link|raw }}">
-								<img width="150" height="150" src="{{ product.post_thumbnail }}" class="wp-post-image" >
+								<img width="150" height="150" src="{{ product.post_thumbnail }}" class="wp-post-image original-image" data-image-id="thumbnail-{{ product.ID }}" >
 							</a>
 						</td>
+
+						{# Conndition to check if we have thumbnail. If true the larger image appears #}
+						{% if product.has_image %}
+							<img id="thumbnail-{{ product.ID }}" src="{{ product.post_thumbnail }}" class="mouse-hovered">
+						{% endif %}
+
 						<td class="wpml-col-title  wpml-col-title-flag">
 							{% if product.post_parent != 0 %} &#8212; {% endif %}
 							<strong>

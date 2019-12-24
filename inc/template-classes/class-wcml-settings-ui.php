@@ -1,6 +1,6 @@
 <?php
 
-use WCML\Twig_SimpleFunction;
+use WPML\Core\Twig_SimpleFunction;
 
 class WCML_Settings_UI extends WCML_Templates_Factory {
 
@@ -15,23 +15,23 @@ class WCML_Settings_UI extends WCML_Templates_Factory {
      * @param woocommerce_wpml $woocommerce_wpml
      * @param SitePress $sitepress
      */
-    function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ){
+	function __construct( woocommerce_wpml $woocommerce_wpml, Sitepress $sitepress ) {
 
-	    $functions = array(
-		    new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) )
-	    );
+		$functions = array(
+			new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) )
+		);
 
-	    parent::__construct( $functions );
+		parent::__construct( $functions );
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress        = $sitepress;
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+	}
 
-	public function wp_do_action( $hook ){
+	public function wp_do_action( $hook ) {
 		do_action( $hook );
 	}
 
-    public function get_model(){
+	public function get_model(){
 
         $model = array(
             'form' => array(
@@ -48,6 +48,15 @@ class WCML_Settings_UI extends WCML_Templates_Factory {
                         'value' => $this->woocommerce_wpml->settings['products_sync_order'],
                         'label' => __('Sync products and product taxonomies order.', 'woocommerce-multilingual')
                     ),
+                ),
+
+                'media_synchronization' => array(
+	                'heading'    => __( 'Products Media Synchronization', 'woocommerce-multilingual' ),
+	                'tip'        => __( 'Configure thumbnail and gallery synchronization to translations.', 'woocommerce-multilingual' ),
+	                'sync_media' => array(
+		                'value' => $this->woocommerce_wpml->get_setting( 'sync_media', true ),
+		                'label' => __( 'Display original images on the translated product front page if images not specified', 'woocommerce-multilingual' )
+	                )
                 ),
 
                 'file_sync' => array(

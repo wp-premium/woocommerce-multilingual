@@ -54,6 +54,7 @@ class OTGS_Installer_Upgrade_Response {
 			$response->new_version    = $plugin->get_version();
 			$response->upgrade_notice = '';
 			$response->url            = $plugin->get_url();
+			$response->tested         = $plugin->get_tested();
 
 			if ( $subscription->get_site_key() ) {
 				$response->package = $this->append_site_key_to_download_url(
@@ -125,16 +126,6 @@ class OTGS_Installer_Upgrade_Response {
 
 		$url_params['site_key'] = $key;
 		$url_params['site_url'] = $site_url;
-		$package_source         = $this->source_factory->create()->get();
-
-		// Add extra parameters for custom Installer packages
-		if ( $package_source ) {
-			$extra = $this->get_extra_url_parameters( $package_source );
-			if ( ! empty( $extra['repository'] ) && $extra['repository'] == $repository_id ) {
-				unset( $extra['repository'] );
-				$url_params = array_merge( $url_params, $extra );
-			}
-		}
 
 		$url = add_query_arg( $url_params, $url );
 
@@ -146,7 +137,6 @@ class OTGS_Installer_Upgrade_Response {
 		}
 
 		return $url;
-
 	}
 
 	private function get_extra_url_parameters( $source ) {

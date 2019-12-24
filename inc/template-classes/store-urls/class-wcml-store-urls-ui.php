@@ -9,11 +9,17 @@ class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 	private $sitepress;
 	private $active_languages;
 
-	function __construct( &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Store_URLs_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
+		$this->sitepress        = $sitepress;
 		$this->active_languages = $this->sitepress->get_active_languages();
 	}
 

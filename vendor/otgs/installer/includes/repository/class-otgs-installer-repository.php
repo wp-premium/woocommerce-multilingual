@@ -7,7 +7,6 @@ class OTGS_Installer_Repository {
 	private $packages;
 	private $product_name;
 	private $api_url;
-	private $products_url;
 
 	public function __construct( array $params = array() ) {
 		foreach ( get_object_vars( $this ) as $property => $value ) {
@@ -53,13 +52,6 @@ class OTGS_Installer_Repository {
 	 */
 	public function get_subscription() {
 		return $this->subscription;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function get_products_url() {
-		return $this->products_url;
 	}
 
 	/**

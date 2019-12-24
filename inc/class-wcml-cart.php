@@ -60,10 +60,10 @@ class WCML_Cart {
 
 			add_filter( 'woocommerce_cart_item_permalink', array( $this, 'cart_item_permalink' ), 10, 2 );
 			add_filter( 'woocommerce_paypal_args', array( $this, 'filter_paypal_args' ) );
-			add_filter( 'woocommerce_add_to_cart_sold_individually_quantity', array(
+			add_filter( 'woocommerce_add_to_cart_sold_individually_found_in_cart', array(
 				$this,
 				'add_to_cart_sold_individually_exception'
-			), 10, 5 );
+			), 10, 4 );
 
 			$this->localize_flat_rates_shipping_classes();
 		}
@@ -184,7 +184,7 @@ class WCML_Cart {
 		if ( $return ) {
 			return array( 'prevent_switching' => $html );
 		} else {
-			echo json_encode( array( 'prevent_switching' => $html ) );
+			wp_send_json_success( [ 'prevent_switching' => $html ] );
 		}
 
 		return true;
@@ -273,7 +273,6 @@ class WCML_Cart {
 
 	public function wcml_refresh_fragments() {
 		WC()->cart->calculate_totals();
-		$this->woocommerce_wpml->locale->wcml_refresh_text_domain();
 	}
 
 	/*
@@ -318,8 +317,8 @@ class WCML_Cart {
 				if ( ! is_null( $tr_variation_id ) ) {
 					$cart->cart_contents[ $key ]['product_id']   = intval( $tr_product_id );
 					$cart->cart_contents[ $key ]['variation_id'] = intval( $tr_variation_id );
-					$cart->cart_contents[ $key ]['data']->set_id( intval( $tr_product_id ) );
-					$cart->cart_contents[ $key ]['data']->post = get_post( $tr_product_id );
+					$cart->cart_contents[ $key ]['data']->set_id( intval( $tr_variation_id ) );
+					$cart->cart_contents[ $key ]['data']->post = get_post( $tr_variation_id );
 				}
 			} else {
 				if ( ! is_null( $tr_product_id ) ) {
@@ -586,37 +585,34 @@ class WCML_Cart {
 		return $args;
 	}
 
-	public function add_to_cart_sold_individually_exception( $qt, $quantity, $product_id, $variation_id, $cart_item_data ) {
+	public function add_to_cart_sold_individually_exception( $found_in_cart, $product_id, $variation_id, $cart_item_data ) {
 
 		$post_id = $product_id;
 		if ( $variation_id ) {
 			$post_id = $variation_id;
 		}
 
-		//check if product already added to cart in another language
 		foreach ( WC()->cart->cart_contents as $cart_item ) {
-
-			if ( $this->sold_individually_product( $cart_item, $cart_item_data, $post_id, $quantity ) ) {
-
-				$this->sold_individually_exception( $post_id );
-
+			if ( $this->sold_individually_product( $cart_item, $cart_item_data, $post_id ) ) {
+				$found_in_cart = true;
+				break;
 			}
 		}
 
-		return $qt;
+		return $found_in_cart;
 	}
 
-	public function sold_individually_product( $cart_item, $cart_item_data, $post_id, $quantity ) {
+	public function sold_individually_product( $cart_item, $cart_item_data, $post_id ) {
 
 		$current_product_trid = $this->sitepress->get_element_trid( $post_id, 'post_' . get_post_type( $post_id ) );
 
-		if ( $cart_item['variation_id'] ) {
+		if ( !empty( $cart_item['variation_id'] ) ) {
 			$cart_element_trid = $this->sitepress->get_element_trid( $cart_item['variation_id'], 'post_product_variation' );
 		} else {
 			$cart_element_trid = $this->sitepress->get_element_trid( $cart_item['product_id'], 'post_product' );
 		}
 
-		if ( apply_filters( 'wcml_add_to_cart_sold_individually', true, $cart_item_data, $post_id, $quantity ) &&
+		if ( apply_filters( 'wcml_add_to_cart_sold_individually', true, $cart_item_data, $post_id, $cart_item['quantity'] ) &&
 		     $current_product_trid == $cart_element_trid &&
 		     $cart_item['quantity'] > 0
 		) {
@@ -624,18 +620,6 @@ class WCML_Cart {
 		} else {
 			return false;
 		}
-	}
-
-	public function sold_individually_exception( $post_id ) {
-
-		$wc_cart_url   = esc_url( wc_get_cart_url() );
-		$message_title = sprintf( esc_html__( 'You cannot add another &quot;%s&quot; to your cart.', 'woocommerce' ), get_the_title( $post_id ) );
-
-		$message = '<a href="' . $wc_cart_url . '" class="button wc-forward">' . esc_html__( 'View Cart', 'woocommerce' ) . '</a>';
-		$message .= ' ' . $message_title;
-
-		throw new Exception( $message );
-
 	}
 
 	/**
@@ -665,11 +649,12 @@ class WCML_Cart {
 		$cart_items = WC()->cart->get_cart_contents();
 
 		//items total
-		foreach( $cart_items as $item ){
-			$cart_total += $this->woocommerce_wpml->multi_currency->prices->get_product_price_in_currency( $item['product_id'], $currency ) * $item['quantity'];
+		foreach ( $cart_items as $item ) {
+			$item_product_id = $item['variation_id'] ?: $item['product_id'];
+			$cart_total      += $this->woocommerce_wpml->multi_currency->prices->get_product_price_in_currency( $item_product_id, $currency ) * $item['quantity'];
 		}
 
-		$cart_total += $this->woocommerce_wpml->multi_currency->prices->convert_price_amount_by_currencies( WC()->cart->get_shipping_total(), $client_currency, $currency );
+		$cart_total += $this->get_cart_shipping_in_currency( $currency );
 
 		$cart_total = $this->woocommerce_wpml->multi_currency->prices->apply_rounding_rules( $cart_total, $currency );
 
@@ -681,11 +666,15 @@ class WCML_Cart {
 	 *
 	 * @return string
      */
-	public function get_formatted_cart_total_in_currency( $currency ){
-
-		$cart_total = $this->woocommerce_wpml->multi_currency->prices->formatted_price( $this->get_cart_total_in_currency( $currency ), $currency );
-
-		return $cart_total;
+	public function get_formatted_cart_total_in_currency( $currency ) {
+		return $this->woocommerce_wpml->multi_currency->prices->format_price_in_currency( $this->get_cart_total_in_currency( $currency ), $currency );
 	}
+
+	public function get_cart_shipping_in_currency( $currency ) {
+		$shipping_amount_in_default_currency = $this->woocommerce_wpml->multi_currency->prices->unconvert_price_amount( WC()->cart->get_shipping_total() );
+
+		return $this->woocommerce_wpml->multi_currency->prices->convert_price_amount( $shipping_amount_in_default_currency, $currency );
+	}
+
 
 }

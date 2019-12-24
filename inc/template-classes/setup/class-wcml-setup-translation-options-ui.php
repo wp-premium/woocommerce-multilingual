@@ -18,7 +18,9 @@ class WCML_Setup_Translation_Options_UI extends WCML_Templates_Factory {
 	    $custom_posts_unlocked = apply_filters( 'wpml_get_setting', false, 'custom_posts_unlocked_option' );
 	    $custom_posts_sync     = apply_filters( 'wpml_get_setting', false, 'custom_posts_sync_option' );
 
-		$is_display_as_translated_checked = 1 === $custom_posts_unlocked[ 'product' ] && WPML_CONTENT_TYPE_DISPLAY_AS_IF_TRANSLATED === $custom_posts_sync[ 'product' ];
+		$is_display_as_translated_checked = isset( $custom_posts_unlocked['product'], $custom_posts_sync['product'] )
+		                                    && 1 === $custom_posts_unlocked['product']
+		                                    && WPML_CONTENT_TYPE_DISPLAY_AS_IF_TRANSLATED === $custom_posts_sync['product'];
 
         $model = array(
             'strings' => array(
