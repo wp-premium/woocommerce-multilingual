@@ -65,4 +65,10 @@ return array(
 	'OTGS_Installer_Instances_Factory'                       => $baseDir . '/includes/instances/class-otgs-installer-instances-factory.php',
 	'OTGS_Installer_Plugins_Update_Cache_Cleaner'            => $baseDir . '/includes/class-otgs-installer-plugins-update-cache-cleaner.php',
 	'OTGS_Installer_Buy_URL_Hooks'                           => $baseDir . '/includes/buy-url/class-otgs-installer-buy-url-hooks.php',
+	'OTGS_Products_Bucket_Repository'                        => $baseDir . '/includes/products/repository/OTGS_Products_Bucket_Repository.php',
+	'OTGS_Products_Bucket_Repository_Factory'                => $baseDir . '/includes/products/repository/OTGS_Products_Bucket_Repository_Factory.php',
+	'OTGS_Products_Manager'                                  => $baseDir . '/includes/products/OTGS_Products_Manager.php',
+	'OTGS_Products_Manager_Factory'                          => $baseDir . '/includes/products/OTGS_Products_Manager_Factory.php',
+	'OTGS_Products_Config_Db_Storage'                        => $baseDir . '/includes/products/OTGS_Products_Config_Db_Storage.php',
+	'OTGS_Products_Config_Xml'                               => $baseDir . '/includes/products/OTGS_Products_Config_Xml.php',
 );

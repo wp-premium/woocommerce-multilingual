@@ -59,7 +59,7 @@ class WCML_Product_Image_Filter implements IWPML_Action {
 			}
 		}
 
-		return $image_id ? $image_id : $value;
+		return $image_id ? [ $image_id ] : $value;
 	}
 
 }

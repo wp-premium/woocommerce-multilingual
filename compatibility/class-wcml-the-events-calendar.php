@@ -10,10 +10,17 @@ class WCML_The_Events_Calendar{
 	/** @var WPML_Element_Translation_Package */
 	private $tp;
 
-	function __construct( $sitepress, $woocommerce_wpml ){
+	/**
+	 * WCML_The_Events_Calendar constructor.
+	 *
+	 * @param SitePress        $sitepress
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $sitepress, $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-    	$this->sitepress        =& $sitepress;
-    	$this->woocommerce_wpml =& $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+		$this->woocommerce_wpml = $woocommerce_wpml;
 
     	if( isset( $_POST['action'] ) && strpos( $_POST['action'], 'tribe-ticket-add-') === 0 ){
 		    add_action( 'tribe_tickets_ticket_add', array( $this, 'unset_post_post_id' ) );

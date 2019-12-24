@@ -6,13 +6,22 @@ class WCML_Sync_Taxonomy extends WCML_Templates_Factory {
     private $taxonomy;
     private $taxonomy_obj;
 
-    function __construct( &$woocommerce_wpml, $taxonomy, $taxonomy_obj ){
-        parent::__construct();
+	/**
+	 * WCML_Sync_Taxonomy constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param string           $taxonomy
+	 * @param WP_Taxonomy      $taxonomy_obj
+	 */
+	function __construct( $woocommerce_wpml, $taxonomy, $taxonomy_obj ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->taxonomy = $taxonomy;
-        $this->taxonomy_obj = $taxonomy_obj;
-    }
+		parent::__construct();
+
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->taxonomy         = $taxonomy;
+		$this->taxonomy_obj     = $taxonomy_obj;
+	}
 
     public function get_model(){
 

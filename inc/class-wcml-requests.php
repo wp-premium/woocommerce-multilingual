@@ -37,6 +37,9 @@ class WCML_Requests{
             $woocommerce_wpml->settings['products_sync_date'] = empty($_POST['products_sync_date']) ? 0 : 1;
             $woocommerce_wpml->settings['products_sync_order'] = empty($_POST['products_sync_order']) ? 0 : 1;
 
+	        $wcml_sync_media = empty( $_POST['sync_media'] ) ? 0 : 1;
+	        $woocommerce_wpml->update_setting( 'sync_media', $wcml_sync_media, true );
+
             $wcml_file_path_sync = filter_input( INPUT_POST, 'wcml_file_path_sync', FILTER_SANITIZE_NUMBER_INT );
 
             $woocommerce_wpml->settings['file_path_sync'] = $wcml_file_path_sync;

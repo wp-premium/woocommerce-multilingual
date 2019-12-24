@@ -195,7 +195,7 @@ class OTGS_Installer_Factory {
 	 * @return OTGS_Installer_Debug_Info
 	 */
 	public function create_debug_info_hook() {
-		return new OTGS_Installer_Debug_Info( $this->get_installer() );
+		return new OTGS_Installer_Debug_Info( $this->get_installer(), new OTGS_Products_Config_Db_Storage() );
 	}
 
 	public function load_debug_info_hooks() {

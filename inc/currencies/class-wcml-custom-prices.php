@@ -41,8 +41,13 @@ class WCML_Custom_Prices{
 
     }
 
-    public function get_product_custom_prices( $product_id, $currency = false ){
-
+	/**
+	 * @param int  $product_id
+	 * @param bool $currency
+	 *
+	 * @return array|false
+	 */
+	public function get_product_custom_prices( $product_id, $currency = false ) {
         if( empty( $currency ) ){
             $currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
         }
@@ -507,28 +512,35 @@ class WCML_Custom_Prices{
     }
 
 	/**
-	 * @param bool $on_sale
+	 * @param WC_Product $product_object
+	 *
+	 * @return bool
+	 */
+	private function is_on_sale( $product_object ) {
+		$custom_prices = $this->get_product_custom_prices( $product_object->get_id() );
+
+		return $custom_prices
+		       && array_key_exists( '_sale_price', $custom_prices )
+		       && array_key_exists( '_regular_price', $custom_prices )
+		       && '' !== $custom_prices['_sale_price']
+		       && $custom_prices['_sale_price'] !== $custom_prices['_regular_price'];
+	}
+
+	/**
+	 * @param bool       $on_sale
 	 * @param WC_Product $product_object
 	 *
 	 * @return bool
 	 */
 	public function filter_product_is_on_sale( $on_sale, $product_object ) {
-
-		if(
-			!$on_sale &&
-			$this->woocommerce_wpml->settings[ 'enable_multi_currency' ] === WCML_MULTI_CURRENCIES_INDEPENDENT &&
+		if (
+			! $on_sale &&
+			WCML_MULTI_CURRENCIES_INDEPENDENT === $this->woocommerce_wpml->settings['enable_multi_currency'] &&
 			get_post_meta( $product_object->get_id(), '_wcml_custom_prices_status', true )
-		){
-
-			$custom_prices = $this->get_product_custom_prices( $product_object->get_id() );
-
-			if( $custom_prices[ '_sale_price' ] !== '' && $custom_prices[ '_sale_price' ] != $custom_prices[ '_regular_price' ] ){
-				$on_sale = true;
-			}
-
+		) {
+			$on_sale = $this->is_on_sale( $product_object );
 		}
 
 		return $on_sale;
 	}
-
 }

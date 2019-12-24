@@ -69,9 +69,9 @@ class WCML_Currency_Switcher{
 			$args[ 'switcher_id' ] = 'product';
 		}
 
-		$wcml_settings = $this->woocommerce_wpml->get_settings();
-		$multi_currency_object =& $this->woocommerce_wpml->multi_currency;
-		$currency_switcher_settings = array();
+		$wcml_settings              = $this->woocommerce_wpml->get_settings();
+		$multi_currency_object      = $this->woocommerce_wpml->multi_currency;
+		$currency_switcher_settings = [];
 
 		if( isset( $wcml_settings[ 'currency_switchers' ][ $args[ 'switcher_id' ] ] ) ){
 			$currency_switcher_settings = $wcml_settings[ 'currency_switchers' ][ $args[ 'switcher_id' ] ];

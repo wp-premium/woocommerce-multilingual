@@ -12,7 +12,7 @@ class WCML_Multi_Currency_Reports {
 	private $wpml_cache;
 
 	/** @var string $reports_currency */
-	private $reports_currency;
+	protected $reports_currency;
 
 	/**
 	 * WCML_Multi_Currency_Reports constructor.
@@ -74,8 +74,7 @@ class WCML_Multi_Currency_Reports {
 	}
 
 	public function reports_init() {
-
-		if ( isset( $_GET['page'] ) && $_GET['page'] == 'wc-reports' ) { //wc-reports - 2.1.x, woocommerce_reports 2.0.x
+		if ( isset( $_GET['page'] ) && 'wc-reports' === $_GET['page'] ) { //wc-reports - 2.1.x, woocommerce_reports 2.0.x
 
 			add_filter( 'woocommerce_reports_get_order_report_query', array( $this, 'admin_reports_query_filter' ) );
 
@@ -105,15 +104,11 @@ class WCML_Multi_Currency_Reports {
             " );
 
 			$this->reports_currency = isset( $_COOKIE['_wcml_reports_currency'] ) ? $_COOKIE['_wcml_reports_currency'] : wcml_get_woocommerce_currency_option();
-			//validation
-			$orders_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
-			if ( ! isset( $orders_currencies[ $this->reports_currency ] ) ) {
-				$this->reports_currency = ! empty( $orders_currencies ) ? key( $orders_currencies ) : false;
-			}
+
+			// Validation.
+			$this->reports_currency = $this->woocommerce_wpml->multi_currency->get_currency_code();
 
 			add_filter( 'woocommerce_currency_symbol', array( $this, '_set_reports_currency_symbol' ) );
-
-
 		}
 	}
 
@@ -147,7 +142,7 @@ class WCML_Multi_Currency_Reports {
 
 		$cookie_name = '_wcml_reports_currency';
 		// @todo uncomment or delete when #wpmlcore-5796 is resolved
-		//do_action( 'wpsc_add_cookie', $cookie_name );
+		// do_action( 'wpsc_add_cookie', $cookie_name );
 		setcookie( $cookie_name, filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS ),
 			time() + 86400, COOKIEPATH, COOKIE_DOMAIN );
 
@@ -156,31 +151,27 @@ class WCML_Multi_Currency_Reports {
 	}
 
 	public function reports_currency_selector() {
+		$currency_codes = $this->woocommerce_wpml->multi_currency->get_currency_codes();
+		$currencies     = get_woocommerce_currencies();
 
-		$orders_currencies = $this->woocommerce_wpml->multi_currency->orders->get_orders_currencies();
-		$currencies        = get_woocommerce_currencies();
-
-		// remove temporary
+		// Remove filter temporary.
 		remove_filter( 'woocommerce_currency_symbol', array( $this, '_set_reports_currency_symbol' ) );
-
 		?>
-
         <select id="dropdown_shop_report_currency" style="margin-left:5px;">
-			<?php if ( empty( $orders_currencies ) ): ?>
+			<?php if ( empty( $currency_codes ) ): ?>
                 <option value=""><?php _e( 'Currency - no orders found', 'woocommerce-multilingual' ) ?></option>
 			<?php else: ?>
-				<?php foreach ( $orders_currencies as $currency => $count ): ?>
+				<?php foreach ( $currency_codes as $currency ): ?>
                     <option value="<?php echo $currency ?>" <?php selected( $currency, $this->reports_currency ); ?>>
 						<?php printf( "%s (%s)", $currencies[ $currency ], get_woocommerce_currency_symbol( $currency ) ) ?>
                     </option>
 				<?php endforeach; ?>
 			<?php endif; ?>
         </select>
-
 		<?php
-		// add back
-		add_filter( 'woocommerce_currency_symbol', array( $this, '_set_reports_currency_symbol' ) );
 
+		// Add filter back.
+		add_filter( 'woocommerce_currency_symbol', array( $this, '_set_reports_currency_symbol' ) );
 	}
 
 	/*

@@ -3,8 +3,14 @@
 class OTGS_Installer_Debug_Info {
 	private $installer;
 
-	public function __construct( WP_Installer $installer ) {
+	/**
+	 * @var OTGS_Products_Config_Db_Storage
+	 */
+	private $products_config_storage;
+
+	public function __construct( WP_Installer $installer, OTGS_Products_Config_Db_Storage $products_config_storage ) {
 		$this->installer = $installer;
+		$this->products_config_storage = $products_config_storage;
 	}
 
 	public function add_hooks() {
@@ -27,7 +33,7 @@ class OTGS_Installer_Debug_Info {
 		foreach ( $repositories as $repo_id => $repository ) {
 			$repositories_data[ $repo_id ] = array(
 				'api-url' => $repository['api-url'],
-				'products' => $repository['products'],
+				'bucket-url' => $this->prepare_bucket_url( $repo_id ),
 				'subscription' => isset( $repository_settings[ $repo_id ]['subscription'] ) ? $repository_settings[ $repo_id ]['subscription'] : '',
 			);
 		}
@@ -39,5 +45,10 @@ class OTGS_Installer_Debug_Info {
 		);
 
 		return $data;
+	}
+
+	private function prepare_bucket_url( $repo_id ) {
+		$bucket_url = $this->products_config_storage->get_repository_products_url( $repo_id );
+		return $bucket_url ? $bucket_url : 'not assigned';
 	}
 }

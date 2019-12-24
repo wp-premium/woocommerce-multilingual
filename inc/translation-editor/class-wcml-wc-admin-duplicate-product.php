@@ -11,16 +11,22 @@ class WCML_WC_Admin_Duplicate_Product{
 	 */
 	private $sitepress;
 
-    public function __construct( &$woocommerce_wpml, &$sitepress, &$wpdb ) {
+	/**
+	 * WCML_WC_Admin_Duplicate_Product constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 * @param wpdb             $wpdb
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress, $wpdb ) {
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+		$this->wpdb             = $wpdb;
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress        = $sitepress;
-        $this->wpdb             = $wpdb;
+		add_action( 'woocommerce_product_duplicate', [ $this, 'woocommerce_duplicate_product' ], 10, 2 );
+	}
 
-        add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
-    }
-
-    public function woocommerce_duplicate_product( $new_id, $post ){
+	public function woocommerce_duplicate_product( $new_id, $post ){
         $duplicated_products = array();
 
         $product_id = $post->get_id();

@@ -28,13 +28,14 @@ function wcml_load_currency( currency, force_switch ){
         data : {
             action: 'wcml_switch_currency',
             currency : currency,
-            force_switch: force_switch
+            force_switch: force_switch,
+            params: window.location.search.substr(1)
         },
         success: function(response) {
             if(typeof response.error !== 'undefined') {
                 alert(response.error);
-            }else if( typeof response.prevent_switching !== 'undefined' ){
-                jQuery('body').append( response.prevent_switching );
+            }else if( typeof response.data.prevent_switching !== 'undefined' ){
+                jQuery('body').append( response.data.prevent_switching );
             }else{
 
                 var target_location = window.location.href;
@@ -54,8 +55,23 @@ function wcml_load_currency( currency, force_switch ){
 
                 wcml_reset_cart_fragments();
 
+                target_location = wcml_maybe_adjust_widget_price( target_location, response.data );
+
                 window.location = target_location;
             }
         }
     });
+}
+
+function wcml_maybe_adjust_widget_price(target_location, response) {
+
+    if (typeof response.min_price !== 'undefined') {
+        target_location = target_location.replace(/(min_price=)(\d+)/, "$1" + response.min_price);
+    }
+
+    if (typeof response.max_price !== 'undefined') {
+        target_location = target_location.replace(/(max_price=)(\d+)/, "$1" + response.max_price);
+    }
+
+    return target_location;
 }

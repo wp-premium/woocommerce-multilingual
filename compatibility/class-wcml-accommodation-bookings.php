@@ -7,21 +7,27 @@ class WCML_Accommodation_Bookings{
      */
     private $woocommerce_wpml;
 
-    function __construct( &$woocommerce_wpml ){
+	/**
+	 * WCML_Accommodation_Bookings constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-	    $this->woocommerce_wpml = $woocommerce_wpml;
+		$this->woocommerce_wpml = $woocommerce_wpml;
 
-        add_action( 'woocommerce_accommodation_bookings_after_booking_base_cost' , array( $this, 'wcml_price_field_after_booking_base_cost' ) );
-        add_action( 'woocommerce_accommodation_bookings_after_booking_pricing_override_block_cost' , array( $this, 'wcml_price_field_after_booking_pricing_override_block_cost' ), 10, 2 );
-        add_action( 'woocommerce_accommodation_bookings_after_bookings_pricing' , array( $this , 'after_bookings_pricing' ) );
+		add_action( 'woocommerce_accommodation_bookings_after_booking_base_cost', [ $this, 'wcml_price_field_after_booking_base_cost', ] );
+		add_action( 'woocommerce_accommodation_bookings_after_booking_pricing_override_block_cost', [ $this, 'wcml_price_field_after_booking_pricing_override_block_cost', ], 10, 2 );
+		add_action( 'woocommerce_accommodation_bookings_after_bookings_pricing', [ $this, 'after_bookings_pricing' ] );
 
-        add_action( 'save_post', array( $this, 'save_custom_costs' ), 110, 2 );
-        add_filter( 'get_post_metadata', array( $this, 'product_price_filter'), 9, 4 );
+		add_action( 'save_post', [ $this, 'save_custom_costs' ], 110, 2 );
+		add_filter( 'get_post_metadata', [ $this, 'product_price_filter' ], 9, 4 );
 
-        add_action( 'init', array( $this, 'load_assets' ), 100 );
-    }
+		add_action( 'init', [ $this, 'load_assets' ], 100 );
+	}
 
-    function wcml_price_field_after_booking_base_cost( $post_id ){
+	function wcml_price_field_after_booking_base_cost( $post_id ){
 
         $this->echo_wcml_price_field( $post_id, 'wcml_wc_booking_base_cost' );
 

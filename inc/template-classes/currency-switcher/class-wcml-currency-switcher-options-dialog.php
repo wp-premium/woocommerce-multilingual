@@ -5,16 +5,24 @@ class WCML_Currency_Switcher_Options_Dialog extends WCML_Templates_Factory {
     private $woocommerce_wpml;
     private $args;
 
-    function __construct( &$args, &$woocommerce_wpml ){
-        parent::__construct( );
+	/**
+	 * WCML_Currency_Switcher_Options_Dialog constructor.
+	 *
+	 * @param array            $args
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $args, $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->args = $args;
+		parent::__construct();
 
-        add_action( 'wcml_before_currency_switcher_options', array( $this, 'render' ) );
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->args             = $args;
 
-    public function get_model(){
+		add_action( 'wcml_before_currency_switcher_options', [ $this, 'render' ] );
+	}
+
+	public function get_model() {
 
         $model = array(
 

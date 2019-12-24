@@ -4,12 +4,18 @@ class WCML_Setup_Ready_UI extends WCML_Templates_Factory {
 
     private $woocommerce_wpml;
 
-    function __construct( &$woocommerce_wpml ){
-        parent::__construct();
+	/**
+	 * WCML_Setup_Ready_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $this->woocommerce_wpml = &$woocommerce_wpml;
+		parent::__construct();
 
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+	}
 
     public function get_model(){
 

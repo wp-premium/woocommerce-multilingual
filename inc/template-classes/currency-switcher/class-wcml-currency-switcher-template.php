@@ -1,6 +1,6 @@
 <?php
 
-use WCML\Twig_SimpleFunction;
+use WPML\Core\Twig_SimpleFunction;
 
 class WCML_Currency_Switcher_Template extends WCML_Templates_Factory {
 
@@ -17,27 +17,30 @@ class WCML_Currency_Switcher_Template extends WCML_Templates_Factory {
      */
     private $woocommerce_wpml;
 
+	/**
+	 * WCML_Currency_Switcher_Template constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param array            $template_data
+	 */
+	public function __construct( $woocommerce_wpml, $template_data ) {
+		$this->woocommerce_wpml = $woocommerce_wpml;
 
-    function __construct( &$woocommerce_wpml, $template_data ){
+		$this->template = $this->format_data( $template_data );
 
-        $this->woocommerce_wpml =& $woocommerce_wpml;
+		if ( array_key_exists( 'template_string', $this->template ) ) {
+			$this->template_string = $this->template['template_string'];
+		}
 
-        $this->template = $this->format_data( $template_data );
+		$functions = [
+			new Twig_SimpleFunction( 'get_formatted_price', [ $this, 'get_formatted_price' ] ),
+		];
 
-        if ( array_key_exists( 'template_string', $this->template ) ) {
-            $this->template_string = $this->template['template_string'];
-        }
+		parent::__construct( $functions );
+	}
 
-        $functions = array(
-            new Twig_SimpleFunction( 'get_formatted_price', array( $this, 'get_formatted_price' ) )
-        );
-
-        parent::__construct( $functions );
-
-    }
-
-    /**
-     * @param array $model
+	/**
+	 * @param array $model
      */
     public function set_model( $model ) {
         $this->model = is_array( $model ) ? $model : array( $model );

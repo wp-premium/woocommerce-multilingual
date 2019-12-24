@@ -4,14 +4,20 @@ class WCML_Widgets{
 
     private $woocommerce_wpml;
 
-    public function __construct( &$woocommerce_wpml ) {
-        $this->woocommerce_wpml =& $woocommerce_wpml;
+	/**
+	 * WCML_Widgets constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 */
+	public function __construct( $woocommerce_wpml ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        add_action( 'widgets_init', array($this, 'register_widgets' ) );
+		$this->woocommerce_wpml = $woocommerce_wpml;
 
-    }
+		add_action( 'widgets_init', [ $this, 'register_widgets' ] );
+	}
 
-    public function register_widgets(){
+	public function register_widgets() {
 
         if( $this->woocommerce_wpml->settings[ 'enable_multi_currency' ] == WCML_MULTI_CURRENCIES_INDEPENDENT ){
             register_widget( 'WCML_Currency_Switcher_Widget' );

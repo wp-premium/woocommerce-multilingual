@@ -54,59 +54,29 @@ class WCML_Multi_Currency_Orders {
 		if ( is_admin() ) {
 			add_filter( 'woocommerce_order_get_currency', array( $this, 'get_currency_for_new_order' ), 10, 2 );
 		}
-
-	}
-
-	public function get_orders_currencies() {
-		global $wpdb;
-
-		$cache_key              = 'wcml_get_orders_currencies';
-		$temp_orders_currencies = wp_cache_get( $cache_key );
-		if ( $temp_orders_currencies ) {
-			return $temp_orders_currencies;
-		}
-
-		$currencies = array();
-
-		$results = $wpdb->get_results( "
-            SELECT LEFT(m.meta_value, 3) AS currency, COUNT(*) AS c
-            FROM {$wpdb->postmeta} m
-            INNER JOIN {$wpdb->posts} p on p.ID = m.post_id
-            WHERE m.meta_key='_order_currency' AND p.post_type='shop_order'
-            GROUP BY currency
-        " );
-
-		foreach ( $results as $row ) {
-			$currencies[ $row->currency ] = (int) $row->c;
-		}
-
-		wp_cache_set( $cache_key, $currencies );
-
-		return $currencies;
 	}
 
 	public function show_orders_currencies_selector() {
 		global $wp_query, $typenow;
 
-		if ( $typenow != 'shop_order' ) {
-			return false;
+		if ( 'shop_order' !== $typenow ) {
+			return;
 		}
 
-		$order_currencies = $this->get_orders_currencies();
-		$currencies       = get_woocommerce_currencies();
+		$currency_codes = $this->multi_currency->get_currency_codes();
+		$currencies     = get_woocommerce_currencies();
 		?>
         <select id="dropdown_shop_order_currency" name="_order_currency">
             <option value=""><?php _e( 'Show all currencies', 'woocommerce-multilingual' ) ?></option>
-			<?php foreach ( $order_currencies as $currency => $count ): ?>
+			<?php foreach ( $currency_codes as $currency ): ?>
                 <option value="<?php echo $currency ?>" <?php
 				if ( isset( $wp_query->query['_order_currency'] ) ) {
 					selected( $currency, $wp_query->query['_order_currency'] );
 				}
-				?> ><?php printf( "%s (%s) (%d)", $currencies[ $currency ], get_woocommerce_currency_symbol( $currency ), $count ) ?></option>
+				?> ><?php printf( "%s (%s)", $currencies[ $currency ], get_woocommerce_currency_symbol( $currency ) ) ?></option>
 			<?php endforeach; ?>
         </select>
 		<?php
-
 	}
 
 	public function filter_orders_by_currency_join( $join ) {
@@ -328,9 +298,8 @@ class WCML_Multi_Currency_Orders {
 			}
 
 			if ( ! isset( $this->multi_currency->prices ) ) {
-				$this->multi_currency->prices = new WCML_Multi_Currency_Prices( $this->multi_currency );
+				$this->multi_currency->prices = new WCML_Multi_Currency_Prices( $this->multi_currency, $this->woocommerce_wpml->get_setting( 'currency_options' ) );
 				$this->multi_currency->prices->add_hooks();
-				$this->multi_currency->prices->prices_init();
 			}
 
 			$product_id          = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();

@@ -54,6 +54,7 @@ class WCML_REST_API_Support{
 
 		add_action( 'woocommerce_rest_insert_product_object', array( $this, 'set_product_language' ), 10, 2 );
 		add_action( 'woocommerce_rest_insert_product_object', array( $this, 'set_product_custom_prices' ), 10, 2 );
+		add_action( 'woocommerce_rest_insert_product_object', array( $this, 'set_product_images' ), 10, 2 );
 
 		add_action( 'woocommerce_rest_insert_product_object', array( $this, 'copy_custom_fields_from_original' ), 10, 1 );
 		add_action( 'woocommerce_rest_prepare_product_object', array( $this, 'copy_product_custom_fields' ), 10 , 3 );
@@ -281,6 +282,34 @@ class WCML_REST_API_Support{
 			}
 		}
 
+	}
+
+
+	/**
+	 * Set product images
+	 *
+	 * @param WC_Product|WP_Post $product
+	 * @param WP_REST_Request $request
+	 *
+	 * @throws WC_API_Exception
+	 *
+	 */
+	public function set_product_images( $product, $request ) {
+
+		$data = $request->get_params();
+
+		if ( isset( $data['translation_of'] ) ) {
+			$product_id = $this->get_product_id( $product );
+
+			$this->woocommerce_wpml->media->sync_thumbnail_id( $data['translation_of'], $product_id, $data['lang'] );
+			$this->woocommerce_wpml->media->sync_product_gallery( $data['translation_of'] );
+
+			if ( isset( $data['variations'] ) ) {
+				foreach ( $data['variations'] as $variation_id ) {
+					$this->woocommerce_wpml->media->sync_variation_thumbnail_id( $this->woocommerce_wpml->products->get_original_product_id( $variation_id ), $variation_id, $data['lang'] );
+				}
+			}
+		}
 	}
 
 	/**

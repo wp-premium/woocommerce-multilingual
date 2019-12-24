@@ -3,6 +3,8 @@
 
 class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
+	const PRICE_FILTERS_PRIORITY_AFTER_COMPOSITE = 99;
+
 	/**
 	 * @var SitePress
 	 */
@@ -34,8 +36,6 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 		add_filter( 'wcml_cart_contents', array($this, 'wpml_composites_compat'), 11, 4 );
 		add_filter( 'woocommerce_composite_component_options_query_args', array($this, 'wpml_composites_transients_cache_per_language'), 10, 3 );
 		add_action( 'wcml_before_sync_product', array( $this, 'sync_composite_data_across_translations'), 10, 2 );
-		add_filter( 'raw_woocommerce_price', array( $this, 'apply_rounding_rules' ) );
-
 
 		if( is_admin() ){		
 
@@ -57,8 +57,25 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'replace_tm_editor_custom_fields_with_own_sections' ) );
 		}else{
 			add_filter( 'get_post_metadata', array( $this, 'filter_composite_product_cost' ), 10, 4 );
+			$this->add_price_rounding_filters();
 		}
 
+	}
+
+	public function add_price_rounding_filters(){
+
+		$filters = array(
+			'woocommerce_product_get_price',
+			'woocommerce_product_get_sale_price',
+			'woocommerce_product_get_regular_price',
+			'woocommerce_product_variation_get_price',
+			'woocommerce_product_variation_get_sale_price',
+			'woocommerce_product_variation_get_regular_price'
+		);
+
+		foreach( $filters as $filter ){
+			add_filter( $filter, array( $this, 'apply_rounding_rules' ), self::PRICE_FILTERS_PRIORITY_AFTER_COMPOSITE );
+		}
 	}
 
 	function woocommerce_composite_component_default_option($selected_value, $component_id, $object) {
@@ -494,7 +511,7 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 	}
 
 	public function get_composite_data( $product_id ){
-		return get_post_meta( $product_id, '_bto_data', true );
+		return get_post_meta( $product_id, '_bto_data', true ) ?: [];
 	}
 
 
@@ -568,8 +585,12 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 	}
 
 	public function apply_rounding_rules( $price ) {
-		if ( wcml_is_multi_currency_on() ) {
-			$price = $this->woocommerce_wpml->multi_currency->prices->apply_rounding_rules( $price );
+
+		if ( $price && is_composite_product() && wcml_is_multi_currency_on() ) {
+			$current_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
+			if( $current_currency !== wcml_get_woocommerce_currency_option() ) {
+				$price = $this->woocommerce_wpml->multi_currency->prices->apply_rounding_rules( $price, $current_currency );
+			}
 		}
 
 		return $price;

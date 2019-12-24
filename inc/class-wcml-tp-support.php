@@ -87,7 +87,7 @@ class WCML_TP_Support {
 
 	public function save_custom_attribute_translations( $post_id, $data, $job ) {
 
-		$translated_attributes = array();
+		$translated_attributes = [];
 		$translated_labels     = $this->woocommerce_wpml->attributes->get_attr_label_translations( $post_id );
 
 		foreach ( $data as $data_key => $value ) {
@@ -117,7 +117,7 @@ class WCML_TP_Support {
 
 		if ( $translated_attributes ) {
 
-			$product_attributes = get_post_meta( $post_id, '_product_attributes', true );
+			$product_attributes = get_post_meta( $post_id, '_product_attributes', true ) ?: [];
 
 			if( isset( $job->original_doc_id ) ){
 				$original_post_id = $job->original_doc_id;
@@ -125,26 +125,20 @@ class WCML_TP_Support {
 				$original_post_id = $this->woocommerce_wpml->products->get_original_product_id( $post_id );
 			}
 
-			$original_attributes = get_post_meta( $original_post_id, '_product_attributes', true );
+			$original_attributes = get_post_meta( $original_post_id, '_product_attributes', true ) ?: [];
 
 			foreach ( $translated_attributes as $attribute_key => $attribute ) {
+				if( isset( $original_attributes[ $attribute_key ] ) ){
+					$product_attributes[ $attribute_key ]          = $original_attributes[ $attribute_key ];
+					$product_attributes[ $attribute_key ]['name']  = $attribute['name'];
+					$product_attributes[ $attribute_key ]['value'] = join( ' | ', $attribute['values'] );
 
-				$product_attributes[ $attribute_key ] = array(
-					'name'        => $attribute['name'],
-					'value'       => join( ' | ', $attribute['values'] ),
-					'is_taxonomy' => 0,
-					'is_visible'  => $original_attributes[ $attribute_key ]['is_visible'],
-					'position'    => $original_attributes[ $attribute_key ]['position']
-				);
-
-				$translated_labels[ $job->language_code ][ $attribute_key ] = $attribute['name'];
-
+					$translated_labels[ $job->language_code ][ $attribute_key ] = $attribute['name'];
+				}
 			}
 
 			update_post_meta( $post_id, '_product_attributes', $product_attributes );
-
 			update_post_meta( $post_id, 'attr_label_translations', $translated_labels );
-
 		}
 
 	}

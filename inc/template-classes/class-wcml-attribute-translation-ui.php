@@ -6,11 +6,19 @@ class WCML_Attribute_Translation_UI extends WCML_Templates_Factory {
 	private $woocommerce_wpml;
 	private $sitepress;
 
-	public function __construct( &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Attribute_Translation_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
+
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->sitepress = $sitepress;
+		$this->sitepress        = $sitepress;
 	}
 
 	public function get_model() {

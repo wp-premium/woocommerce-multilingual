@@ -1,6 +1,6 @@
 <?php
 
-use WCML\Twig_SimpleFunction;
+use WPML\Core\Twig_SimpleFunction;
 
 class WCML_Multi_Currency_UI extends WCML_Templates_Factory {
 
@@ -28,9 +28,16 @@ class WCML_Multi_Currency_UI extends WCML_Templates_Factory {
 	/** @var WCML_Tracking_Link */
 	private $tracking_link;
 
-    function __construct( &$woocommerce_wpml, &$sitepress ){
+	/**
+	 * WCML_Multi_Currency_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
+		// @todo Cover by tests, required for wcml-3037.
 
-        $functions = array(
+		$functions = array(
             new Twig_SimpleFunction( 'get_flag_url', array( $this, 'get_flag_url' ) ),
             new Twig_SimpleFunction( 'is_currency_on', array( $this, 'is_currency_on' ) ),
             new Twig_SimpleFunction( 'get_language_currency', array( $this, 'get_language_currency' ) ),
@@ -220,9 +227,16 @@ class WCML_Multi_Currency_UI extends WCML_Templates_Factory {
         return $this->sitepress->get_flag_url( $code );
     }
 
-    public function is_currency_on($currency, $language) {
-        return $this->woocommerce_wpml->settings['currency_options'][ $currency ]['languages'][ $language ];
-    }
+	/**
+	 * @param string $currency
+	 * @param string $language
+	 *
+	 * @return bool
+	 */
+	public function is_currency_on( $currency, $language ) {
+		return isset( $this->woocommerce_wpml->settings['currency_options'][ $currency ]['languages'][ $language ] )
+		       && (bool) $this->woocommerce_wpml->settings['currency_options'][ $currency ]['languages'][ $language ];
+	}
 
     public function get_language_currency( $language ) {
         return $this->woocommerce_wpml->settings['default_currencies'][ $language ];

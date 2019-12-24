@@ -5,12 +5,18 @@ class WCML_Status_Products_UI extends WCML_Templates_Factory {
     private $woocommerce_wpml;
     private $sitepress;
 
-    function __construct( &$woocommerce_wpml, &$sitepress ){
-        parent::__construct();
+	/**
+	 * WCML_Status_Products_UI constructor.
+	 *
+	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param SitePress        $sitepress
+	 */
+	public function __construct( $woocommerce_wpml, $sitepress ) {
+		parent::__construct();
 
-        $this->woocommerce_wpml = $woocommerce_wpml;
-        $this->sitepress = $sitepress;
-    }
+		$this->woocommerce_wpml = $woocommerce_wpml;
+		$this->sitepress        = $sitepress;
+	}
 
     public function get_model() {
 
