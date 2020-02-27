@@ -56,7 +56,7 @@ abstract class WCML_Templates_Factory extends WPML_Templates_Factory {
 		if ( ! $this->twig ) {
 			$loader = $this->get_twig_loader();
 
-			$environment_args = array();
+			$environment_args = [];
 
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				$environment_args['debug'] = true;

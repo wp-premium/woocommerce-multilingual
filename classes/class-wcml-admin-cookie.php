@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Admin_Cookie{
+class WCML_Admin_Cookie {
 
 	/** @var string */
 	private $name;
@@ -16,10 +16,10 @@ class WCML_Admin_Cookie{
 
 	/**
 	 * @param mixed $value
-	 * @param int $expiration
+	 * @param int   $expiration
 	 */
-	public function set_value( $value, $expiration = null ){
-		if( null === $expiration ){
+	public function set_value( $value, $expiration = null ) {
+		if ( null === $expiration ) {
 			$expiration = time() + DAY_IN_SECONDS;
 		}
 		$this->handle_cache_plugins();
@@ -31,17 +31,14 @@ class WCML_Admin_Cookie{
 	 */
 	public function get_value() {
 		$value = null;
-		if ( isset( $_COOKIE [ $this->name ] ) ){
+		if ( isset( $_COOKIE [ $this->name ] ) ) {
 			$value = $_COOKIE[ $this->name ];
 		}
 		return $value;
 	}
 
-	/**
-	 * @param $name
-	 */
 	private function handle_cache_plugins() {
 		// @todo uncomment or delete when #wpmlcore-5796 is resolved
-		//do_action( 'wpsc_add_cookie', $this->name );
+		// do_action( 'wpsc_add_cookie', $this->name );
 	}
 }

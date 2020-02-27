@@ -19,15 +19,15 @@ class WCML_Ajax_Setup {
 	}
 
 	public function init() {
-		add_filter( 'woocommerce_get_script_data', array( $this, 'add_language_parameter_to_ajax_url' ) );
-		add_action( 'woocommerce_checkout_order_review', array( $this, 'add_hidden_language_field' ) );
+		add_filter( 'woocommerce_get_script_data', [ $this, 'add_language_parameter_to_ajax_url' ] );
+		add_action( 'woocommerce_checkout_order_review', [ $this, 'add_hidden_language_field' ] );
 	}
 
-	function add_hidden_language_field() {
+	public function add_hidden_language_field() {
 		do_action( 'wpml_add_language_form_field' );
 	}
 
-	function add_language_parameter_to_ajax_url( $woocommerce_params ) {
+	public function add_language_parameter_to_ajax_url( $woocommerce_params ) {
 
 		if ( isset( $woocommerce_params['ajax_url'] ) && $this->sitepress->get_current_language() !== $this->sitepress->get_default_language() ) {
 			$woocommerce_params['ajax_url'] = add_query_arg( 'lang', $this->sitepress->get_wp_api()->constant( 'ICL_LANGUAGE_CODE' ), $woocommerce_params['ajax_url'] );

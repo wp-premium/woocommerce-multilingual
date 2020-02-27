@@ -31,6 +31,8 @@ class WCML_Upgrade {
 		'4.4.3',
 		'4.6.8',
 		'4.7.3',
+		'4.7.6',
+		'4.7.8',
 	];
 
 	public function __construct() {
@@ -784,5 +786,45 @@ class WCML_Upgrade {
 
 	private function upgrade_4_7_3() {
 		delete_option( 'wcml_currency_switcher_template_objects' );
+	}
+
+	private function upgrade_4_7_6() {
+		global $wpdb;
+
+		$wpdb->query(
+			"UPDATE {$wpdb->prefix}icl_strings
+                      SET `context` = 'admin_texts_woocommerce_shipping',
+                          `domain_name_context_md5` = MD5( CONCAT( 'admin_texts_woocommerce_shipping', `name`, `gettext_context` ) )
+                      WHERE `context` = 'woocommerce' AND `name` LIKE '%_shipping_method_title'"
+		);
+	}
+
+	private function upgrade_4_7_8() {
+		$emailOptions = [
+			'woocommerce_new_order_settings',
+			'woocommerce_cancelled_order_settings',
+			'woocommerce_failed_order_settings',
+			'woocommerce_customer_on_hold_order_settings',
+			'woocommerce_customer_processing_order_settings',
+			'woocommerce_customer_completed_order_settings',
+			'woocommerce_customer_refunded_order_settings',
+			'woocommerce_customer_invoice_settings',
+			'woocommerce_customer_note_settings',
+			'woocommerce_customer_reset_password_settings',
+			'woocommerce_customer_new_account_settings'
+		];
+
+
+		foreach ( $emailOptions as $emailOption ) {
+
+			$emailSettings = get_option( $emailOption );
+
+			if ( isset( $emailSettings['additional_content'] ) && $emailSettings['additional_content'] ) {
+				$domain = 'admin_texts_' . $emailOption;
+				$name   = '[' . $emailOption . ']additional_content';
+
+				icl_register_string( $domain, $name, $emailSettings['additional_content'], false, '' );
+			}
+		}
 	}
 }

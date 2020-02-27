@@ -8,7 +8,7 @@
  * Text Domain: woocommerce-multilingual
  * Requires at least: 4.7
  * Tested up to: 5.3
- * Version: 4.7.6
+ * Version: 4.7.9
  * Plugin Slug: woocommerce-multilingual
  * WC requires at least: 3.3.0
  * WC tested up to: 3.8.0
@@ -33,7 +33,7 @@ if ( ! $wpml_php_version_check->is_ok() ) {
 	return;
 }
 
-define( 'WCML_VERSION', '4.7.6' );
+define( 'WCML_VERSION', '4.7.9' );
 define( 'WCML_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WCML_PLUGIN_FOLDER', basename( WCML_PLUGIN_PATH ) );
 define( 'WCML_LOCALE_PATH', WCML_PLUGIN_PATH . '/locale' );
@@ -76,13 +76,13 @@ function wcml_loader() {
 	$xdomain_data = new WCML_xDomain_Data( new WPML_Cookie() );
 	$xdomain_data->add_hooks();
 
-	$loaders = array(
+	$loaders = [
 		'WCML_Privacy_Content_Factory',
 		'WCML_ATE_Activate_Synchronization',
 		\WCML\RewriteRules\Hooks::class,
 		\WCML\Email\Settings\Hooks::class,
-		\WCML\Email\OrderItems\Hooks::class,
-	);
+		\WCML\Block\Convert\Hooks::class,
+	];
 
 	if (
 		( defined( 'ICL_SITEPRESS_VERSION' ) && defined( 'WPML_MEDIA_VERSION' ) )
@@ -104,7 +104,7 @@ function wcml_loader() {
 
 $wcml_rest_api = new WCML_REST_API();
 if ( $wcml_rest_api->is_rest_api_request() ) {
-	add_action( 'wpml_before_init', array( $wcml_rest_api, 'remove_wpml_global_url_filters' ), 0 );
+	add_action( 'wpml_before_init', [ $wcml_rest_api, 'remove_wpml_global_url_filters' ], 0 );
 }
 
 add_action( 'plugins_loaded', 'load_wcml_without_wpml', 10000 );

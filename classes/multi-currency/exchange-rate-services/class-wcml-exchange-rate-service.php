@@ -14,9 +14,9 @@ abstract class WCML_Exchange_Rate_Service {
 	/** @var string  */
 	private $api_url;
 
-	private $settings = array();
+	private $settings = [];
 
-	protected $api_key = '';
+	protected $api_key      = '';
 	protected $requires_key = false;
 
 	/**
@@ -34,7 +34,7 @@ abstract class WCML_Exchange_Rate_Service {
 		$this->api_url = $api_url;
 		$this->url     = $url;
 
-		$this->settings = get_option( 'wcml_exchange_rate_service_' . $this->id, array() );
+		$this->settings = get_option( 'wcml_exchange_rate_service_' . $this->id, [] );
 
 		$this->api_key = $this->get_setting( 'api-key' );
 	}
@@ -55,11 +55,11 @@ abstract class WCML_Exchange_Rate_Service {
 
 	/**
 	 * @param string $from
-	 * @param array $to
+	 * @param array  $to
 	 *
 	 * @return mixed
 	 */
-	public abstract function get_rates( $from, $to );
+	abstract public function get_rates( $from, $to );
 
 	/**
 	 * @return bool
@@ -90,7 +90,7 @@ abstract class WCML_Exchange_Rate_Service {
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 */
 	public function save_setting( $key, $value ) {
 		$this->settings[ $key ] = $value;
@@ -101,11 +101,12 @@ abstract class WCML_Exchange_Rate_Service {
 	 * @param string $error_message
 	 */
 	public function save_last_error( $error_message ) {
-		$this->save_setting( 'last_error',
-			array(
+		$this->save_setting(
+			'last_error',
+			[
 				'text' => $error_message,
-				'time' => date_i18n( 'F j, Y g:i a', current_time( 'timestamp' ) )
-			)
+				'time' => date_i18n( 'F j, Y g:i a', current_time( 'timestamp' ) ),
+			]
 		);
 	}
 

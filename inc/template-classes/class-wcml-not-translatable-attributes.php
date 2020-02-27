@@ -16,7 +16,6 @@ class WCML_Not_Translatable_Attributes extends WCML_Templates_Factory {
 	 */
 	public function __construct( $attr_id, $woocommerce_wpml ) {
 		// @todo Cover by tests, required for wcml-3037.
-
 		parent::__construct();
 
 		$this->attr_id          = $attr_id;
@@ -25,38 +24,38 @@ class WCML_Not_Translatable_Attributes extends WCML_Templates_Factory {
 
 	public function get_model() {
 
-		$model = array(
-			'checked' => $this->is_translatable(),
-			'edit_mode' => $this->attr_id ? true : false ,
-			'strings' => array(
-				'label' => __( 'Translatable?', 'woocommerce-multilingual' ),
+		$model = [
+			'checked'   => $this->is_translatable(),
+			'edit_mode' => $this->attr_id ? true : false,
+			'strings'   => [
+				'label'       => __( 'Translatable?', 'woocommerce-multilingual' ),
 				'description' => __( 'Enable this if you want to translate attribute values with Woocommerce Multilingual', 'woocommerce-multilingual' ),
-				'notice' => __( 'Existing translations and variations associated will be deleted.', 'woocommerce-multilingual' )
-			)
-		);
+				'notice'      => __( 'Existing translations and variations associated will be deleted.', 'woocommerce-multilingual' ),
+			],
+		];
 
 		return $model;
 	}
 
-	public function is_translatable(){
+	public function is_translatable() {
 		global $wpdb;
 
-		$attribute_to_edit = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->prefix . "woocommerce_attribute_taxonomies WHERE attribute_id = %d", $this->attr_id ) );
-		if( $attribute_to_edit ){
-			$att_name    = wc_attribute_taxonomy_name( $attribute_to_edit->attribute_name );
+		$attribute_to_edit = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'woocommerce_attribute_taxonomies WHERE attribute_id = %d', $this->attr_id ) );
+		if ( $attribute_to_edit ) {
+			$att_name = wc_attribute_taxonomy_name( $attribute_to_edit->attribute_name );
 
 			$wcml_settings = $this->woocommerce_wpml->get_settings();
 
-			return isset( $wcml_settings[ 'attributes_settings' ][ $att_name ] ) ? $wcml_settings[ 'attributes_settings' ][ $att_name ] : true;
+			return isset( $wcml_settings['attributes_settings'][ $att_name ] ) ? $wcml_settings['attributes_settings'][ $att_name ] : true;
 		}
 
 		return true;
 	}
 
 	public function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/',
-		);
+		];
 	}
 
 	public function get_template() {

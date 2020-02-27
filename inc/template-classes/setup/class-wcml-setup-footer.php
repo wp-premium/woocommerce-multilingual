@@ -20,18 +20,18 @@ class WCML_Setup_Footer_UI extends WCML_Templates_Factory {
 	 */
 	public function get_model() {
 
-		$model = array(
+		$model = [
 			'has_handler' => $this->has_handler,
-		);
+		];
 
 		return $model;
 
 	}
 
 	protected function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/',
-		);
+		];
 	}
 
 	/**

@@ -24,7 +24,7 @@ class WCML_Order_Status_Manager {
 	 * Adds WordPress hooks.
 	 */
 	public function add_hooks() {
-		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 10, 1 );
+		add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ], 10, 1 );
 	}
 
 	/**
@@ -45,16 +45,16 @@ class WCML_Order_Status_Manager {
 	 * Queries for all statuses in wp_posts table.
 	 */
 	private function get_statuses() {
-		remove_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 10 );
+		remove_action( 'pre_get_posts', [ $this, 'pre_get_posts' ], 10 );
 		$this->wp_query->query(
-			array(
+			[
 				'post_type'        => 'wc_order_status',
 				'posts_per_page'   => -1,
 				'suppress_filters' => false,
 
-			)
+			]
 		);
-		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 10, 1 );
+		add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ], 10, 1 );
 		return $this->wp_query->posts;
 	}
 
@@ -67,12 +67,12 @@ class WCML_Order_Status_Manager {
 	 * @return array The post__not_in array.
 	 */
 	private function prepare_post_not_in( $q, $statuses ) {
-		$post__not_in = array();
+		$post__not_in = [];
 
 		if ( $statuses ) {
 			$current_language = apply_filters( 'wpml_current_language', null );
 
-			foreach( $statuses as $status ) {
+			foreach ( $statuses as $status ) {
 				$post_language_details = apply_filters( 'wpml_post_language_details', '', $status->ID );
 				if ( isset( $post_language_details['language_code'] ) ) {
 					if ( $post_language_details['language_code'] !== $current_language ) {
@@ -82,7 +82,7 @@ class WCML_Order_Status_Manager {
 			}
 		}
 
-		$post__not_in_query  = isset( $q->query_vars['post__not_in'] ) ? $q->query_vars['post__not_in'] : array();
+		$post__not_in_query = isset( $q->query_vars['post__not_in'] ) ? $q->query_vars['post__not_in'] : [];
 		return array_merge( $post__not_in_query, $post__not_in );
 	}
 }

@@ -20,7 +20,7 @@ class WCML_Update_Product_Gallery_Translation implements IWPML_Action {
 	}
 
 	public function add_hooks() {
-		add_action( 'wpml_added_media_file_translation', array( $this, 'update_meta' ), PHP_INT_MAX, 3 );
+		add_action( 'wpml_added_media_file_translation', [ $this, 'update_meta' ], PHP_INT_MAX, 3 );
 	}
 
 	/**
@@ -40,14 +40,14 @@ class WCML_Update_Product_Gallery_Translation implements IWPML_Action {
 	}
 
 	/**
-	 * @param int $source_post_id
+	 * @param int               $source_post_id
 	 * @param WPML_Post_Element $updated_attachment_element
 	 *
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
 	private function get_translated_gallery( $source_post_id, WPML_Post_Element $updated_attachment_element ) {
-		$meta_value = array();
+		$meta_value = [];
 
 		$original_gallery_meta = get_post_meta( $source_post_id, '_product_image_gallery', true );
 		if ( '' !== $original_gallery_meta ) {
@@ -68,7 +68,7 @@ class WCML_Update_Product_Gallery_Translation implements IWPML_Action {
 	}
 
 	/**
-	 * @param array $meta_value
+	 * @param array             $meta_value
 	 * @param WPML_Post_Element $source_post
 	 * @param WPML_Post_Element $updated_attachment_element
 	 *

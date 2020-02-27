@@ -108,7 +108,7 @@ class OTGS_Installer_Repositories {
 	}
 
 	public function refresh( $bypass_bucket = false ) {
-		$this->installer->refresh_repositories_data( $bypass_bucket );
+		return $this->installer->refresh_repositories_data( $bypass_bucket );
 	}
 
 	public function save_subscription( OTGS_Installer_Repository $repository ) {

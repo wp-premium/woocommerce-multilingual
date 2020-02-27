@@ -16,16 +16,16 @@ class WCML_Woobe {
 	/**
 	 * WCML_Woobe constructor.
 	 *
-	 * @param SitePress $sitepress
+	 * @param SitePress             $sitepress
 	 * @param WPML_Post_Translation $post_translations
 	 */
-	function __construct( SitePress $sitepress, WPML_Post_Translation $post_translations ) {
-		$this->sitepress        = $sitepress;
+	public function __construct( SitePress $sitepress, WPML_Post_Translation $post_translations ) {
+		$this->sitepress         = $sitepress;
 		$this->post_translations = $post_translations;
 	}
 
 	public function add_hooks() {
-		add_action( 'woobe_after_update_page_field', array( $this, 'replace_price_in_translations' ), 10, 5 );
+		add_action( 'woobe_after_update_page_field', [ $this, 'replace_price_in_translations' ], 10, 5 );
 	}
 
 	/**
@@ -62,13 +62,13 @@ class WCML_Woobe {
 	 */
 	private function is_price_updated( $product_id, $field_key, $value ) {
 		return is_numeric( $product_id )
-		       && 'regular_price' === $field_key
-		       && is_numeric( $value );
+			   && 'regular_price' === $field_key
+			   && is_numeric( $value );
 	}
 
 	private function is_field_set_to_copy( $field_key ) {
-		$settings = $this->sitepress->get_settings();
-		$field_translation_setting = isset( $settings['translation-management']['custom_fields_translation']['_' . $field_key] ) ? $settings['translation-management']['custom_fields_translation']['_' . $field_key] : null;
+		$settings                  = $this->sitepress->get_settings();
+		$field_translation_setting = isset( $settings['translation-management']['custom_fields_translation'][ '_' . $field_key ] ) ? $settings['translation-management']['custom_fields_translation'][ '_' . $field_key ] : null;
 		return $field_translation_setting === $this->sitepress->get_wp_api()->constant( 'WPML_COPY_CUSTOM_FIELD' );
 	}
 }

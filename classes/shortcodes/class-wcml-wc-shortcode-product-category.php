@@ -4,6 +4,7 @@ use WPML\Collect\Support\Collection;
 
 /**
  * Class WCML_WC_Shortcode_Product_Category
+ *
  * @since 4.2.2
  */
 class WCML_WC_Shortcode_Product_Category {
@@ -23,7 +24,7 @@ class WCML_WC_Shortcode_Product_Category {
 	}
 
 	public function add_hooks() {
-		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'translate_category' ), 10, 2 );
+		add_filter( 'woocommerce_shortcode_products_query', [ $this, 'translate_category' ], 10, 2 );
 	}
 
 
@@ -35,7 +36,7 @@ class WCML_WC_Shortcode_Product_Category {
 	 */
 	public function translate_category( $args, $atts = null ) {
 
-		if( $this->sitepress->get_default_language() !== $this->sitepress->get_current_language() ) {
+		if ( $this->sitepress->get_default_language() !== $this->sitepress->get_current_language() ) {
 
 			if ( isset( $args['product_cat'] ) ) {
 				$args = $this->translate_categories_using_simple_tax_query( $args );
@@ -49,7 +50,10 @@ class WCML_WC_Shortcode_Product_Category {
 				};
 
 				$categories = wpml_collect( explode( ',', $atts['category'] ) )
-					->map( function( $slugOrId ) { return trim( $slugOrId ); } )
+					->map(
+						function( $slugOrId ) {
+								return trim( $slugOrId ); }
+					)
 					->filter()
 					->map( $getProductCategoryObject );
 
@@ -66,12 +70,12 @@ class WCML_WC_Shortcode_Product_Category {
 	 *
 	 * @return array
 	 */
-	private function replace_category_in_query_arguments( array $args, Collection $terms ){
+	private function replace_category_in_query_arguments( array $args, Collection $terms ) {
 
 		foreach ( $args['tax_query'] as $i => $tax_query ) {
-			$args['tax_query'][ $i ] = array();
+			$args['tax_query'][ $i ] = [];
 			if ( ! is_int( key( $tax_query ) ) ) {
-				$tax_query = array( $tax_query );
+				$tax_query = [ $tax_query ];
 			}
 			foreach ( $tax_query as $j => $condition ) {
 				if ( 'product_cat' === $condition['taxonomy'] ) {
@@ -93,13 +97,18 @@ class WCML_WC_Shortcode_Product_Category {
 
 		$category_slugs = array_map( 'trim', explode( ',', $args['product_cat'] ) );
 
-		$filter_exists = remove_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10 );
-		$categories_translated = get_terms( array( 'slug' => $category_slugs, 'taxonomy' => 'product_cat' ) );
+		$filter_exists         = remove_filter( 'terms_clauses', [ $this->sitepress, 'terms_clauses' ], 10 );
+		$categories_translated = get_terms(
+			[
+				'slug'     => $category_slugs,
+				'taxonomy' => 'product_cat',
+			]
+		);
 		if ( $filter_exists ) {
-			add_filter( 'terms_clauses', array( $this->sitepress, 'terms_clauses' ), 10, 3 );
+			add_filter( 'terms_clauses', [ $this->sitepress, 'terms_clauses' ], 10, 3 );
 		}
 
-		$category_slugs_translated = array();
+		$category_slugs_translated = [];
 		foreach ( $categories_translated as $category_translated ) {
 			$category_slugs_translated[] = $category_translated->slug;
 		}

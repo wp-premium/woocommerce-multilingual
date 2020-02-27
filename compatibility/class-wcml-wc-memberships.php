@@ -13,12 +13,12 @@ class WCML_WC_Memberships {
 
 	public function add_hooks() {
 
-		add_filter( 'parse_request', array( $this, 'adjust_query_vars' ) );
-		add_filter( 'wcml_register_endpoints_query_vars', array( $this, 'register_endpoints_query_vars' ), 10, 3 );
-		add_filter( 'wcml_endpoint_permalink_filter', array( $this, 'endpoint_permalink_filter' ), 10, 2 );
-		add_filter( 'wc_memberships_members_area_my-memberships_actions', array( $this, 'filter_actions_links' ) );
+		add_filter( 'parse_request', [ $this, 'adjust_query_vars' ] );
+		add_filter( 'wcml_register_endpoints_query_vars', [ $this, 'register_endpoints_query_vars' ], 10, 3 );
+		add_filter( 'wcml_endpoint_permalink_filter', [ $this, 'endpoint_permalink_filter' ], 10, 2 );
+		add_filter( 'wc_memberships_members_area_my-memberships_actions', [ $this, 'filter_actions_links' ] );
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_assets' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'load_assets' ] );
 	}
 
 	public function register_endpoints_query_vars( $query_vars, $wc_vars, $object ) {
@@ -73,7 +73,7 @@ class WCML_WC_Memberships {
 		if ( isset( $post->ID ) && wc_get_page_id( 'myaccount' ) == $post->ID ) {
 			$wcml_plugin_url = $this->wp_api->constant( 'WCML_PLUGIN_URL' );
 			$wcml_version    = $this->wp_api->constant( 'WCML_VERSION' );
-			wp_register_script( 'wcml-members-js', $wcml_plugin_url . '/compatibility/res/js/wcml-members.js', array( 'jquery' ), $wcml_version, true );
+			wp_register_script( 'wcml-members-js', $wcml_plugin_url . '/compatibility/res/js/wcml-members.js', [ 'jquery' ], $wcml_version, true );
 			wp_enqueue_script( 'wcml-members-js' );
 			wp_localize_script( 'wcml-members-js', 'wc_memberships_memebers_area_endpoint', $this->get_members_area_endpoint() );
 		}
@@ -86,10 +86,10 @@ class WCML_WC_Memberships {
 		$string_context      = class_exists( 'WPML_Endpoints_Support' ) ? WPML_Endpoints_Support::STRING_CONTEXT : 'WooCommerce Endpoints';
 		$translated_endpoint = apply_filters( 'wpml_translate_single_string', $endpoint, $string_context, 'members_area' );
 
-		return array(
+		return [
 			'original'   => $endpoint,
-			'translated' => $translated_endpoint
-		);
+			'translated' => $translated_endpoint,
+		];
 	}
 
 

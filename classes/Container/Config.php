@@ -4,7 +4,7 @@ namespace WCML\Container;
 
 class Config {
 
-	static public function getSharedInstances() {
+	public static function getSharedInstances() {
 		global $woocommerce_wpml;
 
 		return [

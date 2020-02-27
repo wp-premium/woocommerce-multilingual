@@ -32,23 +32,17 @@ class WCML_Currency_Switcher_Templates {
 	/**
 	 * @var array $enqueued_templates
 	 */
-	private $enqueued_templates = array();
+	private $enqueued_templates = [];
 
 	/**
 	 * @var string $ds
 	 */
 	private $ds = DIRECTORY_SEPARATOR;
 
-	public function __construct( woocommerce_wpml $woocommerce_wpml, WPML_WP_API $wp_api, WCML_File $wpml_file = null ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, WPML_WP_API $wp_api, WPML_File $wpml_file = null ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->wp_api           = $wp_api;
-
-		if ( ! $wpml_file ) {
-			// @todo: use WPML_FILE class instead after changing requirements for WPML >= 3.6.0.
-			$wpml_file = new WCML_File();
-		}
-
-		$this->wpml_file = $wpml_file;
+		$this->wpml_file        = $wpml_file;
 	}
 
 	public function init_hooks() {
@@ -93,7 +87,7 @@ class WCML_Currency_Switcher_Templates {
 	 * @return array of active WCML_Currency_Switcher_Template
 	 */
 	public function get_active_templates( $load_default = false ) {
-		$templates     = array();
+		$templates     = [];
 		$wcml_settings = $this->woocommerce_wpml->get_settings();
 
 		if ( isset( $wcml_settings['currency_switchers'] ) ) {
@@ -122,7 +116,7 @@ class WCML_Currency_Switcher_Templates {
 	 * @return array of template data
 	 */
 	public function get_templates() {
-		$templates = array();
+		$templates = [];
 
 		foreach ( $this->templates as $key => $template ) {
 
@@ -159,7 +153,7 @@ class WCML_Currency_Switcher_Templates {
 	 * @return array
 	 */
 	private function parse_template_config( $template_path ) {
-		$config             = array();
+		$config             = [];
 		$configuration_file = $template_path . $this->ds . self::CONFIG_FILE;
 		if ( file_exists( $configuration_file ) ) {
 			$json_content = file_get_contents( $configuration_file );
@@ -177,8 +171,8 @@ class WCML_Currency_Switcher_Templates {
 		}
 
 		if ( false === $this->templates ) {
-			$templates    = array();
-			$dirs_to_scan = array();
+			$templates    = [];
+			$dirs_to_scan = [];
 
 			$sub_dir = $this->ds . 'templates' . $this->ds . 'currency-switchers';
 
@@ -201,7 +195,7 @@ class WCML_Currency_Switcher_Templates {
 			foreach ( $templates_paths as $template_path ) {
 				$template_path = $this->wpml_file->fix_dir_separator( $template_path );
 				if ( file_exists( $template_path . $this->ds . WCML_Currency_Switcher_Template::FILENAME ) ) {
-					$tpl    = array();
+					$tpl    = [];
 					$config = $this->parse_template_config( $template_path );
 
 					$tpl['path'] = $template_path;
@@ -255,14 +249,14 @@ class WCML_Currency_Switcher_Templates {
 	 * @return array
 	 */
 	private function scan_template_paths( $dirs_to_scan ) {
-		$templates_paths = array();
+		$templates_paths = [];
 
 		foreach ( $dirs_to_scan as $dir ) {
 			if ( ! is_dir( $dir ) ) {
 				continue;
 			}
 			$files = scandir( $dir );
-			$files = array_diff( $files, array( '..', '.' ) );
+			$files = array_diff( $files, [ '..', '.' ] );
 			if ( count( $files ) > 0 ) {
 				foreach ( $files as $file ) {
 					$template_path = $dir . '/' . $file;
@@ -288,16 +282,17 @@ class WCML_Currency_Switcher_Templates {
 	 * @return array|null
 	 */
 	private function get_files( $ext, $template_path, $config ) {
-		$resources = array();
+		$resources = [];
 
 		if ( isset( $config[ $ext ] ) ) {
-			$config[ $ext ] = is_array( $config[ $ext ] ) ? $config[ $ext ] : array( $config[ $ext ] );
+			$config[ $ext ] = is_array( $config[ $ext ] ) ? $config[ $ext ] : [ $config[ $ext ] ];
 			foreach ( $config[ $ext ] as $file ) {
 				$file        = untrailingslashit( $template_path ) . $this->ds . $file;
 				$resources[] = $this->wpml_file->get_uri_from_path( $file );
 			}
 		} else {
 			$search_path = $template_path . $this->ds . '*.' . $ext;
+
 			if ( glob( $search_path ) ) {
 				foreach ( glob( $search_path ) as $file ) {
 					$resources[] = $this->wpml_file->get_uri_from_path( $file );
@@ -416,11 +411,11 @@ class WCML_Currency_Switcher_Templates {
 		$this->enqueued_templates[] = $slug;
 
 		foreach ( $template->get_scripts() as $k => $url ) {
-			wp_enqueue_script( $template->get_resource_handler( $k ), $url, array(), WCML_VERSION, true );
+			wp_enqueue_script( $template->get_resource_handler( $k ), $url, [], WCML_VERSION, true );
 		}
 
 		foreach ( $template->get_styles() as $k => $url ) {
-			wp_enqueue_style( $template->get_resource_handler( $k ), $url, array(), WCML_VERSION );
+			wp_enqueue_style( $template->get_resource_handler( $k ), $url, [], WCML_VERSION );
 		}
 	}
 

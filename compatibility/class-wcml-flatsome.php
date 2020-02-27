@@ -1,17 +1,17 @@
 <?php
 
-class WCML_Flatsome{
+class WCML_Flatsome {
 
-    function __construct(){
-        add_filter( 'wcml_multi_currency_ajax_actions', array( $this, 'add_action_to_multi_currency_ajax' ) );
-    }
+	public function __construct() {
+		add_filter( 'wcml_multi_currency_ajax_actions', [ $this, 'add_action_to_multi_currency_ajax' ] );
+	}
 
-    function add_action_to_multi_currency_ajax( $actions ){
+	public function add_action_to_multi_currency_ajax( $actions ) {
 
-        $actions[] = 'ux_quickview';
-        $actions[] = 'flatsome_ajax_search_products';
+		$actions[] = 'ux_quickview';
+		$actions[] = 'flatsome_ajax_search_products';
 
-        return $actions;
-    }
+		return $actions;
+	}
 
 }

@@ -20,11 +20,10 @@ class WCML_Url_Translation {
 	 * WCML_Url_Translation constructor.
 	 *
 	 * @param woocommerce_wpml $woocommerce_wpml
-	 * @param SitePress $sitepress
-	 * @param wpdb $wpdb
+	 * @param SitePress        $sitepress
+	 * @param wpdb             $wpdb
 	 */
-	public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb )
-	{
+	public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->sitepress        = $sitepress;
 		$this->wpdb             = $wpdb;
@@ -36,46 +35,65 @@ class WCML_Url_Translation {
 		$this->default_product_tag_gettext_base      = _x( 'product-tag', 'slug', 'woocommerce' );
 	}
 
-	function set_up() {
+	public function set_up() {
 
 		$this->wc_permalinks = get_option( 'woocommerce_permalinks' );
 
-		add_filter( 'pre_update_option_woocommerce_permalinks', array(
-			$this,
-			'register_product_and_taxonomy_bases'
-		), 10, 2 );
+		add_filter(
+			'pre_update_option_woocommerce_permalinks',
+			[
+				$this,
+				'register_product_and_taxonomy_bases',
+			],
+			10,
+			2
+		);
 
 		if ( ! is_admin() ) {
-			add_filter( 'option_woocommerce_permalinks', array(
-				$this,
-				'use_untranslated_default_url_bases'
-			), 1, 1 ); // avoid using the _x translations
-			add_action( 'init', array(
-				$this,
-				'fix_post_object_rewrite_slug'
-			), 6 ); // handle the particular case of the default product base: wpmlst-540
+			add_filter(
+				'option_woocommerce_permalinks',
+				[
+					$this,
+					'use_untranslated_default_url_bases',
+				],
+				1,
+				1
+			); // avoid using the _x translations.
+			add_action(
+				'init',
+				[
+					$this,
+					'fix_post_object_rewrite_slug',
+				],
+				6
+			); // handle the particular case of the default product base: wpmlst-540.
 		}
 
-		add_filter( 'pre_update_option_rewrite_rules', array(
-			$this,
-			'force_bases_in_strings_languages'
-		), 1, 1 ); // high priority
-		add_filter( 'option_rewrite_rules', array( $this, 'translate_bases_in_rewrite_rules' ), 0, 1 ); // high priority
-		add_filter( 'term_link', array( $this, 'translate_taxonomy_base' ), 0, 3 ); // high priority
+		add_filter(
+			'pre_update_option_rewrite_rules',
+			[
+				$this,
+				'force_bases_in_strings_languages',
+			],
+			1,
+			1
+		); // high priority.
+		add_filter( 'option_rewrite_rules', [ $this, 'translate_bases_in_rewrite_rules' ], 0, 1 ); // high priority
+		add_filter( 'term_link', [ $this, 'translate_taxonomy_base' ], 0, 3 ); // high priority
 
-		add_action( 'wp_ajax_wcml_update_base_translation', array( $this, 'wcml_update_base_translation' ) );
-		add_filter( 'redirect_canonical', array( $this, 'check_wc_tax_url_on_redirect' ), 10, 2 );
-		add_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
-		add_filter( 'wp_redirect', array( $this, 'encode_shop_slug' ), 10, 2 );
-		add_action( 'switch_blog', array( $this, 'maybe_remove_query_vars_filter' ) );
+		add_action( 'wp_ajax_wcml_update_base_translation', [ $this, 'wcml_update_base_translation' ] );
+		add_filter( 'redirect_canonical', [ $this, 'check_wc_tax_url_on_redirect' ], 10, 2 );
+		add_filter( 'query_vars', [ $this, 'translate_query_var_for_product' ] );
+		add_filter( 'wp_redirect', [ $this, 'encode_shop_slug' ], 10, 2 );
+		add_action( 'switch_blog', [ $this, 'maybe_remove_query_vars_filter' ] );
 
-		add_filter( 'post_type_link', array( $this, 'translate_product_post_type_link' ), 10, 2 );
+		add_filter( 'post_type_link', [ $this, 'translate_product_post_type_link' ], 10, 2 );
 
 		if ( empty( $this->woocommerce_wpml->settings['url_translation_set_up'] ) ) {
 
 			$this->clean_up_product_and_taxonomy_bases();
 
-			//set translate product by default
+			// set translate product by default
 			$this->translate_product_base();
 
 			$this->register_product_and_taxonomy_bases();
@@ -86,25 +104,24 @@ class WCML_Url_Translation {
 
 	}
 
-	function clean_up_product_and_taxonomy_bases() {
+	public function clean_up_product_and_taxonomy_bases() {
 
 		$base = $this->get_woocommerce_product_base();
 
-		//delete other old product bases
+		// delete other old product bases
 		$this->wpdb->query( "DELETE FROM {$this->wpdb->prefix}icl_strings WHERE context = 'WordPress' AND value != '" . trim( $base, '/' ) . "' AND name LIKE 'URL slug:%' " );
 
-		//update name for current base
-
+		// update name for current base
 		$this->wpdb->update(
 			$this->wpdb->prefix . 'icl_strings',
-			array(
+			[
 				'context' => 'WordPress',
-				'name'    => 'URL slug: product'
-			),
-			array(
+				'name'    => 'URL slug: product',
+			],
+			[
 				'context' => 'WordPress',
-				'name'    => sprintf( 'Url slug: %s', trim( $base, '/' ) )
-			)
+				'name'    => sprintf( 'Url slug: %s', trim( $base, '/' ) ),
+			]
 		);
 
 		$woocommerce_permalinks = maybe_unserialize( get_option( 'woocommerce_permalinks' ) );
@@ -130,12 +147,11 @@ class WCML_Url_Translation {
 			if ( $taxonomy ) {
 				$this->wpdb->query( "DELETE FROM {$this->wpdb->prefix}icl_strings WHERE context LIKE '" . sprintf( 'URL %s slugs - ', $taxonomy ) . "%'" );
 			}
-
 		}
 
 	}
 
-	function fix_post_object_rewrite_slug() {
+	public function fix_post_object_rewrite_slug() {
 		global $wp_post_types, $wp_rewrite;
 
 		if ( empty( $this->wc_permalinks['product_base'] ) ) {
@@ -146,7 +162,7 @@ class WCML_Url_Translation {
 		}
 	}
 
-	function url_strings_context() {
+	public function url_strings_context() {
 		return 'WordPress';
 	}
 
@@ -171,7 +187,7 @@ class WCML_Url_Translation {
 		return $name;
 	}
 
-	function translate_product_base() {
+	public function translate_product_base() {
 
 		if ( ! defined( 'WOOCOMMERCE_VERSION' ) || ( ! isset( $GLOBALS['ICL_Pro_Translation'] ) || is_null( $GLOBALS['ICL_Pro_Translation'] ) ) ) {
 			return;
@@ -181,7 +197,7 @@ class WCML_Url_Translation {
 		do_action( 'wpml_activate_slug_translation', 'product', $slug );
 	}
 
-	function get_woocommerce_product_base() {
+	public function get_woocommerce_product_base() {
 
 		if ( isset( $this->wc_permalinks['product_base'] ) && ! empty( $this->wc_permalinks['product_base'] ) ) {
 			return trim( $this->wc_permalinks['product_base'], '/' );
@@ -193,7 +209,7 @@ class WCML_Url_Translation {
 
 	}
 
-	function register_product_and_taxonomy_bases( $value = false, $old_value = false ) {
+	public function register_product_and_taxonomy_bases( $value = false, $old_value = false ) {
 
 		if ( empty( $value ) ) {
 			$permalink_options = $this->wc_permalinks;
@@ -255,7 +271,6 @@ class WCML_Url_Translation {
 			$this->add_default_slug_translations( $tag_base, $name );
 		}
 
-
 		if ( isset( $permalink_options['attribute_base'] ) && $permalink_options['attribute_base'] ) {
 			$attr_base = trim( $permalink_options['attribute_base'], '/' );
 
@@ -278,7 +293,7 @@ class WCML_Url_Translation {
 	 *
 	 * @return mixed
 	 */
-	function use_untranslated_default_url_bases( $permalinks ) {
+	public function use_untranslated_default_url_bases( $permalinks ) {
 
 		// exception (index.php in WP permalink structure) #wcml-1939
 		if ( preg_match( '#^/?index\.php/#', get_option( 'permalink_structure' ) ) ) {
@@ -298,7 +313,7 @@ class WCML_Url_Translation {
 		return $permalinks;
 	}
 
-	function add_default_slug_translations( $slug, $name ) {
+	public function add_default_slug_translations( $slug, $name ) {
 
 		$string_id       = icl_get_string_id( $slug, $this->url_strings_context(), $name );
 		$string_language = $this->woocommerce_wpml->strings->get_string_language( $slug, $this->url_strings_context(), $name );
@@ -326,24 +341,27 @@ class WCML_Url_Translation {
 						// add string translation
 						icl_add_string_translation( $string_id, $language, $slug_translation, ICL_STRING_TRANSLATION_COMPLETE );
 					}
-
 				}
-
 			}
 		}
 
 	}
 
-	function force_bases_in_strings_languages( $value ) {
+	public function force_bases_in_strings_languages( $value ) {
 
-		if ( $value && $this->sitepress->get_current_language() != 'en' ) {
+		if ( $value && $this->sitepress->get_current_language() !== 'en' ) {
 
-			remove_filter( 'gettext_with_context', array(
-				$this->woocommerce_wpml->strings,
-				'category_base_in_strings_language'
-			), 99, 3 );
-			$taxonomies = array(
-				'product_cat' => array(
+			remove_filter(
+				'gettext_with_context',
+				[
+					$this->woocommerce_wpml->strings,
+					'category_base_in_strings_language',
+				],
+				99,
+				3
+			);
+			$taxonomies = [
+				'product_cat' => [
 					'base'            => 'category_base',
 					'base_translated' => apply_filters(
 						'wpml_translate_single_string',
@@ -351,9 +369,9 @@ class WCML_Url_Translation {
 						$this->url_strings_context(),
 						$this->url_string_name( 'product_cat' )
 					),
-					'default'         => $this->default_product_category_base
-				),
-				'product_tag' => array(
+					'default'         => $this->default_product_category_base,
+				],
+				'product_tag' => [
 					'base'            => 'tag_base',
 					'base_translated' => apply_filters(
 						'wpml_translate_single_string',
@@ -361,29 +379,32 @@ class WCML_Url_Translation {
 						$this->url_strings_context(),
 						$this->url_string_name( 'product_tag' )
 					),
-					'default'         => $this->default_product_tag_base
-				),
+					'default'         => $this->default_product_tag_base,
+				],
+			];
+			add_filter(
+				'gettext_with_context',
+				[
+					$this->woocommerce_wpml->strings,
+					'category_base_in_strings_language',
+				],
+				99,
+				3
 			);
-			add_filter( 'gettext_with_context', array(
-				$this->woocommerce_wpml->strings,
-				'category_base_in_strings_language'
-			), 99, 3 );
 			foreach ( $taxonomies as $taxonomy => $taxonomy_details ) {
 
 				if ( empty( $this->wc_permalinks[ $taxonomy_details['base'] ] ) && $value ) {
 
-					$new_value = array();
+					$new_value = [];
 					foreach ( $value as $k => $v ) {
-						$k               = preg_replace( "#" . $taxonomy_details['base_translated'] . "/#", $taxonomy_details['default'] . '/', $k );
+						$k               = preg_replace( '#' . $taxonomy_details['base_translated'] . '/#', $taxonomy_details['default'] . '/', $k );
 						$new_value[ $k ] = $v;
 					}
 					$value = $new_value;
 					unset( $new_value );
 
 				}
-
 			}
-
 		}
 
 		return $value;
@@ -395,7 +416,7 @@ class WCML_Url_Translation {
 	 *
 	 * @return array
 	 */
-	function translate_bases_in_rewrite_rules( $value ) {
+	public function translate_bases_in_rewrite_rules( $value ) {
 
 		if ( ! empty( $value ) ) {
 			$value = $this->translate_wc_default_taxonomies_bases_in_rewrite_rules( $value );
@@ -411,8 +432,8 @@ class WCML_Url_Translation {
 	 *
 	 * @return array
 	 */
-	public function translate_wc_default_taxonomies_bases_in_rewrite_rules( $value ){
-		$taxonomies = array( 'product_cat', 'product_tag' );
+	public function translate_wc_default_taxonomies_bases_in_rewrite_rules( $value ) {
+		$taxonomies = [ 'product_cat', 'product_tag' ];
 
 		foreach ( $taxonomies as $taxonomy ) {
 			$slug_details = $this->get_translated_tax_slug( $taxonomy );
@@ -427,12 +448,12 @@ class WCML_Url_Translation {
 				$slug_match             = addslashes( ltrim( $slug_details['slug'], '/' ) );
 				$slug_translation_match = ltrim( $slug_details['translated_slug'], '/' );
 
-				$buff_value = array();
+				$buff_value = [];
 
 				foreach ( (array) $value as $k => $v ) {
 
 					if ( $slug_details['slug'] != $slug_details['translated_slug'] && preg_match( '#(^|^/)' . $slug_match . '/#', $k ) ) {
-						$k = preg_replace( '#(^|^/)' . $slug_match . '/#', '$1'. $slug_translation_match . '/', $k );
+						$k = preg_replace( '#(^|^/)' . $slug_match . '/#', '$1' . $slug_translation_match . '/', $k );
 					}
 
 					$buff_value[ $k ] = $v;
@@ -440,7 +461,6 @@ class WCML_Url_Translation {
 				$value = $buff_value;
 				unset( $buff_value );
 			}
-
 		}
 
 		return $value;
@@ -455,7 +475,7 @@ class WCML_Url_Translation {
 
 		// handle attributes
 		$wc_taxonomies           = wc_get_attribute_taxonomies();
-		$wc_taxonomies_wc_format = array();
+		$wc_taxonomies_wc_format = [];
 		foreach ( $wc_taxonomies as $k => $v ) {
 			$wc_taxonomies_wc_format[] = 'pa_' . $v->attribute_name;
 		}
@@ -492,16 +512,14 @@ class WCML_Url_Translation {
 					} elseif ( $attribute_slug_translation && $attribute_slug !== $attribute_slug_translation ) {
 
 						$slug_match  = addslashes( ltrim( $attribute_slug, '/' ) );
-						$pattern     = "#(^|\/)" . $slug_match . "/(.*)#";
+						$pattern     = '#(^|\/)' . $slug_match . '/(.*)#';
 						$replacement = '$1' . $attribute_slug_translation . '/$2';
 
 						$value = $this->replace_bases_in_rewrite_rules( $value, $pattern, $pattern, $replacement );
 
 					}
-
 				}
 			}
-
 		}
 
 		return $value;
@@ -513,8 +531,8 @@ class WCML_Url_Translation {
 	 *
 	 * @return array
 	 */
-	public function translate_shop_page_base_in_rewrite_rules( $value ){
-		//filter shop page rewrite slug
+	public function translate_shop_page_base_in_rewrite_rules( $value ) {
+		// filter shop page rewrite slug
 		$current_shop_id = wc_get_page_id( 'shop' );
 		$default_shop_id = apply_filters( 'translate_object_id', $current_shop_id, 'page', true, $this->sitepress->get_default_language() );
 
@@ -522,16 +540,16 @@ class WCML_Url_Translation {
 			return $value;
 		}
 
-		$current_slug = get_post( $current_shop_id )->post_name;
-		$default_slug = get_post( $default_shop_id )->post_name;
+		$current_slug = get_page_uri( $current_shop_id );
+		$default_slug = get_page_uri( $default_shop_id );
 
 		if ( $current_slug != $default_slug ) {
-			$buff_value = array();
+			$buff_value = [];
 			foreach ( (array) $value as $k => $v ) {
 
 				if ( preg_match( '#^' . $default_slug . '/\?\$$#', $k ) ||
-				     preg_match( '#^' . $default_slug . '/\(?feed#', $k ) ||
-				     preg_match( '#^' . $default_slug . '/page#', $k )
+					 preg_match( '#^' . $default_slug . '/\(?feed#', $k ) ||
+					 preg_match( '#^' . $default_slug . '/page#', $k )
 				) {
 
 					$k = preg_replace( '#^' . $default_slug . '/#', $current_slug . '/', $k );
@@ -548,18 +566,18 @@ class WCML_Url_Translation {
 	}
 
 	/**
-	 * @param array $value
+	 * @param array  $value
 	 * @param string $pattern
 	 * @param string $replacement_pattern
 	 * @param string $replacement
 	 *
 	 * @return array
 	 */
-	public function replace_bases_in_rewrite_rules( $value, $pattern, $replacement_pattern, $replacement ){
+	public function replace_bases_in_rewrite_rules( $value, $pattern, $replacement_pattern, $replacement ) {
 
-		$buff_value = array();
+		$buff_value = [];
 		foreach ( (array) $value as $k => $v ) {
-			if ( preg_match( $pattern , $k ) ) {
+			if ( preg_match( $pattern, $k ) ) {
 				$k = preg_replace( $replacement_pattern, $replacement, $k );
 			}
 			$buff_value[ $k ] = $v;
@@ -571,12 +589,11 @@ class WCML_Url_Translation {
 		return $value;
 	}
 
-	function translate_taxonomy_base( $termlink, $term, $taxonomy ) {
+	public function translate_taxonomy_base( $termlink, $term, $taxonomy ) {
 		global $wp_rewrite, $wpml_term_translations;
 		static $no_recursion_flag;
 
 		// handles product categories, product tags and attributes
-
 		$wc_taxonomies = wc_get_attribute_taxonomies();
 		foreach ( $wc_taxonomies as $k => $v ) {
 			$wc_taxonomies_wc_format[] = 'pa_' . $v->attribute_name;
@@ -608,7 +625,7 @@ class WCML_Url_Translation {
 
 						$buff = $wp_rewrite->extra_permastructs[ $taxonomy ]['struct'];
 
-						if( $base_translated !== $base ){
+						if ( $base_translated !== $base ) {
 							// translate the attribute base
 							$wp_rewrite->extra_permastructs[ $taxonomy ]['struct'] = preg_replace( '#^' . $base . '/(.*)#', $base_translated . '/$1', $wp_rewrite->extra_permastructs[ $taxonomy ]['struct'] );
 						}
@@ -626,13 +643,13 @@ class WCML_Url_Translation {
 
 						if ( $attribute_slug_translation != $attribute_slug ) {
 
-							if( $base ){
+							if ( $base ) {
 								$wp_rewrite->extra_permastructs[ $taxonomy ]['struct'] = preg_replace(
 									'#^' . $base_translated . '/([^/]+)/(.+)$#',
 									$base_translated . '/' . $attribute_slug_translation . '/$2',
 									$wp_rewrite->extra_permastructs[ $taxonomy ]['struct']
 								);
-							}else{
+							} else {
 								$wp_rewrite->extra_permastructs[ $taxonomy ]['struct'] = preg_replace(
 									'#' . $attribute_slug_default . '/(.+)$#',
 									$attribute_slug_translation . '/$1',
@@ -647,24 +664,21 @@ class WCML_Url_Translation {
 						$wp_rewrite->extra_permastructs[ $taxonomy ]['struct'] = $buff;
 
 					}
-
 				}
 
 				$no_recursion_flag = false;
 
 				wp_cache_add( $cache_key, $termlink, 'terms', 0 );
 			}
-
 		}
 
 		return $termlink;
 	}
 
-	function get_translated_tax_slug( $taxonomy, $language = false ) {
+	public function get_translated_tax_slug( $taxonomy, $language = false ) {
 
 		switch ( $taxonomy ) {
 			case 'product_tag':
-
 				if ( ! empty( $this->wc_permalinks['tag_base'] ) ) {
 					$slug = $gettext_slug = trim( $this->wc_permalinks['tag_base'], '/' );
 				} else {
@@ -676,7 +690,6 @@ class WCML_Url_Translation {
 				break;
 
 			case 'product_cat':
-
 				if ( ! empty( $this->wc_permalinks['category_base'] ) ) {
 					$slug = $gettext_slug = trim( $this->wc_permalinks['category_base'], '/' );
 				} else {
@@ -701,24 +714,24 @@ class WCML_Url_Translation {
 			$language = $this->sitepress->get_current_language();
 		}
 
-		if ( $slug && $language != 'all' && $language != $string_language ) {
+		if ( $slug && $language !== 'all' && $language !== $string_language ) {
 
 			$slug_translation = apply_filters( 'wpml_translate_single_string', $slug, $this->url_strings_context(), $this->url_string_name( $taxonomy ), $language, false );
 
-			return array(
+			return [
 				'slug'            => $slug,
-				'translated_slug' => $slug_translation
-			);
+				'translated_slug' => $slug_translation,
+			];
 		}
 
-		return array(
+		return [
 			'slug'            => $slug,
-			'translated_slug' => $slug
-		);
+			'translated_slug' => $slug,
+		];
 
 	}
 
-	function get_base_translation( $base, $language ) {
+	public function get_base_translation( $base, $language ) {
 
 		// case of attribute slugs
 		if ( strpos( $base, 'attribute_slug-' ) === 0 ) {
@@ -784,11 +797,11 @@ class WCML_Url_Translation {
 		return $return;
 
 	}
-	
-	private function get_endpoint_string_context(){
-		
+
+	private function get_endpoint_string_context() {
+
 		return class_exists( 'WPML_Endpoints_Support' ) ? WPML_Endpoints_Support::STRING_CONTEXT : 'WooCommerce Endpoints';
-		
+
 	}
 
 	/**
@@ -800,10 +813,10 @@ class WCML_Url_Translation {
 
 		if ( $base == 'shop' ) {
 			$source_language = $this->sitepress->get_language_for_element( wc_get_page_id( 'shop' ), 'post_page' );
-		} elseif ( in_array( $base, array( 'product', 'product_cat', 'product_tag', 'attribute' ) ) ) {
+		} elseif ( in_array( $base, [ 'product', 'product_cat', 'product_tag', 'attribute' ] ) ) {
 			$source_language = $this->woocommerce_wpml->strings->get_string_language( $base, $this->url_strings_context(), $this->url_string_name( $base ) );
 		} elseif ( strpos( $base, 'attribute_slug-' ) === 0 ) {
-			$slug = preg_replace( '#^attribute_slug-#', '', $base );
+			$slug            = preg_replace( '#^attribute_slug-#', '', $base );
 			$source_language = $this->woocommerce_wpml->strings->get_string_language( $base, $this->url_strings_context(), $this->url_string_name( 'attribute_slug', $slug ) );
 		} else {
 			$source_language = $this->woocommerce_wpml->strings->get_string_language( $base, $this->get_endpoint_string_context(), $base );
@@ -812,7 +825,7 @@ class WCML_Url_Translation {
 		return $source_language;
 	}
 
-	function wcml_update_base_translation() {
+	public function wcml_update_base_translation() {
 
 		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_update_base_translation' ) ) {
@@ -832,12 +845,11 @@ class WCML_Url_Translation {
 
 				$trnsl_shop_obj = get_post( $translated_shop_id );
 				$new_slug       = wp_unique_post_slug( sanitize_title( $_POST['base_translation'] ), $translated_shop_id, $trnsl_shop_obj->post_status, $trnsl_shop_obj->post_type, $trnsl_shop_obj->post_parent );
-				$this->wpdb->update( $this->wpdb->posts, array( 'post_name' => $new_slug ), array( 'ID' => $translated_shop_id ) );
+				$this->wpdb->update( $this->wpdb->posts, [ 'post_name' => $new_slug ], [ 'ID' => $translated_shop_id ] );
 
 			}
-
 		} else {
-			if ( in_array( $original_base, array( 'product', 'product_cat', 'product_tag', 'attribute' ) ) ) {
+			if ( in_array( $original_base, [ 'product', 'product_cat', 'product_tag', 'attribute' ] ) ) {
 				$string_id = icl_get_string_id( $original_base_value, $this->url_strings_context(), $this->url_string_name( $original_base ) );
 			} elseif ( strpos( $original_base, 'attribute_slug-' ) === 0 ) {
 				$slug = preg_replace( '#^attribute_slug-#', '', $original_base );
@@ -849,7 +861,7 @@ class WCML_Url_Translation {
 					$string_id = icl_register_string( $this->get_endpoint_string_context(), $original_base, $original_base_value );
 				}
 
-				if( method_exists( $this->woocommerce_wpml->endpoints, 'add_endpoints' ) ){
+				if ( method_exists( $this->woocommerce_wpml->endpoints, 'add_endpoints' ) ) {
 					$this->woocommerce_wpml->endpoints->add_endpoints();
 					$this->woocommerce_wpml->endpoints->flush_rules_for_endpoints_translations();
 				}
@@ -865,18 +877,17 @@ class WCML_Url_Translation {
 		echo json_encode( $html );
 		die();
 
-
 	}
 
 	// return correct redirect URL for WC standard taxonomies when pretty permalink uses with lang as parameter in WPML
-	function check_wc_tax_url_on_redirect( $redirect_url, $requested_url ) {
+	public function check_wc_tax_url_on_redirect( $redirect_url, $requested_url ) {
 		global $wp_query;
 
 		if ( is_tax() ) {
 			$original = @parse_url( $requested_url );
 			if ( isset( $original['query'] ) ) {
 				parse_str( $original['query'], $query_args );
-				if ( ( isset( $query_args['product_cat'] ) || isset( $query_args['product_tag'] ) ) && isset ( $query_args['lang'] ) ) {
+				if ( ( isset( $query_args['product_cat'] ) || isset( $query_args['product_tag'] ) ) && isset( $query_args['lang'] ) ) {
 					$obj     = $wp_query->get_queried_object();
 					$tax_url = get_term_link( (int) $obj->term_id, $obj->taxonomy );
 
@@ -901,15 +912,14 @@ class WCML_Url_Translation {
 				unset( $_GET[ $translated_slug ] );
 				$_GET[ $product_permalink ] = $buff;
 			}
-
 		}
 
 		return $public_query_vars;
 	}
 
 	public function maybe_remove_query_vars_filter() {
-		if ( !is_plugin_active( basename( $this->sitepress->get_wp_api()->constant( 'WPML_ST_PATH' ) ) . '/plugin.php' ) ) {
-			remove_filter( 'query_vars', array( $this, 'translate_query_var_for_product' ) );
+		if ( ! is_plugin_active( basename( $this->sitepress->get_wp_api()->constant( 'WPML_ST_PATH' ) ) . '/plugin.php' ) ) {
+			remove_filter( 'query_vars', [ $this, 'translate_query_var_for_product' ] );
 		}
 	}
 

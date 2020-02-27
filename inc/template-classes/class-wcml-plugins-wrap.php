@@ -29,7 +29,7 @@ class WCML_Plugins_Wrap {
 	 */
 	public function get_model() {
 
-		$model = array(
+		$model = [
 			'link_url'          => admin_url( 'admin.php?page=wpml-wcml' ),
 			'old_wpml'          => defined( 'ICL_SITEPRESS_VERSION' ) && version_compare( ICL_SITEPRESS_VERSION, '4.0', '<' ),
 			'tracking_link'     => $this->tracking_link->generate( 'https://wpml.org/shop/account/', false, 'account' ),
@@ -41,7 +41,7 @@ class WCML_Plugins_Wrap {
 			'wc'                => class_exists( 'WooCommerce' ),
 			'old_wc'            => class_exists( 'WooCommerce' ) && version_compare( WC_VERSION, '3.3.0', '<' ),
 			'wc_link'           => 'http://wordpress.org/extend/plugins/woocommerce/',
-			'strings'           => array(
+			'strings'           => [
 				'title'                => __( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
 				'required'             => __( 'Required plugins', 'woocommerce-multilingual' ),
 				'plugins'              => __( 'Plugins Status', 'woocommerce-multilingual' ),
@@ -52,7 +52,7 @@ class WCML_Plugins_Wrap {
 				'get_wpml'             => __( 'Get WPML', 'woocommerce-multilingual' ),
 				'get_wpml_tm'          => __( 'Get WPML Translation Management', 'woocommerce-multilingual' ),
 				'get_wpml_st'          => __( 'Get WPML String Translation', 'woocommerce-multilingual' ),
-				'new_design_wpml_link' => sprintf( __( 'You are using WooCommerce Multilingual %s. This version includes an important UI redesign for the configuration screens and it requires <a href="%s">WPML %s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML.', 'woocommerce-multilingual' ), WCML_VERSION, $this->tracking_link->generate( 'https://wpml.org/' ), '3.4' ),
+				'new_design_wpml_link' => sprintf( __( 'You are using WooCommerce Multilingual %1$s. This version includes an important UI redesign for the configuration screens and it requires <a href="%2$s">WPML %3$s</a> or higher. Everything still works on the front end now but, in order to configure options for WooCommerce Multilingual, you need to upgrade WPML.', 'woocommerce-multilingual' ), WCML_VERSION, $this->tracking_link->generate( 'https://wpml.org/' ), '3.4' ),
 				'wpml'                 => '<strong>WPML</strong>',
 				'tm'                   => '<strong>WPML Translation Management</strong>',
 				'st'                   => '<strong>WPML String Translation</strong>',
@@ -64,8 +64,8 @@ class WCML_Plugins_Wrap {
 				'wpml_not_inst'        => sprintf( __( '%s is either not installed or not active.', 'woocommerce-multilingual' ), '<strong><a title="' . esc_attr__( 'The WordPress Multilingual Plugin', 'woocommerce-multilingual' ) . '" href="' . $this->tracking_link->generate( 'https://wpml.org/' ) . '">WPML</a></strong>' ),
 				'old_wc'               => sprintf( __( '%1$s  is installed, but with incorrect version. You need %1$s %2$s or higher. ', 'woocommerce-multilingual' ), '<strong>WooCommerce</strong>', '3.3.0' ),
 				'download_wc'          => __( 'Download WooCommerce', 'woocommerce-multilingual' ),
-			)
-		);
+			],
+		];
 
 		return $model;
 

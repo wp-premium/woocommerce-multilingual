@@ -24,7 +24,7 @@ abstract class WCML_Payment_Gateway {
 	 */
 	protected $gateway;
 
-	private $settings = array();
+	private $settings = [];
 
 	/**
 	 * @var \IWPML_Template_Service
@@ -36,15 +36,15 @@ abstract class WCML_Payment_Gateway {
 	protected $woocommerce_wpml;
 
 	/**
-	 * @param WC_Payment_Gateway $gateway
+	 * @param WC_Payment_Gateway      $gateway
 	 * @param \IWPML_Template_Service $template_service
-	 * @param woocommerce_wpml $woocommerce_wpml
+	 * @param woocommerce_wpml        $woocommerce_wpml
 	 */
 	public function __construct( WC_Payment_Gateway $gateway, IWPML_Template_Service $template_service, woocommerce_wpml $woocommerce_wpml ) {
 		$this->gateway          = $gateway;
 		$this->template_service = $template_service;
 		$this->woocommerce_wpml = $woocommerce_wpml;
-		$this->settings         = get_option( self::OPTION_KEY . $this->get_id(), array() );
+		$this->settings         = get_option( self::OPTION_KEY . $this->get_id(), [] );
 	}
 
 	public function get_settings_output( $current_currency, $active_currencies ) {
@@ -56,15 +56,15 @@ abstract class WCML_Payment_Gateway {
 	}
 
 	public function show() {
-		return $this->get_settings_output();
+		return $this->get_settings_output( $this->current_currency, $this->default_currency );
 	}
 
 	abstract protected function get_output_model();
 
 	abstract protected function get_output_template();
 
-	protected function is_current_currency_default(){
-		if( $this->current_currency === $this->default_currency ){
+	protected function is_current_currency_default() {
+		if ( $this->current_currency === $this->default_currency ) {
 			return true;
 		}
 		return false;
@@ -72,21 +72,21 @@ abstract class WCML_Payment_Gateway {
 	/**
 	 * @return WC_Payment_Gateway
 	 */
-	public function get_gateway(){
+	public function get_gateway() {
 		return $this->gateway;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function get_id(){
+	public function get_id() {
 		return $this->gateway->id;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function get_title(){
+	public function get_title() {
 		return $this->gateway->title;
 	}
 
@@ -112,19 +112,19 @@ abstract class WCML_Payment_Gateway {
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 */
 	public function save_setting( $key, $value ) {
 		$this->settings[ $key ] = $value;
 		$this->save_settings();
 	}
 
-	public function get_active_currencies(){
+	public function get_active_currencies() {
 
 		$active_currencies = $this->active_currencies;
 
-		if( !in_array( $this->current_currency, array_keys( $active_currencies ) ) ){
-			$active_currencies[ $this->current_currency ] = array();
+		if ( ! in_array( $this->current_currency, array_keys( $active_currencies ) ) ) {
+			$active_currencies[ $this->current_currency ] = [];
 		}
 
 		return $active_currencies;

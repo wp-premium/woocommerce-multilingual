@@ -5,7 +5,7 @@ Tags: CMS, woocommerce, commerce, ecommerce, e-commerce, products, WPML, multili
 License: GPLv2
 Requires at least: 4.7
 Tested up to: 5.3
-Stable tag: 4.7.6
+Stable tag: 4.7.9
 Requires PHP: 5.6
 
 Allows running fully multilingual e-commerce sites using WooCommerce and WPML.
@@ -137,18 +137,31 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 
 == Changelog ==
 
-= 4.7.6 =
-* Fix php warning in WCML custom prices module.
-* Fixed unable to add variation to cart for products with more than 30 variations.
-* Remove legacy code for downloading the language pack.
-* Fixed string translation while adding "sold individual" product more than ones from second language.
-* Fixed notices thrown with php 7.4 with multi-currency.
-* Fixed notices thrown with php 7.4 when using multi-currency.
-* Fixed notices thrown with php 7.4 when using WCML with WC Variation Swatches and Photos.
-* Fixed deprecation notices (`Function get_magic_quotes_gpc() is deprecated`) when running PHP 7.4.
-* Fixed a few fatal errors thrown when running PHP 7.4 (e.g. `Fatal error: Uncaught Error: Call to a member function get_setting() on null`) and caused by legacy code passing objects by reference.
-* Fixed language for "Low Stock" and "No Stock" admin emails.
-* Fixed not converted pre-selected price widget prices when switching currency.
+= 4.7.8 =
+* Make `Additional content` field translatable for Emails.
+* Fixed stock synchronization issue for some extra plugins.
+* Fixed cart item not deleted from cart page in some cases.
+* Fixed Average Rating Widget Filter in all languages.
+* Fixed a fatal error when applying a translation job on a product with tabs on PHP 7.1+.
+* Fixed admin order note language after order status change.
+* Fixed not showing products when shop page is a child page of the front/home page.
+* Fixed display glitch of displaying current currency while adding new one.
+* Fixed compatibility plugins additional content appears not translated when using ATE.
+* Fixed inability to edit 'before discount' field on edit order page.
+* Fixed products in all languages displayed on new booking admin page.
+* Fixed language icon not updated in real-time when using Advanced Translation Editor.
+* Fixed warning message displayed at the wrong moment.
+* Fixed wrong language of custom attributes on cart page with display as translated mode enabled for products.
+* Fixed multiple ajax calls on the front page if few tabs opened in different languages for non-logged users.
+* Fixed Subscriptions early renewal price if not subscription price selected in the shop.
+* Fixed Top Rated product widget displaying wrong products on the second language.
+* Fixed Variable subscription "From" from price display auto converted price instead of custom one.
+* Fixed the dynamic WooCommerce blocks which were not converted in the current language.
+* Fixed product in wrong language selected on new order admin page.
+* WP Super Cache enable cache for switching currency.
+* Lock attributes select on second language native edit screen.
+* Fixed price not shown issue with WooCommerce Bookings.
+* Removed limitation of decimals in multi-currency settings.
 
 = 4.7.0 =
 * Replaced some Twig templates with pure PHP templates as the first step towards the removal of Twig dependencies.
@@ -158,6 +171,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * Fixed an issue with the cache flush during language switching.
 * Fixed in the original ticket.
 * Fixed an issue where the gateway strings would always register in English instead of the site's default language.
+* Fixed languages column width on products table.
 * Fixed PHP Notice for WC Variations Swatches And Photos compatibility.
 * WooCommerce Bookings compatibility : Fixed notice when trying to cancel booking.
 * Fixed an issue where the total price on the Composite product page was not rounded.
@@ -172,6 +186,7 @@ WooCommerce Multilingual is compatible with all major WooCommerce extensions. We
 * Fixed an issue where customers would not receive notifications in the correct language.
 * Fixed an issue where the Products shortcode was not working in the secondary language.
 * Fixed error while sending WooCoomerce Bookings email for bookings which didn't have orders assigned.
+* Added compatibility for free version of YIKES Custom Product Tabs.
 * Updated compatibility class for WC Checkout Addons
 * Fixed the images that were wrongly inserted in the translation job when attachments are not translatable.
 * Significantly improved the site performance on when updating the page, post, or a WooCommerce product page in the admin.

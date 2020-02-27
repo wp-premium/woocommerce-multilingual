@@ -57,6 +57,10 @@ class OTGS_Products_Manager {
 	 * @return string|null
 	 */
 	public function get_products_url( $repository_id, $site_key, $site_url, $bypass_buckets ) {
+		$repo_id_upper = strtoupper( $repository_id );
+		if ( defined( "OTGS_INSTALLER_{$repo_id_upper}_PRODUCTS" ) ) {
+			return constant( "OTGS_INSTALLER_{$repo_id_upper}_PRODUCTS" );
+		}
 
 		if ( ! $bypass_buckets && $this->is_on_production_channel( $repository_id ) ) {
 			$products_url = $this->get_products_url_from_local_config( $repository_id, $site_key );

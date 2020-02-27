@@ -27,25 +27,25 @@ class WCML_Status_UI extends WCML_Templates_Factory {
 
 	public function get_model() {
 
-		$WCML_Status_Status_UI 			= new WCML_Status_Status_UI( $this->sitepress );
-		$WCML_Status_Config_Warnings_UI	= new WCML_Status_Config_Warnings_UI( $this->sitepress, $this->woocommerce_wpml, $this->sitepress_settings  );
-		$WCML_Status_Store_Pages_UI		= new WCML_Status_Store_Pages_UI( $this->sitepress, $this->woocommerce_wpml  );
-		$WCML_Status_Taxonomies_UI		= new WCML_Status_Taxonomies_UI( $this->sitepress, $this->woocommerce_wpml  );
-		$WCML_Status_Multi_Currencies_UI= new WCML_Status_Multi_Currencies_UI( $this->woocommerce_wpml  );
-		$WCML_Status_Media_UI           = new WCML_Status_Media_UI( $this->sitepress );
+		$WCML_Status_Status_UI           = new WCML_Status_Status_UI( $this->sitepress );
+		$WCML_Status_Config_Warnings_UI  = new WCML_Status_Config_Warnings_UI( $this->sitepress, $this->woocommerce_wpml, $this->sitepress_settings );
+		$WCML_Status_Store_Pages_UI      = new WCML_Status_Store_Pages_UI( $this->sitepress, $this->woocommerce_wpml );
+		$WCML_Status_Taxonomies_UI       = new WCML_Status_Taxonomies_UI( $this->sitepress, $this->woocommerce_wpml );
+		$WCML_Status_Multi_Currencies_UI = new WCML_Status_Multi_Currencies_UI( $this->woocommerce_wpml );
+		$WCML_Status_Media_UI            = new WCML_Status_Media_UI( $this->sitepress );
 
-		$model = array(
-			'plugins_status' 	=> $WCML_Status_Status_UI->get_view(),
-			'conf_warnings' 	=> $WCML_Status_Config_Warnings_UI->get_view(),
-			'store_pages' 		=> $WCML_Status_Store_Pages_UI->get_view(),
-			'taxonomies'  		=> $WCML_Status_Taxonomies_UI->get_view(),
-			'multi_currency'	=> $WCML_Status_Multi_Currencies_UI->get_view(),
-			'media'             => $WCML_Status_Media_UI->get_view(),
-			'troubl_url' => admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ),
-			'strings' => array(
-				'troubl' => __( 'Troubleshooting', 'woocommerce-multilingual' )
-			)
-		);
+		$model = [
+			'plugins_status' => $WCML_Status_Status_UI->get_view(),
+			'conf_warnings'  => $WCML_Status_Config_Warnings_UI->get_view(),
+			'store_pages'    => $WCML_Status_Store_Pages_UI->get_view(),
+			'taxonomies'     => $WCML_Status_Taxonomies_UI->get_view(),
+			'multi_currency' => $WCML_Status_Multi_Currencies_UI->get_view(),
+			'media'          => $WCML_Status_Media_UI->get_view(),
+			'troubl_url'     => admin_url( 'admin.php?page=wpml-wcml&tab=troubleshooting' ),
+			'strings'        => [
+				'troubl' => __( 'Troubleshooting', 'woocommerce-multilingual' ),
+			],
+		];
 
 		if ( ! $this->woocommerce_wpml->products->is_product_display_as_translated_post_type() ) {
 			$WCML_Status_Products_UI = new WCML_Status_Products_UI( $this->woocommerce_wpml, $this->sitepress );
@@ -56,9 +56,9 @@ class WCML_Status_UI extends WCML_Templates_Factory {
 	}
 
 	public function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/status/',
-		);
+		];
 	}
 
 	public function get_template() {
