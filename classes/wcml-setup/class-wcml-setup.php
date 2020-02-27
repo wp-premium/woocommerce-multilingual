@@ -23,10 +23,10 @@ class WCML_Setup {
 	/**
 	 * WCML_Setup constructor.
 	 *
-	 * @param WCML_Setup_UI $ui
+	 * @param WCML_Setup_UI       $ui
 	 * @param WCML_Setup_Handlers $handlers
-	 * @param woocommerce_wpml $woocommerce_wpml
-	 * @param SitePress $sitepress
+	 * @param woocommerce_wpml    $woocommerce_wpml
+	 * @param SitePress           $sitepress
 	 */
 	public function __construct( WCML_Setup_UI $ui, WCML_Setup_Handlers $handlers, woocommerce_wpml $woocommerce_wpml, SitePress $sitepress ) {
 
@@ -35,76 +35,73 @@ class WCML_Setup {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->sitepress        = $sitepress;
 
-		$this->steps = array(
-			'introduction'   => array(
+		$this->steps = [
+			'introduction'   => [
 				'name'    => __( 'Introduction', 'woocommerce-multilingual' ),
 				'view'    => new WCML_Setup_Introduction_UI(
 					$this->woocommerce_wpml,
 					$this->step_url( 'store-pages' )
 				),
-				'handler' => ''
-			),
-			'store-pages'    => array(
+				'handler' => '',
+			],
+			'store-pages'    => [
 				'name'    => __( 'Store Pages', 'woocommerce-multilingual' ),
 				'view'    => new WCML_Setup_Store_Pages_UI(
 					$this->woocommerce_wpml,
 					$this->sitepress,
 					$this->step_url( 'attributes' )
 				),
-				'handler' => array( $this->handlers, 'install_store_pages' ),
-			),
-			'attributes'     => array(
+				'handler' => [ $this->handlers, 'install_store_pages' ],
+			],
+			'attributes'     => [
 				'name'    => __( 'Global Attributes', 'woocommerce-multilingual' ),
 				'view'    => new WCML_Setup_Attributes_UI(
 					$this->woocommerce_wpml,
 					$this->step_url( 'multi-currency' )
 				),
-				'handler' => array( $this->handlers, 'save_attributes' )
-			),
-			'multi-currency' => array(
+				'handler' => [ $this->handlers, 'save_attributes' ],
+			],
+			'multi-currency' => [
 				'name'    => __( 'Multiple Currencies', 'woocommerce-multilingual' ),
 				'view'    => new WCML_Setup_Multi_Currency_UI(
 					$this->woocommerce_wpml,
 					$this->step_url( 'translation-options' )
 				),
-				'handler' => array( $this->handlers, 'save_multi_currency' )
-			)
-		);
+				'handler' => [ $this->handlers, 'save_multi_currency' ],
+			],
+		];
 
-
-		$this->steps['translation-options'] = array(
-			'name'    =>  __( 'Translation Options', 'woocommerce-multilingual' ),
+		$this->steps['translation-options'] = [
+			'name'    => __( 'Translation Options', 'woocommerce-multilingual' ),
 			'view'    => new WCML_Setup_Translation_Options_UI(
 				$this->woocommerce_wpml,
 				$this->step_url( 'ready' )
 			),
-			'handler' => array( $this->handlers, 'save_translation_options' )
-		);
+			'handler' => [ $this->handlers, 'save_translation_options' ],
+		];
 
-
-		$this->steps['ready'] = array(
+		$this->steps['ready'] = [
 			'name'    => __( 'Ready!', 'woocommerce-multilingual' ),
 			'view'    => new WCML_Setup_Ready_UI( $this->woocommerce_wpml ),
-			'handler' => ''
-		);
-
+			'handler' => '',
+		];
 
 	}
 
 	public function add_hooks() {
 		if ( current_user_can( 'manage_options' ) ) {
-			add_action( 'admin_init', array( $this, 'wizard' ) );
-			add_action( 'admin_init', array( $this, 'handle_steps' ), 0 );
-			add_filter( 'wp_redirect', array( $this, 'redirect_filters' ) );
+			add_action( 'admin_init', [ $this, 'wizard' ] );
+			add_action( 'admin_init', [ $this, 'handle_steps' ], 0 );
+			add_filter( 'wp_redirect', [ $this, 'redirect_filters' ] );
 		}
 
 		if ( ! $this->has_completed() ) {
 			$this->ui->add_wizard_notice_hook();
-			add_action( 'admin_init', array( $this, 'skip_setup' ), 1 );
+			add_action( 'admin_init', [ $this, 'skip_setup' ], 1 );
 		}
 	}
 
-	public function exit_wrapper(){
+	public function exit_wrapper() {
 		exit;
 	}
 
@@ -114,7 +111,7 @@ class WCML_Setup {
 
 			if ( ! $this->do_not_redirect_to_setup() && ! $this->has_completed() ) {
 				wp_safe_redirect( admin_url( 'index.php?page=wcml-setup' ) );
-				add_filter( 'wp_die_handler', array( $this, 'exit_wrapper' ) );
+				add_filter( 'wp_die_handler', [ $this, 'exit_wrapper' ] );
 				wp_die();
 			}
 		}
@@ -122,14 +119,14 @@ class WCML_Setup {
 
 	private function do_not_redirect_to_setup() {
 
-		$woocommerce_notices       = get_option( 'woocommerce_admin_notices', array() );
+		$woocommerce_notices       = get_option( 'woocommerce_admin_notices', [] );
 		$woocommerce_setup_not_run = in_array( 'install', $woocommerce_notices, true );
 
 		return $this->is_wcml_setup_page() ||
-		       is_network_admin() ||
-		       isset( $_GET['activate-multi'] ) ||
-		       ! current_user_can( 'manage_options' ) ||
-		       $woocommerce_setup_not_run;
+			   is_network_admin() ||
+			   isset( $_GET['activate-multi'] ) ||
+			   ! current_user_can( 'manage_options' ) ||
+			   $woocommerce_setup_not_run;
 
 	}
 
@@ -151,24 +148,28 @@ class WCML_Setup {
 
 		$this->splash_wizard_on_wcml_pages();
 
-		if ( ! $this->is_wcml_setup_page() ){
+		if ( ! $this->is_wcml_setup_page() ) {
 			return;
 		}
 
 		$this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
 
 		wp_enqueue_style( 'otgs-ico', ICL_PLUGIN_URL . '/res/css/otgs-ico.css', null, ICL_SITEPRESS_VERSION );
-		wp_enqueue_style( 'wcml-setup', WCML_PLUGIN_URL . '/res/css/wcml-setup.css', array(
-			'dashicons',
-			'install'
-		), WCML_VERSION );
+		wp_enqueue_style(
+			'wcml-setup',
+			WCML_PLUGIN_URL . '/res/css/wcml-setup.css',
+			[
+				'dashicons',
+				'install',
+			],
+			WCML_VERSION
+		);
 
-		wp_enqueue_script( 'wcml-setup', WCML_PLUGIN_URL . '/res/js/wcml-setup.js', array( 'jquery' ), WCML_VERSION, true );
-
+		wp_enqueue_script( 'wcml-setup', WCML_PLUGIN_URL . '/res/js/wcml-setup.js', [ 'jquery' ], WCML_VERSION, true );
 
 		$this->ui->setup_header( $this->steps, $this->step );
 
-		$steps_keys = array_keys( $this->steps );
+		$steps_keys      = array_keys( $this->steps );
 		$step_index      = array_search( $this->step, $steps_keys );
 		$this->next_step = isset( $steps_keys[ $step_index + 1 ] ) ? $steps_keys[ $step_index + 1 ] : '';
 
@@ -176,7 +177,7 @@ class WCML_Setup {
 		$this->ui->setup_content( $this->steps[ $this->step ]['view'] );
 		$this->ui->setup_footer( ! empty( $this->steps[ $this->step ]['handler'] ) );
 
-		if ( $this->step == 'ready' ) {
+		if ( 'ready' === $this->step ) {
 			$this->complete_setup();
 		}
 
@@ -185,14 +186,14 @@ class WCML_Setup {
 
 	private function splash_wizard_on_wcml_pages() {
 
-		if ( isset( $_GET['src'] ) && $_GET['src'] == 'setup_later' ) {
+		if ( isset( $_GET['src'] ) && 'setup_later' === $_GET['src'] ) {
 			$this->woocommerce_wpml->settings['set_up_wizard_splash'] = 1;
 			$this->woocommerce_wpml->update_settings();
 		}
 
 		if ( $this->is_wcml_admin_page() && ! $this->has_completed() && empty( $this->woocommerce_wpml->settings['set_up_wizard_splash'] ) ) {
 			wp_redirect( 'admin.php?page=wcml-setup' );
-			add_filter( 'wp_die_handler', array( $this, 'exit_wrapper' ) );
+			add_filter( 'wp_die_handler', [ $this, 'exit_wrapper' ] );
 			wp_die();
 		}
 	}
@@ -201,7 +202,7 @@ class WCML_Setup {
 
 		if ( isset( $_GET['wcml-setup-skip'] ) && isset( $_GET['_wcml_setup_nonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wcml_setup_nonce'], 'wcml_setup_skip_nonce' ) ) {
-				wp_die( __( 'Action failed. Please refresh the page and retry.', 'woocommerce-multilingual' ) );
+				wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'woocommerce-multilingual' ) );
 			}
 
 			if ( ! current_user_can( 'manage_options' ) ) {
@@ -209,7 +210,7 @@ class WCML_Setup {
 			}
 
 			$this->complete_setup();
-			remove_filter( 'admin_notices', array( $this->ui, 'wizard_notice' ) );
+			remove_filter( 'admin_notices', [ $this->ui, 'wizard_notice' ] );
 
 			delete_transient( '_wcml_activation_redirect' );
 		}
@@ -243,7 +244,7 @@ class WCML_Setup {
 	 *
 	 * @return string
 	 */
-	private function step_url( $step ){
+	private function step_url( $step ) {
 		$url = admin_url( 'admin.php?page=wcml-setup&step=' . $step );
 		return $url;
 	}
@@ -267,10 +268,10 @@ class WCML_Setup {
 	}
 
 	public function handle_steps() {
-		if ( isset( $_POST['handle_step'] ) && $_POST['nonce'] == wp_create_nonce( $_POST['handle_step'] ) ) {
+		if ( isset( $_POST['handle_step'] ) && wp_create_nonce( $_POST['handle_step'] ) === $_POST['nonce'] ) {
 			$step_name = sanitize_text_field( $_POST['handle_step'] );
 			if ( $handler = $this->get_handler( $step_name ) ) {
-				if( is_callable( $handler, true ) ){
+				if ( is_callable( $handler, true ) ) {
 					call_user_func( $handler, $_POST );
 				}
 			}

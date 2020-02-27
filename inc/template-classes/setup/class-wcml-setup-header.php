@@ -12,16 +12,16 @@ class WCML_Setup_Header_UI extends WCML_Templates_Factory {
 	/**
 	 * WCML_Setup_Header_UI constructor.
 	 *
-	 * @param array $steps
+	 * @param array  $steps
 	 * @param string $step
 	 */
 	public function __construct( $steps, $step ) {
 
-		$functions = array(
-			new Twig_SimpleFunction( 'language_attributes', array( $this, 'language_attributes' ) ),
-			new Twig_SimpleFunction( 'wp_print_scripts', array( $this, 'wp_print_scripts' ) ),
-			new Twig_SimpleFunction( 'wp_do_action', array( $this, 'wp_do_action' ) ),
-		);
+		$functions = [
+			new Twig_SimpleFunction( 'language_attributes', [ $this, 'language_attributes' ] ),
+			new Twig_SimpleFunction( 'wp_print_scripts', [ $this, 'wp_print_scripts' ] ),
+			new Twig_SimpleFunction( 'wp_do_action', [ $this, 'wp_do_action' ] ),
+		];
 
 		parent::__construct( $functions );
 
@@ -34,13 +34,13 @@ class WCML_Setup_Header_UI extends WCML_Templates_Factory {
 	 */
 	public function get_model() {
 
-		$model = array(
+		$model = [
 			'title'           => __( 'WooCommerce Multilingual › Setup Wizard', 'woocommerce-multilingual' ),
 			'WCML_PLUGIN_URL' => WCML_PLUGIN_URL,
 			'step'            => $this->step,
 			'has_handler'     => ! empty( $this->steps[ $this->step ]['handler'] ),
-			'nonce'           => wp_create_nonce( $this->step )
-		);
+			'nonce'           => wp_create_nonce( $this->step ),
+		];
 
 		return $model;
 
@@ -65,9 +65,9 @@ class WCML_Setup_Header_UI extends WCML_Templates_Factory {
 	}
 
 	protected function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/',
-		);
+		];
 	}
 
 	/**

@@ -15,7 +15,7 @@ class WCML_Endpoints {
 
 	var $endpoints_strings = array();
 
-	function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, wpdb $wpdb ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->sitepress        = $sitepress;
 		$this->wpdb             = $wpdb;

@@ -41,21 +41,21 @@ class WCML_Setup_Handlers {
 
 	}
 
-	public function save_translation_options( $data ){
+	public function save_translation_options( $data ) {
 
 		if ( isset( $data['translation-option'] ) ) {
 
 			$settings_helper = wpml_load_settings_helper();
 
-			if( 1 === (int) $data['translation-option'] ){
+			if ( 1 === (int) $data['translation-option'] ) {
 				$settings_helper->set_post_type_display_as_translated( 'product' );
 				$settings_helper->set_post_type_translation_unlocked_option( 'product' );
-				$settings_helper->set_taxonomy_display_as_translated('product_cat' );
+				$settings_helper->set_taxonomy_display_as_translated( 'product_cat' );
 				$settings_helper->set_taxonomy_translation_unlocked_option( 'product_cat' );
-			}else{
+			} else {
 				$settings_helper->set_post_type_translatable( 'product' );
 				$settings_helper->set_post_type_translation_unlocked_option( 'product', false );
-				$settings_helper->set_taxonomy_translatable('product_cat' );
+				$settings_helper->set_taxonomy_translatable( 'product_cat' );
 				$settings_helper->set_taxonomy_translation_unlocked_option( 'product_cat', false );
 			}
 		}

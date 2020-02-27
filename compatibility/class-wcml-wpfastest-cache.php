@@ -3,10 +3,13 @@
 class WCML_WpFastest_Cache {
 
 	public function add_hooks() {
-		add_filter( 'wcml_is_cache_enabled_for_switching_currency', array(
-			$this,
-			'is_cache_enabled_for_switching_currency'
-		) );
+		add_filter(
+			'wcml_is_cache_enabled_for_switching_currency',
+			[
+				$this,
+				'is_cache_enabled_for_switching_currency',
+			]
+		);
 	}
 
 	/**

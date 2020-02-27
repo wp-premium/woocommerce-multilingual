@@ -39,7 +39,7 @@ class WCML_Compatibility {
 	 * @param wpdb                             $wpdb             Database object.
 	 * @param WPML_Element_Translation_Package $tp               Element Translation Package.
 	 */
-	function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp, WPML_Post_Translation $wpml_post_translations ) {
+	public function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp, WPML_Post_Translation $wpml_post_translations ) {
 		$this->sitepress              = $sitepress;
 		$this->woocommerce_wpml       = $woocommerce_wpml;
 		$this->wpdb                   = $wpdb;
@@ -145,13 +145,13 @@ class WCML_Compatibility {
 			}
 		}
 
-		// WOOBE WooCommerce Bulk Editor
+		// WOOBE WooCommerce Bulk Editor.
 		if ( defined( 'WOOBE_PATH' ) ) {
 			$this->woobe = new WCML_Woobe( $this->sitepress, $this->wpml_post_translations );
 			$this->woobe->add_hooks();
 		}
 
-		// WooCommerce Checkout Field Editor
+		// WooCommerce Checkout Field Editor.
 		if ( function_exists( 'woocommerce_init_checkout_field_editor' ) ) {
 			$this->checkout_field_editor = new WCML_Checkout_Field_Editor();
 			$this->checkout_field_editor->add_hooks();
@@ -165,10 +165,6 @@ class WCML_Compatibility {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		if ( is_plugin_active( 'woocommerce-ajax-layered-nav/ajax_layered_nav-widget.php' ) ) {
 			$this->wc_ajax_layered_nav_widget = new WCML_Ajax_Layered_Nav_Widget();
-		}
-
-		if ( is_plugin_active( 'woocommerce-ajax-cart/wooajaxcart.php' ) ) {
-			$this->wc_ajax_cart = new WCML_WC_Ajax_Cart();
 		}
 
 		// woocommerce composite products.
@@ -204,11 +200,6 @@ class WCML_Compatibility {
 		// Aurum Theme.
 		if ( wp_get_theme()->get( 'Name' ) === 'Aurum' ) {
 			new WCML_Aurum();
-		}
-
-		// Visual Products Configurator.
-		if ( class_exists( 'Vpc' ) ) {
-			$this->vpc = new WCML_Vpc();
 		}
 
 		// WooCommerce Show Single Variations.
@@ -248,12 +239,6 @@ class WCML_Compatibility {
 		if ( function_exists( 'maxstore_pro_setup' ) ) {
 			$this->maxstore = new WCML_MaxStore();
 			$this->maxstore->add_hooks();
-		}
-
-		// MaxStore-Pro Theme.
-		if ( defined( 'ETHEME_THEME_NAME' ) && 'Blanco' === ETHEME_THEME_NAME ) {
-			$this->etheme_blanco = new WCML_Etheme_Blanco();
-			$this->etheme_blanco->add_hooks();
 		}
 
 		// WPBakery Page Builder.

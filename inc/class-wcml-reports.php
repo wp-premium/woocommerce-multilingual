@@ -14,17 +14,17 @@ class WCML_Reports{
 
     public function init(){
 
-        if( isset($_GET['page']) && $_GET['page'] == 'wc-reports' ) {
+        if( isset($_GET['page']) && $_GET['page']==='wc-reports' ) {
 
             $this->tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'orders';
             $this->report = isset( $_GET['report'] ) ? $_GET['report'] : '';
 
             add_filter( 'woocommerce_reports_get_order_report_query', array( $this, 'filter_reports_query' ), 0 );
 
-            if ( $this->tab == 'orders' && $this->report == 'sales_by_product' ) {
+            if ( $this->tab==='orders' && $this->report==='sales_by_product' ) {
                 add_filter( 'woocommerce_reports_get_order_report_data', array( $this, 'combine_report_by_languages' ) );
             }
-	        if ( $this->tab == 'orders' && $this->report == 'sales_by_category' ) {
+	        if ( $this->tab==='orders' && $this->report==='sales_by_category' ) {
 		        add_filter( 'woocommerce_report_sales_by_category_get_products_in_category', array(
 			        $this,
 			        'use_categories_in_all_languages'
@@ -44,14 +44,14 @@ class WCML_Reports{
         $current_language = $sitepress->get_current_language();
         $active_languages = $sitepress->get_active_languages();
 
-        if($this->tab == 'orders' && $this->report == 'sales_by_product'){
+        if($this->tab==='orders' && $this->report==='sales_by_product'){
             
             $sparkline_query = strpos( $query[ 'select'], 'sparkline_value' ) !== false;
             
             if( 
             
                 $sparkline_query ||                 
-                isset( $query[ 'order_by' ] ) && ( $query[ 'order_by' ] == 'ORDER BY order_item_qty DESC' || $query[ 'order_by' ] == 'ORDER BY order_item_total DESC' ) 
+                isset( $query[ 'order_by' ] ) && ( $query[ 'order_by' ]==='ORDER BY order_item_qty DESC' || $query[ 'order_by' ]==='ORDER BY order_item_total DESC' )
             
             ){
                 
@@ -85,13 +85,13 @@ class WCML_Reports{
                     
                 }
 
-                $query[ 'select' ] .= ', translations.language_code AS language_code_' . esc_sql( str_replace('-', '_', $current_language)  ); // user for per-language caching
+                $query[ 'select' ] .= ', translations.language_code AS language_code_' . esc_sql( str_replace('-', '_', $current_language)  ); // user for per-language caching.
                 
             }elseif(
-                $query[ 'select' ] == 'SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount' || //sales for the selected items
-                $query[ 'select' ] == 'SELECT SUM( order_item_meta__qty.meta_value) as order_item_count'         || //purchases for the selected items                
-                $query[ 'select' ] == 'SELECT SUM( order_item_meta__qty.meta_value) as order_item_count, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' || //Get orders and dates in range - main chart: order_item_counts
-                $query[ 'select' ] == 'SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' //Get orders and dates in range - main chart: order_item_amounts
+                $query[ 'select' ]==='SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount' || //sales for the selected items
+                $query[ 'select' ]==='SELECT SUM( order_item_meta__qty.meta_value) as order_item_count'         || //purchases for the selected items
+                $query[ 'select' ]==='SELECT SUM( order_item_meta__qty.meta_value) as order_item_count, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' || //Get orders and dates in range - main chart: order_item_counts
+                $query[ 'select' ]==='SELECT SUM( order_item_meta__line_total.meta_value) as order_item_amount, posts.post_date as post_date, order_item_meta__product_id.meta_value as product_id' //Get orders and dates in range - main chart: order_item_amounts
                 
             ){
                 preg_match("#order_item_meta__product_id_array\.meta_value IN \(([^\)]+)\)#", $query[ 'where' ], $matches);
@@ -152,7 +152,7 @@ class WCML_Reports{
                     break;
             }
             
-            if($row->order_language == $current_language){
+            if($row->order_language===$current_language){
                 
                 $combined_results[$key] = $row;
                 

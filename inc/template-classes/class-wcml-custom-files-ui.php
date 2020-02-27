@@ -18,7 +18,6 @@ class WCML_Custom_Files_UI extends WCML_Templates_Factory {
 	 */
 	public function __construct( $woocommerce_wpml, $product_id, $is_variation = false ) {
 		// @todo Cover by tests, required for wcml-3037.
-
 		parent::__construct();
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
@@ -28,25 +27,25 @@ class WCML_Custom_Files_UI extends WCML_Templates_Factory {
 
 	public function get_model() {
 
-		$model = array(
-			'product_id' => $this->product_id,
+		$model = [
+			'product_id'   => $this->product_id,
 			'is_variation' => $this->is_variation,
-			'nonce' => wp_nonce_field('wcml_save_files_option','wcml_save_files_option_nonce'),
-			'sync_custom' => get_post_meta( $this->product_id, 'wcml_sync_files', true ),
-			'strings' => array(
+			'nonce'        => wp_nonce_field( 'wcml_save_files_option', 'wcml_save_files_option_nonce' ),
+			'sync_custom'  => get_post_meta( $this->product_id, 'wcml_sync_files', true ),
+			'strings'      => [
 				'use_custom' => __( 'Use custom settings for translations download files', 'woocommerce-multilingual' ),
-				'use_same' => __( 'Use the same files for translations', 'woocommerce-multilingual' ),
-				'separate' => __( 'Add separate download files for translations when you translate this product', 'woocommerce-multilingual' )
-			)
-		);
+				'use_same'   => __( 'Use the same files for translations', 'woocommerce-multilingual' ),
+				'separate'   => __( 'Add separate download files for translations when you translate this product', 'woocommerce-multilingual' ),
+			],
+		];
 
 		return $model;
 	}
 
 	public function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/',
-		);
+		];
 	}
 
 	public function get_template() {

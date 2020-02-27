@@ -28,7 +28,7 @@ if ( ! function_exists( 'wcml_price_custom_fields' ) ) {
 	 * @return array
 	 */
 	function wcml_price_custom_fields( $object_id ) {
-		$default_keys = array(
+		$default_keys = [
 			'_max_variation_price',
 			'_max_variation_regular_price',
 			'_max_variation_sale_price',
@@ -38,7 +38,7 @@ if ( ! function_exists( 'wcml_price_custom_fields' ) ) {
 			'_price',
 			'_regular_price',
 			'_sale_price',
-		);
+		];
 
 		/**
 		 * See the following filter.

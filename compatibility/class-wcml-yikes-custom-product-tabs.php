@@ -25,11 +25,11 @@ class WCML_YIKES_Custom_Product_Tabs {
 	/**
 	 * WCML_Tab_Manager constructor.
 	 *
-	 * @param woocommerce_wpml $woocommerce_wpml
-	 * @param SitePress $sitepress
+	 * @param woocommerce_wpml                 $woocommerce_wpml
+	 * @param SitePress                        $sitepress
 	 * @param WPML_Element_Translation_Package $tp
 	 */
-	function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, WPML_Element_Translation_Package $tp ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, SitePress $sitepress, WPML_Element_Translation_Package $tp ) {
 		$this->sitepress        = $sitepress;
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->tp               = $tp;
@@ -37,28 +37,26 @@ class WCML_YIKES_Custom_Product_Tabs {
 
 	public function add_hooks() {
 
+		add_action( 'wpml_translation_job_saved', [ $this, 'save_custom_tabs_translation' ], 10, 3 );
+
 		if ( is_admin() ) {
-			add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
-			add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 4 );
-			add_action( 'wcml_update_extra_fields', array( $this, 'sync_tabs' ), 10, 4 );
-			add_filter( 'wpml_duplicate_custom_fields_exceptions', array( $this, 'custom_fields_exceptions' ) );
-			add_filter( 'wcml_do_not_display_custom_fields_for_product', array( $this, 'custom_fields_exceptions' ) );
-
-			add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_custom_tabs_to_translation_package' ), 10, 2 );
-			add_action( 'wpml_translation_job_saved',   array( $this, 'save_custom_tabs_translation' ), 10, 3 );
-
-			add_action( 'woocommerce_product_data_panels', array( $this, 'show_pointer_info' ) );
-			add_action( 'init', array( $this, 'maybe_remove_admin_language_switcher' ) );
+			add_action( 'wcml_gui_additional_box_html', [ $this, 'custom_box_html' ], 10, 3 );
+			add_filter( 'wcml_gui_additional_box_data', [ $this, 'custom_box_html_data' ], 10, 4 );
+			add_action( 'wcml_update_extra_fields', [ $this, 'sync_tabs' ], 10, 4 );
+			add_filter( 'wpml_duplicate_custom_fields_exceptions', [ $this, 'custom_fields_exceptions' ] );
+			add_filter( 'wcml_do_not_display_custom_fields_for_product', [ $this, 'custom_fields_exceptions' ] );
+			add_filter( 'wpml_tm_translation_job_data', [ $this, 'append_custom_tabs_to_translation_package' ], 10, 2 );
+			add_action( 'woocommerce_product_data_panels', [ $this, 'show_pointer_info' ] );
+			add_action( 'init', [ $this, 'maybe_remove_admin_language_switcher' ] );
 		}
 	}
 
 	/**
 	 * @param object $obj
-	 * @param int $product_id
-	 * @param array $data
-	 *
+	 * @param int    $product_id
+	 * @param array  $data
 	 */
-	function custom_box_html( $obj, $product_id, $data ) {
+	public function custom_box_html( $obj, $product_id, $data ) {
 
 		$orig_prod_tabs = $this->get_product_tabs( $product_id );
 
@@ -87,23 +85,23 @@ class WCML_YIKES_Custom_Product_Tabs {
 
 
 	/**
-	 * @param array $data
-	 * @param int $product_id
+	 * @param array  $data
+	 * @param int    $product_id
 	 * @param object $translation
 	 * @param string $lang
 	 *
 	 * @return array
 	 */
-	function custom_box_html_data( $data, $product_id, $translation, $lang ) {
+	public function custom_box_html_data( $data, $product_id, $translation, $lang ) {
 
 		$orig_prod_tabs = $this->get_product_tabs( $product_id );
 		if ( $orig_prod_tabs ) {
 			foreach ( $orig_prod_tabs as $key => $prod_tab ) {
 				if ( isset( $prod_tab['title'] ) ) {
-					$data[ 'tab_' . $key . '_title' ] = array( 'original' => $prod_tab['title'] );
+					$data[ 'tab_' . $key . '_title' ] = [ 'original' => $prod_tab['title'] ];
 				}
 				if ( isset( $prod_tab['content'] ) ) {
-					$data[ 'tab_' . $key . '_content' ] = array( 'original' => $prod_tab['content'] );
+					$data[ 'tab_' . $key . '_content' ] = [ 'original' => $prod_tab['content'] ];
 				}
 			}
 
@@ -126,20 +124,19 @@ class WCML_YIKES_Custom_Product_Tabs {
 	}
 
 	/**
-	 * @param int $original_product_id
-	 * @param int $trnsl_product_id
-	 * @param array $data
+	 * @param int    $original_product_id
+	 * @param int    $trnsl_product_id
+	 * @param array  $data
 	 * @param string $lang
-	 *
 	 */
-	function sync_tabs( $original_product_id, $trnsl_product_id, $data, $lang ) {
+	public function sync_tabs( $original_product_id, $trnsl_product_id, $data, $lang ) {
 
 		$orig_prod_tabs = $this->get_product_tabs( $original_product_id );
 
 		if ( ( isset( $_POST['icl_ajx_action'] ) && ( 'make_duplicates' === $_POST['icl_ajx_action'] ) ) || ( get_post_meta( $trnsl_product_id, '_icl_lang_duplicate_of', true ) ) ) {
 			update_post_meta( $trnsl_product_id, self::CUSTOM_TABS_FIELD, $orig_prod_tabs );
 		} elseif ( $orig_prod_tabs ) {
-			$trnsl_product_tabs = array();
+			$trnsl_product_tabs = [];
 			foreach ( $orig_prod_tabs as $key => $orig_prod_tab ) {
 				$title_key                             = md5( 'tab_' . $key . '_title' );
 				$content_key                           = md5( 'tab_' . $key . '_content' );
@@ -172,7 +169,7 @@ class WCML_YIKES_Custom_Product_Tabs {
 	}
 
 	/**
-	 * @param array $package
+	 * @param array  $package
 	 * @param object $post
 	 *
 	 * @return array
@@ -185,19 +182,19 @@ class WCML_YIKES_Custom_Product_Tabs {
 			if ( $orig_prod_tabs ) {
 				foreach ( $orig_prod_tabs as $key => $prod_tab ) {
 					if ( isset( $prod_tab['title'] ) ) {
-						$package['contents'][ self::CUSTOM_TABS_FIELD . ':product_tab:' . $key . ':title' ] = array(
+						$package['contents'][ self::CUSTOM_TABS_FIELD . ':product_tab:' . $key . ':title' ] = [
 							'translate' => 1,
 							'data'      => $this->tp->encode_field_data( $prod_tab['title'], 'base64' ),
 							'format'    => 'base64',
-						);
+						];
 					}
 
 					if ( isset( $prod_tab['content'] ) ) {
-						$package['contents'][ self::CUSTOM_TABS_FIELD . ':product_tab:' . $key . ':content' ] = array(
+						$package['contents'][ self::CUSTOM_TABS_FIELD . ':product_tab:' . $key . ':content' ] = [
 							'translate' => 1,
 							'data'      => $this->tp->encode_field_data( $prod_tab['content'], 'base64' ),
 							'format'    => 'base64',
-						);
+						];
 					}
 				}
 			}
@@ -207,8 +204,8 @@ class WCML_YIKES_Custom_Product_Tabs {
 	}
 
 	/**
-	 * @param int $post_id
-	 * @param array $data
+	 * @param int    $post_id
+	 * @param array  $data
 	 * @param object $job
 	 */
 	public function save_custom_tabs_translation( $post_id, $data, $job ) {
@@ -219,13 +216,13 @@ class WCML_YIKES_Custom_Product_Tabs {
 
 			$translated_product_tabs = $this->get_product_tabs( $post_id );
 
-			if( !$translated_product_tabs ){
+			if ( ! $translated_product_tabs ) {
 				$translated_product_tabs = $original_product_tabs;
 			}
 
 			foreach ( $data as $value ) {
 
-				if ( preg_match( '/'.self::CUSTOM_TABS_FIELD.':product_tab:([0-9]+):(.+)/', $value['field_type'], $matches ) ) {
+				if ( preg_match( '/' . self::CUSTOM_TABS_FIELD . ':product_tab:([0-9]+):(.+)/', $value['field_type'], $matches ) ) {
 
 					$tab_key = $matches[1];
 					$field   = $matches[2];
@@ -254,10 +251,10 @@ class WCML_YIKES_Custom_Product_Tabs {
 		$pointer_ui->show();
 	}
 
-	public function maybe_remove_admin_language_switcher( ) {
+	public function maybe_remove_admin_language_switcher() {
 
 		if ( isset( $_GET['page'] ) && 'yikes-woo-settings' === $_GET['page'] ) {
-			remove_action( 'wp_before_admin_bar_render', array( $this->sitepress, 'admin_language_switcher' ) );
+			remove_action( 'wp_before_admin_bar_render', [ $this->sitepress, 'admin_language_switcher' ] );
 		}
 
 	}

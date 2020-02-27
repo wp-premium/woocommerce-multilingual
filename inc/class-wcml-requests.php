@@ -1,103 +1,103 @@
 <?php
-class WCML_Requests{
-    
-    function __construct(){
-        
-        add_action('init', array($this, 'run') );
-        
-    }
-    
-    function run(){
-        global $woocommerce_wpml;
+class WCML_Requests {
 
-        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        $settings_needs_update = false;
+	public function __construct() {
 
-        if( isset( $_GET[ 'wcml_action' ] ) ){
-            $settings_needs_update = true;
+		add_action( 'init', [ $this, 'run' ] );
 
-            if( $_GET['wcml_action'] == 'dismiss' ){
-                $woocommerce_wpml->settings['dismiss_doc_main'] = 1;
-            }elseif( $_GET['wcml_action'] == 'dismiss_tm_warning' ){
-                $woocommerce_wpml->settings['dismiss_tm_warning'] = 1;
-            }elseif( $_GET['wcml_action'] == 'dismiss_cart_warning' ){
-                $woocommerce_wpml->settings['dismiss_cart_warning'] = 1;
-            }else{
-                $settings_needs_update = false;
-            }
-        }
+	}
 
-        if(isset($_POST['wcml_save_settings']) && wp_verify_nonce($nonce, 'wcml_save_settings_nonce')){
-            global $sitepress,$sitepress_settings;
+	public function run() {
+		global $woocommerce_wpml;
 
-	        if ( isset( $_POST['trnsl_interface'] ) ){
-		        $woocommerce_wpml->settings['trnsl_interface'] = filter_input( INPUT_POST, 'trnsl_interface', FILTER_SANITIZE_NUMBER_INT );
-	        }
+		$nonce                 = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$settings_needs_update = false;
 
-            $woocommerce_wpml->settings['products_sync_date'] = empty($_POST['products_sync_date']) ? 0 : 1;
-            $woocommerce_wpml->settings['products_sync_order'] = empty($_POST['products_sync_order']) ? 0 : 1;
+		if ( isset( $_GET['wcml_action'] ) ) {
+			$settings_needs_update = true;
 
-	        $wcml_sync_media = empty( $_POST['sync_media'] ) ? 0 : 1;
-	        $woocommerce_wpml->update_setting( 'sync_media', $wcml_sync_media, true );
+			if ( 'dismiss' === $_GET['wcml_action'] ) {
+				$woocommerce_wpml->settings['dismiss_doc_main'] = 1;
+			} elseif ( 'dismiss_tm_warning' === $_GET['wcml_action'] ) {
+				$woocommerce_wpml->settings['dismiss_tm_warning'] = 1;
+			} elseif ( 'dismiss_cart_warning' === $_GET['wcml_action'] ) {
+				$woocommerce_wpml->settings['dismiss_cart_warning'] = 1;
+			} else {
+				$settings_needs_update = false;
+			}
+		}
 
-            $wcml_file_path_sync = filter_input( INPUT_POST, 'wcml_file_path_sync', FILTER_SANITIZE_NUMBER_INT );
+		if ( isset( $_POST['wcml_save_settings'] ) && wp_verify_nonce( $nonce, 'wcml_save_settings_nonce' ) ) {
+			global $sitepress,$sitepress_settings;
 
-            $woocommerce_wpml->settings['file_path_sync'] = $wcml_file_path_sync;
+			if ( isset( $_POST['trnsl_interface'] ) ) {
+				$woocommerce_wpml->settings['trnsl_interface'] = filter_input( INPUT_POST, 'trnsl_interface', FILTER_SANITIZE_NUMBER_INT );
+			}
 
-	        if ( isset( $_POST['cart_sync_lang'] ) && isset( $_POST['cart_sync_currencies'] ) ) {
-		        $woocommerce_wpml->settings['cart_sync']['lang_switch']     = (int) filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT );
-		        $woocommerce_wpml->settings['cart_sync']['currency_switch'] = (int) filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT );
-	        }
+			$woocommerce_wpml->settings['products_sync_date']  = empty( $_POST['products_sync_date'] ) ? 0 : 1;
+			$woocommerce_wpml->settings['products_sync_order'] = empty( $_POST['products_sync_order'] ) ? 0 : 1;
 
-            $new_value = $wcml_file_path_sync == 0 ? 2 :$wcml_file_path_sync;
-            $sitepress_settings['translation-management']['custom_fields_translation']['_downloadable_files'] = $new_value;
-            $sitepress_settings['translation-management']['custom_fields_translation']['_file_paths'] = $new_value;
+			$wcml_sync_media = empty( $_POST['sync_media'] ) ? 0 : 1;
+			$woocommerce_wpml->update_setting( 'sync_media', $wcml_sync_media, true );
 
-            $sitepress->save_settings($sitepress_settings);
+			$wcml_file_path_sync = filter_input( INPUT_POST, 'wcml_file_path_sync', FILTER_SANITIZE_NUMBER_INT );
 
-            $message = array(
-                'id'            => 'wcml-settings-saved',
-                'text'          => __('Your settings have been saved.', 'woocommerce-multilingual' ),
-                'group'         => 'wcml-settings',
-                'admin_notice'  => true,
-                'limit_to_page' => true,
-                'classes'       => array('updated', 'notice', 'notice-success'),
-                'show_once'     => true
-            );
-            ICL_AdminNotifier::add_message( $message );
+			$woocommerce_wpml->settings['file_path_sync'] = $wcml_file_path_sync;
 
-            $settings_needs_update = true;
-        }
+			if ( isset( $_POST['cart_sync_lang'] ) && isset( $_POST['cart_sync_currencies'] ) ) {
+				$woocommerce_wpml->settings['cart_sync']['lang_switch']     = (int) filter_input( INPUT_POST, 'cart_sync_lang', FILTER_SANITIZE_NUMBER_INT );
+				$woocommerce_wpml->settings['cart_sync']['currency_switch'] = (int) filter_input( INPUT_POST, 'cart_sync_currencies', FILTER_SANITIZE_NUMBER_INT );
+			}
 
-        if( $settings_needs_update ){
-            $woocommerce_wpml->update_settings();
-        }
+			$new_value = $wcml_file_path_sync == 0 ? 2 : $wcml_file_path_sync;
+			$sitepress_settings['translation-management']['custom_fields_translation']['_downloadable_files'] = $new_value;
+			$sitepress_settings['translation-management']['custom_fields_translation']['_file_paths']         = $new_value;
 
-        add_action('wp_ajax_wcml_ignore_warning', array( $this, 'update_settings_from_warning') );
+			$sitepress->save_settings( $sitepress_settings );
 
-        // Override cached widget id
-        add_filter( 'woocommerce_cached_widget_id', array( $this, 'override_cached_widget_id' ) );
-    }
+			$message = [
+				'id'            => 'wcml-settings-saved',
+				'text'          => __( 'Your settings have been saved.', 'woocommerce-multilingual' ),
+				'group'         => 'wcml-settings',
+				'admin_notice'  => true,
+				'limit_to_page' => true,
+				'classes'       => [ 'updated', 'notice', 'notice-success' ],
+				'show_once'     => true,
+			];
+			ICL_AdminNotifier::add_message( $message );
 
-    function update_settings_from_warning(){
-        $nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        if(!$nonce || !wp_verify_nonce($nonce, 'wcml_ignore_warning')){
-            die('Invalid nonce');
-        }
-        global $woocommerce_wpml;
+			$settings_needs_update = true;
+		}
 
-        $woocommerce_wpml->settings[$_POST['setting']] = 1;
-        $woocommerce_wpml->update_settings();
+		if ( $settings_needs_update ) {
+			$woocommerce_wpml->update_settings();
+		}
 
-    }
+		add_action( 'wp_ajax_wcml_ignore_warning', [ $this, 'update_settings_from_warning' ] );
 
-    public function override_cached_widget_id( $widget_id ){
+		// Override cached widget id.
+		add_filter( 'woocommerce_cached_widget_id', [ $this, 'override_cached_widget_id' ] );
+	}
 
-        if( defined( 'ICL_LANGUAGE_CODE' ) ){
-            $widget_id .= ':' . ICL_LANGUAGE_CODE;
-        }
+	public function update_settings_from_warning() {
+		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_ignore_warning' ) ) {
+			die( 'Invalid nonce' );
+		}
+		global $woocommerce_wpml;
 
-        return $widget_id;
-    }
+		$woocommerce_wpml->settings[ $_POST['setting'] ] = 1;
+		$woocommerce_wpml->update_settings();
+
+	}
+
+	public function override_cached_widget_id( $widget_id ) {
+
+		if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
+			$widget_id .= ':' . ICL_LANGUAGE_CODE;
+		}
+
+		return $widget_id;
+	}
 
 }

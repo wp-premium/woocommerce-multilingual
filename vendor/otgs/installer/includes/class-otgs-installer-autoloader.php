@@ -5,6 +5,7 @@ class OTGS_Installer_Autoloader {
 	public function initialize() {
 		include_once dirname( __FILE__ ) . '/functions-core.php';
 		include_once dirname( __FILE__ ) . '/functions-templates.php';
+		include_once dirname( __FILE__ ) . '/utilities/FP/functions.php';
 
 		spl_autoload_register( array( $this, 'autoload' ) );
 	}

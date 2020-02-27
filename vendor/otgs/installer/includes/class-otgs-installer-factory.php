@@ -1,5 +1,8 @@
 <?php
 
+use OTGS\Installer\AdminNotices\Loader;
+use OTGS\Installer\AdminNotices\Notices\Account;
+
 class OTGS_Installer_Factory {
 
 	private $installer;
@@ -335,6 +338,13 @@ class OTGS_Installer_Factory {
 	public function load_buy_url_hooks() {
 		$buy_url = new OTGS_Installer_Buy_URL_Hooks( $this->installer->get_embedded_at() );
 		$buy_url->add_hooks();
+
+		return $this;
+	}
+
+	public function load_admin_notice_hooks() {
+		Account::addHooks( $this->installer );
+		Loader::addHooks( defined( 'DOING_AJAX' ) );
 
 		return $this;
 	}

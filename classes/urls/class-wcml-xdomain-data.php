@@ -3,7 +3,6 @@
 /**
  * Handles data being passed between different domains using WPML xDomain logic
  * https://wpml.org/?page_id=693147
- *
  */
 class WCML_xDomain_Data {
 
@@ -22,8 +21,8 @@ class WCML_xDomain_Data {
 	}
 
 	public function add_hooks() {
-		add_filter( 'wpml_cross_domain_language_data', array( $this, 'pass_data_to_domain' ) );
-		add_action( 'before_woocommerce_init', array( $this, 'check_request' ) );
+		add_filter( 'wpml_cross_domain_language_data', [ $this, 'pass_data_to_domain' ] );
+		add_action( 'before_woocommerce_init', [ $this, 'check_request' ] );
 	}
 
 	/**
@@ -35,7 +34,7 @@ class WCML_xDomain_Data {
 
 		$wcml_session_id = md5( microtime() . uniqid( mt_rand(), true ) );
 		$data['wcsid']   = $wcml_session_id;
-		$session_data    = array();
+		$session_data    = [];
 
 		if ( isset( $_COOKIE[ 'wp_woocommerce_session_' . COOKIEHASH ] ) ) {
 			$session_data['session'] = $_COOKIE[ 'wp_woocommerce_session_' . COOKIEHASH ];
@@ -55,8 +54,8 @@ class WCML_xDomain_Data {
 
 	public function check_request() {
 
-		if ( has_filter( 'wpml_get_cross_domain_language_data' ) ) { // After WPML 3.2.7
-			$xdomain_data = apply_filters( 'wpml_get_cross_domain_language_data', array() );
+		if ( has_filter( 'wpml_get_cross_domain_language_data' ) ) { // After WPML 3.2.7.
+			$xdomain_data = apply_filters( 'wpml_get_cross_domain_language_data', [] );
 		} elseif ( isset( $_GET['xdomain_data'] ) ) {
 			$xdomain_data = json_decode( base64_decode( $_GET['xdomain_data'] ), true );
 		}
@@ -76,7 +75,7 @@ class WCML_xDomain_Data {
 
 		if ( ! empty( $data ) ) {
 
-			$session_expiration = time() + (int) apply_filters( 'wc_session_expiration', 60 * 60 * 48 ); // 48 Hours
+			$session_expiration = time() + (int) apply_filters( 'wc_session_expiration', 60 * 60 * 48 ); // 48 Hours.
 			$secure             = apply_filters( 'wc_session_use_secure_cookie', false );
 
 			if ( isset( $data['session'] ) ) {
@@ -90,7 +89,6 @@ class WCML_xDomain_Data {
 				$_COOKIE['woocommerce_cart_hash']     = $data['hash'];
 				$_COOKIE['woocommerce_items_in_cart'] = $data['items'];
 			}
-
 		}
 
 		delete_option( 'wcml_session_data_' . $wcml_session_id );

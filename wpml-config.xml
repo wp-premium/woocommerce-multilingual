@@ -143,4 +143,30 @@
 		<key name="woocommerce_checkout_privacy_policy_text" />
 		<key name="woocommerce_checkout_terms_and_conditions_checkbox_text" />
 	</admin-texts>
+	<gutenberg-blocks>
+		<gutenberg-block type="woocommerce/product-search" translate="1">
+			<xpath>//*[contains(@class, "wc-block-product-search__label")]</xpath>
+			<xpath>//*[contains(@class, "wc-block-product-search__field")]/@placeholder</xpath>
+			<xpath>//*[contains(@class, "wc-block-product-search__button")]/@label</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/featured-category" translate="1">
+			<xpath>//*[contains(@class, "wp-block-button__link")]</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/featured-product" translate="1">
+			<xpath>//*[contains(@class, "wp-block-button__link")]</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/active-filters" translate="1">
+			<xpath>//*[contains(@class, "wp-block-woocommerce-active-filters")]/@data-heading</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/attribute-filter" translate="1">
+			<xpath>//*[contains(@class, "wp-block-woocommerce-attribute-filter")]/@data-heading</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/price-filter" translate="1">
+			<xpath>//*[contains(@class, "wp-block-woocommerce-price-filter")]/@data-heading</xpath>
+		</gutenberg-block>
+		<gutenberg-block type="woocommerce/all-products" translate="0"></gutenberg-block>
+		<gutenberg-block type="woocommerce/all-reviews" translate="0"></gutenberg-block>
+		<gutenberg-block type="woocommerce/reviews-by-product" translate="0"></gutenberg-block>
+		<gutenberg-block type="woocommerce/reviews-by-category" translate="0"></gutenberg-block>
+	</gutenberg-blocks>
 </wpml-config>

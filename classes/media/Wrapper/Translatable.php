@@ -27,20 +27,20 @@ class Translatable implements IMedia {
 	}
 
 	public function add_hooks() {
-		//when save new attachment duplicate product gallery
+		// when save new attachment duplicate product gallery.
 		add_action( 'wpml_media_create_duplicate_attachment', [ $this, 'sync_product_gallery_duplicate_attachment' ], 11, 2 );
 	}
 
 	public function product_images_ids( $product_id ) {
 		$product_images_ids = [];
 
-		//thumbnail image
+		// thumbnail image.
 		$tmb = get_post_meta( $product_id, '_thumbnail_id', true );
 		if ( $tmb ) {
 			$product_images_ids[] = $tmb;
 		}
 
-		//product gallery
+		// product gallery.
 		$product_gallery = get_post_meta( $product_id, '_product_image_gallery', true );
 		if ( $product_gallery ) {
 			$product_gallery = explode( ',', $product_gallery );
@@ -51,19 +51,23 @@ class Translatable implements IMedia {
 			}
 		}
 
-		foreach ( wp_get_post_terms( $product_id, 'product_type', [ "fields" => "names" ] ) as $type ) {
+		foreach ( wp_get_post_terms( $product_id, 'product_type', [ 'fields' => 'names' ] ) as $type ) {
 			$product_type = $type;
 		}
 
-		if ( isset( $product_type ) && $product_type == 'variable' ) {
-			$get_post_variations_image = $this->wpdb->get_col( $this->wpdb->prepare( "SELECT pm.meta_value FROM {$this->wpdb->posts} AS p
+		if ( isset( $product_type ) && 'variable' === $product_type ) {
+			$get_post_variations_image = $this->wpdb->get_col(
+				$this->wpdb->prepare(
+					"SELECT pm.meta_value FROM {$this->wpdb->posts} AS p
                                                 LEFT JOIN {$this->wpdb->postmeta} AS pm ON p.ID = pm.post_id
                                                 WHERE pm.meta_key='_thumbnail_id'
                                                   AND p.post_status IN ('publish','private')
                                                   AND p.post_type = 'product_variation'
                                                   AND p.post_parent = %d
                                                 ORDER BY ID",
-			                                                                         $product_id ) );
+					$product_id
+				)
+			);
 			foreach ( $get_post_variations_image as $variation_image ) {
 				if ( $variation_image && ! in_array( $variation_image, $product_images_ids ) ) {
 					$product_images_ids[] = $variation_image;
@@ -104,7 +108,7 @@ class Translatable implements IMedia {
 
 	/**
 	 * @param int|string $post_id
-	 * @param string $language
+	 * @param string     $language
 	 *
 	 * @return int|null
 	 */
@@ -115,9 +119,11 @@ class Translatable implements IMedia {
 		if ( is_null( $translated_thumbnail_id ) && $thumbnail_id ) {
 			$factory                 = new WPML_Media_Attachments_Duplication_Factory();
 			$media_duplicate         = $factory->create();
-			$translated_thumbnail_id = $media_duplicate->create_duplicate_attachment( $thumbnail_id,
+			$translated_thumbnail_id = $media_duplicate->create_duplicate_attachment(
+				$thumbnail_id,
 				wp_get_post_parent_id( $thumbnail_id ),
-				$language );
+				$language
+			);
 		}
 
 		return $translated_thumbnail_id;
@@ -136,15 +142,19 @@ class Translatable implements IMedia {
 				if ( ! $translation->original ) {
 					foreach ( $gallery_ids as $image_id ) {
 						if ( get_post( $image_id ) ) {
-							$duplicated_id = apply_filters( 'translate_object_id',
-							                                $image_id,
-							                                'attachment',
-							                                false,
-							                                $translation->language_code );
+							$duplicated_id = apply_filters(
+								'translate_object_id',
+								$image_id,
+								'attachment',
+								false,
+								$translation->language_code
+							);
 							if ( is_null( $duplicated_id ) && $image_id ) {
-								$duplicated_id = $this->create_base_media_translation( $image_id,
-								                                                       $translation->element_id,
-								                                                       $translation->language_code );
+								$duplicated_id = $this->create_base_media_translation(
+									$image_id,
+									$translation->element_id,
+									$translation->language_code
+								);
 							}
 							$duplicated_ids .= $duplicated_id . ',';
 						}
@@ -168,7 +178,7 @@ class Translatable implements IMedia {
 	public function sync_product_gallery_duplicate_attachment( $att_id, $dup_att_id ) {
 		$product_id = wp_get_post_parent_id( $att_id );
 		$post_type  = get_post_type( $product_id );
-		if ( $post_type != 'product' || array_key_exists( $product_id, $this->products_being_synced ) ) {
+		if ( 'product' !== $post_type || array_key_exists( $product_id, $this->products_being_synced ) ) {
 			return;
 		}
 		$this->products_being_synced[ $product_id ] = 1;
@@ -176,27 +186,29 @@ class Translatable implements IMedia {
 		unset( $this->products_being_synced[ $product_id ] );
 	}
 
-	private function is_thumbnail_image_duplication_enabled( $product_id ){
+	private function is_thumbnail_image_duplication_enabled( $product_id ) {
 		return $this->is_duplication_enabled( $product_id, 'WPML_Admin_Post_Actions::DUPLICATE_FEATURED_META_KEY', 'WPML_Admin_Post_Actions::DUPLICATE_FEATURED_GLOBAL_KEY' );
 	}
 
-	private function is_media_duplication_enabled( $product_id ){
+	private function is_media_duplication_enabled( $product_id ) {
 		return $this->is_duplication_enabled( $product_id, 'WPML_Admin_Post_Actions::DUPLICATE_MEDIA_META_KEY', 'WPML_Admin_Post_Actions::DUPLICATE_MEDIA_GLOBAL_KEY' );
 	}
 
 	private function is_duplication_enabled( $product_id, $meta_key, $global_key ) {
 
-		$setting_value = get_post_meta( $product_id,
-		                                $this->sitepress->get_wp_api()
-		                                                ->constant( $meta_key ),
-		                                true );
+		$setting_value = get_post_meta(
+			$product_id,
+			$this->sitepress->get_wp_api()
+														->constant( $meta_key ),
+			true
+		);
 
 		if ( '' === $setting_value ) {
-			// fallback to global setting
+			// fallback to global setting.
 			$media_options = get_option( '_wpml_media', [] );
 
 			$global_setting_key = $this->sitepress->get_wp_api()
-			                                      ->constant( $global_key );
+												  ->constant( $global_key );
 			if ( isset( $media_options['new_content_settings'][ $global_setting_key ] ) ) {
 				$setting_value = $media_options['new_content_settings'][ $global_setting_key ];
 			}

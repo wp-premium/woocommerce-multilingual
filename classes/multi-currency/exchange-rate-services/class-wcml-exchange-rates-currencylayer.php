@@ -5,9 +5,9 @@
  */
 class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service {
 
-	private $id = 'currencylayer';
-	private $name = 'currencylayer';
-	private $url = 'https://currencylayer.com/';
+	private $id      = 'currencylayer';
+	private $name    = 'currencylayer';
+	private $url     = 'https://currencylayer.com/';
 	private $api_url = 'http://apilayer.net/api/live?access_key=%s&source=%s&currencies=%s&amount=1';
 
 	public function __construct() {
@@ -17,7 +17,7 @@ class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service {
 
 	/**
 	 * @param string $from
-	 * @param array $tos
+	 * @param array  $tos
 	 *
 	 * @return array
 	 * @throws Exception
@@ -25,7 +25,7 @@ class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service {
 	public function get_rates( $from, $tos ) {
 
 		parent::clear_last_error();
-		$rates = array();
+		$rates = [];
 
 		$url = sprintf( $this->api_url, $this->api_key, $from, implode( ',', $tos ) );
 
@@ -62,7 +62,7 @@ class WCML_Exchange_Rates_Currencylayer extends WCML_Exchange_Rate_Service {
 				}
 			}
 		}
-		
+
 		return $rates;
 
 	}

@@ -42,8 +42,10 @@ class WCML_TP_Support {
 		add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_slug_to_translation_package' ), 10, 2 );
 		add_action( 'wpml_translation_job_saved', array( $this, 'save_slug_translations' ), 10, 2 );
 
-		add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_images_to_translation_package' ), 10, 2 );
-		add_action( 'wpml_translation_job_saved', array( $this, 'save_images_translations' ), 10, 3 );
+		if ( ! defined( 'WPML_MEDIA_VERSION' ) ) {
+			add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_images_to_translation_package' ), 10, 2 );
+			add_action( 'wpml_translation_job_saved', array( $this, 'save_images_translations' ), 10, 3 );
+		}
 	}
 
 	public function append_custom_attributes_to_translation_package( $package, $post ) {
