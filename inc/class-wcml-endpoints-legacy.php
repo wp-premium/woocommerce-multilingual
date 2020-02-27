@@ -6,7 +6,7 @@ class WCML_Endpoints_Legacy {
 	private $woocommerce_wpml;
 	var $endpoints_strings = array();
 
-	function __construct( $woocommerce_wpml ) {
+	public function __construct( $woocommerce_wpml ) {
 		$this->woocommerce_wpml = $woocommerce_wpml;
 	}
 
@@ -19,7 +19,7 @@ class WCML_Endpoints_Legacy {
 		add_filter( 'option_rewrite_rules', array(
 			$this,
 			'translate_endpoints_in_rewrite_rules'
-		), 0, 1 ); // high priority
+		), 0, 1 ); // high priority.
 		add_filter( 'page_link', array( $this, 'endpoint_permalink_filter' ), 10, 2 ); //after WPML
 
 		if ( ! is_admin() ) {
@@ -30,7 +30,7 @@ class WCML_Endpoints_Legacy {
 		add_filter( 'woocommerce_settings_saved', array( $this, 'update_original_endpoints_strings' ) );
 	}
 
-	function register_endpoints_translations( $language = null ) {
+	public function register_endpoints_translations( $language = null ) {
 
 		if ( ! class_exists( 'WooCommerce' ) || ! defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE || version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
 			return false;
@@ -40,11 +40,11 @@ class WCML_Endpoints_Legacy {
 
 		if ( ! empty( $wc_vars ) ) {
 			$query_vars = array(
-				// Checkout actions
+				// Checkout actions.
 				'order-pay'          => $this->get_endpoint_translation( 'order-pay', $wc_vars['order-pay'], $language ),
 				'order-received'     => $this->get_endpoint_translation( 'order-received', $wc_vars['order-received'], $language ),
 
-				// My account actions
+				// My account actions.
 				'view-order'         => $this->get_endpoint_translation( 'view-order', $wc_vars['view-order'], $language ),
 				'edit-account'       => $this->get_endpoint_translation( 'edit-account', $wc_vars['edit-account'], $language ),
 				'edit-address'       => $this->get_endpoint_translation( 'edit-address', $wc_vars['edit-address'], $language ),
@@ -79,7 +79,7 @@ class WCML_Endpoints_Legacy {
 		return WC()->query->query_vars;
 	}
 
-	function get_endpoint_translation( $key, $endpoint, $language = null ) {
+	public function get_endpoint_translation( $key, $endpoint, $language = null ) {
 
 		$this->register_endpoint_string( $key, $endpoint );
 
@@ -108,19 +108,19 @@ class WCML_Endpoints_Legacy {
 
 	}
 
-	function rewrite_rule_endpoints( $call, $data ) {
+	public function rewrite_rule_endpoints( $call, $data ) {
 
-		if ( $call == 'icl_st_save_translation' && in_array( $data['icl_st_string_id'], $this->endpoints_strings ) ) {
+		if ( $call==='icl_st_save_translation' && in_array( $data['icl_st_string_id'], $this->endpoints_strings ) ) {
 			$this->add_endpoints();
 			$this->flush_rules_for_endpoints_translations();
 		}
 	}
 
-	function flush_rules_for_endpoints_translations() {
+	public function flush_rules_for_endpoints_translations() {
 		add_option( 'flush_rules_for_endpoints_translations', true );
 	}
 
-	function maybe_flush_rules() {
+	public function maybe_flush_rules() {
 		if ( get_option( 'flush_rules_for_endpoints_translations' ) ) {
 			delete_option( 'flush_rules_for_endpoints_translations' );
 			WC()->query->init_query_vars();
@@ -142,14 +142,14 @@ class WCML_Endpoints_Legacy {
 		}
 	}
 
-	function update_rewrite_rules( $value, $old_value ) {
+	public function update_rewrite_rules( $value, $old_value ) {
 		$this->add_endpoints();
 		$this->flush_rules_for_endpoints_translations();
 
 		return $value;
 	}
 
-	function add_endpoints() {
+	public function add_endpoints() {
 		if ( ! isset( $this->endpoints_strings ) ) {
 			return;
 		}
@@ -167,7 +167,7 @@ class WCML_Endpoints_Legacy {
 
 	}
 
-	function endpoint_permalink_filter( $p, $pid ) {
+	public function endpoint_permalink_filter( $p, $pid ) {
 		global $post, $wp;
 
 		if ( isset( $post->ID ) && ! is_admin() && version_compare( WOOCOMMERCE_VERSION, '2.2', '>=' ) && defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE ) {
@@ -210,7 +210,7 @@ class WCML_Endpoints_Legacy {
 		return $p;
 	}
 
-	function get_endpoint_url( $endpoint, $value = '', $permalink = '', $page_lang = false ) {
+	public function get_endpoint_url( $endpoint, $value = '', $permalink = '', $page_lang = false ) {
 		global $sitepress;
 
 		if ( $page_lang ) {
@@ -242,7 +242,7 @@ class WCML_Endpoints_Legacy {
 	}
 
 
-	function get_translated_edit_address_slug( $slug, $language = false ) {
+	public function get_translated_edit_address_slug( $slug, $language = false ) {
 
 		$strings_language = $this->woocommerce_wpml->strings->get_string_language( $slug, 'woocommerce', 'edit-address-slug: ' . $slug );
 

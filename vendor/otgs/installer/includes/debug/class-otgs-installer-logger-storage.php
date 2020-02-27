@@ -10,6 +10,7 @@ class OTGS_Installer_Logger_Storage {
 	const COMPONENT_PRODUCTS_URL        = 'products-url-fetching';
 	const COMPONENT_DOWNLOAD            = 'download';
 	const COMPONENT_REPOSITORIES        = 'repositories-fetching';
+	const COMPONENT_PRODUCTS_PARSING    = 'products-parsing';
 	const API_CONNECTION_TEST           = 'api-connection-test';
 	const PRODUCTS_FILE_CONNECTION_TEST = 'products-connection-test';
 

@@ -1,17 +1,17 @@
 <?php
 
-class WCML_MaxStore{
+class WCML_MaxStore {
 
-    function add_hooks(){
+	public function add_hooks() {
 
-	    add_filter( 'wcml_force_reset_cart_fragments', array( $this, 'wcml_force_reset_cart_fragments' ) );
+		add_filter( 'wcml_force_reset_cart_fragments', [ $this, 'wcml_force_reset_cart_fragments' ] );
 
-    }
+	}
 
-    public function wcml_force_reset_cart_fragments(){
+	public function wcml_force_reset_cart_fragments() {
 
-        return 1;
+		return 1;
 
-    }
+	}
 
 }

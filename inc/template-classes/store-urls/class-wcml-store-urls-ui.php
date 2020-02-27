@@ -25,77 +25,82 @@ class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 
 	public function get_model() {
 
-		$model = array(
-			'data' => array(
+		$model = [
+			'data'            => [
 				'flags' => $this->woocommerce_wpml->products->get_translation_flags( $this->active_languages, false, false ),
-			),
-			'shop_base' => array(
-				'flag' => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'shop' ) ),
+			],
+			'shop_base'       => [
+				'flag'       => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'shop' ) ),
 				'orig_value' => get_post( wc_get_page_id( 'shop' ) )->post_name,
-				'statuses' => $this->get_base_translations_statuses( 'shop', $this->active_languages ),
-			),
-			'product_base' => array(
-				'flag' => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product' ) ),
+				'statuses'   => $this->get_base_translations_statuses( 'shop', $this->active_languages ),
+			],
+			'product_base'    => [
+				'flag'       => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product' ) ),
 				'orig_value' => $this->woocommerce_wpml->url_translation->get_woocommerce_product_base(),
-				'statuses' => $this->get_base_translations_statuses( 'product', $this->active_languages ),
-			),
-			'cat_base' => array(
-				'flag' => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product_cat' ) ),
-				'orig_value' => !empty( $this->woocommerce_wpml->url_translation->wc_permalinks['category_base'] ) ? trim( $this->woocommerce_wpml->url_translation->wc_permalinks['category_base'], '/' ) : 'product-category',
-				'statuses' => $this->get_base_translations_statuses( 'product_cat', $this->active_languages ),
-			),
-			'tag_base' => array(
-				'flag' => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product_tag' ) ),
-				'orig_value' => !empty( $this->woocommerce_wpml->url_translation->wc_permalinks['tag_base'] ) ? trim( $this->woocommerce_wpml->url_translation->wc_permalinks['tag_base'], '/' ) : 'product-tag',
-				'statuses' => $this->get_base_translations_statuses( 'product_tag', $this->active_languages ),
-			),
-			'attr_base' => array(
-				'flag' => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'attribute' ) ),
+				'statuses'   => $this->get_base_translations_statuses( 'product', $this->active_languages ),
+			],
+			'cat_base'        => [
+				'flag'       => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product_cat' ) ),
+				'orig_value' => ! empty( $this->woocommerce_wpml->url_translation->wc_permalinks['category_base'] ) ? trim( $this->woocommerce_wpml->url_translation->wc_permalinks['category_base'], '/' ) : 'product-category',
+				'statuses'   => $this->get_base_translations_statuses( 'product_cat', $this->active_languages ),
+			],
+			'tag_base'        => [
+				'flag'       => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'product_tag' ) ),
+				'orig_value' => ! empty( $this->woocommerce_wpml->url_translation->wc_permalinks['tag_base'] ) ? trim( $this->woocommerce_wpml->url_translation->wc_permalinks['tag_base'], '/' ) : 'product-tag',
+				'statuses'   => $this->get_base_translations_statuses( 'product_tag', $this->active_languages ),
+			],
+			'attr_base'       => [
+				'flag'       => $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( 'attribute' ) ),
 				'orig_value' => trim( $this->woocommerce_wpml->url_translation->wc_permalinks['attribute_base'], '/' ),
-				'statuses' => $this->get_base_translations_statuses( 'attribute', $this->active_languages, $this->woocommerce_wpml->url_translation->wc_permalinks['attribute_base'] ),
-			),
-			'endpoints_base' => $this->get_endpoint_info(),
-			'attribute_slugs'=> $this->get_attribute_slugs_info(),
-			'strings' => array(
-				'notice' => __( 'This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages.', 'woocommerce-multilingual' ),
-				'notice_defaults' => sprintf( __( 'You can enter or edit your default values on the %sPermalinks settings%s page or, for the endpoints, on the WooCommerce %sAccount settings%s page.',
-						'woocommerce-multilingual' ),
-						'<a href="' . admin_url('options-permalink.php'). '">', '</a>',
-						'<a href="' . admin_url('admin.php?page=wc-settings&tab=account') .'">', '</a>'
+				'statuses'   => $this->get_base_translations_statuses( 'attribute', $this->active_languages, $this->woocommerce_wpml->url_translation->wc_permalinks['attribute_base'] ),
+			],
+			'endpoints_base'  => $this->get_endpoint_info(),
+			'attribute_slugs' => $this->get_attribute_slugs_info(),
+			'strings'         => [
+				'notice'           => __( 'This page allows you to translate all strings that are being used by WooCommerce in building different type of urls. Translating them enables you to have fully localized urls that match the language of the pages.', 'woocommerce-multilingual' ),
+				'notice_defaults'  => sprintf(
+					__(
+						'You can enter or edit your default values on the %1$sPermalinks settings%2$s page or, for the endpoints, on the WooCommerce %3$sAccount settings%4$s page.',
+						'woocommerce-multilingual'
 					),
-				'perm_settings' => '<a href="'.admin_url('options-permalink.php').'" >' .__( 'permalinks settings', 'woocommerce-multilingual' ).'</a>',
-				'account_settings' => '<a href="admin.php?page=wc-settings&tab=account" >'.__( 'Account settings', 'woocommerce-multilingual' ).'</a>',
-				'slug_type' => __( 'Slug type', 'woocommerce-multilingual' ),
-				'orig_slug' => __( 'Original Slug', 'woocommerce-multilingual' ),
-				'shop' => __( 'Shop page', 'woocommerce-multilingual' ),
-				'product' => __( 'Product base', 'woocommerce-multilingual' ),
-				'category' => __( 'Product category base', 'woocommerce-multilingual' ),
-				'tag' => __( 'Product tag base', 'woocommerce-multilingual' ),
-				'attr' => __( 'Product attribute base', 'woocommerce-multilingual' ),
-				'endpoint' => __( 'Endpoint: %s', 'woocommerce-multilingual' ),
-				'attribute_slug' => __( 'Attribute slug: %s', 'woocommerce-multilingual' ),
-			),
-			'nonces' => array(
-				'edit_base' => wp_nonce_field('wcml_edit_base', 'wcml_edit_base_nonce'),
-				'update_base' => wp_nonce_field('wcml_update_base_translation', 'wcml_update_base_nonce')
-			)
-		);
+					'<a href="' . admin_url( 'options-permalink.php' ) . '">',
+					'</a>',
+					'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=account' ) . '">',
+					'</a>'
+				),
+				'perm_settings'    => '<a href="' . admin_url( 'options-permalink.php' ) . '" >' . __( 'permalinks settings', 'woocommerce-multilingual' ) . '</a>',
+				'account_settings' => '<a href="admin.php?page=wc-settings&tab=account" >' . __( 'Account settings', 'woocommerce-multilingual' ) . '</a>',
+				'slug_type'        => __( 'Slug type', 'woocommerce-multilingual' ),
+				'orig_slug'        => __( 'Original Slug', 'woocommerce-multilingual' ),
+				'shop'             => __( 'Shop page', 'woocommerce-multilingual' ),
+				'product'          => __( 'Product base', 'woocommerce-multilingual' ),
+				'category'         => __( 'Product category base', 'woocommerce-multilingual' ),
+				'tag'              => __( 'Product tag base', 'woocommerce-multilingual' ),
+				'attr'             => __( 'Product attribute base', 'woocommerce-multilingual' ),
+				'endpoint'         => __( 'Endpoint: %s', 'woocommerce-multilingual' ),
+				'attribute_slug'   => __( 'Attribute slug: %s', 'woocommerce-multilingual' ),
+			],
+			'nonces'          => [
+				'edit_base'   => wp_nonce_field( 'wcml_edit_base', 'wcml_edit_base_nonce' ),
+				'update_base' => wp_nonce_field( 'wcml_update_base_translation', 'wcml_update_base_nonce' ),
+			],
+		];
 
 		return $model;
 	}
 
-	public function get_endpoint_info(){
+	public function get_endpoint_info() {
 
-		$endpoints_info = array();
-		foreach( WC()->query->query_vars as $key => $endpoint ){
+		$endpoints_info = [];
+		foreach ( WC()->query->query_vars as $key => $endpoint ) {
 			if ( class_exists( 'WPML_Endpoints_Support' ) ) {
 				$key = $endpoint;
 			}
 
-			$endpoints_info[ $key ][ 'key' ] = $key;
-			$endpoints_info[ $key ][ 'orig_value' ] = $endpoint;
-			$endpoints_info[ $key ][ 'flag' ] = $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( $key ) );
-			$endpoints_info[ $key ][ 'statuses' ] = $this->get_base_translations_statuses( $key, $this->active_languages, $endpoint );
+			$endpoints_info[ $key ]['key']        = $key;
+			$endpoints_info[ $key ]['orig_value'] = $endpoint;
+			$endpoints_info[ $key ]['flag']       = $this->sitepress->get_flag_url( $this->woocommerce_wpml->url_translation->get_source_slug_language( $key ) );
+			$endpoints_info[ $key ]['statuses']   = $this->get_base_translations_statuses( $key, $this->active_languages, $endpoint );
 
 		}
 
@@ -103,26 +108,26 @@ class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 
 	}
 
-	private function get_attribute_slugs_info(){
+	private function get_attribute_slugs_info() {
 		$product_attributes = $this->woocommerce_wpml->attributes->get_translatable_attributes();
 
-		$attributes_info = array();
-		foreach( $product_attributes as $attribute ){
+		$attributes_info = [];
+		foreach ( $product_attributes as $attribute ) {
 
-			if( $attribute->attribute_public ) {
+			if ( $attribute->attribute_public ) {
 				$language = $this->woocommerce_wpml->strings->get_string_language(
 					$attribute->attribute_name,
 					$this->woocommerce_wpml->url_translation->url_strings_context(),
 					$this->woocommerce_wpml->url_translation->url_string_name( 'attribute_slug', $attribute->attribute_name )
 				);
 
-				//$this->woocommerce_wpml->url_translation
-				$attributes_info[ $attribute->attribute_name ] = array(
+				// $this->woocommerce_wpml->url_translation
+				$attributes_info[ $attribute->attribute_name ] = [
 					'label'      => $attribute->attribute_label,
 					'orig_value' => $attribute->attribute_name,
 					'flag'       => $this->sitepress->get_flag_url( $language ),
-					'statuses'   => $this->get_base_translations_statuses( 'attribute_slug-' . $attribute->attribute_name, $this->active_languages, $attribute->attribute_name )
-				);
+					'statuses'   => $this->get_base_translations_statuses( 'attribute_slug-' . $attribute->attribute_name, $this->active_languages, $attribute->attribute_name ),
+				];
 
 			}
 		}
@@ -130,7 +135,7 @@ class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 		return $attributes_info;
 	}
 
-	public function get_base_translations_statuses( $base, $active_languages, $value = true ){
+	public function get_base_translations_statuses( $base, $active_languages, $value = true ) {
 
 		$statuses = new WCML_Store_URLs_Translation_Statuses_UI( $base, $active_languages, $value, $this->woocommerce_wpml, $this->sitepress );
 
@@ -139,9 +144,9 @@ class WCML_Store_URLs_UI extends WCML_Templates_Factory {
 	}
 
 	public function init_template_base_dir() {
-		$this->template_paths = array(
+		$this->template_paths = [
 			WCML_PLUGIN_PATH . '/templates/store-urls/',
-		);
+		];
 	}
 
 	public function get_template() {

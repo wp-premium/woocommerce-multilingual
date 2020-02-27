@@ -5,13 +5,13 @@
     plugins_update_XHR :{},
 
     init: function(){
-        
+
         jQuery('.otgs_wp_installer_table').on('click', '.enter_site_key_js', otgs_wp_installer.show_site_key_form);
         jQuery('.otgs_wp_installer_table').on('click', '.cancel_site_key_js', otgs_wp_installer.hide_site_key_form);
-        
+
         jQuery('.otgs_wp_installer_table').on('click', '.remove_site_key_js', otgs_wp_installer.remove_site_key);
         jQuery('.otgs_wp_installer_table').on('click', '.update_site_key_js', otgs_wp_installer.update_site_key);
-            
+
         jQuery('.otgs_wp_installer_table').on('submit', '.otgsi_site_key_form', otgs_wp_installer.save_site_key);
         jQuery('.otgs_wp_installer_table').on('submit', '.otgsi_downloads_form', otgs_wp_installer.download_downloads);
         jQuery('.otgs_wp_installer_table').on('change', '.otgsi_downloads_form :checkbox[name="downloads[]"]', otgs_wp_installer.update_downloads_form);
@@ -19,6 +19,7 @@
         jQuery('.otgs_wp_installer_table').on('click', '.installer_expand_button', otgs_wp_installer.toggle_subpackages);
 
         otgs_wp_installer.scroll_to_repository();
+        otgs_wp_installer.maybe_register();
 
         if( typeof pagenow != 'undefined' && pagenow == 'plugins'){
 
@@ -50,7 +51,7 @@
     reset_errors: function(){
         jQuery('.installer-error-box').html('').hide();
     },
-    
+
     show_error: function(repo, text){
         jQuery('#installer_repo_' + repo).find('.installer-error-box').html(text).show();
     },
@@ -67,13 +68,13 @@
         otgs_wp_installer.reset_errors();
 
         var form = button.closest('td').find('form.otgsi_site_key_form');
-        button.parent('p').hide();
+        button.closest('.enter_site_key_wrap_js').hide();
 
         form.show();
         form.find('input[name^=site_key_]').focus().val('');
         form.find('input').removeAttr('disabled');
 
-        form.closest('.otgsi_register_product_wrap').addClass('otgsi_yellow_bg');
+        form.closest('.otgsi_register_product_wrap').addClass('otgsi_insert_key');
 
         return false;
 
@@ -84,47 +85,47 @@
         var form = button.closest('td').find('form');
         form.hide();
 
-        form.closest('.otgsi_register_product_wrap').removeClass('otgsi_yellow_bg').find('.enter_site_key_wrap_js').show();
+        form.closest('.otgsi_register_product_wrap').removeClass('otgsi_insert_key').find('.enter_site_key_wrap_js').show();
         otgs_wp_installer.reset_errors();
         return false;
     },
 
     save_site_key: function(){
-        
+
         var thisf = jQuery(this);
         var data = jQuery(this).serialize();
-        jQuery(this).find('input').attr('disabled', 'disabled');        
-        
+        jQuery(this).find('input').attr('disabled', 'disabled');
+
         var spinner = jQuery('<span class="spinner"></span>');
         spinner.css({display: 'inline-block', float: 'right', visibility: 'visible'}).prependTo(jQuery(this));
-        
+
         otgs_wp_installer.reset_errors();
-        
-        jQuery.ajax({url: ajaxurl, type: 'POST', dataType:'json', data: data, success: 
+
+        jQuery.ajax({url: ajaxurl, type: 'POST', dataType:'json', data: data, success:
             function(ret){
                 if(!ret.data.error){
                     otgs_wp_installer.saved_site_key();
                 }else{
                     otgs_wp_installer.show_error(thisf.find('[name=repository_id]').val(), ret.data.error);
-                    thisf.find('input').removeAttr('disabled');        
+                    thisf.find('input').removeAttr('disabled');
                 }
-                
+
                 if(typeof ret.data.debug != 'undefined'){
                     thisf.append('<textarea style="width:100%" rows="20">' + ret.data.debug + '</textarea>');
                 }
-                
+
                 spinner.remove();
             }
         });
-        
+
         return false;
-        
+
     },
-    
+
     saved_site_key: function(){
         location.reload();
     },
-    
+
     remove_site_key: function(){
 
         if( jQuery(this).attr('disabled') == 'disabled' ){
@@ -143,41 +144,40 @@
 
         }
 
-        return false;  
+        return false;
     },
 
     removed_site_key: function(){
         location.reload();
     },
-    
+
     update_site_key: function(){
         var error_wrap = jQuery(this).closest('.otgsi_register_product_wrap').find('.installer-error-box');
         error_wrap.html('');
 
         var spinner = jQuery('<span class="spinner"></span>');
 
-        spinner.css({visibility: 'visible', float: 'none'}).prependTo(jQuery(this).parent());
+        spinner.css({visibility: 'visible', float: 'none'}).insertAfter(jQuery(this));
         data = {action: 'update_site_key', repository_id: jQuery(this).data('repository'), nonce: jQuery(this).data('nonce')}
         jQuery.ajax({
-            url: ajaxurl, 
-            type: 'POST', 
-            data: data, 
+            url: ajaxurl,
+            type: 'POST',
+            data: data,
             dataType: 'json',
             complete: function( event, xhr, settings ){
                 var error = '';
                 if(xhr == 'success') {
                     var ret = event.responseJSON;
-                    if(ret.error){
-                        error = ret.error;
+                    if(ret.data.error){
+                        error = ret.data.error;
                     }else{
                         otgs_wp_installer.updated_site_key(ret);
                     }
                 }else{
-                    error = 'Error processing request (' + xhr + '). Please try again!';
+                    error = '<p>Error processing request (' + xhr + '). Please try again!</p>';
                 }
-
                 if( error ){
-                    error_wrap.html('<p>' + error + '</p>').show();
+                    error_wrap.html(error).show();
                     spinner.remove();
                 }
 
@@ -185,26 +185,26 @@
         });
 
         return false;
-        
+
     },
-    
+
     updated_site_key: function(ret){
-        location.reload();            
+        location.reload();
     },
-    
+
     update_downloads_form: function(){
 
         var checked = jQuery('.otgsi_downloads_form :checkbox:checked[name="downloads[]"]').length;
-        
+
         if(checked){
             jQuery(this).closest('form').find(':submit, :checkbox[name=activate]').removeAttr('disabled');
         }else{
             jQuery(this).closest('form').find(':submit, :checkbox[name=activate]').attr('disabled', 'disabled');
         }
-        
-        
+
+
     },
-    
+
     download_downloads: function(){
 
         var activate = jQuery(this).find(":checkbox:checked[name=activate]").val(),
@@ -212,7 +212,7 @@
             downloads_form = jQuery(this),
             idx = 0,
             checkboxes = [];
-                
+
         jQuery(this).find(':checkbox:checked[name="downloads[]"]').each(function(){
             if(jQuery(this).attr('disabled')) return;
             checkboxes[idx] = jQuery(this);
@@ -364,7 +364,7 @@
 
         return false;
     },
-        
+
     show_download_progress_status: function(downloads_form, text){
 
         downloads_form.find('.installer-download-progress-status').html(text).fadeIn();
@@ -379,7 +379,7 @@
 
     toggle_subpackages: function(){
         var list = jQuery(this).closest('td').find('.otgs_wp_installer_subtable');
-        
+
         if(list.is(':visible')){
             list.slideUp('fast');
         }else{
@@ -425,7 +425,7 @@
         }
 
     },
-    
+
     toggle_release_notes: function(){
         var handle = jQuery(this);
         var tr = handle.closest('tr');
@@ -437,9 +437,40 @@
         tr.next('.installer-release-notes').fadeToggle();
 
         return false;
+    },
+
+    maybe_register: function(){
+        var getQueryStringValue = function (key) {
+            return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+        };
+        if( getQueryStringValue('action') === 'register' ) {
+            var repo = getQueryStringValue('repository'),
+                sitekey = getQueryStringValue('sitekey'),
+                repoElement = jQuery( '#installer_repo_' + repo );
+
+            repoElement.find('.enter_site_key_js').trigger('click');
+            jQuery('html, body').animate({
+                scrollTop: repoElement.offset().top
+            }, 1000);
+            if( sitekey ) {
+                repoElement.find('input[name="site_key_' + repo + '"]').val(sitekey).focus();
+            }
+        }
+    },
+
+    check_account: function( data, onFound, onError ) {
+        jQuery.ajax(
+            {
+                url: ajaxurl,
+                type: 'POST',
+                dataType:'json',
+                data: data,
+                success: onFound,
+                error: onError
+            }
+        );
     }
-    
-    
+
 }
 
 

@@ -76,14 +76,21 @@ class Installer_Theme_Class {
                 //Assign each repo with theme to property
                 $this->theme_repo[] = $repo;
 
-                if ( (isset($installer_repositories[$repo]['api-url'])) && (isset($installer_repositories[$repo]['products'])) ) {
-
+	            if ( isset( $installer_repositories[ $repo ]['api-url'] ) ) {
+		            $products_manager = WP_Installer()->get_products_manager();
                     //Define the rest of the properties based on the given repo
                     $this->repository_api[$repo] = $installer_repositories[$repo]['api-url'];
-                    $this->repository_theme_products[$repo] = $installer_repositories[$repo]['products'];
-                    $this->installer_site_url[$repo] = WP_Installer()->get_installer_site_url( $repo );
-                    $this->installer_site_key[$repo] = WP_Installer()->get_site_key( $repo );
-                    $this->theme_user_registration[$repo] = false;
+		            $this->installer_site_url[$repo] = WP_Installer()->get_installer_site_url( $repo );
+		            $this->installer_site_key[$repo] = WP_Installer()->get_site_key( $repo );
+		            $this->repository_theme_products[ $repo ] = $products_manager->get_products_url(
+			            $repo,
+			            $this->installer_site_key[ $repo ],
+			            $this->installer_site_url[ $repo ],
+			            false
+		            );
+
+
+		            $this->theme_user_registration[$repo] = false;
 
                     if ( WP_Installer()->repository_has_valid_subscription( $repo ) ) {
 
@@ -352,7 +359,7 @@ class Installer_Theme_Class {
     }
 
     /** Get Themes */
-    private function installer_theme_get_themes( $product_url = '', $repo_source = '' ) {
+    private function installer_theme_get_themes( $product_url = '', $repository_id  = '' ) {
 
         //Query API
         if ( empty($product_url) ) {
@@ -374,8 +381,8 @@ class Installer_Theme_Class {
         if ( (is_array( $current_installer_settings )) && (!(empty($current_installer_settings))) ) {
 
             //Set and already defined, retrieved $products
-            if ( isset($current_installer_settings['repositories'][$repo_source]['data']) ) {
-                $products = $current_installer_settings['repositories'][$repo_source]['data'];
+            if ( isset($current_installer_settings['repositories'][$repository_id]['data']) ) {
+                $products = $current_installer_settings['repositories'][$repository_id]['data'];
                 if ( isset($products['downloads']['themes']) ) {
                     $themes = $products['downloads']['themes'];
                 }
@@ -562,8 +569,13 @@ class Installer_Theme_Class {
         if ( (is_array( $this->installer_repo_with_themes )) && (!(empty($this->installer_repo_with_themes))) ) {
             foreach ( $this->installer_repo_with_themes as $k => $repo_slug ) {
                 //Step2: Let's checked if we have update for this theme
-                $update_available = get_option( $this->installer_themes_available_updates[$repo_slug] );
-                if ( $update_available ) {
+	            if ( is_array( $this->installer_themes_available_updates ) && isset( $this->installer_themes_available_updates[ $repo_slug ] ) ) {
+		            $update_available = get_option( $this->installer_themes_available_updates[ $repo_slug ] );
+	            } else {
+		            $update_available = false;
+	            }
+
+	            if ( $update_available ) {
                     if ( (is_array( $update_available )) && (!(empty($update_available))) ) {
                         //Has updates available coming from this specific theme repo
                         //Let's loop through the themes that needs update
@@ -597,16 +609,22 @@ class Installer_Theme_Class {
             if ( (!($themes)) || ($doing_api_query) ) {
                 //Not yet defined
                 //Loop through each repositories and check whether they have themes
-                foreach ( $repositories as $k => $v ) {
-                    if ( isset($v['products']) ) {
-                        $products_url = $v['products'];
-                        $themes = $this->installer_theme_get_themes( $products_url, $k );
-                        if ( (is_array( $themes )) && (!(empty($themes))) ) {
-                            //Repo has themes
-                            $repositories_with_themes[] = $k;
-                        }
-                    }
-                }
+	            foreach ( $repositories as $repository_id => $repository_data ) {
+		            $products_manager = WP_Installer()->get_products_manager();
+		            $product_url      = $products_manager->get_products_url(
+			            $repository_id,
+			            WP_Installer()->get_site_key( $repository_id ),
+			            WP_Installer()->get_installer_site_url( $repository_id ),
+			            false
+		            );
+		            if ( $product_url ) {
+			            $themes = $this->installer_theme_get_themes( $product_url, $repository_id );
+			            if ( ( is_array( $themes ) ) && ( ! ( empty( $themes ) ) ) ) {
+				            //Repo has themes
+				            $repositories_with_themes[] = $repository_id;
+			            }
+		            }
+	            }
             } else {
                 //Already set
                 $repositories_with_themes = $themes;
@@ -819,14 +837,18 @@ class Installer_Theme_Class {
                         }
                     }
                     //Exited the upgrade loop for this specific theme repository
-                    if ( !(empty($otgs_theme_updates_available)) ) {
+                    if ( !empty($otgs_theme_updates_available) ) {
                         //Has updates
-                        update_option( $this->installer_themes_available_updates[$repo_slug], $otgs_theme_updates_available );
+	                    if ( is_array( $this->installer_themes_available_updates ) && isset( $this->installer_themes_available_updates[ $repo_slug ] ) ) {
+		                    update_option( $this->installer_themes_available_updates[ $repo_slug ], $otgs_theme_updates_available );
+	                    }
                     } else {
                         //No updates
-                        delete_option( $this->installer_themes_available_updates[$repo_slug] );
+	                    if ( is_array( $this->installer_themes_available_updates ) && isset( $this->installer_themes_available_updates[ $repo_slug ] ) ) {
+		                    //No updates
+		                    delete_option( $this->installer_themes_available_updates[ $repo_slug ] );
+	                    }
                     }
-
                 }
             }
         }

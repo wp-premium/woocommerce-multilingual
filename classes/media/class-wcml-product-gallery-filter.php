@@ -20,24 +20,24 @@ class WCML_Product_Gallery_Filter implements IWPML_Action {
 	}
 
 	public function add_hooks() {
-		add_filter( 'get_post_metadata', array( $this, 'localize_image_ids' ), 10, 3 );
+		add_filter( 'get_post_metadata', [ $this, 'localize_image_ids' ], 10, 3 );
 	}
 
 	public function localize_image_ids( $value, $object_id, $meta_key ) {
 
 		$image_ids = false;
 		if ( '_product_image_gallery' === $meta_key &&
-		     in_array( get_post_type( $object_id ), array( 'product', 'product_variation' ) ) ) {
+			 in_array( get_post_type( $object_id ), [ 'product', 'product_variation' ] ) ) {
 
-			$cache_key  = $object_id . '_image_gallery';
-			$found      = false;
+			$cache_key = $object_id . '_image_gallery';
+			$found     = false;
 			$image_ids = $this->wpml_cache->get( $cache_key, $found );
 
 			if ( ! $image_ids ) {
 
-				remove_filter( 'get_post_metadata', array( $this, 'localize_image_ids' ), 10 );
+				remove_filter( 'get_post_metadata', [ $this, 'localize_image_ids' ], 10 );
 
-				$meta_value = array();
+				$meta_value = [];
 
 				$post_element   = $this->translation_element_factory->create( $object_id, 'post' );
 				$source_element = $post_element->get_source_element();
@@ -63,11 +63,10 @@ class WCML_Product_Gallery_Filter implements IWPML_Action {
 					$image_ids = implode( ',', $meta_value );
 				}
 
-				add_filter( 'get_post_metadata', array( $this, 'localize_image_ids' ), 10, 3 );
+				add_filter( 'get_post_metadata', [ $this, 'localize_image_ids' ], 10, 3 );
 
 				$this->wpml_cache->set( $cache_key, $image_ids );
 			}
-
 		}
 
 		return $image_ids ? [ $image_ids ] : $value;

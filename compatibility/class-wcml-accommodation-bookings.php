@@ -27,7 +27,7 @@ class WCML_Accommodation_Bookings{
 		add_action( 'init', [ $this, 'load_assets' ], 100 );
 	}
 
-	function wcml_price_field_after_booking_base_cost( $post_id ){
+	public function wcml_price_field_after_booking_base_cost( $post_id ){
 
         $this->echo_wcml_price_field( $post_id, 'wcml_wc_booking_base_cost' );
 

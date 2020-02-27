@@ -2,31 +2,31 @@
 
 class WCML_Payment_Method_Filter {
 	/** @var array  */
-	private $payment_gateway_cache = array();
+	private $payment_gateway_cache = [];
 
 	/** @var array  */
-	private $post_type_cache = array();
+	private $post_type_cache = [];
 
 	public function add_hooks() {
-		add_filter( 'get_post_metadata', array( $this, 'payment_method_string' ), 10, 3 );
+		add_filter( 'get_post_metadata', [ $this, 'payment_method_string' ], 10, 3 );
 	}
 
 	public function payment_method_string( $title, $object_id, $meta_key ) {
 
-		if ( '_payment_method_title' === $meta_key && !empty( $title ) && $object_id && 'shop_order' === $this->get_post_type( $object_id ) ) {
+		if ( '_payment_method_title' === $meta_key && ! empty( $title ) && $object_id && 'shop_order' === $this->get_post_type( $object_id ) ) {
 			$payment_gateway = $this->get_payment_gateway( $object_id );
 
-			if( isset( $_POST['payment_method'] ) && $payment_gateway->id !== $_POST['payment_method'] && WC()->payment_gateways() ){
+			if ( isset( $_POST['payment_method'] ) && $payment_gateway->id !== $_POST['payment_method'] && WC()->payment_gateways() ) {
 				$payment_gateways = WC()->payment_gateways->payment_gateways();
-				if( isset( $payment_gateways[ $_POST['payment_method'] ] ) ){
+				if ( isset( $payment_gateways[ $_POST['payment_method'] ] ) ) {
 					$payment_gateway = $payment_gateways[ $_POST['payment_method'] ];
 				}
 			}
 
-			if( $payment_gateway ){
+			if ( $payment_gateway ) {
 				$title = icl_translate( 'admin_texts_woocommerce_gateways', $payment_gateway->id . '_gateway_title', $payment_gateway->title );
 
-				if( $title === $payment_gateway->title ){
+				if ( $title === $payment_gateway->title ) {
 					$title = __( $payment_gateway->title, 'woocommerce' );
 
 					if ( 'cheque' === $payment_gateway->id && $title === $payment_gateway->title ) {
@@ -59,9 +59,9 @@ class WCML_Payment_Method_Filter {
 	 */
 	private function get_payment_gateway( $object_id ) {
 		if ( ! array_key_exists( $object_id, $this->payment_gateway_cache ) ) {
-			remove_filter( 'get_post_metadata', array( $this, 'payment_method_string' ), 10, 3 );
+			remove_filter( 'get_post_metadata', [ $this, 'payment_method_string' ], 10, 3 );
 			$payment_gateway = wc_get_payment_gateway_by_order( $object_id );
-			add_filter( 'get_post_metadata', array( $this, 'payment_method_string' ), 10, 3 );
+			add_filter( 'get_post_metadata', [ $this, 'payment_method_string' ], 10, 3 );
 			$this->payment_gateway_cache[ $object_id ] = $payment_gateway;
 		}
 

@@ -85,7 +85,7 @@ class WCML_Pointers{
 		wp_enqueue_style( 'wcml-pointers' );
 
 		$method = $before ? 'before' : 'append';
-		// @todo move to an enqueued script?
+		// @todo move to an enqueued script?.
 		?>
 			<script type="text/javascript">
 				jQuery('<?php echo $jquery_selector; ?>').<?php echo $method; ?>('<?php echo $this->get_anchor( $link, $name, $anchor_template ); ?>');

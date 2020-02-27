@@ -9,8 +9,8 @@ class WCML_Products_Screen_Options {
 	 * Setup hooks.
 	 */
 	public function init() {
-		add_filter( 'default_hidden_columns',      array( $this, 'filter_screen_options' ), 10, 2 );
-		add_filter( 'wpml_hide_management_column', array( $this, 'sitepress_screen_option_filter' ), 10, 2 );
+		add_filter( 'default_hidden_columns', [ $this, 'filter_screen_options' ], 10, 2 );
+		add_filter( 'wpml_hide_management_column', [ $this, 'sitepress_screen_option_filter' ], 10, 2 );
 	}
 
 	/**

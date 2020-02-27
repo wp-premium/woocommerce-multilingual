@@ -18,33 +18,35 @@ class WCML_Table_Rate_Shipping {
 	/**
 	 * WCML_Table_Rate_Shipping constructor.
 	 *
-	 * @param SitePress $sitepress
+	 * @param SitePress        $sitepress
 	 * @param woocommerce_wpml $woocommerce_wpml
 	 */
-	function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml ) {
-		$this->sitepress = $sitepress;
+	public function __construct( SitePress $sitepress, woocommerce_wpml $woocommerce_wpml ) {
+		$this->sitepress        = $sitepress;
 		$this->woocommerce_wpml = $woocommerce_wpml;
 	}
 
-	public function add_hooks(){
+	public function add_hooks() {
 
-		add_action( 'init', array( $this, 'init' ), 9 );
+		add_action( 'init', [ $this, 'init' ], 9 );
 
 		if ( ! is_admin() ) {
-			add_filter( 'get_the_terms', array( $this, 'shipping_class_id_in_default_language' ), 10, 3 );
-			add_filter( 'woocommerce_shipping_table_rate_is_available', array( $this, 'shipping_table_rate_is_available' ), 10, 3 );
+			add_filter( 'get_the_terms', [ $this, 'shipping_class_id_in_default_language' ], 10, 3 );
+			add_filter( 'woocommerce_shipping_table_rate_is_available', [ $this, 'shipping_table_rate_is_available' ], 10, 3 );
 		}
 
 		if ( wcml_is_multi_currency_on() ) {
 			$wpml_api = $this->sitepress->get_wp_api();
 			if ( $wpml_api->version_compare( $wpml_api->constant( 'TABLE_RATE_SHIPPING_VERSION' ), '3.0.11', '<' ) ) {
-				add_filter( 'woocommerce_table_rate_query_rates_args', array( $this, 'filter_query_rates_args' ) );
+				add_filter( 'woocommerce_table_rate_query_rates_args', [ $this, 'filter_query_rates_args' ] );
 			}
 
-			add_filter( 'woocommerce_table_rate_package_row_base_price', array(
-				$this,
-				'filter_product_base_price'
-			), 10, 3 );
+			add_filter(
+				'woocommerce_table_rate_package_row_base_price',
+				[ $this, 'filter_product_base_price' ],
+				10,
+				3
+			);
 		}
 
 	}
@@ -53,29 +55,29 @@ class WCML_Table_Rate_Shipping {
 	 * Register shipping labels for string translation.
 	 */
 	public function init() {
-		// Register shipping label
+		// Register shipping label.
 		if (
-			isset( $_GET[ 'page' ] ) &&
+			isset( $_GET['page'] ) &&
 			(
-				$_GET[ 'page' ] === 'shipping_zones' ||
+				'shipping_zones' === $_GET['page'] ||
 				(
-					$_GET['page'] == 'wc-settings' &&
-					isset( $_GET[ 'tab' ] ) &&
-					$_GET['tab'] == 'shipping'
+					'wc-settings' === $_GET['page'] &&
+					isset( $_GET['tab'] ) &&
+					'shipping' === $_GET['tab']
 				)
 			)
 		) {
 
 			$this->show_pointer_info();
 
-			if( isset( $_POST[ 'shipping_label' ] ) &&
-			    isset( $_POST[ 'woocommerce_table_rate_title' ] ) ){
-				do_action( 'wpml_register_single_string', 'woocommerce', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) . '_shipping_method_title', sanitize_text_field( $_POST[ 'woocommerce_table_rate_title' ] ) );
+			if ( isset( $_POST['shipping_label'] ) &&
+				isset( $_POST['woocommerce_table_rate_title'] ) ) {
+				do_action( 'wpml_register_single_string', WCML_WC_Shipping::STRINGS_CONTEXT, sanitize_text_field( $_POST['woocommerce_table_rate_title'] ) . '_shipping_method_title', sanitize_text_field( $_POST['woocommerce_table_rate_title'] ) );
 
-				$shipping_labels = array_map( 'wc_clean', $_POST[ 'shipping_label' ] );
+				$shipping_labels = array_map( 'wc_clean', $_POST['shipping_label'] );
 				foreach ( $shipping_labels as $key => $shipping_label ) {
-					$rate_key = isset( $_GET[ 'instance_id' ] ) ? 'table_rate'.$_GET[ 'instance_id' ].$_POST[ 'rate_id' ][ $key ] : $shipping_label;
-					do_action( 'wpml_register_single_string', 'woocommerce', $rate_key. '_shipping_method_title', $shipping_label );
+					$rate_key = isset( $_GET['instance_id'] ) ? 'table_rate' . $_GET['instance_id'] . $_POST['rate_id'][ $key ] : $shipping_label;
+					do_action( 'wpml_register_single_string', WCML_WC_Shipping::STRINGS_CONTEXT, $rate_key . '_shipping_method_title', $shipping_label );
 				}
 			}
 		}
@@ -92,35 +94,37 @@ class WCML_Table_Rate_Shipping {
 		global $icl_adjust_id_url_filter_off;
 
 		$is_product_object = 'product' === get_post_type( $post_id ) || 'product_variation' === get_post_type( $post_id );
-		if( $terms && $is_product_object && 'product_shipping_class' === $taxonomy ){
+		if ( $terms && $is_product_object && 'product_shipping_class' === $taxonomy ) {
 
-			if( is_admin() ){
+			if ( is_admin() ) {
 				$shipp_class_language = $this->woocommerce_wpml->products->get_original_product_language( $post_id );
-			}else {
+			} else {
 				$shipp_class_language = $this->sitepress->get_default_language();
 			}
 
-			$cache_key = md5( json_encode ( $terms ) );
-			$cache_key .= ":".$post_id.$shipp_class_language;
+			$cache_key  = md5( wp_json_encode( $terms ) );
+			$cache_key .= ':' . $post_id . $shipp_class_language;
 
 			$cache_group = 'trnsl_shipping_class';
 			$cache_terms = wp_cache_get( $cache_key, $cache_group );
 
-			if( $cache_terms ) return $cache_terms;
+			if ( $cache_terms ) {
+				return $cache_terms;
+			}
 
 			foreach ( $terms as $k => $term ) {
 
 				$shipping_class_id = apply_filters( 'translate_object_id', $term->term_id, 'product_shipping_class', false, $shipp_class_language );
 
-				$icl_adjust_id_url_filter = $icl_adjust_id_url_filter_off;
+				$icl_adjust_id_url_filter     = $icl_adjust_id_url_filter_off;
 				$icl_adjust_id_url_filter_off = true;
 
-				$terms[ $k ] = get_term( $shipping_class_id,  'product_shipping_class' );
+				$terms[ $k ] = get_term( $shipping_class_id, 'product_shipping_class' );
 
 				$icl_adjust_id_url_filter_off = $icl_adjust_id_url_filter;
 			}
 
-			wp_cache_set ( $cache_key, $terms, $cache_group );
+			wp_cache_set( $cache_key, $terms, $cache_group );
 		}
 
 		return $terms;
@@ -128,29 +132,30 @@ class WCML_Table_Rate_Shipping {
 
 	/**
 	 * It's not possible to filter rate_min and rate_max so we use the original price to compare against these values
+	 *
+	 * @param array $args
+	 *
+	 * @return mixed
 	 */
-	public function filter_query_rates_args( $args ){
-
-		if( isset( $args['price'] ) && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ){
+	public function filter_query_rates_args( $args ) {
+		if ( isset( $args['price'] ) && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ) {
 			$args['price'] = $this->woocommerce_wpml->multi_currency->prices->unconvert_price_amount( $args['price'] );
 		}
 
 		return $args;
 	}
 
-	public function show_pointer_info(){
-
+	public function show_pointer_info() {
 		$pointer_ui = new WCML_Pointer_UI(
-			sprintf( __( 'You can translate this method title on the %sWPML String Translation page%s. Use the search on the top of that page to find the method title string.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php').'">', '</a>' ),
+			sprintf( __( 'You can translate this method title on the %1$sWPML String Translation page%2$s. Use the search on the top of that page to find the method title string.', 'woocommerce-multilingual' ), '<a href="' . admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php' ) . '">', '</a>' ),
 			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-table-rate-shipping-woocommerce-multilingual/',
 			'woocommerce_table_rate_title'
 		);
 
 		$pointer_ui->show();
 
-
 		$pointer_ui = new WCML_Pointer_UI(
-			sprintf( __( 'You can translate the labels of your table rates on the %sWPML String Translation page%s. Use the search on the top of that page to find the labels strings.', 'woocommerce-multilingual' ), '<a href="'.admin_url('admin.php?page='.WPML_ST_FOLDER.'/menu/string-translation.php').'">', '</a>' ),
+			sprintf( __( 'You can translate the labels of your table rates on the %1$sWPML String Translation page%2$s. Use the search on the top of that page to find the labels strings.', 'woocommerce-multilingual' ), '<a href="' . admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php' ) . '">', '</a>' ),
 			'https://wpml.org/documentation/woocommerce-extensions-compatibility/translating-woocommerce-table-rate-shipping-woocommerce-multilingual/',
 			'shipping_rates .shipping_label a'
 		);
@@ -160,15 +165,14 @@ class WCML_Table_Rate_Shipping {
 
 	/**
 	 * @param $row_base_price
-	 * @param WC_Product $_product
+	 * @param WC_Product     $_product
 	 * @param $qty
 	 *
 	 * @return mixed
-	 *
 	 */
-	public function filter_product_base_price( $row_base_price, $_product, $qty ){
+	public function filter_product_base_price( $row_base_price, $_product, $qty ) {
 
-		if( $_product && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ){
+		if ( $_product && wcml_get_woocommerce_currency_option() !== $this->woocommerce_wpml->multi_currency->get_client_currency() ) {
 			$row_base_price = $this->woocommerce_wpml->products->get_product_price_from_db( $_product->get_id() ) * $qty;
 		}
 
@@ -176,31 +180,33 @@ class WCML_Table_Rate_Shipping {
 	}
 
 	/**
-	 * @param bool $available
-	 * @param array $package
+	 * @param bool               $available
+	 * @param array              $package
 	 * @param WC_Shipping_Method $object
 	 *
 	 * @return bool
 	 */
 	public function shipping_table_rate_is_available( $available, $package, $object ) {
 
-		if ( ! $available ) {
-			add_filter( 'option_woocommerce_table_rate_priorities_' . $object->instance_id, array(
-				$this,
-				'filter_table_rate_priorities'
-			) );
-			remove_filter( 'woocommerce_shipping_table_rate_is_available', array(
-				$this,
-				'shipping_table_rate_is_available'
-			), 10, 3 );
+		add_filter(
+			'option_woocommerce_table_rate_priorities_' . $object->instance_id,
+			[ $this, 'filter_table_rate_priorities' ]
+		);
+		remove_filter(
+			'woocommerce_shipping_table_rate_is_available',
+			[ $this, 'shipping_table_rate_is_available' ],
+			10,
+			3
+		);
 
-			$available = $object->is_available( $package );
+		$available = $object->is_available( $package );
 
-			add_filter( 'woocommerce_shipping_table_rate_is_available', array(
-				$this,
-				'shipping_table_rate_is_available'
-			), 10, 3 );
-		}
+		add_filter(
+			'woocommerce_shipping_table_rate_is_available',
+			[ $this, 'shipping_table_rate_is_available' ],
+			10,
+			3
+		);
 
 		return $available;
 	}
@@ -223,5 +229,4 @@ class WCML_Table_Rate_Shipping {
 
 		return $priorities;
 	}
-
 }

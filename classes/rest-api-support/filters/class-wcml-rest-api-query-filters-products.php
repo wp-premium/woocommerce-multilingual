@@ -15,6 +15,7 @@ class WCML_REST_API_Query_Filters_Products{
 
 	public function add_hooks(){
 		add_filter( 'woocommerce_rest_product_query', array( $this, 'filter_products_query' ), 10, 2 );
+		add_filter( 'woocommerce_rest_product_object_query', array( $this, 'filter_products_query' ), 10, 2 );
 	}
 
 	/**

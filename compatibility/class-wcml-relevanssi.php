@@ -4,7 +4,7 @@ class WCML_Relevanssi {
 
 	public function add_hooks() {
 		// Re-index translated product to add missing terms (wcml-2282)
-		add_action( 'wcml_update_extra_fields', array( $this, 'index_product' ), 10, 4 );
+		add_action( 'wcml_update_extra_fields', [ $this, 'index_product' ], 10, 4 );
 	}
 
 	public function index_product( $product_id, $tr_product_id, $translations, $target_language ) {

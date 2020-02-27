@@ -35,21 +35,21 @@ class WCML_Admin_Menus {
 			add_filter( 'wpml_menu_page', [ __CLASS__, 'wpml_menu_page' ] );
 		}
 
-		add_action( 'admin_menu', array( __CLASS__, 'register_menus' ), 80 );
+		add_action( 'admin_menu', [ __CLASS__, 'register_menus' ], 80 );
 
 		if ( self::is_page_without_admin_language_switcher() ) {
 			self::remove_wpml_admin_language_switcher();
 		}
 
 		if ( is_admin() && ! is_null( $sitepress ) && self::$woocommerce_wpml->dependencies_are_ok ) {
-			add_action( 'admin_footer', array( __CLASS__, 'documentation_links' ) );
-			add_action( 'admin_head', array( __CLASS__, 'hide_multilingual_content_setup_box' ) );
-			add_action( 'admin_init', array( __CLASS__, 'restrict_admin_with_redirect' ) );
+			add_action( 'admin_footer', [ __CLASS__, 'documentation_links' ] );
+			add_action( 'admin_head', [ __CLASS__, 'hide_multilingual_content_setup_box' ] );
+			add_action( 'admin_init', [ __CLASS__, 'restrict_admin_with_redirect' ] );
 		}
 
-		add_filter( 'woocommerce_prevent_admin_access', array( __CLASS__, 'check_user_admin_access' ) );
+		add_filter( 'woocommerce_prevent_admin_access', [ __CLASS__, 'check_user_admin_access' ] );
 
-		add_action( 'admin_head', array( __CLASS__, 'add_menu_warning' ) );
+		add_action( 'admin_head', [ __CLASS__, 'add_menu_warning' ] );
 	}
 
 	/**
@@ -63,11 +63,11 @@ class WCML_Admin_Menus {
 		$get_page      = isset( $_GET['page'] ) ? $_GET['page'] : false;
 
 		$is_page_wpml_wcml       = isset( $_GET['page'] ) && 'wpml-wcml' === $_GET['page'];
-		$is_new_order_or_coupon  = in_array( $pagenow, array( 'edit.php', 'post-new.php' ), true ) &&
-		                           $get_post_type &&
-		                           in_array( $get_post_type, array( 'shop_coupon', 'shop_order' ), true );
+		$is_new_order_or_coupon  = in_array( $pagenow, [ 'edit.php', 'post-new.php' ], true ) &&
+								   $get_post_type &&
+								   in_array( $get_post_type, [ 'shop_coupon', 'shop_order' ], true );
 		$is_edit_order_or_coupon = 'post.php' === $pagenow && $get_post &&
-		                           in_array( get_post_type( $get_post ), array( 'shop_coupon', 'shop_order' ), true );
+								   in_array( get_post_type( $get_post ), [ 'shop_coupon', 'shop_order' ], true );
 		$is_shipping_zones       = 'shipping_zones' === $get_page;
 		$is_attributes_page      = apply_filters( 'wcml_is_attributes_page', 'product_attributes' === $get_page );
 
@@ -81,7 +81,7 @@ class WCML_Admin_Menus {
 	}
 
 	public static function remove_wpml_admin_language_switcher() {
-		remove_action( 'wp_before_admin_bar_render', array( self::$sitepress, 'admin_language_switcher' ) );
+		remove_action( 'wp_before_admin_bar_render', [ self::$sitepress, 'admin_language_switcher' ] );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class WCML_Admin_Menus {
 				__( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
 				'wpml_operate_woocommerce_multilingual',
 				'wpml-wcml',
-				array( __CLASS__, 'render_menus' )
+				[ __CLASS__, 'render_menus' ]
 			);
 		} else {
 			add_menu_page(
@@ -113,7 +113,7 @@ class WCML_Admin_Menus {
 				__( 'WooCommerce Multilingual', 'woocommerce-multilingual' ),
 				'wpml_manage_woocommerce_multilingual',
 				'wpml-wcml',
-				array( __CLASS__, 'render_menus' ),
+				[ __CLASS__, 'render_menus' ],
 				WCML_PLUGIN_URL . '/res/images/icon16.png'
 			);
 
@@ -151,7 +151,7 @@ class WCML_Admin_Menus {
 
 			$quick_edit_notice .= sprintf(
 				/* translators: 1: WooCommerce Multilingual products editor, 2: Edit this product translation */
-				__( "Quick edit is disabled for product translations. It\'s recommended to use the %s for editing products translations. %s", 'woocommerce-multilingual' ),
+				__( 'Quick edit is disabled for product translations. It\'s recommended to use the %1$s for editing products translations. %2$s', 'woocommerce-multilingual' ),
 				'<a href="' . admin_url( 'admin.php?page=wpml-wcml&tab=products' ) . '" >' . __( 'WooCommerce Multilingual products editor', 'woocommerce-multilingual' ) . '</a>',
 				'<a href="" class="quick_product_trnsl_link" >' . __( 'Edit this product translation', 'woocommerce-multilingual' ) . '</a>'
 			);
@@ -250,7 +250,7 @@ class WCML_Admin_Menus {
 				exit;
 			}
 		} elseif ( 'post.php' === $pagenow && self::is_post_product_translation_screen() ) {
-			add_action( 'admin_notices', array( __CLASS__, 'inf_editing_product_in_non_default_lang' ) );
+			add_action( 'admin_notices', [ __CLASS__, 'inf_editing_product_in_non_default_lang' ] );
 		}
 	}
 
@@ -266,13 +266,13 @@ class WCML_Admin_Menus {
 	 */
 	private static function is_post_action_needs_redirect() {
 		return ! isset( $_GET['action'] ) ||
-		       ( isset( $_GET['action'] ) &&
-		         ! in_array(
-			         $_GET['action'],
-			         array( 'trash', 'delete', 'untrash' ),
-			         true
-		         )
-		       );
+			   ( isset( $_GET['action'] ) &&
+				! in_array(
+					$_GET['action'],
+					[ 'trash', 'delete', 'untrash' ],
+					true
+				)
+			   );
 	}
 
 	/**
@@ -293,7 +293,7 @@ class WCML_Admin_Menus {
 			$message .= sprintf(
 				/* translators: 1: open <a> tag, 2: close <a> tag */
 				__(
-					'The recommended way to translate WooCommerce products is using the %sWooCommerce Multilingual products translation%s page.
+					'The recommended way to translate WooCommerce products is using the %1$sWooCommerce Multilingual products translation%2$s page.
 					Please use this page only for translating elements that are not available in the WooCommerce Multilingual products translation table.',
 					'woocommerce-multilingual'
 				),

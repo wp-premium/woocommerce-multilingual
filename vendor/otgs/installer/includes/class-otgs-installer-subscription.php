@@ -10,6 +10,7 @@ class OTGS_Installer_Subscription {
 
 	const SUBSCRIPTION_STATUS_TEXT_EXPIRED = 'expired';
 	const SUBSCRIPTION_STATUS_TEXT_VALID = 'valid';
+	const SUBSCRIPTION_STATUS_TEXT_REFUNDED = 'refunded';
 	const SUBSCRIPTION_STATUS_TEXT_MISSING = 'missing';
 
 	private $status;
@@ -19,6 +20,7 @@ class OTGS_Installer_Subscription {
 	private $type;
 	private $registered_by;
 	private $data;
+	private $notes;
 
 	/**
 	 * WPML_Installer_Subscription constructor.
@@ -38,6 +40,10 @@ class OTGS_Installer_Subscription {
 
 			if ( isset( $subscription['data']->expires ) ) {
 				$this->expires = $subscription['data']->expires;
+			}
+
+			if ( isset( $subscription['data']->notes ) ) {
+				$this->notes = $subscription['data']->notes;
 			}
 
 			if ( isset( $subscription['key'] ) ) {
@@ -67,17 +73,22 @@ class OTGS_Installer_Subscription {
 			return self::SUBSCRIPTION_STATUS_TEXT_VALID;
 		}
 
+		if ( $this->is_refunded() ) {
+			return self::SUBSCRIPTION_STATUS_TEXT_REFUNDED;
+		}
+
 		return self::SUBSCRIPTION_STATUS_TEXT_MISSING;
 	}
 
 	/**
+	 * @param int $expiredForPeriod
 	 * @return bool
 	 */
-	private function is_expired() {
+	private function is_expired( $expiredForPeriod = 0 ) {
 		return ! $this->is_lifetime()
 		       && (
 			       self::SUBSCRIPTION_STATUS_EXPIRED === $this->get_status()
-			       || ( $this->get_expiration() && strtotime( $this->get_expiration() ) <= time() )
+			       || ( $this->get_expiration() && strtotime( $this->get_expiration() ) <= time() - $expiredForPeriod )
 		       );
 	}
 
@@ -117,10 +128,17 @@ class OTGS_Installer_Subscription {
 	}
 
 	/**
+	 * @param int $expiredForPeriod
 	 * @return bool
 	 */
-	public function is_valid() {
+	public function is_valid( $expiredForPeriod = 0 ) {
 		return ( $this->is_lifetime()
-		         || ( $this->get_status() === self::SUBSCRIPTION_STATUS_ACTIVE && ! $this->is_expired() ) );
+		         || ( $this->get_status() === self::SUBSCRIPTION_STATUS_ACTIVE && ! $this->is_expired( $expiredForPeriod ) ) );
+	}
+
+	public function is_refunded() {
+		return ! $this->is_lifetime() &&
+		       $this->get_status() === self::SUBSCRIPTION_STATUS_INACTIVE &&
+		       $this->notes === 'Payment refunded to user';
 	}
 }

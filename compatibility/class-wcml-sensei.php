@@ -12,8 +12,8 @@ class WCML_Sensei {
 	/**
 	 * WCML_Sensei constructor.
 	 *
-	 * @param Sitepress $sitepress
-	 * @param wpdb $wpdb
+	 * @param Sitepress           $sitepress
+	 * @param wpdb                $wpdb
 	 * @param WPML_Custom_Columns $custom_columns
 	 */
 	public function __construct( SitePress $sitepress, wpdb $wpdb, WPML_Custom_Columns $custom_columns ) {
@@ -24,19 +24,19 @@ class WCML_Sensei {
 
 	public function add_hooks() {
 
-		add_filter( 'manage_edit-lesson_columns', array( $this->custom_columns, 'add_posts_management_column' ) );
-		add_filter( 'manage_edit-course_columns', array( $this->custom_columns, 'add_posts_management_column' ) );
-		add_filter( 'manage_edit-question_columns', array( $this->custom_columns, 'add_posts_management_column' ) );
+		add_filter( 'manage_edit-lesson_columns', [ $this->custom_columns, 'add_posts_management_column' ] );
+		add_filter( 'manage_edit-course_columns', [ $this->custom_columns, 'add_posts_management_column' ] );
+		add_filter( 'manage_edit-question_columns', [ $this->custom_columns, 'add_posts_management_column' ] );
 
-		add_action( 'save_post', array( $this, 'save_post_actions' ), 100, 2 );
-		add_action( 'sensei_log_activity_after', array( $this, 'log_activity_after' ), 10, 3 );
-		add_filter( 'sensei_bought_product_id', array( $this, 'filter_bought_product_id' ), 10, 2 );
-		add_action( 'delete_comment', array( $this, 'delete_user_activity' ) );
+		add_action( 'save_post', [ $this, 'save_post_actions' ], 100, 2 );
+		add_action( 'sensei_log_activity_after', [ $this, 'log_activity_after' ], 10, 3 );
+		add_filter( 'sensei_bought_product_id', [ $this, 'filter_bought_product_id' ], 10, 2 );
+		add_action( 'delete_comment', [ $this, 'delete_user_activity' ] );
 
-		add_action( 'pre_get_comments', array( $this, 'pre_get_comments' ) );
+		add_action( 'pre_get_comments', [ $this, 'pre_get_comments' ] );
 
 		if ( $this->is_sensei_admin_without_language_switcher() ) {
-			remove_action( 'wp_before_admin_bar_render', array( $this->sitepress, 'admin_language_switcher' ) );
+			remove_action( 'wp_before_admin_bar_render', [ $this->sitepress, 'admin_language_switcher' ] );
 		}
 	}
 
@@ -52,7 +52,7 @@ class WCML_Sensei {
 		global $sitepress;
 
 		// skip not related post types
-		if ( ! in_array( $post->post_type, array( 'lesson', 'course', 'quiz' ) ) ) {
+		if ( ! in_array( $post->post_type, [ 'lesson', 'course', 'quiz' ] ) ) {
 			return;
 		}
 		// skip auto-drafts
@@ -67,7 +67,6 @@ class WCML_Sensei {
 		if ( $post->post_type == 'quiz' && isset( $_POST['ID'] ) ) {
 			$this->save_post_actions( $_POST['ID'], get_post( $_POST['ID'] ) );
 		}
-
 
 		// sync fields from original
 		$trid         = $sitepress->get_element_trid( $post_id, 'post_' . $post->post_type );
@@ -96,13 +95,13 @@ class WCML_Sensei {
 	}
 
 
-	function sync_custom_fields( $original_post_id, $post_id, $post_type ) {
+	public function sync_custom_fields( $original_post_id, $post_id, $post_type ) {
 		global $sitepress;
 
 		$language = $sitepress->get_language_for_element( $post_id, 'post_' . $post_type );
 		if ( $post_type == 'quiz' ) {
 
-			//sync quiz lesson
+			// sync quiz lesson
 			$lesson_id = get_post_meta( $original_post_id, '_quiz_lesson', true );
 
 			if ( $lesson_id ) {
@@ -114,9 +113,8 @@ class WCML_Sensei {
 			} else {
 				delete_post_meta( $post_id, '_quiz_lesson' );
 			}
-
 		} elseif ( $post_type == 'lesson' ) {
-			//sync lesson course
+			// sync lesson course
 			$course_id = get_post_meta( $original_post_id, '_lesson_course', true );
 
 			if ( $course_id ) {
@@ -129,7 +127,7 @@ class WCML_Sensei {
 				delete_post_meta( $post_id, '_lesson_course' );
 			}
 
-			//sync lesson prerequisite
+			// sync lesson prerequisite
 			$lesson_id = get_post_meta( $original_post_id, '_lesson_prerequisite', true );
 
 			if ( $lesson_id ) {
@@ -141,10 +139,9 @@ class WCML_Sensei {
 			} else {
 				delete_post_meta( $post_id, '_lesson_prerequisite' );
 			}
-
 		} else {
 
-			//sync course woocommerce_product
+			// sync course woocommerce_product
 			$product_id = get_post_meta( $original_post_id, '_course_woocommerce_product', true );
 
 			if ( $product_id ) {
@@ -157,7 +154,7 @@ class WCML_Sensei {
 				delete_post_meta( $post_id, '_course_woocommerce_product' );
 			}
 
-			//sync course prerequisite
+			// sync course prerequisite
 			$course_id = get_post_meta( $original_post_id, '_course_prerequisite', true );
 
 			if ( $course_id ) {
@@ -169,12 +166,11 @@ class WCML_Sensei {
 			} else {
 				delete_post_meta( $post_id, '_course_prerequisite' );
 			}
-
 		}
 
 	}
 
-	function log_activity_after( $args, $data, $comment_id = false ) {
+	public function log_activity_after( $args, $data, $comment_id = false ) {
 		global $sitepress;
 
 		if ( ! $comment_id ) {
@@ -201,12 +197,11 @@ class WCML_Sensei {
 					$sitepress->set_element_language_details( $tr_comment_id, 'comment', $trid, $translation->language_code );
 				}
 			}
-
 		}
 
 	}
 
-	function filter_bought_product_id( $product_id, $order ) {
+	public function filter_bought_product_id( $product_id, $order ) {
 
 		$order_id       = method_exists( 'WC_Order', 'get_id' ) ? $order->get_id() : $order->id;
 		$order_language = get_post_meta( $order_id, 'wpml_language', true );
@@ -220,34 +215,32 @@ class WCML_Sensei {
 		}
 	}
 
-	function delete_user_activity( $comment_id ) {
+	public function delete_user_activity( $comment_id ) {
 		global $sitepress;
 
 		$comment_type = get_comment_type( $comment_id );
 
-		if ( strstr( $comment_type, "sensei" ) ) {
+		if ( strstr( $comment_type, 'sensei' ) ) {
 
 			$trid         = $sitepress->get_element_trid( $comment_id, 'comment' );
 			$translations = $sitepress->get_element_translations( $trid, 'comment' );
 
-			remove_action( 'delete_comment', array( $this, 'delete_user_activity' ) );
+			remove_action( 'delete_comment', [ $this, 'delete_user_activity' ] );
 			foreach ( $translations as $translation ) {
 				if ( $comment_id != $translation->element_id ) {
 					wp_delete_comment( $translation->element_id, true );
 				}
 			}
-
 		}
-
 
 	}
 
-	function pre_get_comments( $obj ) {
+	public function pre_get_comments( $obj ) {
 		global $sitepress;
 
 		if ( $obj->query_vars['type'] == 'sensei_course_start' ) {
 
-			remove_filter( 'comments_clauses', array( $sitepress, 'comments_clauses' ), 10, 2 );
+			remove_filter( 'comments_clauses', [ $sitepress, 'comments_clauses' ], 10, 2 );
 
 		}
 

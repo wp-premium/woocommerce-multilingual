@@ -41,7 +41,7 @@ class WCML_Removed_Cart_Items_UI extends WCML_Templates_Factory {
     public function get_model(){
 
         $language_details = $this->sitepress->get_language_details( $this->sitepress->get_current_language() );
-        $switched_to = $this->woocommerce->session->get( 'wcml_switched_type' ) == 'currency' ? $this->woocommerce_wpml->multi_currency->get_client_currency() : $language_details[ 'display_name' ];
+        $switched_to = $this->woocommerce->session->get( 'wcml_switched_type' ) === 'currency' ? $this->woocommerce_wpml->multi_currency->get_client_currency() : $language_details[ 'display_name' ];
 
         $model = array(
             'products' => $this->get_removed_products(),

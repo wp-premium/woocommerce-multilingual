@@ -318,10 +318,16 @@ class WPML_Dependencies {
 	}
 
 	private function get_invalid_plugins_report_list() {
+		/* translators: %s: Version number */
+		$required_version     = __( 'required version: %s', 'sitepress' );
 		$invalid_plugins_list = '<ul class="ul-disc">';
 		foreach ( $this->invalid_plugins as $invalid_plugin ) {
-			$plugin_name_html = '<li data-installed-version="' . $this->installed_plugins[ $invalid_plugin ] . '">';
-			$plugin_name_html .= $invalid_plugin;
+			$plugin_name_html        = '<li data-installed-version="' . $this->installed_plugins[ $invalid_plugin ] . '">';
+			$required_version_string = '';
+			if ( isset( $this->expected_versions[ $invalid_plugin ] ) ) {
+				$required_version_string = ' (' . sprintf( $required_version, $this->expected_versions[ $invalid_plugin ] ) . ')';
+			}
+			$plugin_name_html .= $invalid_plugin . $required_version_string;
 			$plugin_name_html .= '</li>';
 
 			$invalid_plugins_list .= $plugin_name_html;

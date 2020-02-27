@@ -5,9 +5,9 @@
  */
 class WCML_Exchange_Rates_Fixerio extends WCML_Exchange_Rate_Service {
 
-	private $id = 'fixerio';
-	private $name = 'Fixer.io';
-	private $url = 'http://fixer.io/';
+	private $id      = 'fixerio';
+	private $name    = 'Fixer.io';
+	private $url     = 'http://fixer.io/';
 	private $api_url = 'http://data.fixer.io/api/latest?access_key=%1$s&base=%2$s&symbols=%3$s';
 
 	public function __construct() {
@@ -17,7 +17,7 @@ class WCML_Exchange_Rates_Fixerio extends WCML_Exchange_Rate_Service {
 
 	/**
 	 * @param string $from
-	 * @param  array $tos
+	 * @param  array  $tos
 	 *
 	 * @return array
 	 * @throws Exception
@@ -25,7 +25,7 @@ class WCML_Exchange_Rates_Fixerio extends WCML_Exchange_Rate_Service {
 	public function get_rates( $from, $tos ) {
 
 		parent::clear_last_error();
-		$rates = array();
+		$rates = [];
 
 		$url = sprintf( $this->api_url, $this->api_key, $from, implode( ',', $tos ) );
 

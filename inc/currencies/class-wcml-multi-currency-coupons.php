@@ -28,7 +28,7 @@ class WCML_Multi_Currency_Coupons{
 
 	    $discount_type = $this->wc_27_coupons ? $coupon->get_discount_type() : $coupon->discount_type;
 
-        if( $discount_type == 'fixed_cart' || $discount_type == 'fixed_product' ){
+        if( $discount_type==='fixed_cart' || $discount_type==='fixed_product' ){
 
 	        if( $this->wc_27_coupons ) {
 		        $coupon->set_amount( apply_filters( 'wcml_raw_price_amount', $coupon->get_amount() ) );

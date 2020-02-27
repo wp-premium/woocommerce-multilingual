@@ -222,7 +222,7 @@ class WCML_Multi_Currency {
 		$this->default_currency = wcml_get_woocommerce_currency_option();
 		$this->currencies       = $this->woocommerce_wpml->settings['currency_options'];
 
-		// Add default currency if missing (set when MC is off)
+		// Add default currency if missing (set when MC is off).
 		if ( ! empty( $this->default_currency ) && ! isset( $this->currencies[ $this->default_currency ] ) ) {
 			$this->currencies[ $this->default_currency ] = [];
 		}
@@ -253,22 +253,22 @@ class WCML_Multi_Currency {
 			foreach ( $active_languages as $language ) {
 				if ( ! isset( $currency['languages'][ $language['code'] ] ) ) {
 					$this->currencies[ $code ]['languages'][ $language['code'] ] = 1;
-					$save_to_db                                                  = true;
+					$save_to_db = true;
 				}
 			}
 		}
 
 		$this->currency_codes = array_keys( $this->currencies );
 
-		// default language currencies
+		// default language currencies.
 		foreach ( $active_languages as $language ) {
 			if ( ! isset( $this->woocommerce_wpml->settings['default_currencies'][ $language['code'] ] ) ) {
 				$this->woocommerce_wpml->settings['default_currencies'][ $language['code'] ] = 0;
-				$save_to_db                                                                  = true;
+				$save_to_db = true;
 			}
 		}
 
-		// sanity check
+		// sanity check.
 		if ( isset( $this->woocommerce_wpml->settings['default_currencies'] ) ) {
 			foreach ( $this->woocommerce_wpml->settings['default_currencies'] as $language => $value ) {
 				if ( ! isset( $active_languages[ $language ] ) ) {
@@ -277,17 +277,17 @@ class WCML_Multi_Currency {
 				}
 				if ( ! empty( $value ) && ! in_array( $value, $this->currency_codes ) ) {
 					$this->woocommerce_wpml->settings['default_currencies'][ $language ] = 0;
-					$save_to_db                                                          = true;
+					$save_to_db = true;
 				}
 			}
 		}
 
-		// add missing currencies to currencies_order
+		// add missing currencies to currencies_order.
 		if ( isset( $this->woocommerce_wpml->settings['currencies_order'] ) ) {
 			foreach ( $this->currency_codes as $currency ) {
 				if ( ! in_array( $currency, $this->woocommerce_wpml->settings['currencies_order'] ) ) {
 					$this->woocommerce_wpml->settings['currencies_order'][] = $currency;
-					$save_to_db                                             = true;
+					$save_to_db = true;
 				}
 			}
 		}
@@ -296,7 +296,7 @@ class WCML_Multi_Currency {
 			$this->woocommerce_wpml->update_settings();
 		}
 
-		// force disable multi-currency when the default currency is empty
+		// force disable multi-currency when the default currency is empty.
 		if ( empty( $this->default_currency ) ) {
 			$this->woocommerce_wpml->settings['enable_multi_currency'] = WCML_MULTI_CURRENCIES_DISABLED;
 		}
@@ -314,7 +314,7 @@ class WCML_Multi_Currency {
 
 	public function get_currencies( $include_default = false ) {
 
-		// by default, exclude default currency
+		// by default, exclude default currency.
 		$currencies       = [];
 		$default_currency = wcml_get_woocommerce_currency_option();
 
@@ -403,7 +403,7 @@ class WCML_Multi_Currency {
 
 		$default_currencies = $this->woocommerce_wpml->settings['default_currencies'];
 		$current_language   = $sitepress->get_current_language();
-		$current_language   = ( $current_language != 'all' && ! is_null( $current_language ) ) ? $current_language : $sitepress->get_default_language();
+		$current_language   = ( $current_language !== 'all' && ! is_null( $current_language ) ) ? $current_language : $sitepress->get_default_language();
 
 		if ( ! $this->client_currency &&
 			 isset( $this->woocommerce_wpml->settings['display_custom_prices'] ) &&
@@ -461,7 +461,7 @@ class WCML_Multi_Currency {
 			}
 		}
 
-		// edit order page
+		// edit order page.
 		if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
 			$arg = parse_url( $_SERVER['HTTP_REFERER'] );
 			if ( isset( $arg['query'] ) ) {
@@ -472,7 +472,7 @@ class WCML_Multi_Currency {
 			}
 		}
 
-		// client currency in general / if enabled for this language
+		// client currency in general / if enabled for this language.
 		if ( is_null( $this->client_currency ) && ! empty( $woocommerce->session ) ) {
 			$session_currency = $woocommerce->session->get( 'client_currency' );
 			if ( $session_currency && ! empty( $this->currencies[ $session_currency ]['languages'][ $current_language ] ) ) {
@@ -484,11 +484,11 @@ class WCML_Multi_Currency {
 		if ( is_null( $this->client_currency ) ) {
 			$woocommerce_currency = wcml_get_woocommerce_currency_option();
 
-			// fall on WC currency if enabled for this language
+			// fall on WC currency if enabled for this language.
 			if ( ! empty( $this->currencies[ $woocommerce_currency ]['languages'][ $current_language ] ) ) {
 				$this->client_currency = $woocommerce_currency;
 			} else {
-				// first currency enabled for this language
+				// first currency enabled for this language.
 				foreach ( $this->currencies as $code => $data ) {
 					if ( ! empty( $data['languages'][ $current_language ] ) ) {
 						$this->client_currency = $code;
@@ -547,7 +547,7 @@ class WCML_Multi_Currency {
 		$currency     = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$force_switch = filter_input( INPUT_POST, 'force_switch', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		parse_str( filter_input( INPUT_POST, 'params', FILTER_SANITIZE_STRING ), $params );
-		$from_currency  = $this->client_currency;
+		$from_currency = $this->client_currency;
 
 		do_action( 'wcml_before_switch_currency', $currency, $force_switch );
 
@@ -557,7 +557,7 @@ class WCML_Multi_Currency {
 
 		$this->set_client_currency( $currency, $force_switch );
 
-		// force set user cookie when user is not logged in
+		// force set user cookie when user is not logged in.
 		global $woocommerce, $current_user;
 		if ( empty( $woocommerce->session->data ) && empty( $current_user->ID ) ) {
 			$woocommerce->session->set_customer_session_cookie( true );

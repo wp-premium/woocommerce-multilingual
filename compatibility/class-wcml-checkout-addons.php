@@ -7,7 +7,7 @@
 class WCML_Checkout_Addons {
 
 	public function add_hooks() {
-		add_filter( 'option_wc_checkout_add_ons', array( $this, 'option_wc_checkout_add_ons' ), 10, 2 );
+		add_filter( 'option_wc_checkout_add_ons', [ $this, 'option_wc_checkout_add_ons' ], 10, 2 );
 	}
 
 	public function option_wc_checkout_add_ons( $option_value, $option_name = null ) {
@@ -48,8 +48,8 @@ class WCML_Checkout_Addons {
 
 	private function adjust_price( $conf ) {
 		if ( isset( $conf['adjustment'], $conf['adjustment_type'] )
-		     && $conf['adjustment_type'] === 'fixed'
-		     && ! $this->is_default_language() ) {
+			 && $conf['adjustment_type'] === 'fixed'
+			 && ! $this->is_default_language() ) {
 			$conf['adjustment'] = apply_filters( 'wcml_raw_price_amount', $conf['adjustment'] );
 		}
 		return $conf;

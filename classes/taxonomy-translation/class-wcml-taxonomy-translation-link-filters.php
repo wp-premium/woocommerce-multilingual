@@ -1,6 +1,6 @@
 <?php
 
-class WCML_Taxonomy_Translation_Link_Filters{
+class WCML_Taxonomy_Translation_Link_Filters {
 
 	/**
 	 * @var WCML_Attributes
@@ -11,30 +11,30 @@ class WCML_Taxonomy_Translation_Link_Filters{
 		$this->wcml_attributes = $wcml_attributes;
 	}
 
-	public function add_filters(){
-		add_filter( 'wpml_notice_text', array( $this, 'override_translation_notice_text' ), 10, 2 );
-		add_filter( 'wpml_taxonomy_slug_translation_ui', array( $this, 'slug_translation_ui_class' ), 10, 2 );
+	public function add_filters() {
+		add_filter( 'wpml_notice_text', [ $this, 'override_translation_notice_text' ], 10, 2 );
+		add_filter( 'wpml_taxonomy_slug_translation_ui', [ $this, 'slug_translation_ui_class' ], 10, 2 );
 	}
 
 	/**
 	 * @param string text
-	 * @param array $notice
+	 * @param array       $notice
 	 *
 	 * @return string
 	 */
 	public function override_translation_notice_text( $text, $notice ) {
-		if( 'taxonomy-term-help-notices' === $notice['group'] ) {
+		if ( 'taxonomy-term-help-notices' === $notice['group'] ) {
 			$taxonomy = get_taxonomy( $notice['id'] );
 			if ( false !== $taxonomy ) {
 
-			$link = sprintf(
-				'<a href="%s">%s</a>',
-				$this->get_screen_url( $taxonomy->name ),
-				sprintf( esc_html__( '%s translation', 'woocommerce-multilingual' ), $taxonomy->labels->singular_name )
-			);
+				$link = sprintf(
+					'<a href="%s">%s</a>',
+					$this->get_screen_url( $taxonomy->name ),
+					sprintf( esc_html__( '%s translation', 'woocommerce-multilingual' ), $taxonomy->labels->singular_name )
+				);
 
 				$text = sprintf(
-					esc_html__( 'Translating %s? Use the %s table for easier translation.', 'woocommerce-multilingual' ),
+					esc_html__( 'Translating %1$s? Use the %2$s table for easier translation.', 'woocommerce-multilingual' ),
 					$taxonomy->labels->name,
 					$link
 				);
@@ -53,9 +53,9 @@ class WCML_Taxonomy_Translation_Link_Filters{
 		$url = false;
 
 		$base_url = admin_url( 'admin.php' );
-		$args     = array( 'page' => 'wpml-wcml' );
+		$args     = [ 'page' => 'wpml-wcml' ];
 
-		$built_in_taxonomies = array( 'product_cat', 'product_tag', 'product_shipping_class' );
+		$built_in_taxonomies = [ 'product_cat', 'product_tag', 'product_shipping_class' ];
 		if ( in_array( $taxonomy, $built_in_taxonomies, true ) ) {
 			$args['tab'] = $taxonomy;
 		} else {
@@ -68,7 +68,7 @@ class WCML_Taxonomy_Translation_Link_Filters{
 			} else {
 				$custom_taxonomies = get_object_taxonomies( 'product', 'objects' );
 
-				$translatable_taxonomies = array();
+				$translatable_taxonomies = [];
 				foreach ( $custom_taxonomies as $product_taxonomy_name => $product_taxonomy_object ) {
 					if ( is_taxonomy_translated( $product_taxonomy_name ) ) {
 						$translatable_taxonomies[] = $product_taxonomy_name;
@@ -90,9 +90,9 @@ class WCML_Taxonomy_Translation_Link_Filters{
 	}
 
 
-	private function get_translatable_attributes(){
+	private function get_translatable_attributes() {
 
-		$translatable_attributes = array();
+		$translatable_attributes = [];
 		foreach ( $this->wcml_attributes->get_translatable_attributes() as $attribute ) {
 			$translatable_attributes[] = 'pa_' . $attribute->attribute_name;
 		}
@@ -100,9 +100,9 @@ class WCML_Taxonomy_Translation_Link_Filters{
 		return $translatable_attributes;
 	}
 
-	public function slug_translation_ui_class( $ui_class, $taxonomy ){
+	public function slug_translation_ui_class( $ui_class, $taxonomy ) {
 
-		if( in_array( $taxonomy, $this->get_translatable_attributes() ) ){
+		if ( in_array( $taxonomy, $this->get_translatable_attributes() ) ) {
 
 			$ui_class = new WCML_St_Taxonomy_UI( get_taxonomy( $taxonomy ) );
 		}

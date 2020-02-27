@@ -17,23 +17,23 @@ class WCML_Price_Filter {
 	}
 
 	public function add_hooks() {
-		add_action( 'wp_footer', array( $this, 'override_currency_symbol' ), 100 );
+		add_action( 'wp_footer', [ $this, 'override_currency_symbol' ], 100 );
 
 		if ( ! is_admin() ) {
-			add_filter( 'woocommerce_product_query_meta_query', array( $this, 'unconvert_price_filter_limits' ) );
+			add_filter( 'woocommerce_product_query_meta_query', [ $this, 'unconvert_price_filter_limits' ] );
 		}
 
 	}
 
 	public function override_currency_symbol() {
 		?>
-        <script type="text/javascript">
-        /* <![CDATA[ */
-            if( typeof woocommerce_price_slider_params !== 'undefined' ) {
-                woocommerce_price_slider_params.currency_format_symbol = wcml_mc_settings.current_currency.symbol;
-            }
-        /* ]]> */
-        </script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if( typeof woocommerce_price_slider_params !== 'undefined' ) {
+				woocommerce_price_slider_params.currency_format_symbol = wcml_mc_settings.current_currency.symbol;
+			}
+		/* ]]> */
+		</script>
 		<?php
 	}
 
@@ -47,7 +47,7 @@ class WCML_Price_Filter {
 		$multi_currency = $this->woocommerce_wpml->multi_currency;
 
 		if ( $multi_currency->get_client_currency() !== wcml_get_woocommerce_currency_option() ) {
-			if ( isset( $meta_query['price_filter'] ) && isset($meta_query['price_filter']['key']) && $meta_query['price_filter']['key'] === '_price' ) {
+			if ( isset( $meta_query['price_filter'] ) && isset( $meta_query['price_filter']['key'] ) && $meta_query['price_filter']['key'] === '_price' ) {
 				$meta_query['price_filter']['value'][0] = $multi_currency->prices->unconvert_price_amount( $meta_query['price_filter']['value'][0] );
 				$meta_query['price_filter']['value'][1] = $multi_currency->prices->unconvert_price_amount( $meta_query['price_filter']['value'][1] );
 			}

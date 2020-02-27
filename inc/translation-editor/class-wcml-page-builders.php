@@ -23,19 +23,19 @@ class WCML_Page_Builders {
 	public function get_page_builders_strings( $product_id, $target_language ) {
 
 		$string_packages     = $this->get_page_builders_string_packages( $product_id );
-		$translation_package = array();
+		$translation_package = [];
 
 		if ( $string_packages ) {
 
 			foreach ( $string_packages as $package_id => $string_package ) {
 
-				$translation_package[ $package_id ] = array(
-					'title' => $string_package->title
-				);
+				$translation_package[ $package_id ] = [
+					'title' => $string_package->title,
+				];
 
 				$strings = $string_package->get_package_strings();
 
-				$translated_strings = $string_package->get_translated_strings( array() );
+				$translated_strings = $string_package->get_translated_strings( [] );
 
 				foreach ( $strings as $string ) {
 
@@ -60,7 +60,7 @@ class WCML_Page_Builders {
 		foreach ( $string_packages as $string_package ) {
 			$strings_section = new WPML_Editor_UI_Field_Section( $string_package['title'] );
 
-			if( isset( $string_package['strings'] ) ) {
+			if ( isset( $string_package['strings'] ) ) {
 				foreach ( $string_package['strings'] as $string ) {
 					$field_label = apply_filters( 'wpml_string_title_from_id', false, $string->id );
 					$strings_section->add_field( new WCML_Editor_UI_WYSIWYG_Field( $string->name, $field_label, $data, true ) );
@@ -77,9 +77,9 @@ class WCML_Page_Builders {
 
 		foreach ( $string_packages as $string_package ) {
 
-			if( isset( $string_package['strings'] ) ){
+			if ( isset( $string_package['strings'] ) ) {
 				foreach ( $string_package['strings'] as $string ) {
-					$element_data[ $string->name ] = array( 'original' => $string->value );
+					$element_data[ $string->name ] = [ 'original' => $string->value ];
 					if ( isset( $string->translated_value ) ) {
 						$element_data[ $string->name ]['translation'] = $string->translated_value;
 					}
@@ -96,7 +96,7 @@ class WCML_Page_Builders {
 
 		foreach ( $string_packages as $string_package ) {
 
-			if( isset( $string_package['strings'] ) ) {
+			if ( isset( $string_package['strings'] ) ) {
 				foreach ( $string_package['strings'] as $string ) {
 
 					do_action(

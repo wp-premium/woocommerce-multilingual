@@ -5,9 +5,9 @@
  */
 class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 
-	const TEMPLATE = 'paypal.twig';
-	const ID = 'paypal';
-	const SUPPORTED_CURRENCIES = array(
+	const TEMPLATE             = 'paypal.twig';
+	const ID                   = 'paypal';
+	const SUPPORTED_CURRENCIES = [
 		'AUD',
 		'BRL',
 		'CAD',
@@ -34,31 +34,31 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 		'GBP',
 		'RMB',
 		'RUB',
-		'INR'
-	);
+		'INR',
+	];
 
 	protected function get_output_model() {
 
-		if( $this->is_current_currency_default() ){
-			return array();
+		if ( $this->is_current_currency_default() ) {
+			return [];
 		}
 
 		$currencies_details = $this->get_currencies_details();
 
-		return array(
-			'strings'                 => array(
+		return [
+			'strings'                 => [
 				'currency_label' => __( 'Currency', 'woocommerce-multilingual' ),
 				'setting_label'  => __( 'PayPal Email', 'woocommerce-multilingual' ),
-				'not_supported'  => sprintf( __( 'This gateway does not support %s. To show this gateway please select another currency.', 'woocommerce-multilingual' ), $this->current_currency )
-			),
+				'not_supported'  => sprintf( __( 'This gateway does not support %s. To show this gateway please select another currency.', 'woocommerce-multilingual' ), $this->current_currency ),
+			],
 			'gateway_id'              => $this->get_id(),
 			'gateway_title'           => $this->get_title(),
 			'current_currency'        => $this->current_currency,
 			'gateway_settings'        => $this->get_setting( $this->current_currency ),
 			'currencies_details'      => array_intersect_key( $currencies_details, $this->get_active_currencies() ),
 			'selected_currency_valid' => $this->is_valid_for_use( $currencies_details[ $this->current_currency ]['currency'] ),
-			'current_currency_valid'  => $currencies_details[ $this->current_currency ]['is_valid']
-		);
+			'current_currency_valid'  => $currencies_details[ $this->current_currency ]['is_valid'],
+		];
 	}
 
 	protected function get_output_template() {
@@ -72,7 +72,7 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 	 */
 	public function is_valid_for_use( $currency ) {
 
-		$filter_removed = remove_filter( 'woocommerce_paypal_supported_currencies', array( 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ) );
+		$filter_removed = remove_filter( 'woocommerce_paypal_supported_currencies', [ 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ] );
 
 		$is_valid = in_array(
 			$currency,
@@ -83,8 +83,8 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 			true
 		);
 
-		if( $filter_removed ){
-			add_filter( 'woocommerce_paypal_supported_currencies', array( 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ) );
+		if ( $filter_removed ) {
+			add_filter( 'woocommerce_paypal_supported_currencies', [ 'WCML_Payment_Gateway_PayPal', 'filter_supported_currencies' ] );
 		}
 
 		return $is_valid;
@@ -95,21 +95,21 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 	 *
 	 * @return array
 	 */
-	public function get_currencies_details(){
+	public function get_currencies_details() {
 
-		$currencies_details = array();
-		$default_currency   = wcml_get_woocommerce_currency_option();
+		$currencies_details     = [];
+		$default_currency       = wcml_get_woocommerce_currency_option();
 		$woocommerce_currencies = get_woocommerce_currencies();
 
 		foreach ( $woocommerce_currencies as $code => $currency ) {
 
 			if ( $default_currency === $code ) {
-				$currencies_details[ $code ]['value'] = $this->get_gateway()->settings['email'];
+				$currencies_details[ $code ]['value']    = $this->get_gateway()->settings['email'];
 				$currencies_details[ $code ]['currency'] = $code;
 				$currencies_details[ $code ]['is_valid'] = $this->is_valid_for_use( $default_currency );
 			} else {
-				$currency_gateway_setting    = $this->get_setting( $code );
-				$currencies_details[ $code ]['value'] = $currency_gateway_setting ? $currency_gateway_setting['value'] : '';
+				$currency_gateway_setting                = $this->get_setting( $code );
+				$currencies_details[ $code ]['value']    = $currency_gateway_setting ? $currency_gateway_setting['value'] : '';
 				$currencies_details[ $code ]['currency'] = $currency_gateway_setting ? $currency_gateway_setting['currency'] : $code;
 				$currencies_details[ $code ]['is_valid'] = $this->is_valid_for_use( $code );
 			}
@@ -119,12 +119,12 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 
 	}
 
-	public function add_hooks(){
-		add_filter( 'woocommerce_paypal_args', array( $this, 'filter_paypal_args' ), 10, 2 );
+	public function add_hooks() {
+		add_filter( 'woocommerce_paypal_args', [ $this, 'filter_paypal_args' ], 10, 2 );
 	}
 
 	/**
-	 * @param array $args
+	 * @param array    $args
 	 * @param WC_Order $order
 	 *
 	 * @return array
@@ -172,7 +172,7 @@ class WCML_Payment_Gateway_PayPal extends WCML_Payment_Gateway {
 		$client_currency = $woocommerce_wpml->multi_currency->get_client_currency();
 
 		if ( ! in_array( $client_currency, self::SUPPORTED_CURRENCIES, true ) ) {
-			$gateway_settings = get_option( self::OPTION_KEY . self::ID, array() );
+			$gateway_settings = get_option( self::OPTION_KEY . self::ID, [] );
 
 			if ( $gateway_settings && isset( $gateway_settings[ $client_currency ] ) ) {
 

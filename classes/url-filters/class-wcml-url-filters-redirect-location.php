@@ -12,10 +12,10 @@ class WCML_Url_Filters_Redirect_Location {
 	}
 
 	public function add_hooks() {
-		$hooks = array( 'woocommerce_get_checkout_payment_url', 'woocommerce_get_cancel_order_url', 'woocommerce_get_return_url' );
+		$hooks = [ 'woocommerce_get_checkout_payment_url', 'woocommerce_get_cancel_order_url', 'woocommerce_get_return_url' ];
 
 		foreach ( $hooks as $hook ) {
-			add_filter( $hook, array( $this, 'filter' ), 10, 1 );
+			add_filter( $hook, [ $this, 'filter' ], 10, 1 );
 		}
 	}
 
