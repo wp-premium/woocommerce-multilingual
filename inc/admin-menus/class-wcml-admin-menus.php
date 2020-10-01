@@ -161,7 +161,7 @@ class WCML_Admin_Menus {
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			<script type="text/javascript">
-				jQuery( '.subsubsub' ).append( '<?php echo wp_kses_post( $quick_edit_notice ); ?>' );
+				jQuery( '.subsubsub' ).append( '<?php echo wp_filter_post_kses( $quick_edit_notice ); ?>' );
 				jQuery( '.subsubsub' ).append( ' <?php echo $quick_edit_notice_prod_link; ?> ' );
 				jQuery( '.quick_hide a' ).on( 'click', function() {
 					jQuery( '.quick_product_trnsl_link' ).attr( 'href', jQuery( '#wcml_product_trnsl_link' ).val() + jQuery( this ).closest( 'tr' ).attr( 'id' ).replace( /post-/, '' ) );
@@ -241,13 +241,10 @@ class WCML_Admin_Menus {
 			) {
 				$prid = (int) $_GET['post'];
 				if ( 'auto-draft' !== get_post_status( $prid ) ) {
-					wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
-					exit;
+					wcml_safe_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products&prid=' . $prid ) );
 				}
 			} elseif ( self::is_admin_duplicate_page_action( $pagenow ) && self::is_post_product_translation_screen() ) {
-
-				wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products' ) );
-				exit;
+			    wcml_safe_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=products' ) );
 			}
 		} elseif ( 'post.php' === $pagenow && self::is_post_product_translation_screen() ) {
 			add_action( 'admin_notices', [ __CLASS__, 'inf_editing_product_in_non_default_lang' ] );

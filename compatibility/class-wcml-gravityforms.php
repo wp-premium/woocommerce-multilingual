@@ -21,7 +21,7 @@ class WCML_gravityforms {
 		add_filter( 'gform_formatted_money', [ $this, 'wcml_convert_price' ], 10, 2 );
 		add_filter( 'wcml_multi_currency_ajax_actions', [ $this, 'add_ajax_action' ] );
 
-		add_action( 'wcml_after_duplicate_product_post_meta', [ $this, 'sync_gf_data' ], 10, 3 );
+		add_action( 'wcml_after_duplicate_product_post_meta', [ $this, 'sync_gf_data' ], 10, 2 );
 	}
 
 	public function wcml_convert_price( $formatted, $unformatted ) {
@@ -34,11 +34,16 @@ class WCML_gravityforms {
 
 
 	public function add_ajax_action( $actions ) {
-		$actions[] = 'get_updated_price';
+		$actions[] = 'get_updated_price'; // Deprecated from 2.7.
+		$actions[] = 'gforms_get_updated_price';
 		return $actions;
 	}
 
-	public function sync_gf_data( $original_product_id, $trnsl_product_id, $data ) {
+	/**
+	 * @param int $original_product_id
+	 * @param int $trnsl_product_id
+	 */
+	public function sync_gf_data( $original_product_id, $trnsl_product_id ) {
 		// sync only if WCML editor is in use
 		if ( $this->woocommerce_wpml->is_wpml_prior_4_2() ) {
 			$wcml_settings      = get_option( '_wcml_settings' );
@@ -49,24 +54,26 @@ class WCML_gravityforms {
 
 		if ( $is_using_tm_editor ) {
 			$orig_gf  = maybe_unserialize( get_post_meta( $original_product_id, '_gravity_form_data', true ) );
-			$trnsl_gf = maybe_unserialize( get_post_meta( $trnsl_product_id, '_gravity_form_data', true ) );
 
-			if ( ! $trnsl_gf ) {
-				update_post_meta( $trnsl_product_id, '_gravity_form_data', $orig_gf );
-			} else {
-				$trnsl_gf['id']                        = $orig_gf['id'];
-				$trnsl_gf['display_title']             = $orig_gf['display_title'];
-				$trnsl_gf['display_description']       = $orig_gf['display_description'];
-				$trnsl_gf['disable_woocommerce_price'] = $orig_gf['disable_woocommerce_price'];
-				$trnsl_gf['disable_calculations']      = $orig_gf['disable_calculations'];
-				$trnsl_gf['disable_label_subtotal']    = $orig_gf['disable_label_subtotal'];
-				$trnsl_gf['disable_label_options']     = $orig_gf['disable_label_options'];
-				$trnsl_gf['disable_label_total']       = $orig_gf['disable_label_total'];
-				$trnsl_gf['disable_anchor']            = $orig_gf['disable_anchor'];
+			if ( $orig_gf ) {
+				$trnsl_gf = maybe_unserialize( get_post_meta( $trnsl_product_id, '_gravity_form_data', true ) );
 
-				update_post_meta( $trnsl_product_id, '_gravity_form_data', $trnsl_gf );
+				if ( ! $trnsl_gf ) {
+					update_post_meta( $trnsl_product_id, '_gravity_form_data', $orig_gf );
+				} else {
+					$trnsl_gf['id']                        = $orig_gf['id'];
+					$trnsl_gf['display_title']             = $orig_gf['display_title'];
+					$trnsl_gf['display_description']       = $orig_gf['display_description'];
+					$trnsl_gf['disable_woocommerce_price'] = $orig_gf['disable_woocommerce_price'];
+					$trnsl_gf['disable_calculations']      = $orig_gf['disable_calculations'];
+					$trnsl_gf['disable_label_subtotal']    = $orig_gf['disable_label_subtotal'];
+					$trnsl_gf['disable_label_options']     = $orig_gf['disable_label_options'];
+					$trnsl_gf['disable_label_total']       = $orig_gf['disable_label_total'];
+					$trnsl_gf['disable_anchor']            = $orig_gf['disable_anchor'];
+
+					update_post_meta( $trnsl_product_id, '_gravity_form_data', $trnsl_gf );
+				}
 			}
 		}
 	}
-
 }

@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
     $('.wcml_prod_hidden_notice').prependTo('#woocommerce-product-data');
 
     for (i = 0; i < ids.length; i++) {
-        $('#'+ids[i]).attr('disabled','disabled');
+        $('#'+ids[i]).prop('disabled', true);
         $('#'+ids[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     }
 
@@ -59,7 +59,7 @@ jQuery(document).ready(function($){
     }
 
     for (i = 0; i < buttons.length; i++) {
-        $('.'+buttons[i]).attr('disabled','disabled');
+        $('.'+buttons[i]).prop('disabled',true);
         $('.'+buttons[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     }
 
@@ -70,7 +70,7 @@ jQuery(document).ready(function($){
     });
 
     $('.remove_variation').each(function(){
-        $(this).attr('disabled','disabled');
+        $(this).prop('disabled', true);
         $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','right'));
     });
 
@@ -100,7 +100,7 @@ jQuery(document).ready(function($){
     }
 
     for (i = 0; i < inpt_names.length; i++) {
-        $('input[name="'+inpt_names[i]+'"]').attr('readonly','readonly');
+        $('input[name="'+inpt_names[i]+'"]').prop('readonly', true);
 
         $('.dimensions_field span.wrap').css('float','left');
         if( inpt_names[i] == '_width' || inpt_names[i] == '_height' || inpt_names[i] == '_length' ){
@@ -120,7 +120,7 @@ jQuery(document).ready(function($){
     }
 
     $('#product_attributes td textarea,#product_attributes input[type="text"]').each(function(){
-        $(this).attr('readonly','readonly');
+        $(this).prop('readonly', true);
         $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     });
 
@@ -130,16 +130,16 @@ jQuery(document).ready(function($){
         '#_featured,' +
         '#product_attributes select.attribute_values'
     ).each(function () {
-        $(this).attr('disabled', 'disabled');
+        $(this).prop('disabled', true);
         $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     });
 
     $('form#post input[type="submit"]').click(function(){
         for (i = 0; i < ids.length; i++) {
-            $('#'+ids[i]).removeAttr('disabled');
+            $('#'+ids[i]).prop('disabled', false);
         }
         $('.woocommerce_variation select,#variable_product_options .toolbar select,.woocommerce_variation input[type="checkbox"],#product_attributes input[type="checkbox"]').each(function(){
-            $(this).removeAttr('disabled');
+            $(this).prop('disabled', false);
         });
     });
 
@@ -147,7 +147,7 @@ jQuery(document).ready(function($){
 
 var wcml_lock_variation_fields = function( file_path_sync ){
 
-    var check_attr = jQuery('.woocommerce_variation>h3 select').attr('disabled');
+    var check_attr = jQuery('.woocommerce_variation>h3 select').prop('disabled');
 
     if (typeof check_attr !== typeof undefined && check_attr !== false) {
         return;
@@ -155,7 +155,7 @@ var wcml_lock_variation_fields = function( file_path_sync ){
 
     jQuery('.woocommerce_variation>h3 select, #variable_product_options .toolbar select, .show_if_variation_manage_stock select').each(function(){
 
-        jQuery(this).attr('disabled','disabled');
+        jQuery(this).prop('disabled', true);
         jQuery(this).parent().append('<input type="hidden" name="'+jQuery(this).attr('name')+'" value="'+jQuery(this).val()+'" />');
         jQuery(this).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
     });
@@ -182,7 +182,7 @@ var wcml_lock_variation_fields = function( file_path_sync ){
 
         //variation fields
         jQuery('input[name^="variable'+inpt_names[i]+'"]').each(function(){
-            jQuery(this).attr('readonly','readonly');
+            jQuery(this).prop('readonly', true);
             jQuery(this).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
         });
     }
@@ -191,7 +191,7 @@ var wcml_lock_variation_fields = function( file_path_sync ){
     var var_checkboxes = ['_enabled','_is_downloadable','_is_virtual','_manage_stock'];
     for (i = 0; i < var_checkboxes.length; i++) {
         jQuery('input[name^="variable'+var_checkboxes[i]+'"]').each(function(){
-            jQuery(this).attr('disabled','disabled');
+            jQuery(this).prop('disabled', true);
             if( jQuery(this).prop('checked') ){
                 jQuery(this).parent().append('<input type="hidden" name="'+jQuery(this).attr('name')+'" value="'+jQuery(this).val()+'" />');
             }
@@ -202,7 +202,7 @@ var wcml_lock_variation_fields = function( file_path_sync ){
     var var_selectboxes = ['_stock_status','_shipping_class','_tax_class'];
     for (i = 0; i < var_selectboxes.length; i++) {
         jQuery('select[name^="variable'+var_selectboxes[i]+'"]').each(function(){
-            jQuery(this).attr('disabled','disabled');
+            jQuery(this).prop('disabled', true);
             jQuery(this).parent().append('<input type="hidden" name="'+jQuery(this).attr('name')+'" value="'+jQuery(this).val()+'" />');
             jQuery(this).after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
         });
@@ -215,17 +215,17 @@ var wcml_lock_variation_fields = function( file_path_sync ){
             if( file_path_sync[ key ] == 1){
 
                 jQuery('input[name^="_wc_variation_file_names['+key+']"]').each(function(){
-                    jQuery(this).attr('readonly','readonly');
+                    jQuery(this).prop('readonly', true);
                 });
 
                 jQuery('input[name^="_wc_variation_file_urls['+key+']"]').each(function(){
-                    jQuery(this).attr('readonly','readonly');
-                    jQuery(this).closest('tr').find('.upload_file_button').attr('disabled','disabled');
-                    jQuery(this).closest('tr').find('.delete').attr('disabled','disabled');
+                    jQuery(this).prop('readonly', true);
+                    jQuery(this).closest('tr').find('.upload_file_button').prop('disabled', true);
+                    jQuery(this).closest('tr').find('.delete').prop('disabled', true);
                     jQuery(this).closest('tr').find('.delete').after(jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','right'));
                 });
 
-                jQuery('input[name^="_wc_variation_file_urls['+key+']"]').closest('table').find('.insert').attr('disabled','disabled');
+                jQuery('input[name^="_wc_variation_file_urls['+key+']"]').closest('table').find('.insert').prop('disabled', true);
                 jQuery('input[name^="_wc_variation_file_urls['+key+']"]').closest('table').find('.insert').after( jQuery('.wcml_lock_img').clone().removeClass('wcml_lock_img').show().css('float','left') );
 
             }

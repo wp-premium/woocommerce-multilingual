@@ -56,14 +56,14 @@ jQuery( document ).ready( function( $ ){
                 '#bookings_availability input[type="time"], ' +
 
                 '#bookings_persons input[type="number"]').each(function(){
-                $(this).attr('readonly','readonly');
+                $(this).prop('readonly', true);
                 $(this).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
             });
 
             var buttons = [ 'add_resource', 'add_row','remove_booking_resource','remove_booking_person','add_person' ];
 
             for (i = 0; i < buttons.length; i++) {
-                $('.'+buttons[i]).attr('disabled','disabled');
+                $('.'+buttons[i]).prop('disabled', true);
                 $('.'+buttons[i]).unbind('click');
                 $('.'+buttons[i]).after($('.wcml_lock_img').clone().removeClass('wcml_lock_img').show());
             }
@@ -72,11 +72,11 @@ jQuery( document ).ready( function( $ ){
             $('form#post input[type="submit"]').click(function(){
 
                 for (i = 0; i < non_standard_fields.ids.length; i++) {
-                    $('#'+non_standard_fields.ids[i]).removeAttr('disabled');
+                    $('#'+non_standard_fields.ids[i]).prop('disabled', false);
                 }
 
                 $('#bookings_pricing select, #bookings_resources select, #bookings_availability select,#bookings_persons input[type="checkbox"]').each(function(){
-                    $(this).removeAttr('disabled');
+                    $(this).prop('disabled', false);
                 });
 
             });

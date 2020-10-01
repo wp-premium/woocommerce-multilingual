@@ -1,5 +1,12 @@
 <?php
+/**
+ * @deprecated
+ */
 function WP_Installer(){
+	return WP_Installer::instance();
+}
+
+function OTGS_Installer(){
 	return WP_Installer::instance();
 }
 

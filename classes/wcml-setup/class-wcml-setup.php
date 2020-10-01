@@ -101,18 +101,12 @@ class WCML_Setup {
 		}
 	}
 
-	public function exit_wrapper() {
-		exit;
-	}
-
 	public function setup_redirect() {
 		if ( get_transient( '_wcml_activation_redirect' ) ) {
 			delete_transient( '_wcml_activation_redirect' );
 
 			if ( ! $this->do_not_redirect_to_setup() && ! $this->has_completed() ) {
-				wp_safe_redirect( admin_url( 'index.php?page=wcml-setup' ) );
-				add_filter( 'wp_die_handler', [ $this, 'exit_wrapper' ] );
-				wp_die();
+				wcml_safe_redirect( admin_url( 'index.php?page=wcml-setup' ) );
 			}
 		}
 	}
@@ -192,9 +186,7 @@ class WCML_Setup {
 		}
 
 		if ( $this->is_wcml_admin_page() && ! $this->has_completed() && empty( $this->woocommerce_wpml->settings['set_up_wizard_splash'] ) ) {
-			wp_redirect( 'admin.php?page=wcml-setup' );
-			add_filter( 'wp_die_handler', [ $this, 'exit_wrapper' ] );
-			wp_die();
+			wcml_safe_redirect( 'admin.php?page=wcml-setup' );
 		}
 	}
 

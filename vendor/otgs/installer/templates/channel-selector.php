@@ -19,8 +19,8 @@
 	        '%CHANNEL%', WP_Installer()->get_generic_product_name( $repository_id ) ) ) ?>">
         </span>
         <span class="installer-channel-update-fail" data-text-unstable="<?php
-        $support_url  = $repository_id ==='toolset' ? 'https://wp-types.com/forums/forum/support-2/' : 'https://wpml.org/forums/forum/english-support/';
-        $download_url = $repository_id ==='toolset' ? 'https://wp-types.com/account/downloads/' : 'https://wpml.org/account/downloads/';
+        $support_url  = $repository_id ==='toolset' ? 'https://toolset.com/forums/forum/professional-support/' : 'https://wpml.org/forums/forum/english-support/';
+        $download_url = $repository_id ==='toolset' ? 'https://toolset.com/account/downloads/' : 'https://wpml.org/account/downloads/';
         echo esc_attr( sprintf(
             __( "Something went wrong and we could not install all updates from the %s channel. Click here to %stry again%s. If the errors persist, please switch back to the Production channel and contact the %s%s support%s.", 'installer' ),
 	        '%CHANNEL%',

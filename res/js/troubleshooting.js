@@ -10,7 +10,7 @@ jQuery( function($) {
                 //troubleshooting page
                 jQuery('#wcml_trbl').on('click',function(){
                     var field = jQuery(this);
-                    field.attr('disabled', 'disabled');
+                    field.prop('disabled', true);
                     jQuery('.spinner').css('display','inline-block').css('visibility','visible');
                     if(jQuery('#wcml_sync_update_product_count').is(':checked')){
                         WCML_Troubleshooting.update_product_count();
@@ -26,7 +26,7 @@ jQuery( function($) {
 
                 jQuery('#wcml_product_type_trbl').on('click',function(){
                     var field = jQuery(this);
-                    field.attr('disabled', 'disabled');
+                    field.prop('disabled', true);
                     jQuery('.product_type_spinner').css('display','inline-block').css('visibility','visible');
 
                     WCML_Troubleshooting.fix_product_type_terms();
@@ -251,7 +251,7 @@ jQuery( function($) {
                 },
                 dataType: 'json',
                 success: function(response) {
-                    jQuery('#wcml_product_type_trbl').removeAttr('disabled');
+                    jQuery('#wcml_product_type_trbl').prop('disabled', false);
                     jQuery('.product_type_spinner').hide();
                     jQuery('.product_type_fix_done').show();
                     setTimeout(function() {
@@ -278,7 +278,7 @@ jQuery( function($) {
             }else if(jQuery('#wcml_sync_deleted_meta').is(':checked') && parseInt( jQuery('#count_meta').val() ) !== 0 ){
                 WCML_Troubleshooting.sync_deleted_meta();
             }else{
-                jQuery('#wcml_trbl').removeAttr('disabled');
+                jQuery('#wcml_trbl').prop('disabled', false);
                 jQuery('.spinner').hide();
                 jQuery('#wcml_trbl').next().fadeOut();
             }

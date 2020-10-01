@@ -426,13 +426,15 @@ class WCML_WC_Subscriptions {
 	}
 
 	/**
-	 * @param WC_Subscription $subscription
+	 * @param mixed $subscription
 	 *
-	 * @return WC_Subscription
+	 * @return mixed
 	 */
 	public function filter_subscription_items( $subscription ) {
 
-		$this->woocommerce_wpml->orders->adjust_order_item_in_language( $subscription->get_items() );
+		if ( $subscription instanceof WC_Subscription ) {
+			$this->woocommerce_wpml->orders->adjust_order_item_in_language( $subscription->get_items() );
+		}
 
 		return $subscription;
 	}

@@ -67,18 +67,18 @@ function fix_dialogs_visibility(element) {
 
     if ('multiple_choice' !== option_type && 'checkbox' !== option_type) {
         parent.find('.wc-pao-addon-content-option-rows .wcml-option-prices .wc_input_price').each(function () {
-            jQuery(this).attr('disabled', 'disabled');
+            jQuery(this).prop('disabled', true);
         });
         parent.find('.wc-pao-addon-adjust-price-settings .wcml-option-prices .wc_input_price').each(function () {
-            jQuery(this).removeAttr('disabled');
+            jQuery(this).prop('disabled', false);
         });
     } else {
         parent.find('.wc-pao-addon-adjust-price-settings .wcml-option-prices .wc_input_price').each(function () {
-            jQuery(this).attr('disabled', 'disabled');
+            jQuery(this).prop('disabled', true);
         });
 
         parent.find('.wc-pao-addon-content-option-rows .wcml-option-prices .wc_input_price').each(function () {
-            jQuery(this).removeAttr('disabled');
+            jQuery(this).prop('disabled', false);
         });
     }
 

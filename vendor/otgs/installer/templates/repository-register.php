@@ -11,7 +11,7 @@ class Register {
 				 xmlns="http://www.w3.org/1999/html">
 				<div class="otgs-installer-notice-content">
 					<h2>
-						<?php echo esc_html( sprintf( __( 'You are using an unregistered version of %s and are not receiving compatibility and security updates.', 'installer' ), $model->productName ) ); ?>
+						<?php echo esc_html( sprintf( __( 'Already purchased %s?', 'installer' ), $model->productName ) ); ?>
 						<a class="enter_site_key_js otgs-installer-notice-link-register"
 						   href="#"
 							<?php

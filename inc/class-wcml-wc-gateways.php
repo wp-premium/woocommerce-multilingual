@@ -1,5 +1,8 @@
 <?php
 
+use WPML\Collect\Support\Collection;
+use WPML\FP\Fns;
+
 class WCML_WC_Gateways {
 
 	const WCML_BACS_ACCOUNTS_CURRENCIES_OPTION = 'wcml_bacs_accounts_currencies';
@@ -29,7 +32,7 @@ class WCML_WC_Gateways {
 
 	public function add_hooks() {
 		add_action( 'init', [ $this, 'on_init_hooks' ], 11 );
-		add_filter( 'woocommerce_payment_gateways', [ $this, 'loaded_woocommerce_payment_gateways' ] );
+		add_filter( 'woocommerce_payment_gateways', Fns::withoutRecursion( Fns::identity(), [ $this, 'loaded_woocommerce_payment_gateways' ] ) );
 	}
 
 	public function on_init_hooks() {
@@ -144,45 +147,99 @@ class WCML_WC_Gateways {
 
 		$postData = wpml_collect( $_POST );
 		if ( $postData->isNotEmpty() ) {
+			if ( $this->is_user_order_note( $postData ) ) {
+				$current_gateway_language = get_post_meta( $postData->get( 'post_id' ), 'wpml_language', true );
+			} elseif ( $this->is_refund_line_item( $postData ) ) {
+				$current_gateway_language = get_post_meta( $postData->get( 'order_id' ), 'wpml_language', true );
+			} else {
+				$current_gateway_language = $this->get_order_action_gateway_language( $postData );
+			}
+		} else {
+			$current_gateway_language = $this->get_order_ajax_action_gateway_language();
+		}
 
-			$is_user_order_note = 'woocommerce_add_order_note' === $postData->get( 'action' ) && 'customer' === $postData->get( 'note_type' );
-			if ( $is_user_order_note ) {
-				return get_post_meta( $postData->get( 'post_id' ), 'wpml_language', true );
+		/**
+		 * Filters the current gateway language
+		 *
+		 * @since 4.9.0
+		 *
+		 * @param string $current_gateway_language
+		 */
+		return apply_filters( 'wcml_current_gateway_language', $current_gateway_language );
+	}
+
+	/**
+	 * @param Collection $postData
+	 *
+	 * @return bool
+	 */
+	private function is_user_order_note( Collection $postData ) {
+		return 'woocommerce_add_order_note' === $postData->get( 'action' ) && 'customer' === $postData->get( 'note_type' );
+	}
+
+	/**
+	 * @param Collection $postData
+	 *
+	 * @return bool
+	 */
+	private function is_refund_line_item( Collection $postData ){
+	    return 'woocommerce_refund_line_items' === $postData->get( 'action' );
+    }
+
+
+	/**
+	 * @param Collection $postData
+	 *
+	 * @return string
+	 */
+	private function get_order_action_gateway_language( Collection $postData ) {
+
+		if ( $postData->get( 'post_ID' ) ) {
+
+			$is_saving_new_order = wpml_collect( [
+					'auto-draft',
+					'draft'
+				] )->contains( $postData->get( 'post_status' ) )
+			                       && 'editpost' === $postData->get( 'action' )
+			                       && $postData->get( 'save' );
+			if ( $is_saving_new_order && isset( $_COOKIE[ WCML_Orders::DASHBOARD_COOKIE_NAME ] ) ) {
+				return $_COOKIE[ WCML_Orders::DASHBOARD_COOKIE_NAME ];
 			}
 
-			$is_refund_line_item = 'woocommerce_refund_line_items' === $postData->get( 'action' );
-			if ( $is_refund_line_item ) {
-				return get_post_meta( $postData->get( 'order_id' ), 'wpml_language', true );
-			}
+			$is_order_emails_status       = wpml_collect( [
+				'wc-completed',
+				'wc-processing',
+				'wc-refunded',
+				'wc-on-hold'
+			] )->contains( $postData->get( 'order_status' ) );
 
-			if ( $postData->get( 'post_ID' ) ) {
-				$is_saving_new_order = wpml_collect( [ 'auto-draft', 'draft' ] )->contains( $postData->get( 'post_status' ) )
-												&& 'editpost' === $postData->get( 'action' )
-												&& $postData->get( 'save' );
-				if ( $is_saving_new_order && isset( $_COOKIE[ WCML_Orders::DASHBOARD_COOKIE_NAME ] ) ) {
-					return $_COOKIE[ WCML_Orders::DASHBOARD_COOKIE_NAME ];
-				}
-
-				$is_order_emails_status       = wpml_collect( [ 'wc-completed', 'wc-processing', 'wc-refunded', 'wc-on-hold' ] )->contains( $postData->get( 'order_status' ) );
-				$is_send_order_details_action = 'send_order_details' === $postData->get( 'wc_order_action' );
-				if ( $is_order_emails_status || $is_send_order_details_action ) {
-					return get_post_meta( $postData->get( 'post_ID' ), 'wpml_language', true );
-				}
-
-				return $this->current_language;
+			$is_send_order_details_action = 'send_order_details' === $postData->get( 'wc_order_action' );
+			if ( $is_order_emails_status || $is_send_order_details_action ) {
+				return get_post_meta( $postData->get( 'post_ID' ), 'wpml_language', true );
 			}
 		}
 
+		return $this->current_language;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_order_ajax_action_gateway_language(){
+
 		$getData = wpml_collect( $_GET );
 		if ( $getData->isNotEmpty() ) {
-			$is_order_ajax_action = 'woocommerce_mark_order_status' === $getData->get( 'action' ) && wpml_collect( [ 'completed', 'processing' ] )->contains( $getData->get( 'status' ) );
+			$is_order_ajax_action = 'woocommerce_mark_order_status' === $getData->get( 'action' ) && wpml_collect( [
+					'completed',
+					'processing'
+				] )->contains( $getData->get( 'status' ) );
 			if ( $is_order_ajax_action && $getData->get( 'order_id' ) ) {
 				return get_post_meta( $getData->get( 'order_id' ), 'wpml_language', true );
 			}
 		}
 
 		return $this->current_language;
-	}
+    }
 
 	public function show_language_links_for_gateways() {
 

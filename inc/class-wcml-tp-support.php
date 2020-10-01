@@ -2,12 +2,16 @@
 
 class WCML_TP_Support {
 
+	const CUSTOM_FIELD_NAME = 'wc_variation_field:';
+
 	/** @var woocommerce_wpml */
 	private $woocommerce_wpml;
 	/** @var  wpdb */
 	private $wpdb;
 	/** @var WPML_Element_Translation_Package */
 	private $tp;
+	/** @var array */
+	private $tm_settings;
 
 	/**
 	 * WCML_Attributes constructor.
@@ -15,12 +19,14 @@ class WCML_TP_Support {
 	 * @param woocommerce_wpml $woocommerce_wpml
 	 * @param wpdb $wpdb
 	 * @param WPML_Element_Translation_Package $tp
+	 * @param array $tm_settings
 	 */
-	public function __construct( woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp ) {
+	public function __construct( woocommerce_wpml $woocommerce_wpml, wpdb $wpdb, WPML_Element_Translation_Package $tp, array $tm_settings ) {
 
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->wpdb             = $wpdb;
 		$this->tp               = $tp;
+		$this->tm_settings      = $tm_settings;
 	}
 
 	public function add_hooks() {
@@ -32,11 +38,11 @@ class WCML_TP_Support {
 
 		add_filter( 'wpml_tm_translation_job_data', array(
 			$this,
-			'append_variation_descriptions_translation_package'
+			'append_variation_custom_fields_to_translation_package'
 		), 10, 2 );
 		add_action( 'wpml_pro_translation_completed', array(
 			$this,
-			'save_variation_descriptions_translations'
+			'save_variation_custom_fields_translations'
 		), 20, 3 ); //after WCML_Products
 
 		add_filter( 'wpml_tm_translation_job_data', array( $this, 'append_slug_to_translation_package' ), 10, 2 );
@@ -145,7 +151,23 @@ class WCML_TP_Support {
 
 	}
 
-	public function append_variation_descriptions_translation_package( $package, $post ) {
+	/**
+	 * @param int $variation_id
+	 *
+	 * @return array
+	 */
+	private function get_variation_custom_fields_to_translate( $variation_id ) {
+		$is_field_translatable = function ( $meta_key ) {
+			return isset( $this->tm_settings['custom_fields_translation'][ $meta_key ] )
+			       && (int) $this->tm_settings['custom_fields_translation'][ $meta_key ] === WPML_TRANSLATE_CUSTOM_FIELD;
+		};
+
+		return wpml_collect( (array) get_post_custom_keys( $variation_id ) )
+			->filter( $is_field_translatable )
+			->toArray();
+	}
+
+	public function append_variation_custom_fields_to_translation_package( $package, $post ) {
 
 		if ( 'product' === $post->post_type ) {
 
@@ -160,16 +182,19 @@ class WCML_TP_Support {
 
 				foreach ( $variations as $variation ) {
 
-					$description = get_post_meta( $variation->ID, '_variation_description', true );
+					$meta_keys_to_translate = $this->get_variation_custom_fields_to_translate( $variation->ID );
 
-					if ( $description ) {
-						$package['contents'][ 'wc_variation_description:' . $variation->ID ] = array(
-							'translate' => 1,
-							'data'      => $this->tp->encode_field_data( $description, 'base64' ),
-							'format'    => 'base64'
-						);
+					foreach ( $meta_keys_to_translate as $meta_key ){
+						$meta_value = get_post_meta( $variation->ID, $meta_key, true );
+
+						if ( $meta_value && !is_array( $meta_value ) ) {
+							$package['contents'][ self::CUSTOM_FIELD_NAME.$meta_key.':' . $variation->ID ] = array(
+								'translate' => 1,
+								'data'      => $this->tp->encode_field_data( $meta_value, 'base64' ),
+								'format'    => 'base64'
+							);
+						}
 					}
-
 				}
 
 			}
@@ -180,34 +205,30 @@ class WCML_TP_Support {
 
 	}
 
-	public function save_variation_descriptions_translations( $post_id, $data, $job ) {
+	public function save_variation_custom_fields_translations( $post_id, $data, $job ) {
 
 		$language = $job->language_code;
 
 		foreach ( $data as $data_key => $value ) {
 
-			if ( $value['finished'] && isset( $value['field_type'] ) && strpos( $value['field_type'], 'wc_variation_description:' ) === 0 ) {
+			if ( $value['finished'] && isset( $value['field_type'] ) && strpos( $value['field_type'], self::CUSTOM_FIELD_NAME ) === 0 ) {
 
-				$variation_id = substr( $value['field_type'], strpos( $value['field_type'], ':' ) + 1 );
+				$exp          = explode( ':', $value['field_type'], 3 );
+				$meta_key     = $exp[1];
+				$variation_id = $exp[2];
 
 				if ( is_post_type_translated( 'product_variation' ) ) {
-
 					$translated_variation_id = apply_filters( 'translate_object_id', $variation_id, 'product_variation', false, $language );
-
 				} else {
 					global $wpml_post_translations;
 					$translations            = $wpml_post_translations->get_element_translations( $variation_id );
 					$translated_variation_id = isset( $translations[ $language ] ) ? $translations[ $language ] : false;
-
 				}
 
 				if ( $translated_variation_id ) {
-					update_post_meta( $translated_variation_id, '_variation_description', $value['data'] );
+					update_post_meta( $translated_variation_id, $meta_key, $value['data'] );
 				}
-
-
 			}
-
 		}
 
 	}
@@ -324,5 +345,3 @@ class WCML_TP_Support {
 
 	}
 }
-
-

@@ -296,11 +296,7 @@ class WCML_WC_Strings {
 						input.parent().find('.translation_controls').append('&nbsp;');
 
 					} else {
-						input.parent().find('.translation_controls').append('<a href="
-						<?php
-							echo admin_url( 'admin.php?page=wpml-wcml&tab=slugs' )
-						?>
-							"><?php _e( 'translations', 'woocommerce-multilingual' ); ?></a>');
+						input.parent().find('.translation_controls').append('<a href="<?php echo admin_url( 'admin.php?page=wpml-wcml&tab=slugs' ); ?>"><?php _e( 'translations', 'woocommerce-multilingual' ); ?></a>');
 					}
 
 					jQuery('#<?php echo $key; ?>_language_selector').prependTo(input.parent().find('.translation_controls'));

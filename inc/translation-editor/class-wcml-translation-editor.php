@@ -84,8 +84,8 @@ class WCML_Translation_Editor {
 				echo '<script type="text/javascript">';
 				echo PHP_EOL . '// <![CDATA[' . PHP_EOL;
 				echo 'addLoadEvent(function(){' . PHP_EOL;
-				echo "jQuery('#product-type option').removeAttr('selected');" . PHP_EOL;
-				echo "jQuery('#product-type option[value=\"" . $terms[0]->slug . "\"]').attr('selected', 'selected');" . PHP_EOL;
+				echo "jQuery('#product-type option').prop('selected', false);" . PHP_EOL;
+				echo "jQuery('#product-type option[value=\"" . $terms[0]->slug . "\"]').prop('selected', true);" . PHP_EOL;
 				echo '});' . PHP_EOL;
 				echo PHP_EOL . '// ]]>' . PHP_EOL;
 				echo '</script>';
@@ -404,7 +404,7 @@ class WCML_Translation_Editor {
 			<?php
 			printf(
 				__(
-					'To configure how the %1$sWooCommerce products%2$s are translated, visit the WooCommerce Multiligual %3$ssettings%4$s page.',
+					'To configure how the %1$sWooCommerce products%2$s are translated, visit the WooCommerce Multilingual %3$ssettings%4$s page.',
 					'woocommerce-multilingual'
 				),
 				'<strong>',
