@@ -319,9 +319,7 @@ class WCML_Store_Pages {
 	public function create_missing_store_pages_with_redirect() {
 		$this->create_missing_store_pages();
 
-		wp_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=status' ) );
-		exit;
-
+		wcml_safe_redirect( admin_url( 'admin.php?page=wpml-wcml&tab=status' ) );
 	}
 
 	/**

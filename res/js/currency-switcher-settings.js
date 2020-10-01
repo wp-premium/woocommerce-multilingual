@@ -20,6 +20,21 @@ jQuery( function($){
 
                 WCML_Currency_Switcher_Settings.open_dialog_from_hash();
 
+                document.addEventListener('wcmlActiveCurrenciesChange', function(e) {
+                    var action = e.detail.action;
+                    var currency = e.detail.currency;
+                    var currencyData = e.detail.currencyData;
+
+                    if ('add' === action) {
+                        $('#wcml_currencies_order').append('<li class="wcml_currencies_order_'+currency.code+' ui-sortable-handle" cur="'+currency.code+'">'+ currencyData.label + ' (' + currencyData.symbol + ')</li>');
+                    } else if ('remove' === action) {
+                        $('#wcml_currencies_order .wcml_currencies_order_'+ currency.code).remove();
+                    }
+                });
+
+                document.addEventListener('wcmlCurrencyModeChange', function(e) {
+                    $('#display_custom_prices_select,#currency-switcher, #currency-switcher-widget, #currency-switcher-product, #multi-currency-per-language-details, #online-exchange-rates').fadeIn();
+                });
             } );
 
         },

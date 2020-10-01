@@ -28,7 +28,7 @@ class Expired {
 
 		?>
         <div class="otgs-installer-registered otgs-installer-expired clearfix">
-            <div class="notice inline otgs-installer-notice otgs-installer-notice-expired otgs-installer-notice-<?php echo $model->repoId; ?>">
+            <div class="notice inline otgs-installer-notice otgs-installer-notice-expired">
                 <div class="otgs-installer-notice-content">
                     <h2><?php echo esc_html( $title ); ?>
                         <a class="update_site_key_js"

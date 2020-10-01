@@ -1,7 +1,7 @@
 <?php
 $baseDir = dirname( dirname( __FILE__ ) );
 
-return array(
+return [
 	'Installer_Dependencies'                                 => $baseDir . '/includes/class-installer-dependencies.php',
 	'Installer_Theme_Class'                                  => $baseDir . '/includes/class-installer-theme.php',
 	'Installer_Upgrader_Skins'                               => $baseDir . '/includes/class-installer-upgrader-skins.php',
@@ -93,4 +93,5 @@ return array(
 	'OTGS\Installer\Templates\Repository\Refunded'           => $baseDir . '/templates/repository-refunded.php',
 	'OTGS\Installer\Templates\Repository\Registered'         => $baseDir . '/templates/repository-registered.php',
 	'OTGS\Installer\Templates\Repository\RegisteredButtons'  => $baseDir . '/templates/repository-registered-buttons.php',
-);
+	'OTGS\Installer\Rest\Push'                               => $baseDir . '/includes/rest/Push.php',
+];

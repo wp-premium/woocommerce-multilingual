@@ -1,5 +1,7 @@
 <?php
 
+use WPML\FP\Obj;
+
 class WCML_Custom_Prices {
 
 	/** @var woocommerce_wpml */
@@ -31,7 +33,9 @@ class WCML_Custom_Prices {
 		add_action( 'woocommerce_variation_is_visible', [ $this, 'filter_product_variations_with_custom_prices' ], 10, 2 );
 
 		add_filter( 'loop_shop_post_in', [ $this, 'filter_products_with_custom_prices' ], 100 );
+		add_filter( 'woocommerce_is_purchasable', [ $this, 'check_product_with_custom_prices' ], 10, 2 );
 
+		add_action( 'wc_after_products_ending_sales', [ $this, 'maybe_remove_sale_prices' ] );
 	}
 
 	public function add_individual_variation_nonce( $loop, $variation_data, $variation ) {
@@ -216,17 +220,14 @@ class WCML_Custom_Prices {
 
 	private function is_date_range_set( $product_meta, $currency ) {
 
-		$current_currency_schedule = isset( $product_meta[ '_sale_price_dates_from_' . $currency ] ) &&
-									 $product_meta[ '_sale_price_dates_from_' . $currency ][0] &&
-									 isset( $product_meta[ '_sale_price_dates_to_' . $currency ] ) &&
-									 $product_meta[ '_sale_price_dates_to_' . $currency ][0];
+		$get_currency_schedule = function ( $suffix ) use ( $product_meta ) {
+			return Obj::path( [
+					'_sale_price_dates_from' . $suffix,
+					0
+				], $product_meta ) || Obj::path( [ '_sale_price_dates_to' . $suffix, 0 ], $product_meta );
+		};
 
-		$default_currency_schedule = isset( $product_meta['_sale_price_dates_from'] ) &&
-									 $product_meta['_sale_price_dates_from'][0] &&
-									 isset( $product_meta['_sale_price_dates_to'] ) &&
-									 $product_meta['_sale_price_dates_to'][0];
-
-		return $current_currency_schedule || $default_currency_schedule;
+		return $get_currency_schedule( '' ) || $get_currency_schedule( "_$currency" );
 	}
 
 	private function is_on_sale_date_range( $product_meta, $currency ) {
@@ -307,17 +308,27 @@ class WCML_Custom_Prices {
 
 	}
 
-	// set variations without custom prices to not visible when "Show only products with custom prices in secondary currencies" is enabled.
+	public function check_product_with_custom_prices( $is_purchasable, WC_Product $product ) {
+
+		if ( $this->is_filtering_products_with_custom_prices_enabled() && is_product() ) {
+
+			$original_id = $this->woocommerce_wpml->products->get_original_product_id( $product->get_id() );
+
+			if ( ! $this->is_custom_prices_set_for_product( $original_id ) ) {
+				return false;
+			}
+		}
+
+		return $is_purchasable;
+	}
+
 	public function filter_product_variations_with_custom_prices( $is_visible, $variation_id ) {
 
-		if ( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
-			isset( $this->woocommerce_wpml->settings['display_custom_prices'] ) &&
-			$this->woocommerce_wpml->settings['display_custom_prices'] &&
-			is_product() ) {
+		if ( $this->is_filtering_products_with_custom_prices_enabled() && is_product() ) {
 
 			$orig_child_id = $this->woocommerce_wpml->products->get_original_product_id( $variation_id );
 
-			if ( ! get_post_meta( $orig_child_id, '_wcml_custom_prices_status', true ) ) {
+			if ( ! $this->is_custom_prices_set_for_product( $orig_child_id ) ) {
 				return false;
 			}
 		}
@@ -328,16 +339,8 @@ class WCML_Custom_Prices {
 	// display products with custom prices only if enabled "Show only products with custom prices in secondary currencies" option on settings page.
 	public function filter_products_with_custom_prices( $filtered_posts ) {
 
-		if ( $this->woocommerce_wpml->settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT &&
-			isset( $this->woocommerce_wpml->settings['display_custom_prices'] ) &&
-			$this->woocommerce_wpml->settings['display_custom_prices'] ) {
+		if ( $this->is_filtering_products_with_custom_prices_enabled() ) {
 
-			$client_currency      = $this->woocommerce_wpml->multi_currency->get_client_currency();
-			$woocommerce_currency = wcml_get_woocommerce_currency_option();
-
-			if ( $client_currency == $woocommerce_currency ) {
-				return $filtered_posts;
-			}
 			$matched_products       = [];
 			$matched_products_query = $this->wpdb->get_results(
 				"
@@ -349,6 +352,9 @@ class WCML_Custom_Prices {
 			);
 
 			if ( $matched_products_query ) {
+
+				$client_currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
+
 				remove_filter( 'get_post_metadata', [ $this->woocommerce_wpml->multi_currency->prices, 'product_price_filter' ], 10, 4 );
 				foreach ( $matched_products_query as $product ) {
 					if ( ! get_post_meta( $product->ID, '_price_' . $client_currency, true ) ) {
@@ -375,6 +381,17 @@ class WCML_Custom_Prices {
 		}
 
 		return $filtered_posts;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_filtering_products_with_custom_prices_enabled() {
+
+		return wcml_is_multi_currency_on() &&
+		       isset( $this->woocommerce_wpml->settings['display_custom_prices'] ) &&
+		       $this->woocommerce_wpml->settings['display_custom_prices'] &&
+		       $this->woocommerce_wpml->multi_currency->get_client_currency() !== wcml_get_woocommerce_currency_option();
 	}
 
 	public function save_custom_prices( $post_id ) {
@@ -543,11 +560,46 @@ class WCML_Custom_Prices {
 		if (
 			! $on_sale &&
 			WCML_MULTI_CURRENCIES_INDEPENDENT === $this->woocommerce_wpml->settings['enable_multi_currency'] &&
-			get_post_meta( $product_object->get_id(), '_wcml_custom_prices_status', true )
+			$this->is_custom_prices_set_for_product( $product_object->get_id() )
 		) {
 			$on_sale = $this->is_on_sale( $product_object );
 		}
 
 		return $on_sale;
+	}
+
+	/**
+	 * @param $product_id
+	 *
+	 * @return mixed
+	 */
+	private function is_custom_prices_set_for_product( $product_id ){
+		return get_post_meta( $product_id, '_wcml_custom_prices_status', true );
+	}
+
+	/**
+	 * @param array $product_ids
+	 */
+	public function maybe_remove_sale_prices( $product_ids ) {
+
+		foreach ( $product_ids as $product_id ) {
+
+			$product            = wc_get_product( $product_id );
+			$is_product_on_sale = $product && $product->get_sale_price();
+
+			if ( $is_product_on_sale || ! $this->is_custom_prices_set_for_product( $product_id ) ) {
+				continue;
+			}
+
+			foreach ( $this->woocommerce_wpml->multi_currency->get_currencies() as $code => $currency ) {
+
+				$is_auto_schedule_set = ! get_post_meta( $product_id, '_wcml_schedule_' . $code, true );
+
+				if ( $is_auto_schedule_set ) {
+					update_post_meta( $product_id, '_price_' . $code, get_post_meta( $product_id, '_regular_price_' . $code, true ) );
+					update_post_meta( $product_id, '_sale_price_' . $code, '' );
+				}
+			}
+		}
 	}
 }

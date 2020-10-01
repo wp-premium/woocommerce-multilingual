@@ -50,9 +50,11 @@ class WCML_Currencies {
 			$multi_currency_install->set_default_currencies_languages( $old_value, $new_value );
 		} else {
 			$currency_options               = $this->woocommerce_wpml->get_setting( 'currency_options' );
-			$currency_options[ $new_value ] = $currency_options[ $old_value ];
-			unset( $currency_options[ $old_value ] );
-			$this->woocommerce_wpml->update_setting( 'currency_options', $currency_options );
+			if ( isset( $currency_options[ $old_value ] ) ) {
+				$currency_options[ $new_value ] = $currency_options[ $old_value ];
+				unset( $currency_options[ $old_value ] );
+				$this->woocommerce_wpml->update_setting( 'currency_options', $currency_options );
+			}
 		}
 
 	}

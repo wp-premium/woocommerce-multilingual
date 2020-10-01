@@ -344,8 +344,12 @@ class WCML_Emails {
 
 		$translated_value = false;
 		$emailStrings     = wpml_collect( [
+			'subject',
+			'subject_downloadable',
 			'subject_partial',
 			'subject_full',
+			'heading',
+			'heading_downloadable',
 			'heading_partial',
 			'heading_full',
 			'additional_content'
@@ -356,39 +360,71 @@ class WCML_Emails {
 			$emailStrings->contains( $key )
 		) {
 
-			$language = null;
-
-			$adminEmails = wpml_collect([
+			$isAdminEmail = wpml_collect([
 				'new_order',
 				'cancelled_order',
 				'failed_order',
-			]);
+			])->contains( $object->id );
 
-			if ( $adminEmails->contains( $object->id ) ) {
-				$language = $this->get_admin_language_by_email( $object->recipient, $object->object->get_id() );
-			}
-
-			$translated_value = $this->get_email_translated_string( $key, $object, $language );
+			$translated_value = $this->get_email_translated_string( $key, $object, $isAdminEmail );
 		}
 
 		return $translated_value ?: $value;
 	}
 
 	/**
-	 * @param string $key
+	 * @param string   $key
 	 * @param WC_Email $object
-	 * @param string $language
+	 * @param bool     $isAdminEmail
 	 *
 	 * @return string
 	 */
-	public function get_email_translated_string( $key,
-			$object, $language)
-		{
+	public function get_email_translated_string( $key, $object, $isAdminEmail ) {
 
-		$context = 'admin_texts_woocommerce_' . $object->id . '_settings';
-		$name    = '[woocommerce_' . $object->id . '_settings]' . $key;
+		list( $context, $name ) = $this->get_email_context_and_name( $object );
 
-		return $this->wcml_get_translated_email_string( $context, $name, $object->object->get_id(), $language );
+		$language = $isAdminEmail
+			? $this->get_admin_language_by_email( $object->recipient, $this->get_order_id_from_email_object( $object ) )
+			: null;
+
+		return $this->wcml_get_translated_email_string( $context, $name . $key, $this->get_order_id_from_email_object( $object ), $language );
+	}
+
+	/**
+	 * @param WC_Email $emailObject
+	 *
+	 * @return array
+	 */
+	public function get_email_context_and_name( $emailObject ) {
+
+		$emailId = $emailObject->id;
+
+		if ( $emailObject instanceof WC_Email_Customer_Refunded_Order ) {
+			$emailId = 'customer_refunded_order';
+		}
+
+		$context = 'admin_texts_woocommerce_' . $emailId . '_settings';
+		$name    = '[woocommerce_' . $emailId . '_settings]';
+
+		return [ $context, $name ];
+	}
+
+	/**
+	 * @param WC_Email $object
+	 *
+	 * @return bool|string|int
+	 */
+	private function get_order_id_from_email_object( $object ) {
+
+		if ( method_exists( $object->object, 'get_id' ) ) {
+			return $object->object->get_id();
+		}
+
+		if ( is_array( $object->object ) && isset( $object->object['ID'] ) ) {
+			return $object->object['ID'];
+		}
+
+		return false;
 	}
 
 	public function new_order_admin_email( $order_id ) {
@@ -627,10 +663,11 @@ class WCML_Emails {
 	 */
 	private function admin_notification( $product, $action, $method ) {
 
-		$wcEmails          = $this->woocommerce->mailer();
-		$is_action_removed = remove_action( $action, [ $wcEmails, $method ] );
+		$wcEmails = $this->woocommerce->mailer();
 
-		if ( $is_action_removed ) {
+		remove_action( $action, [ $wcEmails, $method ] );
+
+		if ( method_exists( $wcEmails, $method ) ) {
 			$admin_language               = $this->get_admin_language_by_email( get_option( 'woocommerce_stock_email_recipient' ) );
 			$product_id_in_admin_language = wpml_object_id_filter(
 				$product->get_id(),

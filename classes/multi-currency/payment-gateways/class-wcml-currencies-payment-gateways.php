@@ -5,8 +5,7 @@
  */
 class WCML_Currencies_Payment_Gateways {
 
-	const OPTION_KEY      = 'wcml_custom_payment_gateways_for_currencies';
-	const TEMPLATE_FOLDER = '/templates/multi-currency/payment-gateways/';
+	const OPTION_KEY = 'wcml_custom_payment_gateways_for_currencies';
 
 	/** @var array */
 	private $payment_gateways;
@@ -33,7 +32,7 @@ class WCML_Currencies_Payment_Gateways {
 	}
 
 	public function add_hooks() {
-		add_action( 'init', [ $this, 'init_gateways' ] );
+		add_action( 'wp_loaded', [ $this, 'init_gateways' ] );
 
 		add_filter( 'woocommerce_gateway_description', [ $this, 'filter_gateway_description' ], 10, 2 );
 		add_filter( 'option_woocommerce_stripe_settings', [ 'WCML_Payment_Gateway_Stripe', 'filter_stripe_settings' ] );
@@ -182,7 +181,6 @@ class WCML_Currencies_Payment_Gateways {
 				if ( $this->is_a_valid_gateway( $id, $supported_gateway ) ) {
 					$this->payment_gateways[ $id ] = new $supported_gateway(
 						$this->available_gateways[ $id ],
-						$this->get_template_service(),
 						$this->woocommerce_wpml
 					);
 					if ( $this->is_enabled( $client_currency ) ) {
@@ -198,17 +196,8 @@ class WCML_Currencies_Payment_Gateways {
 
 		/** @var int $non_supported_gateway */
 		foreach ( $non_supported_gateways as $non_supported_gateway ) {
-			$this->payment_gateways[ $non_supported_gateway ] = new WCML_Not_Supported_Payment_Gateway( $this->available_gateways[ $non_supported_gateway ], $this->get_template_service(), $this->woocommerce_wpml );
+			$this->payment_gateways[ $non_supported_gateway ] = new WCML_Not_Supported_Payment_Gateway( $this->available_gateways[ $non_supported_gateway ], $this->woocommerce_wpml );
 		}
-	}
-
-	/**
-	 * @return \WPML_Twig_Template
-	 */
-	private function get_template_service() {
-		$twig_loader = new WPML_Twig_Template_Loader( [ $this->wp_api->constant( 'WCML_PLUGIN_PATH' ) . self::TEMPLATE_FOLDER ] );
-
-		return $twig_loader->get_template();
 	}
 
 	/**

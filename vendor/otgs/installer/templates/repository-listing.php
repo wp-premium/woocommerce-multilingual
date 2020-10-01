@@ -39,6 +39,7 @@ $model                      = (object) [
 					\OTGS\Installer\Templates\Repository\Expired::render( $model );
 				} else if ( $this->repository_has_refunded_subscription( $repository_id ) ) {
 					$model->expired = true;
+					$model->shouldDisplayUnregisterLink = $this->should_display_unregister_link_on_refund_notice();
 					\OTGS\Installer\Templates\Repository\Refunded::render( $model );
 				} else {
 					$this->show_subscription_renew_warning( $repository_id, $subscription_type );

@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
                 var buttonsOpts = {};
                 buttonsOpts[ dialogBox.find('.cancel-button').val() ] = function () {
                     jQuery(this).dialog("close");
-                    jQuery('input[name="trnsl_interface"][value="1"]').attr('checked', 'checked');
+                    jQuery('input[name="trnsl_interface"][value="1"]').prop('checked', true);
                 };
                 buttonsOpts[ dialogBox.find('.ok-button').val() ] = function () {
                     jQuery(this).dialog("close");
@@ -27,10 +27,10 @@ jQuery(document).ready(function ($) {
                     },
                     open: function (event, ui) {
                         jQuery(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-						jQuery('#jquery-ui-style-css').attr('disabled', 'disabled');
+						jQuery('#jquery-ui-style-css').prop('disabled', true);
                     },
                     close: function (event, ui) {
-                        jQuery('#jquery-ui-style-css').removeAttr('disabled');
+                        jQuery('#jquery-ui-style-css').prop('disabled', false);
                     },
                     buttons : buttonsOpts
                 });

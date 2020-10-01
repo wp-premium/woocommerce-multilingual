@@ -234,11 +234,11 @@ class WCML_Cart {
 				  },
 					open: function (event, ui) {
 						jQuery(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-						jQuery('#jquery-ui-style-css').attr('disabled', 'disabled');
+						jQuery('#jquery-ui-style-css').prop('disabled', true);
 						repositionDialog();
 					},
 				  close: function (event, ui) {
-					  jQuery('#jquery-ui-style-css').removeAttr('disabled');
+					  jQuery('#jquery-ui-style-css').prop('disabled', false);
 				  },
 				  buttons: {
 					  "<?php echo $switch_to; ?>": function () {
@@ -258,7 +258,7 @@ class WCML_Cart {
 							<?php else : ?>
 						  jQuery('.wcml_currency_switcher').each( function(){
 							  jQuery(this).parent().find('img').remove();
-							  jQuery(this).removeAttr('disabled');
+							  jQuery(this).prop('disabled', false);
 							  jQuery(this).val('<?php echo esc_js( $stay_in_value ); ?>');
 						  });
 						  jQuery(document).on('click', '.wcml_currency_switcher a', wcml_switch_currency_handler );
