@@ -273,15 +273,16 @@ class WCML_Url_Translation {
 
 		if ( isset( $permalink_options['attribute_base'] ) && $permalink_options['attribute_base'] ) {
 			$attr_base = trim( $permalink_options['attribute_base'], '/' );
+			$attr_string_name = $this->url_string_name( 'attribute' );
 
-			$string_language = $this->woocommerce_wpml->strings->get_string_language( $attr_base, $this->url_strings_context(), $name );
+			$string_language = $this->woocommerce_wpml->strings->get_string_language( $attr_base, $this->url_strings_context(), $attr_string_name );
 			if ( is_null( $string_language ) ) {
 				$string_language = '';
 			}
-			do_action( 'wpml_register_single_string', $this->url_strings_context(), $this->url_string_name( 'attribute' ), $attr_base, false, $string_language );
+			do_action( 'wpml_register_single_string', $this->url_strings_context(), $attr_string_name, $attr_base, false, $string_language );
 
 			if ( isset( $_POST['attribute_base_language'] ) ) {
-				$this->woocommerce_wpml->strings->set_string_language( $attr_base, $this->url_strings_context(), $this->url_string_name( 'attribute' ), $_POST['attribute_base_language'] );
+				$this->woocommerce_wpml->strings->set_string_language( $attr_base, $this->url_strings_context(), $attr_string_name, $_POST['attribute_base_language'] );
 			}
 		}
 
@@ -540,8 +541,8 @@ class WCML_Url_Translation {
 			return $value;
 		}
 
-		$current_slug = get_page_uri( $current_shop_id );
-		$default_slug = get_page_uri( $default_shop_id );
+		$current_slug = urldecode( get_page_uri( $current_shop_id ) );
+		$default_slug = urldecode( get_page_uri( $default_shop_id ) );
 
 		if ( $current_slug != $default_slug ) {
 			$buff_value = [];
@@ -834,7 +835,7 @@ class WCML_Url_Translation {
 
 		$original_base       = $_POST['base'];
 		$original_base_value = $_POST['base_value'];
-		$base_translation    = $_POST['base_translation'];
+		$base_translation    = trim( $_POST['base_translation'], '/' );
 		$language            = $_POST['language'];
 
 		if ( $original_base == 'shop' ) {

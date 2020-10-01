@@ -27,41 +27,35 @@ abstract class WCML_Payment_Gateway {
 	private $settings = [];
 
 	/**
-	 * @var \IWPML_Template_Service
-	 */
-	private $template_service;
-	/**
 	 * @var woocommerce_wpml
 	 */
 	protected $woocommerce_wpml;
 
 	/**
 	 * @param WC_Payment_Gateway      $gateway
-	 * @param \IWPML_Template_Service $template_service
 	 * @param woocommerce_wpml        $woocommerce_wpml
 	 */
-	public function __construct( WC_Payment_Gateway $gateway, IWPML_Template_Service $template_service, woocommerce_wpml $woocommerce_wpml ) {
+	public function __construct( WC_Payment_Gateway $gateway, woocommerce_wpml $woocommerce_wpml ) {
 		$this->gateway          = $gateway;
-		$this->template_service = $template_service;
 		$this->woocommerce_wpml = $woocommerce_wpml;
 		$this->settings         = get_option( self::OPTION_KEY . $this->get_id(), [] );
 	}
 
+	/**
+	 * @deprecated since 4.9.0, use React component instead.
+	 */
 	public function get_settings_output( $current_currency, $active_currencies ) {
-		$this->current_currency  = $current_currency;
-		$this->active_currencies = $active_currencies;
-		$this->default_currency  = wcml_get_woocommerce_currency_option();
-
-		return $this->template_service->show( $this->get_output_model(), $this->get_output_template() );
+		return '';
 	}
 
+	/**
+	 * @deprecated since 4.9.0, use React component instead.
+	 */
 	public function show() {
-		return $this->get_settings_output( $this->current_currency, $this->default_currency );
+		return '';
 	}
 
-	abstract protected function get_output_model();
-
-	abstract protected function get_output_template();
+	abstract public function get_output_model();
 
 	protected function is_current_currency_default() {
 		if ( $this->current_currency === $this->default_currency ) {

@@ -52,6 +52,7 @@ class WCML_Update_Product_Gallery_Translation implements IWPML_Action {
 		$original_gallery_meta = get_post_meta( $source_post_id, '_product_image_gallery', true );
 		if ( '' !== $original_gallery_meta ) {
 			$original_gallery = explode( ',', $original_gallery_meta );
+			$original_gallery = array_filter( $original_gallery );
 
 			foreach ( $original_gallery as $original_attachment_id ) {
 				$attachment_element    = $this->translation_element_factory->create( $original_attachment_id, 'post' );

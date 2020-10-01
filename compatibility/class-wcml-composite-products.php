@@ -35,13 +35,12 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 		add_filter( 'woocommerce_composite_component_default_option', array($this, 'woocommerce_composite_component_default_option'), 10, 3 );
 		add_filter( 'wcml_cart_contents', array($this, 'wpml_composites_compat'), 11, 4 );
 		add_filter( 'woocommerce_composite_component_options_query_args', array($this, 'wpml_composites_transients_cache_per_language'), 10, 3 );
-		add_action( 'wcml_before_sync_product', array( $this, 'sync_composite_data_across_translations'), 10, 2 );
+		add_action( 'wcml_before_sync_product_data', array( $this, 'sync_composite_data_across_translations' ), 10, 2 );
 		add_action( 'wpml_translation_job_saved',   array( $this, 'save_composite_data_translation' ), 10, 3 );
-		if( is_admin() ){		
+		if( is_admin() ){
 
 			add_action( 'wcml_gui_additional_box_html', array( $this, 'custom_box_html' ), 10, 3 );
 			add_filter( 'wcml_gui_additional_box_data', array( $this, 'custom_box_html_data' ), 10, 4 );
-			add_action( 'wcml_before_sync_product_data', array( $this, 'components_update' ), 10, 3 );
 			add_action( 'wcml_update_extra_fields', array( $this, 'update_component_strings' ), 10, 4 );
 			add_filter( 'woocommerce_json_search_found_products', array( $this, 'woocommerce_json_search_found_products' ) );
 
@@ -87,7 +86,7 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
 		return $selected_value;
 	}
-	
+
 	public function wpml_composites_compat( $new_cart_data, $cart_contents, $key, $new_key ) {
 
 		if ( isset( $cart_contents[ $key ][ 'composite_children' ] ) || isset( $cart_contents[ $key ][ 'composite_parent' ] ) ) {
@@ -109,11 +108,12 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 		return $args;
 	}
 
-	public function sync_composite_data_across_translations(  $original_product_id, $current_product_id ){
+	public function sync_composite_data_across_translations( $original_product_id, $current_product_id ){
 
 		if( $this->get_product_type( $original_product_id ) == 'composite' ){
 
 			$composite_data = $this->get_composite_data( $original_product_id );
+			$composite_scenarios_meta = $this->get_composite_scenarios_meta( $original_product_id );
 
 			$product_trid = $this->sitepress->get_element_trid( $original_product_id, 'post_product' );
 			$product_translations = $this->sitepress->get_element_translations( $product_trid, 'post_product' );
@@ -138,28 +138,50 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
 							foreach ( $component['assigned_ids'] as $idx => $assigned_id ) {
 								$composite_data[$component_id]['assigned_ids'][$idx] =
-									apply_filters( 'translate_object_id', $assigned_id, 'product', true, $product_translation->language_code );
+									apply_filters( 'wpml_object_id', $assigned_id, 'product', true, $product_translation->language_code );
 							}
 
 						} elseif( $component['query_type'] == 'category_ids' ){
 
 							foreach ( $component['assigned_category_ids'] as $idx => $assigned_id ) {
 								$composite_data[$component_id]['assigned_category_ids'][$idx] =
-									apply_filters( 'translate_object_id', $assigned_id, 'product_cat', true, $product_translation->language_code );
+									apply_filters( 'wpml_object_id', $assigned_id, 'product_cat', true, $product_translation->language_code );
 
 							}
 
+						}
+
+						//sync default
+						if ( isset( $component['default_id'] ) && $component['default_id'] ) {
+							$translated_default_id = apply_filters( 'wpml_object_id', $component['default_id'], get_post_type( $component['default_id'] ), false, $product_translation->language_code );
+							if ( $translated_default_id ) {
+								$composite_data[ $component_id ]['default_id'] = $translated_default_id;
+							}
 						}
 
 					}
 
 					update_post_meta( $product_translation->element_id, '_bto_data', $composite_data );
 
+					if ( $composite_scenarios_meta ) {
+						foreach ( $composite_scenarios_meta as $scenario_key => $scenario_meta ) {
+							//sync product ids
+							foreach ( $scenario_meta['component_data'] as $component_id => $component_data ) {
+								foreach ( $component_data as $key => $assigned_prod_id ) {
+									$translated_assigned_product_id = apply_filters( 'wpml_object_id', $assigned_prod_id, get_post_type( $assigned_prod_id ), false, $product_translation->language_code );
+									if ( $translated_assigned_product_id ) {
+										$composite_scenarios_meta[ $scenario_key ]['component_data'][ $component_id ][ $key ] = $translated_assigned_product_id;
+									}
+								}
+							}
+						}
+
+						update_post_meta( $product_translation->element_id, '_bto_scenario_data', $composite_scenarios_meta );
+					}
 				}
-
 			}
-		}
 
+		}
 	}
 
 	public function custom_box_html( $obj, $product_id, $data ){
@@ -279,73 +301,6 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 		return $data;
 	}
 
-	public function components_update( $original_product_id, $product_id, $language ){
-
-		$composite_data = $this->get_composite_data( $original_product_id );
-
-		foreach( $composite_data as $component_id => $component ) {
-
-			//sync product ids
-			if( $component[ 'query_type' ] == 'product_ids' ){
-				foreach( $component[ 'assigned_ids' ] as $key => $assigned_id ){
-					$assigned_id_current_language = apply_filters( 'translate_object_id', $assigned_id, get_post_type( $assigned_id ), false, $language );
-					if( $assigned_id_current_language ){
-						$composite_data[ $component_id ][ 'assigned_ids' ][ $key ] = $assigned_id_current_language;
-					}
-				}
-			}elseif( $component[ 'query_type' ] == 'category_ids' ){
-				foreach( $component[ 'assigned_category_ids' ] as $key => $assigned_id ){
-					$trsl_term_id = apply_filters( 'translate_object_id', $assigned_id, 'product_cat', false, $language );
-					if( $trsl_term_id ){
-						$composite_data[ $component_id ][ 'assigned_category_ids' ][ $key ] = $trsl_term_id;
-					}
-				}
-			}
-
-			//sync default
-			if( $component[ 'default_id' ] ){
-				$trnsl_default_id = apply_filters( 'translate_object_id', $component[ 'default_id' ], get_post_type( $component[ 'default_id' ] ), false, $language );
-				if( $trnsl_default_id ){
-					$composite_data[ $component_id ][ 'default_id' ] = $trnsl_default_id;
-				}
-			}
-
-		}
-
-		update_post_meta( $product_id, '_bto_data', $composite_data );
-
-		$composite_scenarios_meta = $this->get_composite_scenarios_meta( $original_product_id );
-		if( $composite_scenarios_meta ){
-			foreach( $composite_scenarios_meta as $scenario_key => $scenario_meta ){
-				//sync product ids
-				foreach( $scenario_meta[ 'component_data' ] as $compon_id => $component_data ){
-					if( isset( $composite_data[ $compon_id ] ) && $composite_data[ $compon_id ][ 'query_type' ] == 'product_ids' ){
-						foreach( $component_data as $key => $assigned_prod_id ){
-							$trnsl_assigned_prod_id = apply_filters( 'translate_object_id', $assigned_prod_id, get_post_type( $assigned_prod_id ), false, $language );
-							if( $trnsl_assigned_prod_id ){
-								$composite_scenarios_meta[ $scenario_key ][ 'component_data' ][ $compon_id ][ $key ] = $trnsl_assigned_prod_id;
-							}
-						}
-					}elseif( isset( $composite_data[ $compon_id ] ) && $composite_data[ $compon_id ][ 'query_type' ] == 'category_ids' ){
-						foreach( $component_data as $key => $assigned_cat_id ){
-							$trslt_assigned_cat_id = apply_filters( 'translate_object_id', $assigned_cat_id, 'product_cat', false, $language );
-							if( $trslt_assigned_cat_id ){
-								$composite_scenarios_meta[ $scenario_key ][ 'component_data' ][ $compon_id ][ $key ] = $trslt_assigned_cat_id;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		update_post_meta( $product_id, '_bto_scenario_data', $composite_scenarios_meta );
-
-		return array(
-			'components' => $composite_data,
-			'scenarios'  => $composite_scenarios_meta,
-		);
-	}
-
 
 	public function update_component_strings( $original_product_id, $product_id, $data, $language ){
 
@@ -456,14 +411,14 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 
 					foreach ( $component['assigned_ids'] as $idx => $assigned_id ) {
 						$composite_data[$component_id]['assigned_ids'][$idx] =
-							apply_filters( 'translate_object_id', $assigned_id, 'product', true, $job->language_code );
+							apply_filters( 'wpml_object_id', $assigned_id, 'product', true, $job->language_code );
 					}
 
 				} elseif( $component['query_type'] == 'category_ids' ){
 
 					foreach ( $component['assigned_category_ids'] as $idx => $assigned_id ) {
 						$composite_data[$component_id]['assigned_category_ids'][$idx] =
-							apply_filters( 'translate_object_id', $assigned_id, 'product_cat', true, $job->language_code );
+							apply_filters( 'wpml_object_id', $assigned_id, 'product_cat', true, $job->language_code );
 
 					}
 
@@ -553,7 +508,7 @@ class WCML_Composite_Products extends WCML_Compatibility_Helper{
 				$original_id = $this->woocommerce_wpml->products->get_original_product_id( $object_id );
 
 				$cost_status = get_post_meta( $original_id, '_wcml_custom_prices_status', true );
-				
+
 				$currency = $this->woocommerce_wpml->multi_currency->get_client_currency();
 
 				if ( $currency === wcml_get_woocommerce_currency_option() ) {

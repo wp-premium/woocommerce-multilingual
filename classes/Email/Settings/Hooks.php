@@ -83,7 +83,7 @@ class Hooks implements IWPML_Backend_Action, IWPML_DIC_Action {
 
 			if ( isset( $_GET['section'] ) && $_GET['section'] === $sectionName ) {
 
-				$emailSettings = get_option( $emailOption );
+				$emailSettings = $this->get_email_option( $emailOption );
 
 				if ( $emailSettings ) {
 
@@ -114,7 +114,7 @@ class Hooks implements IWPML_Backend_Action, IWPML_DIC_Action {
 								]
 							);
 
-							$stPage = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=admin_texts_' . $emailOption . '&search=' . $settingsValue );
+							$stPage = admin_url( 'admin.php?page=' . WPML_ST_FOLDER . '/menu/string-translation.php&context=admin_texts_' . $emailOption );
 
 							?>
 							<script>
@@ -143,7 +143,7 @@ class Hooks implements IWPML_Backend_Action, IWPML_DIC_Action {
 					list( , $emailType, $emailElement ) = $keyParts;
 
 					$emailInputKey     = self::getEmailInputKey( $emailType, $emailElement );
-					$emailSettings     = get_option( $emailType, true );
+					$emailSettings     = $this->get_email_option( $emailType, true );
 					$optionStringValue = $emailSettings[ $emailElement ];
 
 					$stringValue = isset( $_POST[ $emailInputKey ] ) ? $_POST[ $emailInputKey ] : $optionStringValue;
@@ -156,6 +156,21 @@ class Hooks implements IWPML_Backend_Action, IWPML_DIC_Action {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param string $option
+	 * @param bool $default
+	 *
+	 * @return mixed
+	 */
+	private function get_email_option( $option, $default = false ) {
+		$emailSettings = get_option( $option, $default );
+		if ( $emailSettings && is_array( $emailSettings ) && ! isset( $emailSettings['additional_content'] ) ) {
+			$emailSettings['additional_content'] = '';
+		}
+
+		return $emailSettings;
 	}
 
 	/**

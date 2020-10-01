@@ -11,7 +11,7 @@ class Refunded {
 		$buyButton        = __( 'Check my order status', 'installer' );
 		?>
 		<div class="otgs-installer-registered clearfix">
-			<div class="notice inline otgs-installer-notice otgs-installer-notice-refund otgs-installer-notice-<?php echo $model->repoId; ?>">
+			<div class="notice inline otgs-installer-notice otgs-installer-notice-refund">
 				<div class="otgs-installer-notice-content">
 					<h2><?php echo esc_html( $title ); ?></h2>
 					<p><?php echo esc_html( $into ); ?></p>
@@ -26,7 +26,9 @@ class Refunded {
 						</a>
 
 						<?php
-						\OTGS\Installer\Templates\Repository\RegisteredButtons::render( $model );
+                        if( $model->shouldDisplayUnregisterLink ) {
+	                        \OTGS\Installer\Templates\Repository\RegisteredButtons::render( $model );
+                        }
 						?>
 					</div>
 				</div>

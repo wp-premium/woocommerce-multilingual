@@ -17,7 +17,7 @@ jQuery( function($){
 
         toggleManualAutomatic: function(){
 
-            if($(this).attr('checked') == 'checked'){
+            if($(this).prop('checked')){
                 $('#exchange-rates-online-wrap').fadeIn();
             }else{
                 $('#exchange-rates-online-wrap').fadeOut();
@@ -32,7 +32,7 @@ jQuery( function($){
             $('#exchange-rates-error').html('').hide();
             $('#update-rates-spinner').css({ visibility: 'visible' });
             $('.exchange-rates-sources .notice-error').html('').hide();
-            updateButton.attr('disabled', 'disabled');
+            updateButton.prop('disabled', true);
 
             $.ajax({
                 type: "post",
@@ -55,7 +55,7 @@ jQuery( function($){
                     }
 
                     $('#update-rates-spinner').css({ visibility: 'hidden' });
-                    updateButton.removeAttr('disabled');
+                    updateButton.prop('disabled', false);
 
                     for( code in response.rates ){
                         $('#currency_row_' + code + ' span.rate').hide().html( response.rates[code] ).fadeIn('slow');
@@ -72,9 +72,11 @@ jQuery( function($){
         toggleUpdateManuallyButton: function(){
 
             if( WCMLExchangeRates.selectedService == $(this).val() ){
-                $('#update-rates-manually').removeAttr( 'disabled' ).next('.wcml-tip').hide();
+                $('#update-rates-manually').prop( 'disabled', false );
+                $('#update-rates-manually').next('.wcml-tip').hide();
             } else {
-                $('#update-rates-manually').attr( 'disabled', 'disabled' ).next('.wcml-tip').show().tipTip( WCML_Tooltip.default_args);
+                $('#update-rates-manually').prop( 'disabled', true );
+                $('#update-rates-manually').next('.wcml-tip').show().tipTip( WCML_Tooltip.default_args);
             }
 
         },
@@ -88,8 +90,8 @@ jQuery( function($){
 
         updateFrequency: function(){
 
-            $('[name="update-weekly-day"], [name="update-monthly-day"]').attr('disabled', 'disabled');
-            $(this).parent().find('select').removeAttr('disabled');
+            $('[name="update-weekly-day"], [name="update-monthly-day"]').prop('disabled', true);
+            $(this).parent().find('select').prop('disabled', false);
 
         }
     }

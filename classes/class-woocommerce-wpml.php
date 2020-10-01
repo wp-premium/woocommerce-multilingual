@@ -1,5 +1,7 @@
 <?php
 
+use function WPML\Container\make;
+
 /**
  * Class woocommerce_wpml
  */
@@ -168,7 +170,6 @@ class woocommerce_wpml {
 
 		$actions_that_need_mc = [
 			'save-mc-options',
-			'wcml_new_currency',
 			'wcml_save_currency',
 			'wcml_delete_currency',
 			'wcml_update_currency_lang',
@@ -186,7 +187,7 @@ class woocommerce_wpml {
 			|| ( isset( $_GET['page'] ) && 'wpml-wcml' === $_GET['page'] && isset( $_GET['tab'] ) && 'multi-currency' === $_GET['tab'] )
 			|| ( isset( $_POST['action'] ) && in_array( $_POST['action'], $actions_that_need_mc, true ) )
 		) {
-			$this->multi_currency = new WCML_Multi_Currency();
+			$this->get_multi_currency();
 			$wcml_price_filters   = new WCML_Price_Filter( $this );
 			$wcml_price_filters->add_hooks();
 		} else {
@@ -199,7 +200,7 @@ class woocommerce_wpml {
 		if ( is_admin() || wpml_is_rest_request() ) {
 			$this->translation_editor = new WCML_Translation_Editor( $this, $sitepress, $wpdb );
 			$this->translation_editor->add_hooks();
-			$tp_support = new WCML_TP_Support( $this, $wpdb, new WPML_Element_Translation_Package() );
+			$tp_support = new WCML_TP_Support( $this, $wpdb, new WPML_Element_Translation_Package(), $sitepress->get_setting( 'translation-management', [] ) );
 			$tp_support->add_hooks();
 			$this->sync_variations_data = new WCML_Synchronize_Variations_Data( $this, $sitepress, $wpdb );
 		}
@@ -447,7 +448,7 @@ class woocommerce_wpml {
 	 */
 	public function get_multi_currency() {
 		if ( ! isset( $this->multi_currency ) ) {
-			$this->multi_currency = new WCML_Multi_Currency();
+			$this->multi_currency = make( WCML_Multi_Currency::class );
 		}
 		return $this->multi_currency;
 	}

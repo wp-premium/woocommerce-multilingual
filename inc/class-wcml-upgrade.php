@@ -33,6 +33,7 @@ class WCML_Upgrade {
 		'4.7.3',
 		'4.7.6',
 		'4.7.8',
+		'4.10.0',
 	];
 
 	public function __construct() {
@@ -825,6 +826,14 @@ class WCML_Upgrade {
 
 				icl_register_string( $domain, $name, $emailSettings['additional_content'], false, '' );
 			}
+		}
+	}
+
+	private function upgrade_4_10_0() {
+		$wcml_settings = get_option( '_wcml_settings' );
+		if ( WCML_MULTI_CURRENCIES_INDEPENDENT === $wcml_settings['enable_multi_currency'] ) {
+			$wcml_settings['currency_mode'] = 'by_language';
+			update_option( '_wcml_settings', $wcml_settings );
 		}
 	}
 }

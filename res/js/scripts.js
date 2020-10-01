@@ -111,7 +111,7 @@ jQuery(document).ready(function ($) {
 
         var wrap = $(this).closest('.wcml-wrap');
 
-        $(this).attr('disabled', 'disabled');
+        $(this).prop('disabled', true);
         var ajaxLoader = $('<span class="spinner" style="visibility: visible;">');
         var setting = jQuery(this).data('setting');
         $(this).parent().prepend(ajaxLoader);

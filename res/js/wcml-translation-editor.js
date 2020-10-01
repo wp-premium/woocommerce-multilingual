@@ -112,7 +112,7 @@ jQuery( function($){
 					data: { action: 'wcml_editor_auto_slug', title: title, job_id: job_id },
 					success: function(response) {
 						slug_field.val( response.slug );
-						slug_field.removeAttr('readonly');
+						slug_field.prop('readonly', false);
 						$('#icl_tm_copy_link_slug').prop('disabled', 'on');
 					}
 

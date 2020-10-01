@@ -14,7 +14,7 @@ jQuery(document).ready(function($){
         if( !$(this).is(':checked') && $('#wcml-is-translatable-attr-notice').size()>0 ){
 
             if ( confirm( $('#wcml-is-translatable-attr-notice').val() ) == false ) {
-                $(this).attr("checked", true);
+                $(this).prop("checked", true);
             }
         }
     });

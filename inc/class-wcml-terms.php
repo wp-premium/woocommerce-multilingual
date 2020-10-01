@@ -440,12 +440,11 @@ class WCML_Terms {
                 JOIN {$this->wpdb->term_taxonomy} tx on tr.term_taxonomy_id = tx.term_taxonomy_id
                 JOIN {$this->wpdb->posts} p ON tr.object_id = p.ID
                 JOIN {$this->wpdb->prefix}icl_translations t ON t.element_id = p.ID 
-                WHERE {$where} tx.taxonomy = %s AND p.post_type = 'product' AND t.element_type='post_product' AND t.language_code = %s 
+                WHERE {$where} tx.taxonomy = %s AND p.post_type = 'product' AND t.element_type='post_product' AND t.source_language_code IS NULL  
                 ORDER BY ID ASC
                 
         ",
-				$taxonomy,
-				$this->sitepress->get_default_language()
+				$taxonomy
 			)
 		);
 
@@ -788,6 +787,14 @@ class WCML_Terms {
 
 	}
 
+	/**
+	 * @param array  $terms
+	 * @param int    $product_id
+	 * @param string $taxonomy
+	 * @param array  $args
+	 *
+	 * @return array
+	 */
 	public function get_product_terms_filter( $terms, $product_id, $taxonomy, $args ) {
 
 		$language = $this->sitepress->get_language_for_element( $product_id, 'post_' . get_post_type( $product_id ) );
@@ -801,7 +808,7 @@ class WCML_Terms {
 			if ( ! $is_objects_array ) {
 				$term_obj = get_term_by( 'name', $term, $taxonomy );
 
-				$is_wc_filtering_by_slug = isset( $args['fields'] ) && 'id=>slug' === $args['fields'];
+				$is_wc_filtering_by_slug = isset( $args['fields'] ) && in_array( $args['fields'], [ 'id=>slug', 'slugs' ] );
 				if ( $is_wc_filtering_by_slug || ! $term_obj ) {
 					$term_obj = get_term_by( 'slug', $term, $taxonomy );
 					$is_slug  = true;

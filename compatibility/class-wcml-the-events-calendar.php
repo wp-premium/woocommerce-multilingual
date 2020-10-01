@@ -207,7 +207,7 @@ class WCML_The_Events_Calendar {
 
 			$this->sync_custom_fields( $rsvp_post_id, $translated_rsvp_post_id );
 
-			$this->save_ticket_meta_translations( $rsvp_post_id, $translated_rsvp_post_id );
+			$this->save_ticket_meta_translations( $rsvp_post_id, $translated_rsvp_post_id, $data );
 
 		}
 	}
@@ -301,7 +301,7 @@ class WCML_The_Events_Calendar {
 
 			$this->sync_custom_fields( $ticket_post_id, $translated_ticket_post_id );
 
-			$this->save_ticket_meta_translations( $ticket_post_id, $translated_ticket_post_id );
+			$this->save_ticket_meta_translations( $ticket_post_id, $translated_ticket_post_id, $data );
 		}
 	}
 
@@ -337,7 +337,12 @@ class WCML_The_Events_Calendar {
 		return $package;
 	}
 
-	private function save_ticket_meta_translations( $ticket_id, $translated_ticket_id ) {
+	/**
+	 * @param int $ticket_id
+	 * @param int $translated_ticket_id
+	 * @param array $data
+	 */
+	private function save_ticket_meta_translations( $ticket_id, $translated_ticket_id, $data ) {
 		$ticket_meta            = get_post_meta( $ticket_id, '_tribe_tickets_meta', true );
 		$translated_ticket_meta = $ticket_meta;
 		if ( is_array( $ticket_meta ) ) {

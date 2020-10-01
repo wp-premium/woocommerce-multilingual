@@ -34,12 +34,9 @@ class Installer_Dependencies {
 	}
 
 	public function is_win_paths_exception( $repository_id ) {
-
 		if ( ! isset( $this->is_win_paths_exception[ $repository_id ] ) ) {
-
 			$this->is_win_paths_exception[ $repository_id ] = false;
-
-			if ( strtoupper( substr( PHP_OS, 0, 3 ) ) === 'WIN' ) {
+			if ( strtoupper( substr( constant('PHP_OS'), 0, 3 ) ) === 'WIN' ) {
 
 				$windows_max_path_length = 256;
 				$longest_path['wpml']    = 109;
@@ -50,29 +47,21 @@ class Installer_Dependencies {
 				$upgrade_path_length = strlen( WP_CONTENT_DIR . '/upgrade' );
 
 				$installer_settings = WP_Installer()->settings;
-
-                if ( isset($installer_settings['repositories'][$repository_id]['data']) && is_array( $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'] ) ) {
-                    $a_plugin = current( $installer_settings['repositories'][$repository_id]['data']['downloads']['plugins'] );
-                    $url = WP_Installer()->append_site_key_to_download_url( $a_plugin['url'], 'xxxxxx', $repository_id );
-                    $tmpfname = wp_tempnam( $url );
-
+				if ( isset( $installer_settings['repositories'][ $repository_id ]['data']['downloads']['plugins'] ) ) {
+					$a_plugin       = current( $installer_settings['repositories'][ $repository_id ]['data']['downloads']['plugins'] );
+					$url            = WP_Installer()->append_site_key_to_download_url( $a_plugin['url'], 'xxxxxx', $repository_id );
+					$tmpfname       = wp_tempnam( $url );
 					$tmpname_length = strlen( basename( $tmpfname ) ) - 4; // -.tmp
+					wp_delete_file( $tmpfname );
 
 					if ( $upgrade_path_length + $tmpname_length + $longest_path[ $repository_id ] + $margin > $windows_max_path_length ) {
-
 						$this->is_win_paths_exception[ $repository_id ] = true;
-
 					}
-
 				}
-
-
 			}
-
 		}
 
 		return $this->is_win_paths_exception[ $repository_id ];
-
 	}
 
 	public function is_uploading_allowed() {

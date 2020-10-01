@@ -208,12 +208,12 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
 				} else {
 
-					$custom_fields_values = array_values( array_filter( maybe_unserialize( get_post_meta( $this->product_id, $custom_field, true ) ) ) );
+					$custom_fields_values = $this->get_custom_field_values( $this->product_id, $custom_field );
 
 					if ( $custom_fields_values ) {
 						$cf_fields_group = new WPML_Editor_UI_Field_Group();
 
-						foreach ( $custom_fields_values as $custom_field_index => $custom_field_val ) {
+						foreach ( array_values( array_filter( $custom_fields_values ) ) as $custom_field_index => $custom_field_val ) {
 							$cf_fields_group = $this->add_single_custom_field_content( $cf_fields_group, $custom_field, $custom_field_index, $custom_field_val );
 						}
 
@@ -358,31 +358,34 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
 	}
 
-	public function add_custom_fields_ui_section( $custom_fields_section, $custom_fields, $variation_id = false ) {
+	public function add_custom_fields_ui_section( $custom_fields_section, $custom_fields, $variation_id ) {
 
 		foreach ( $custom_fields as $custom_field ) {
 
-			$custom_field_id = $variation_id ? $custom_field . $variation_id : $custom_field;
+			if ( '_variation_description' === $custom_field || $this->get_custom_field_values( $variation_id, $custom_field ) ) {
 
-			if ( key( $this->data[ $custom_field_id ] ) !== 'original' ) {
-				$group = new WPML_Editor_UI_Field_Group( $this->get_product_custom_field_label( $custom_field, $variation_id ), true );
-				foreach ( $this->data[ $custom_field_id ] as $custom_field_key => $custom_field_array ) {
-					if ( '_variation_description' === $custom_field ) {
-						$custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
-					} else {
-						$custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+				$custom_field_id = $custom_field . $variation_id;
+
+				if ( key( $this->data[ $custom_field_id ] ) !== 'original' ) {
+					$group = new WPML_Editor_UI_Field_Group( $this->get_product_custom_field_label( $custom_field, $variation_id ), true );
+					foreach ( $this->data[ $custom_field_id ] as $custom_field_key => $custom_field_array ) {
+						if ( '_variation_description' === $custom_field ) {
+							$custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+						} else {
+							$custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_key, '', $this->data[ $custom_field_id ], false );
+						}
+
+						$group->add_field( $custom_field_input );
 					}
-
-					$group->add_field( $custom_field_input );
-				}
-				$custom_fields_section->add_field( $group );
-			} else {
-				if ( '_variation_description' === $custom_field ) {
-					$custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+					$custom_fields_section->add_field( $group );
 				} else {
-					$custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+					if ( '_variation_description' === $custom_field ) {
+						$custom_field_input = new WPML_Editor_UI_TextArea_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+					} else {
+						$custom_field_input = new WPML_Editor_UI_Single_Line_Field( $custom_field_id, $this->get_product_custom_field_label( $custom_field, $variation_id ), $this->data, true );
+					}
+					$custom_fields_section->add_field( $custom_field_input );
 				}
-				$custom_fields_section->add_field( $custom_field_input );
 			}
 		}
 
@@ -567,8 +570,9 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 					$trnsl_mid_ids                 = $this->woocommerce_wpml->products->get_mid_ids_by_key( $translation_id, $custom_field );
 				}
 
+				$data_custom_field_key = $custom_field;
 				if ( $is_variation ) {
-					$custom_field .= $element_id;
+					$data_custom_field_key .= $element_id;
 				}
 
 				foreach ( $orig_custom_field_values as $val_key => $orig_custom_field_value ) {
@@ -576,33 +580,31 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 					if ( $this->check_custom_field_is_single_value( $element_id, $custom_field ) ) {
 
 						if ( count( $orig_custom_field_values ) == 1 ) {
-							$element_data[ $custom_field ]                = [ 'original' => $orig_custom_field_value ];
-							$element_data[ $custom_field ]['translation'] = ( $translation_id && isset( $translated_custom_field_value[ $val_key ] ) ) ? $translated_custom_field_value[ $val_key ] : '';
+							$element_data[ $data_custom_field_key ]                = [ 'original' => $orig_custom_field_value ];
+							$element_data[ $data_custom_field_key ]['translation'] = ( $translation_id && isset( $translated_custom_field_value[ $val_key ] ) ) ? $translated_custom_field_value[ $val_key ] : '';
 						} else {
 
-							$custom_field_key = $custom_field . ':' . ( isset( $trnsl_mid_ids[ $val_key ] ) ? $trnsl_mid_ids[ $val_key ] : 'new_' . $val_key );
+							$custom_field_key = $data_custom_field_key . ':' . ( isset( $trnsl_mid_ids[ $val_key ] ) ? $trnsl_mid_ids[ $val_key ] : 'new_' . $val_key );
 
-							$element_data[ $custom_field ][ $custom_field_key ]                = [ 'original' => $orig_custom_field_value ];
-							$element_data[ $custom_field ][ $custom_field_key ]['translation'] = ( $translation_id && isset( $translated_custom_field_value[ $val_key ] ) ) ? $translated_custom_field_value[ $val_key ] : '';
+							$element_data[ $data_custom_field_key ][ $custom_field_key ]                = [ 'original' => $orig_custom_field_value ];
+							$element_data[ $data_custom_field_key ][ $custom_field_key ]['translation'] = ( $translation_id && isset( $translated_custom_field_value[ $val_key ] ) ) ? $translated_custom_field_value[ $val_key ] : '';
 						}
 					} else {
 
-						$custom_fields            = maybe_unserialize( get_post_meta( $this->product_id, $custom_field, true ) );
+						$custom_fields            = $this->get_custom_field_values( $this->product_id, $custom_field );
 						$translated_custom_fields = [];
 
 						if ( $custom_fields ) {
 
 							if ( $translation_id ) {
-								$translated_custom_fields = maybe_unserialize( get_post_meta( $translation_id, $custom_field, true ) );
+								$translated_custom_fields = $this->get_custom_field_values( $translation_id, $custom_field );
 							}
 
 							$i = 0;
-							foreach ( $custom_fields as $key => $field_value ) {
-								if ( ! empty( $field_value ) ) {
-									$translated_custom_field_value = isset( $translated_custom_fields[ $key ] ) ? $translated_custom_fields[ $key ] : '';
-									$element_data                  = $this->add_single_custom_field_content_value( $element_data, $custom_field, $i, $field_value, $translated_custom_field_value );
-									$i ++;
-								}
+							foreach ( array_filter( $custom_fields ) as $key => $field_value ) {
+								$translated_custom_field_value = isset( $translated_custom_fields[ $key ] ) ? $translated_custom_fields[ $key ] : '';
+								$element_data                  = $this->add_single_custom_field_content_value( $element_data, $data_custom_field_key, $i, $field_value, $translated_custom_field_value );
+								$i ++;
 							}
 						}
 					}
@@ -947,9 +949,8 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 	}
 
 	public function check_custom_field_is_single_value( $product_id, $meta_key ) {
-		$meta_value = maybe_unserialize( get_post_meta( $product_id, $meta_key, true ) );
 
-		if ( is_array( $meta_value ) ) {
+		if ( is_array( $this->get_custom_field_values( $product_id, $meta_key ) ) ) {
 			return false;
 		} else {
 			return apply_filters( 'wcml_check_is_single', true, $product_id, $meta_key );
@@ -970,6 +971,25 @@ class WCML_Editor_UI_Product_Job extends WPML_Editor_UI_Job {
 
 	public function show_media_button() {
 		return true;
+	}
+
+	/**
+	 * @param int $product_id
+	 * @param string $field_key
+	 *
+	 * @return array|string
+	 */
+	private function get_custom_field_values( $product_id, $field_key ) {
+		$maybe_double_unserialize = function ( $value ) {
+			return maybe_unserialize( $value );
+		};
+
+		$values = array_map(
+			$maybe_double_unserialize,
+			array_filter( get_post_meta( $product_id, $field_key ) )
+		);
+
+		return count( $values ) === 1 ? $values[0] : $values;
 	}
 
 }

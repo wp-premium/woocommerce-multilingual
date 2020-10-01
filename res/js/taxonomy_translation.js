@@ -57,7 +57,7 @@ jQuery(document).ready(function ($) {
         var this_form = $('#wcml_tt_sync_variations');
         var data = this_form.serialize();
         this_form.find('.wcml_tt_spinner').fadeIn();
-        this_form.find('input[type=submit]').attr('disabled', 'disabled');
+        this_form.find('input[type=submit]').prop('disabled', true);
 
         $.ajax({
             type: "post",
@@ -73,7 +73,7 @@ jQuery(document).ready(function ($) {
                 } else {
                     this_form.find('input[name=last_post_id]').val(0);
                     this_form.find('.wcml_tt_spinner').fadeOut();
-                    this_form.find('input').removeAttr('disabled');
+                    this_form.find('input').prop('disabled', false);
                     jQuery('#wcml_tt_sync_assignment').fadeOut();
                     jQuery('#wcml_tt_sync_desc').fadeOut();
                 }
@@ -92,7 +92,7 @@ jQuery(document).ready(function ($) {
         var parameters = this_form.serialize();
 
         this_form.find('.wcml_tt_spinner').fadeIn();
-        this_form.find('input').attr('disabled', 'disabled');
+        this_form.find('input').prop('disabled', true);
 
         $('.wcml_tt_sync_row').remove();
 
@@ -104,7 +104,7 @@ jQuery(document).ready(function ($) {
             success: function (ret) {
 
                 this_form.find('.wcml_tt_spinner').fadeOut();
-                this_form.find('input').removeAttr('disabled');
+                this_form.find('input').prop('disabled', false);
 
                 if (ret.errors) {
                     this_form.find('.errors').html(ret.errors);
@@ -128,7 +128,7 @@ jQuery(document).ready(function ($) {
         var parameters = this_form.serialize();
 
         this_form.find('.wcml_tt_spinner').fadeIn();
-        this_form.find('input').attr('disabled', 'disabled');
+        this_form.find('input').prop('disabled', true);
 
         jQuery.ajax({
             type: "POST",
@@ -138,7 +138,7 @@ jQuery(document).ready(function ($) {
             success: function (ret) {
 
                 this_form.find('.wcml_tt_spinner').fadeOut();
-                this_form.find('input').removeAttr('disabled');
+                this_form.find('input').prop('disabled', false);
 
                 if (ret.errors) {
                     this_form.find('.errors').html(ret.errors);

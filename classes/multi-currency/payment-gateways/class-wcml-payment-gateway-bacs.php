@@ -5,29 +5,20 @@
  */
 class WCML_Payment_Gateway_Bacs extends WCML_Payment_Gateway {
 
-	const TEMPLATE = 'bacs.twig';
-
-	protected function get_output_model() {
+	public function get_output_model() {
 		return [
-			'strings'           => [
-				'currency_label' => __( 'Currency', 'woocommerce-multilingual' ),
-				'setting_label'  => __( 'Bank Account', 'woocommerce-multilingual' ),
-				'all_label'      => __( 'All Accounts', 'woocommerce-multilingual' ),
-				'all_in_label'   => __( 'All in selected currency', 'woocommerce-multilingual' ),
-				'tooltip'        => __( 'Set the currency in which your customer will see the final price when they checkout. Choose which accounts they will see in their payment message.', 'woocommerce-multilingual' ),
+			'id'          => $this->get_id(),
+			'title'       => $this->get_title(),
+			'isSupported' => true,
+			'settings'    => $this->get_settings(),
+			'tooltip'     => __( 'Set the currency in which your customer will see the final price when they checkout. Choose which accounts they will see in their payment message.', 'woocommerce-multilingual' ),
+			'strings'     => [
+				'labelCurrency'    => __( 'Currency', 'woocommerce-multilingual' ),
+				'labelBankAccount' => __( 'Bank Account', 'woocommerce-multilingual' ),
+				'optionAll'        => __( 'All Accounts', 'woocommerce-multilingual' ),
+				'optionAllIn'      => __( 'All in selected currency', 'woocommerce-multilingual' ),
 			],
-			'gateway_id'        => $this->get_id(),
-			'gateway_title'     => $this->get_title(),
-			'current_currency'  => $this->current_currency,
-			'default_currency'  => $this->default_currency,
-			'gateway_settings'  => $this->get_setting( $this->current_currency ),
-			'active_currencies' => $this->get_active_currencies(),
-			'account_details'   => $this->get_gateway()->account_details,
 		];
-	}
-
-	protected function get_output_template() {
-		return self::TEMPLATE;
 	}
 
 	public function add_hooks() {

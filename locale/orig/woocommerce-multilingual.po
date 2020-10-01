@@ -1687,10 +1687,10 @@ msgid "Successfully updated %s for all translated %s."
 msgstr ""
 
 # <p class="icl-admin-message" style="margin-top: 0">
-# <?php printf( __('To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page.',
+# <?php printf( __('To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multilingual %ssettings%s page.',
 # 'woocommerce-multilingual'), '<strong>', '</strong>', '<a href="' . admin_url('admin.php?page=wpml-wcml&tab=settings') . '">', '</a>' ); ?>
 
-msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multiligual %ssettings%s page."
+msgid "To configure how the %sWooCommerce products%s are translated, visit the WooCommerce Multilingual %ssettings%s page."
 msgstr ""
 
 # $job_details[ 'job_id' ],

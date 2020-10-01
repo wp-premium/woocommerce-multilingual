@@ -78,6 +78,8 @@ class WCML_Multi_Currency_Prices {
 			add_filter( 'wc_price_args', [ $this, 'filter_wc_price_args' ] );
 		}
 
+		add_action( 'woocommerce_cart_loaded_from_session', [ $this, 'recalculate_totals' ] );
+
 		// formatting options.
 		add_filter( 'option_woocommerce_price_thousand_sep', [ $this, 'filter_currency_thousand_sep_option' ] );
 		add_filter( 'option_woocommerce_price_decimal_sep', [ $this, 'filter_currency_decimal_sep_option' ] );
@@ -569,7 +571,6 @@ class WCML_Multi_Currency_Prices {
 	}
 
 	public function filter_woocommerce_cart_contents_total( $cart_contents_total ) {
-		global $woocommerce;
 		remove_filter(
 			'woocommerce_cart_contents_total',
 			[
@@ -578,11 +579,15 @@ class WCML_Multi_Currency_Prices {
 			],
 			100
 		);
-		$woocommerce->cart->calculate_totals();
-		$cart_contents_total = $woocommerce->cart->get_cart_total();
+		$this->recalculate_totals();
+		$cart_contents_total = WC()->cart->get_cart_total();
 		add_filter( 'woocommerce_cart_contents_total', [ $this, 'filter_woocommerce_cart_contents_total' ], 100 );
 
 		return $cart_contents_total;
+	}
+
+	public function recalculate_totals() {
+		WC()->cart->calculate_totals();
 	}
 
 	public function filter_woocommerce_cart_subtotal( $cart_subtotal, $compound, $cart_object ) {

@@ -61,8 +61,13 @@ class WCML_Bookings {
 
 		// Translate emails.
 		add_filter( 'get_post_metadata', [ $this, 'get_order_language' ], 10, 4 );
-		add_filter( 'woocommerce_booking_reminder_notification', [ $this, 'translate_notification' ], 9 );
+
 		add_filter( 'woocommerce_booking_confirmed_notification', [ $this, 'translate_notification' ], 9 );
+		add_action( 'wc-booking-reminder', [ $this, 'translate_notification' ], 9 );
+
+		// @todo: Verify if 'woocommerce_booking_reminder_notification' and
+		// 'woocommerce_booking_cancelled_notification' are still needed.
+		add_filter( 'woocommerce_booking_reminder_notification', [ $this, 'translate_notification' ], 9 );
 		add_filter( 'woocommerce_booking_cancelled_notification', [ $this, 'translate_notification' ], 9 );
 
 		add_action(
@@ -270,14 +275,13 @@ class WCML_Bookings {
 			add_filter( 'woocommerce_email_get_option', [ $this, 'translate_emails_text_strings' ], 10, 4 );
 
 			add_action( 'woocommerce_booking_confirmed_notification', [ $this, 'translate_booking_confirmed_email_texts' ], 9 );
-
 			add_action( 'woocommerce_booking_pending-confirmation_to_cancelled_notification', [ $this, 'translate_booking_cancelled_email_texts' ], 9 );
 			add_action( 'woocommerce_booking_confirmed_to_cancelled_notification', [ $this, 'translate_booking_cancelled_email_texts' ], 9 );
 			add_action( 'woocommerce_booking_paid_to_cancelled_notification', [ $this, 'translate_booking_cancelled_email_texts' ], 9 );
 
-			add_action( 'wc-booking-reminder', [ $this, 'translate_booking_confirmed_email_texts' ], 9 );
+			// @todo: Verify 'wc-booking-reminder' because it happens in wp cron and we are in admin here.
+			add_action( 'wc-booking-reminder', [ $this, 'translate_booking_reminder_email_texts' ], 9 );
 			add_action( 'woocommerce_admin_new_booking_notification', [ $this, 'translate_new_booking_email_texts' ], 9 );
-
 
 			add_action( 'woocommerce_booking_pending-confirmation_to_cancelled_notification', [ $this, 'translate_booking_cancelled_admin_email_texts' ], 9 );
 			add_action( 'woocommerce_booking_confirmed_to_cancelled_notification', [ $this, 'translate_booking_cancelled_admin_email_texts' ], 9 );
@@ -306,6 +310,7 @@ class WCML_Bookings {
 
 		add_filter( 'woocommerce_bookings_account_tables', [ $this, 'filter_my_account_bookings_tables_by_current_language' ] );
 
+		add_filter( 'schedule_event', [ $this, 'prevent_events_on_duplicates' ] );
 	}
 
 	/**
@@ -344,6 +349,10 @@ class WCML_Bookings {
 
 	/**
 	 * Translate strings of notifications.
+	 *
+	 * If $order_id is a booking ID, the language will be
+	 * fetched from the parent order because we have a
+	 * filter on the post meta `wpml_language` for bookings.
 	 *
 	 * @param integer $order_id Order ID.
 	 */
@@ -2499,16 +2508,39 @@ class WCML_Bookings {
 		return $text_keys;
 	}
 
+	/**
+	 * @param string   $value
+	 * @param WC_Email $object
+	 * @param string   $old_value
+	 * @param string   $key
+	 *
+	 * @return string
+	 */
 	public function translate_emails_text_strings( $value, $object, $old_value, $key ) {
+		$translated_value = false;
 
-		$emails_ids = [ 'admin_booking_cancelled', 'new_booking', 'booking_cancelled', 'booking_confirmed', 'booking_reminder' ];
-		$keys       = [ 'subject', 'subject_confirmation', 'heading', 'heading_confirmation' ];
+		$emails_ids = wpml_collect( [
+			// true if it's an admin email.
+			'admin_booking_cancelled' => true,
+			'new_booking'             => true,
+			'booking_cancelled'       => false,
+			'booking_confirmed'       => false,
+			'booking_reminder'        => false,
+		] );
 
-		if ( in_array( $key, $keys ) && in_array( $object->id, $emails_ids ) ) {
-			$translated_value = $object->$key;
+		$keys = [
+			'subject',
+			'subject_confirmation',
+			'heading',
+			'heading_confirmation',
+		];
+
+		if ( in_array( $key, $keys ) && $emails_ids->has( $object->id ) ) {
+			$is_admin_email   = $emails_ids->get( $object->id, false );
+			$translated_value = $this->woocommerce_wpml->emails->get_email_translated_string( $key, $object, $is_admin_email );
 		}
 
-		return ! empty( $translated_value ) ? $translated_value : $value;
+		return $translated_value ?: $value;
 	}
 
 	public function translate_booking_confirmed_email_texts( $booking_id ) {
@@ -2691,5 +2723,22 @@ class WCML_Bookings {
 	public function save_booking_data_to_translation( $post_id, $data, $job ){
 	    $this->save_person_translation( $post_id, $data, $job );
 	    $this->save_resource_translation( $post_id, $data, $job );
+    }
+
+	/**
+	 * @param stdClass|false $event
+	 *
+	 * @return stdClass|false
+	 */
+    public function prevent_events_on_duplicates( $event ) {
+        if (
+            isset( $event->hook, $event->args[0] )
+            && in_array( $event->hook, [ 'wc-booking-reminder', 'wc-booking-complete' ], true )
+            && get_post_meta( $event->args[0], '_booking_duplicate_of', true )
+        ) {
+            return false;
+        }
+
+        return $event;
     }
 }

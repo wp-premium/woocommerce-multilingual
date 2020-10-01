@@ -1,5 +1,9 @@
 <?php
 
+use WCML\Multicurrency\UI\Hooks;
+use WCML\MultiCurrency\Geolocation;
+use WPML\FP\Obj;
+
 class WCML_Multi_Currency_Configuration {
 
 
@@ -23,20 +27,22 @@ class WCML_Multi_Currency_Configuration {
 
 		self::set_prices_config();
 
+		self::add_hooks();
+	}
+
+	public static function add_hooks(){
 		if ( is_ajax() ) {
 
 			add_action( 'wp_ajax_legacy_update_custom_rates', [ __CLASS__, 'legacy_update_custom_rates' ] );
 			add_action( 'wp_ajax_legacy_remove_custom_rates', [ __CLASS__, 'legacy_remove_custom_rates' ] );
 
-			add_action( 'wp_ajax_wcml_new_currency', [ __CLASS__, 'edit_currency' ] );
 			add_action( 'wp_ajax_wcml_save_currency', [ __CLASS__, 'save_currency' ] );
 			add_action( 'wp_ajax_wcml_delete_currency', [ __CLASS__, 'delete_currency' ] );
-
 			add_action( 'wp_ajax_wcml_update_currency_lang', [ __CLASS__, 'update_currency_lang' ] );
 			add_action( 'wp_ajax_wcml_update_default_currency', [ __CLASS__, 'update_default_currency_ajax' ] );
-
+			add_action( 'wp_ajax_wcml_set_currency_mode', [ __CLASS__, 'set_currency_mode' ] );
+			add_action( 'wp_ajax_wcml_set_max_mind_key', [ __CLASS__, 'set_max_mind_key' ] );
 		}
-
 	}
 
 	public static function save_configuration() {
@@ -47,6 +53,7 @@ class WCML_Multi_Currency_Configuration {
 
 			$wcml_settings['enable_multi_currency'] = isset( $_POST['multi_currency'] ) ? intval( $_POST['multi_currency'] ) : 0;
 			$wcml_settings['display_custom_prices'] = isset( $_POST['display_custom_prices'] ) ? intval( $_POST['display_custom_prices'] ) : 0;
+			$wcml_settings['currency_mode'] = filter_input( INPUT_POST, 'currency_mode', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 			// update default currency settings
 			if ( $wcml_settings['enable_multi_currency'] == WCML_MULTI_CURRENCIES_INDEPENDENT ) {
@@ -62,6 +69,10 @@ class WCML_Multi_Currency_Configuration {
 
 				foreach ( $options as $wc_key => $key ) {
 					$wcml_settings['currency_options'][ $woocommerce_currency ][ $key ] = get_option( $wc_key, true );
+				}
+
+				if ( ! isset( $wcml_settings['currency_options'][ $woocommerce_currency ]['location_mode'] ) ) {
+					$wcml_settings['currency_options'][ $woocommerce_currency ]['location_mode'] = 'all';
 				}
 			}
 
@@ -87,42 +98,6 @@ class WCML_Multi_Currency_Configuration {
 			$wpml_admin_notices->remove_notice( 'wcml-save-multi-currency-options', 'wcml-fixerio-api-key-required' );
 		}
 
-	}
-
-	public static function edit_currency() {
-
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( wp_verify_nonce( $nonce, 'wcml_edit_currency' ) ) {
-
-			self::$multi_currency->init_currencies();
-			$args['currencies']    = self::$multi_currency->currencies;
-			$args['wc_currencies'] = get_woocommerce_currencies();
-
-			if ( empty( $_POST['currency'] ) ) {
-
-				$args['title'] = empty( $_POST['currency'] ) ? __( 'Add new currency', 'woocommerce-multilingual' ) : __( 'Update currency', 'woocommerce-multilingual' );
-
-			} else {
-
-				$args['currency_code']   = filter_input( INPUT_POST, 'currency', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-				$args['currency_name']   = $args['wc_currencies'][ $args['currency_code'] ];
-				$args['currency_symbol'] = get_woocommerce_currency_symbol( $args['currency_code'] );
-
-				$args['title'] = sprintf(
-					__( 'Update settings for %s', 'woocommerce-multilingual' ),
-					'<strong>' . $args['currency_name'] . ' (' . $args['currency_symbol'] . ')</strong>'
-				);
-
-			}
-
-			$custom_currency_options = new WCML_Custom_Currency_Options( $args, self::$woocommerce_wpml );
-			$return['html']          = $custom_currency_options->get_view();
-
-			echo json_encode( $return );
-
-		}
-
-		exit;
 	}
 
 	public static function add_currency( $currency_code ) {
@@ -153,29 +128,30 @@ class WCML_Multi_Currency_Configuration {
 	}
 
 	public static function save_currency() {
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'save_currency' ) ) {
-			die( 'Invalid nonce' );
-		}
+		self::verify_nonce();
+		$data = self::get_data();
 
 		$wc_currency   = wcml_get_woocommerce_currency_option();
-		$wc_currencies = get_woocommerce_currencies();
 
-		$options = $_POST['currency_options'];
+		$options = $data['currency_options'];
 
 		$currency_code = $options['code'];
 
-		if ( isset( $options['gateways_settings'] ) ) {
+		if ( isset( $options['gatewaysSettings'] ) ) {
 
 			$payment_gateways = self::$multi_currency->currencies_payment_gateways->get_gateways();
 
-			foreach ( $options['gateways_settings'] as $code => $gateways_settings ) {
+			foreach ( $options['gatewaysSettings'] as $code => $gateways_settings ) {
 				if ( isset( $payment_gateways[ $code ] ) ) {
 					$payment_gateways[ $code ]->save_setting( $currency_code, $gateways_settings );
 				}
 			}
 
-			self::$multi_currency->currencies_payment_gateways->set_enabled( $currency_code, isset( $options['gateways_enabled'] ) ? true : false );
+			self::$multi_currency->currencies_payment_gateways->set_enabled( $currency_code, $options['gatewaysEnabled'] );
+		}
+
+		if ( isset( $options['countries'] ) ) {
+			$options['countries'] = wc_string_to_array( $options['countries'], ',' );
 		}
 
 		if ( $wc_currency !== $currency_code ) {
@@ -196,7 +172,7 @@ class WCML_Multi_Currency_Configuration {
 						$rate_changed  = true;
 					}
 					self::$multi_currency->currencies[ $currency_code ][ $key ] = $options[ $key ];
-					$changed = true;
+					$changed                                                    = true;
 				}
 			}
 
@@ -205,94 +181,70 @@ class WCML_Multi_Currency_Configuration {
 					self::$multi_currency->currencies[ $currency_code ]['previous_rate'] = $previous_rate;
 					self::$multi_currency->currencies[ $currency_code ]['updated']       = date( 'Y-m-d H:i:s' );
 				}
-				self::$woocommerce_wpml->settings['currency_options'] = self::$multi_currency->currencies;
-				self::$woocommerce_wpml->update_settings();
 			}
-
-			switch ( self::$multi_currency->currencies[ $currency_code ]['position'] ) {
-				case 'left':
-					$price = sprintf( '%s99.99', get_woocommerce_currency_symbol( $currency_code ) );
-					break;
-				case 'right':
-					$price = sprintf( '99.99%s', get_woocommerce_currency_symbol( $currency_code ) );
-					break;
-				case 'left_space':
-					$price = sprintf( '%s 99.99', get_woocommerce_currency_symbol( $currency_code ) );
-					break;
-				case 'right_space':
-					$price = sprintf( '99.99 %s', get_woocommerce_currency_symbol( $currency_code ) );
-					break;
-			}
-
-			$return['currency_name_formatted'] = sprintf( '<span class="truncate">%s</span> <small>(%s)</small>', $wc_currencies[ $currency_code ], $price );
-
-			$return['currency_meta_info'] = sprintf( '1 %s = %s %s', $wc_currency, self::$multi_currency->currencies[ $currency_code ]['rate'], $currency_code );
+		} else {
+			self::$multi_currency->currencies[ $currency_code ]['countries']     = $options['countries'];
+			self::$multi_currency->currencies[ $currency_code ]['location_mode'] = $options['location_mode'];
 		}
 
-		$args                     = [];
-		$args['default_currency'] = $wc_currency;
-		$args['currencies']       = self::$multi_currency->currencies;
-		$args['wc_currencies']    = $wc_currencies;
-		$args['currency_code']    = $currency_code;
-		$args['currency_name']    = $wc_currencies[ $currency_code ];
-		$args['currency_symbol']  = get_woocommerce_currency_symbol( $currency_code );
-		$args['currency']         = self::$multi_currency->currencies[ $currency_code ];
-		$args['title']            = sprintf( __( 'Update settings for %s', 'woocommerce-multilingual' ), $args['currency_name'] . ' (' . $args['currency_symbol'] . ')' );
+		self::$woocommerce_wpml->update_setting( 'currency_options', self::$multi_currency->currencies );
 
-		$custom_currency_options    = new WCML_Custom_Currency_Options( $args, self::$woocommerce_wpml );
-		$return['currency_options'] = $custom_currency_options->get_view();
-		$return['currency_name']    = $wc_currencies[ $currency_code ];
-		$return['currency_symbol']  = get_woocommerce_currency_symbol( $currency_code );
-
-		echo json_encode( $return );
-		exit;
+		wp_send_json_success( [
+			'formattedLastRateUpdate' => Hooks::formatLastRateUpdate(
+				Obj::path( [ $currency_code, 'updated' ], self::$multi_currency->currencies )
+			),
+		] );
 	}
 
 	public static function delete_currency() {
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_delete_currency' ) ) {
-			die( 'Invalid nonce' );
-		}
+		self::verify_nonce();
+		$data = self::get_data();
 
-		self::$multi_currency->delete_currency_by_code( $_POST['code'] );
-
-		exit;
+		self::$multi_currency->delete_currency_by_code( $data['code'] );
+		wp_send_json_success();
 	}
 
 	public static function update_currency_lang() {
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_update_currency_lang' ) ) {
-			die( 'Invalid nonce' );
-		}
+		self::verify_nonce();
+		$data = self::get_data();
 
 		$settings = self::$woocommerce_wpml->get_settings();
-		$settings['currency_options'][ $_POST['code'] ]['languages'][ $_POST['lang'] ] = $_POST['value'];
+		$settings['currency_options'][ $data['code'] ]['languages'][ $data['lang'] ] = (int) $data['value'];
 
 		self::$woocommerce_wpml->update_settings( $settings );
-		exit;
+		wp_send_json_success();
+	}
+
+	private static function verify_nonce() {
+		$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+		if ( ! wp_verify_nonce( $nonce,  WCML\Multicurrency\UI\Hooks::HANDLE ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+	}
+
+	private static function get_data() {
+		return json_decode( stripslashes( $_POST['data'] ), true );
 	}
 
 	public static function update_default_currency_ajax() {
-
-		$nonce = filter_input( INPUT_POST, 'wcml_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wcml_update_default_currency' ) ) {
-			die( 'Invalid nonce' );
-		}
-
+		self::verify_nonce();
 		self::update_default_currency();
-
-		exit;
+		wp_send_json_success();
 	}
 
 	public static function update_default_currency() {
 		global $woocommerce;
 
+		$data = self::get_data();
+
 		if ( ! empty( $woocommerce->session ) &&
-			$_POST['lang'] == $woocommerce->session->get( 'client_currency_language' ) ) {
-			$woocommerce->session->set( 'client_currency', $_POST['code'] );
+		     $data['lang'] == $woocommerce->session->get( 'client_currency_language' ) &&
+		     $data['code'] !== 'location' ) {
+			$woocommerce->session->set( 'client_currency', $data['code'] );
 		}
 
-		self::$woocommerce_wpml->settings['default_currencies'][ $_POST['lang'] ] = $_POST['code'];
+		self::$woocommerce_wpml->settings['default_currencies'][ $data['lang'] ] = $data['code'];
 		self::$woocommerce_wpml->update_settings();
 
 	}
@@ -408,6 +360,35 @@ class WCML_Multi_Currency_Configuration {
 
 		if ( $save ) {
 			$sitepress->save_settings( $wpml_settings );
+		}
+	}
+
+	public static function set_currency_mode() {
+		self::verify_nonce();
+		$data = self::get_data();
+
+		self::$woocommerce_wpml->settings['currency_mode'] = $data['mode'];
+		self::$woocommerce_wpml->update_settings();
+
+		wp_send_json_success();
+	}
+
+	public static function set_max_mind_key() {
+		self::verify_nonce();
+		$data = self::get_data();
+
+		if ( isset( WC()->integrations ) ) {
+			$integrations = WC()->integrations->get_integrations();
+
+			if ( isset( $integrations['maxmind_geolocation'] ) ) {
+				try {
+					$integrations['maxmind_geolocation']->validate_license_key_field( 'license_key', $data['MaxMindKey'] );
+					$integrations['maxmind_geolocation']->update_option( 'license_key', $data['MaxMindKey'] );
+					wp_send_json_success();
+				} catch ( Exception $e ) {
+					wp_send_json_error( $e->getMessage() );
+				}
+			}
 		}
 	}
 
